@@ -1,101 +1,125 @@
 <p align="center">
- <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform" />
- <img src="https://img.shields.io/badge/UI-Tauri%20v2%20%2B%20React-purple" alt="UI" />
- <img src="https://img.shields.io/badge/Backend-Python%20%2B%20FastAPI-green" alt="Backend" />
- <img src="https://img.shields.io/badge/AI-OpenAI%20%7C%20Claude%20%7C%20Bedrock-orange" alt="AI" />
- <img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="License" />
+  <img src="src-tauri/icons/icon.png" alt="LangHire" width="120" />
 </p>
 
-# ‍ LangHire
+<h1 align="center">LangHire</h1>
 
-**AI-powered automated job application system with a native desktop UI.**
+<p align="center">
+  <strong>AI-powered job application automation with a native desktop UI</strong>
+</p>
 
-LangHire uses AI browser agents to automatically search LinkedIn for jobs, fill out applications, and submit them — all from a beautiful cross-platform desktop app. It features a self-learning memory system that gets better at each website over time.
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform" />
+  <img src="https://img.shields.io/badge/Tauri%20v2-React%20%2B%20TypeScript-purple" alt="UI" />
+  <img src="https://img.shields.io/badge/Backend-Python%20%2B%20FastAPI-green" alt="Backend" />
+  <img src="https://img.shields.io/badge/AI-OpenAI%20%7C%20Claude%20%7C%20Bedrock-orange" alt="AI" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="License" /></a>
+</p>
 
-> ** Non-technical users**: Download the pre-built binary for your OS from [Releases](../../releases). No coding required!
+---
+
+Applying to jobs is tedious. You find a listing, click through to the application, fill in the same fields you filled in yesterday, answer the same screening questions, upload your resume again — repeat fifty times. LangHire automates the entire loop.
+
+It uses AI browser agents to search LinkedIn, collect matching jobs, fill out applications, upload your resume, and submit — while a **self-learning memory system** remembers how each applicant tracking system (ATS) works so it gets faster and more accurate over time. Everything runs locally on your machine. No data leaves your computer except LLM API calls.
+
+> **Non-technical users** -- Download a pre-built binary from [Releases](../../releases). No coding required.
 >
-> ** Developers**: See [Contributing](#-contributing) for setup instructions.
+> **Developers** -- See [Development Setup](#development-setup) to run from source.
 
 ---
 
 ## Features
 
-### Native Desktop App
-- Runs on **macOS**, **Windows**, and **Linux** as a native app (not a browser tab)
-- Built with Tauri v2 — lightweight ~10MB shell using OS WebView
-- No server setup required — everything runs locally on your machine
-
-### AI-Powered Automation
-- **Job Collection** — Searches LinkedIn for jobs matching your profile
-- **Automated Applications** — AI agent fills forms, uploads resume, answers questions
-- **Tailored Resumes** — Auto-customizes your resume per job description
-- **Smart Q&A** — Learns answers from previous applications and reuses them
-
-### Self-Learning Memory System
-- Stores per-website procedural knowledge (navigation patterns, form strategies, UI quirks)
-- Memories from one Workday site help on ALL Workday sites (ATS domain normalization)
-- Confidence-based retrieval — high-confidence memories are prioritized
-- Memory decay + cleanup for maintenance
-
-### Multi-LLM Support
-| Provider | Models | Auth |
-|----------|--------|------|
-| **OpenAI** | GPT-4o, GPT-4o-mini, GPT-4-turbo | API Key |
-| **Anthropic** | Claude Sonnet, Haiku, Opus | API Key |
-| **AWS Bedrock** | Claude via Bedrock | Access Key + Secret |
-
-### Dashboard & Analytics
-- Real-time job stats (collected, applied, failed, pending)
-- Success rate tracking
-- Per-domain performance breakdown
-- Memory system impact analysis (A/B comparison)
+- **Native desktop app** -- macOS, Windows, and Linux via [Tauri v2](https://tauri.app) (~10 MB, not Electron)
+- **Job collection** -- Searches LinkedIn for jobs matching your target titles and locations
+- **Automated applications** -- AI agent fills forms, uploads your resume, answers screening questions
+- **Tailored resumes** -- Auto-customizes your resume for each job description
+- **Self-learning memory** -- Stores per-ATS procedural knowledge (navigation patterns, form strategies, UI quirks). Lessons from one Workday site apply to all Workday sites.
+- **Smart Q&A reuse** -- Learns answers from previous applications and reuses them
+- **Multi-LLM support** -- OpenAI (GPT-4o, 4o-mini, 4-turbo), Anthropic (Claude Sonnet, Haiku, Opus), AWS Bedrock
+- **Dashboard** -- Real-time stats, success rates, per-domain performance, memory impact analysis
+- **CLI tools** -- Power-user scripts for collection, application, memory management, and analytics
+- **100% local** -- All data stored on your machine in your OS app data directory
 
 ---
 
-## Screenshots
+## Quick Start
 
-| Dashboard | Profile Editor | LLM Settings |
-|-----------|---------------|--------------|
-| Live stats, quick actions, getting started guide | Full candidate profile with tag inputs | Multi-provider config with connection test |
+### 1. Download
 
-| Jobs Browser | Memory Browser | Settings |
-|-------------|----------------|----------|
-| Search, filter by status, status badges | Domain list, memory viewer, category stats | Resume, credentials, blocked domains |
-
----
-
-## Quick Start (Users)
-
-### Download Pre-Built Binary
-
-Go to [**Releases**](../../releases) and download the installer for your OS:
+Go to [**Releases**](../../releases) and grab the installer for your OS:
 
 | OS | File | Notes |
 |----|------|-------|
-| **macOS** | langhire_x.x.x_aarch64.dmg | Apple Silicon (M1/M2/M3) |
-| **macOS** | langhire_x.x.x_x64.dmg | Intel Mac |
-| **Windows** | langhire_x.x.x_x64-setup.exe | 64-bit Windows 10+ |
-| **Linux** | langhire_x.x.x_amd64.AppImage | Universal Linux |
-| **Linux** | langhire_x.x.x_amd64.deb | Debian/Ubuntu |
+| macOS | `langhire_x.x.x_aarch64.dmg` | Apple Silicon (M1/M2/M3/M4) |
+| macOS | `langhire_x.x.x_x64.dmg` | Intel |
+| Windows | `langhire_x.x.x_x64-setup.exe` | 64-bit Windows 10+ |
+| Linux | `langhire_x.x.x_amd64.AppImage` | Universal |
+| Linux | `langhire_x.x.x_amd64.deb` | Debian / Ubuntu |
 
-### First-Time Setup
+### 2. Prerequisites
 
-1. **Open the app** — double-click the installed application
-2. **Set up your profile** — Go to Profile → fill in your name, email, skills, target job titles
-3. **Configure LLM** — Go to LLM Settings → select a provider → enter your API key → Test Connection
-4. **Set resume path** — Go to Settings → point to your resume PDF
-5. **Collect jobs** — Go to Jobs → Start collecting from LinkedIn
-6. **Apply** — Go to Apply → Start applying to collected jobs
-
-### Prerequisites
-
-- **Python 3.13+** must be installed on your system ([python.org/downloads](https://www.python.org/downloads/))
-- **Chromium browser** installed via Playwright:
- bash
- pip install playwright
- python -m playwright install chromium
- 
+- **Python 3.13+** ([python.org/downloads](https://www.python.org/downloads/))
+- **Chromium** via Playwright:
+  ```bash
+  pip install playwright
+  python -m playwright install chromium
+  ```
 - **An LLM API key** from OpenAI, Anthropic, or AWS
+
+### 3. First Run
+
+1. Open the app
+2. The setup wizard walks you through: **LLM provider** → **Resume upload** (auto-parses your profile) → **Review profile** → Ready
+3. Go to **Jobs** → enter a job title → **Start Collecting**
+4. Go to **Apply** → **Start Applying**
+5. Watch the dashboard as applications roll in
+
+---
+
+## How It Works
+
+LangHire runs a three-stage loop: **Collect → Apply → Learn**.
+
+**Collect** -- An AI browser agent logs into LinkedIn, searches for jobs matching your target titles and locations, and saves each listing with its URL, company, title, and description.
+
+**Apply** -- For each pending job, the agent opens the application (Easy Apply or external ATS), fills every field using your profile, uploads your resume, answers screening questions from its Q&A bank, and submits. Multiple workers can run in parallel.
+
+**Learn** -- After each application, the system extracts procedural learnings: which buttons to click, how forms are structured, what fails and what works. These memories are stored per-ATS domain with confidence scores, so next time it encounters the same ATS, it already knows how to navigate it.
+
+### Architecture
+
+```
+┌──────────────────────────────────────────────────┐
+│              Tauri Desktop Shell (Rust)           │
+│     Lightweight native wrapper, ~10 MB           │
+└────────────────────┬─────────────────────────────┘
+                     │ spawns sidecar
+                     ▼
+┌──────────────────────────────────────────────────┐
+│  React Frontend          │  FastAPI Backend      │
+│  (TypeScript)            │  (Python sidecar)     │
+│                          │                       │
+│  - Dashboard             │  - browser-use agents │
+│  - Profile editor        │  - Playwright browser │
+│  - LLM settings          │  - Memory system      │
+│  - Job browser           │  - Multi-LLM factory  │
+│  - Apply controls        │  - 20+ REST endpoints │
+│  - Memory viewer         │                       │
+│          ◄── HTTP localhost:8742 ──►             │
+└──────────────────────────────────────────────────┘
+                     │
+                     ▼
+        SQLite + JSON (OS app data directory)
+```
+
+All data is stored locally:
+
+| OS | Path |
+|----|------|
+| macOS | `~/Library/Application Support/langhire/` |
+| Windows | `%APPDATA%/langhire/` |
+| Linux | `~/.config/langhire/` |
 
 ---
 
@@ -106,240 +130,148 @@ Go to [**Releases**](../../releases) and download the installer for your OS:
 | Tool | Version | Install |
 |------|---------|---------|
 | Node.js | 18+ | [nodejs.org](https://nodejs.org) |
-| Rust | 1.77+ | curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh |
-| Python | 3.13+ | [python.org](https://python.org) or brew install python |
-| uv | latest | curl -LsSf https://astral.sh/uv/install.sh \| sh |
+| Rust | 1.77+ | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh` |
+| Python | 3.13+ | [python.org](https://python.org) |
+| uv | latest | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 
-### Clone & Install
+### Clone and Install
 
-bash
-# Clone the repo
-git clone https://github.com/YOUR_USERNAME/langhire.git
-cd langhire
+```bash
+git clone https://github.com/jaimaann/LangHire.git
+cd LangHire
 
-# Install Node dependencies
-npm install
+npm install                                    # Node dependencies
+uv sync                                        # Python dependencies
+uv run python -m playwright install chromium   # Browser engine
+```
 
-# Install Python dependencies
-uv sync
+### Run in Development
 
-# Install Playwright browser
-uv run python -m playwright install chromium
+Two terminals:
 
-
-### Running in Development
-
-You need **two terminals**:
-
-bash
-# Terminal 1: Start the Python backend
+```bash
+# Terminal 1 -- Python backend
 uv run python backend/main.py
 
-# Terminal 2: Start the frontend dev server
+# Terminal 2 -- Frontend dev server
 npm run dev
+```
 
+Open http://localhost:1420, or run as a native desktop app instead:
 
-Then open http://localhost:1420 in your browser, or run the native Tauri app:
-
-bash
-# Terminal 2 (alternative): Start as native desktop app
+```bash
+# Terminal 2 (alternative) -- Native Tauri app
 cargo tauri dev
+```
 
+> The first `cargo tauri dev` compiles the Rust shell (~2 min). Subsequent runs are fast.
 
-> **Note**: The first cargo tauri dev run will compile the Rust shell (~2 min). Subsequent runs are instant.
+### Build for Production
 
-### Building for Production
-
-bash
-# Build the desktop app
+```bash
 cargo tauri build
+```
 
-
-This produces platform-specific installers in src-tauri/target/release/bundle/:
-- macOS: .dmg and .app
-- Windows: .exe and .msi
-- Linux: .deb and .AppImage
+Produces platform-specific installers in `src-tauri/target/release/bundle/`.
 
 ---
 
 ## Project Structure
 
-
-langhire/
- src/ # React frontend (TypeScript)
- App.tsx # Router + layout
- main.tsx # Entry point
- index.css # Tailwind CSS
- components/layout/ # Sidebar navigation
- pages/ # 7 page components
- Dashboard.tsx # Stats overview
- Profile.tsx # Candidate profile editor
- LLMSettings.tsx # LLM provider config
- Jobs.tsx # Job browser with filters
- Apply.tsx # Application controls
- Memory.tsx # Memory browser
- Settings.tsx # App settings
- lib/
- api.ts # Backend API client
- types.ts # TypeScript interfaces
-
- backend/ # Python backend (FastAPI)
- main.py # FastAPI server (20+ endpoints)
- requirements.txt # Python dependencies
- core/
- config.py # OS-aware config management
- llm_factory.py # Multi-provider LLM factory
-
- src-tauri/ # Tauri native shell (Rust)
- tauri.conf.json # App config (window, permissions)
- Cargo.toml # Rust dependencies
- src/lib.rs # Tauri plugins setup
-
- memory/ # Agent memory system (Python)
- store.py # SQLite memory store
- extractors.py # Post-run learning extraction
- metrics.py # Run metrics tracking
-
- collect_jobs.py # Job collection script
- apply_jobs.py # Job application script
- apply_jobs_tailored.py # Tailored resume application
- dashboard.py # CLI performance dashboard
- memory_cli.py # CLI memory management
-
- package.json # Node dependencies
- pyproject.toml # Python project config
- vite.config.ts # Vite bundler config
- index.html # HTML entry point
-
-
-### Architecture
-
-
-
- Tauri Desktop Shell 
- 
- React Frontend Python Backend 
- (TypeScript) (FastAPI sidecar) 
- 
- • Profile Editor • browser-use agents 
- • LLM Settings • Playwright/Chromium 
- • Job Dashboard • Memory system 
- • Run Controls • Multi-LLM factory 
- • Memory Viewer • All automation 
- 
- HTTP (localhost:8742) 
- 
- 
- Data: SQLite + JSON in OS app data directory 
-
-
+```
+LangHire/
+├── src/                        # React frontend (TypeScript)
+│   ├── pages/                  # Dashboard, Profile, Jobs, Apply, Memory, Settings, LLMSettings, Logs
+│   ├── components/             # UI primitives, SetupWizard, Sidebar, LoginCards
+│   └── lib/                    # API client, TypeScript types
+│
+├── backend/                    # Python backend (FastAPI)
+│   ├── main.py                 # Server with 20+ endpoints
+│   ├── core/                   # Config, LLM factory, shared utilities
+│   └── memory/                 # SQLite store, post-run extractors, metrics
+│
+├── src-tauri/                  # Tauri native shell (Rust)
+│   ├── src/lib.rs              # App setup, sidecar launch
+│   └── tauri.conf.json         # Window config, permissions, bundling
+│
+├── cli/                        # CLI automation scripts
+│   ├── collect_jobs.py         # Job collection
+│   ├── apply_jobs.py           # Job application (multi-worker)
+│   ├── apply_jobs_tailored.py  # Tailored resume variant
+│   ├── dashboard.py            # Terminal analytics dashboard
+│   └── memory_cli.py           # Memory management
+│
+└── scripts/                    # Build helpers (macOS DMG, backend bundling)
+```
 
 ---
 
-## Configuration
+## CLI Usage
 
-All user data is stored locally in your OS app data directory:
+The CLI scripts work standalone alongside the desktop app:
 
-| OS | Path |
-|----|------|
-| macOS | ~/Library/Application Support/langhire/ |
-| Windows | %APPDATA%/langhire/ |
-| Linux | ~/.config/langhire/ |
-
-Files stored:
-- candidate_profile.json — Your profile data
-- llm_settings.json — LLM provider credentials
-- settings.json — App preferences
-- jobs.json — Collected job listings
-- memory_store.db — Agent memory database
-
-**All data stays on your machine. Nothing is sent to any server except the LLM API calls.**
-
----
-
-## How the Memory System Works
-
-1. **Before each run** — Memories for the target website are injected into the agent's prompt
-2. **During the run** — The agent reports observations about the website's UI
-3. **After each run** — Claude analyzes the run and extracts 3-8 procedural learnings
-
-Memories are categorized: navigation, form_strategy, element_interaction, failure_recovery, site_structure, qa_pattern
-
-ATS domains are normalized — a lesson learned on goodyear.wd1.myworkdayjobs.com helps on ALL Workday sites.
-
----
-
-## CLI Usage (Advanced)
-
-The original CLI scripts still work alongside the desktop app:
-
-bash
+```bash
 # Collect jobs from LinkedIn
-uv run python collect_jobs.py
+uv run python cli/collect_jobs.py
 
-# Apply to Easy Apply jobs
-uv run python apply_jobs.py --workers 3
+# Apply to jobs (3 parallel workers)
+uv run python cli/apply_jobs.py --workers 3
 
-# Apply with tailored resumes
-uv run python apply_jobs_tailored.py --workers 2
+# Apply with per-job tailored resumes
+uv run python cli/apply_jobs_tailored.py --workers 2
 
 # Memory management
-uv run python memory_cli.py stats
-uv run python memory_cli.py domains
-uv run python memory_cli.py show linkedin.com
+uv run python cli/memory_cli.py stats
+uv run python cli/memory_cli.py domains
+uv run python cli/memory_cli.py show linkedin.com
 
-# Performance dashboard (terminal)
-uv run python dashboard.py
-
+# Terminal performance dashboard
+uv run python cli/dashboard.py
+```
 
 ---
 
 ## Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
 
-### Quick Start for Contributors
+```bash
+git clone https://github.com/jaimaann/LangHire.git
+cd LangHire
+npm install && uv sync
+uv run python backend/main.py   # Terminal 1
+npm run dev                     # Terminal 2
+```
 
-bash
-git clone https://github.com/YOUR_USERNAME/langhire.git
-cd langhire
-npm install
-uv sync
-# Start developing (two terminals)
-uv run python backend/main.py # Terminal 1
-npm run dev # Terminal 2
+**Areas where help is needed:**
 
-
-### Areas We Need Help
-
-- **More ATS integrations** — Workday, Greenhouse, Lever, etc.
-- **UI/UX improvements** — Better dark mode, animations, responsive layout
-- **More LLM providers** — Google Gemini, Ollama (local), Azure OpenAI
-- **Dashboard enhancements** — Charts, trend visualization
-- **Testing** — Unit tests, integration tests, E2E tests
-- **Documentation** — Tutorials, video walkthroughs
-- **Internationalization** — Multi-language support
+- More ATS integrations (Workday, Greenhouse, Lever, iCIMS)
+- UI/UX improvements (dark mode, animations, responsive layout)
+- Additional LLM providers (Google Gemini, Ollama for local inference, Azure OpenAI)
+- Dashboard charts and trend visualization
+- Testing (unit, integration, E2E)
+- Documentation and video walkthroughs
+- Internationalization
 
 ---
 
 ## License
 
-[MIT License](LICENSE) — Free for personal and commercial use.
+[MIT](LICENSE)
 
 ---
 
-## ️ Disclaimer
+## Disclaimer
 
-This tool automates job applications on LinkedIn and other platforms. Use responsibly:
+This tool automates job applications on LinkedIn and other platforms. Use it responsibly:
 
 - Respect each platform's Terms of Service and rate limits
 - Don't spam employers with low-quality applications
 - Review your profile and settings before running automated applications
-- The AI agent makes decisions based on your profile — ensure your information is accurate
 - You are responsible for all applications submitted through this tool
 
 ---
 
 <p align="center">
- Built with ️ using <a href="https://tauri.app">Tauri</a>, <a href="https://react.dev">React</a>, <a href="https://python.org">Python</a>, and <a href="https://github.com/browser-use/browser-use">browser-use</a>
+  Built with <a href="https://tauri.app">Tauri</a>, <a href="https://react.dev">React</a>, <a href="https://python.org">Python</a>, and <a href="https://github.com/browser-use/browser-use">browser-use</a>
 </p>
