@@ -12,7 +12,7 @@
       "identifier": "shell:allow-spawn",
       "allow": [
         {
-          "name": "job-applicant-backend",
+          "name": "langhire-backend",
           "sidecar": true,
           "args": true
         }

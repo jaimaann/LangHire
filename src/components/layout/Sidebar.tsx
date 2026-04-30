@@ -62,7 +62,7 @@ export default function Sidebar() {
             <Briefcase className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-foreground tracking-tight">Job Applicant</h1>
+            <h1 className="text-base font-bold text-foreground tracking-tight">LangHire</h1>
             <p className="text-[11px] text-muted-foreground leading-none">AI-Powered Applications</p>
           </div>
         </div>
@@ -107,3 +107,4 @@ export default function Sidebar() {
     </aside>
   );
 }
+

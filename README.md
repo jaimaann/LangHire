@@ -6,11 +6,11 @@
   <img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="License" />
 </p>
 
-# 🧑‍💼 Job Applicant
+# 🧑‍💼 LangHire
 
 **AI-powered automated job application system with a native desktop UI.**
 
-Job Applicant uses AI browser agents to automatically search LinkedIn for jobs, fill out applications, and submit them — all from a beautiful cross-platform desktop app. It features a self-learning memory system that gets better at each website over time.
+LangHire uses AI browser agents to automatically search LinkedIn for jobs, fill out applications, and submit them — all from a beautiful cross-platform desktop app. It features a self-learning memory system that gets better at each website over time.
 
 > **🚀 Non-technical users**: Download the pre-built binary for your OS from [Releases](../../releases). No coding required!
 >
@@ -72,11 +72,11 @@ Go to [**Releases**](../../releases) and download the installer for your OS:
 
 | OS | File | Notes |
 |----|------|-------|
-| **macOS** | `Job-Applicant_x.x.x_aarch64.dmg` | Apple Silicon (M1/M2/M3) |
-| **macOS** | `Job-Applicant_x.x.x_x64.dmg` | Intel Mac |
-| **Windows** | `Job-Applicant_x.x.x_x64-setup.exe` | 64-bit Windows 10+ |
-| **Linux** | `Job-Applicant_x.x.x_amd64.AppImage` | Universal Linux |
-| **Linux** | `Job-Applicant_x.x.x_amd64.deb` | Debian/Ubuntu |
+| **macOS** | `langhire_x.x.x_aarch64.dmg` | Apple Silicon (M1/M2/M3) |
+| **macOS** | `langhire_x.x.x_x64.dmg` | Intel Mac |
+| **Windows** | `langhire_x.x.x_x64-setup.exe` | 64-bit Windows 10+ |
+| **Linux** | `langhire_x.x.x_amd64.AppImage` | Universal Linux |
+| **Linux** | `langhire_x.x.x_amd64.deb` | Debian/Ubuntu |
 
 ### First-Time Setup
 
@@ -114,8 +114,8 @@ Go to [**Releases**](../../releases) and download the installer for your OS:
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/job-applicant.git
-cd job-applicant
+git clone https://github.com/YOUR_USERNAME/langhire.git
+cd langhire
 
 # Install Node dependencies
 npm install
@@ -165,7 +165,7 @@ This produces platform-specific installers in `src-tauri/target/release/bundle/`
 ## 📁 Project Structure
 
 ```
-job-applicant/
+langhire/
 ├── src/                        # React frontend (TypeScript)
 │   ├── App.tsx                 # Router + layout
 │   ├── main.tsx                # Entry point
@@ -242,9 +242,9 @@ All user data is stored locally in your OS app data directory:
 
 | OS | Path |
 |----|------|
-| macOS | `~/Library/Application Support/job-applicant/` |
-| Windows | `%APPDATA%/job-applicant/` |
-| Linux | `~/.config/job-applicant/` |
+| macOS | `~/Library/Application Support/langhire/` |
+| Windows | `%APPDATA%/langhire/` |
+| Linux | `~/.config/langhire/` |
 
 Files stored:
 - `candidate_profile.json` — Your profile data
@@ -301,8 +301,8 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed gu
 ### Quick Start for Contributors
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/job-applicant.git
-cd job-applicant
+git clone https://github.com/YOUR_USERNAME/langhire.git
+cd langhire
 npm install
 uv sync
 # Start developing (two terminals)

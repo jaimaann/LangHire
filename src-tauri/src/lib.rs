@@ -8,11 +8,11 @@ struct Backend(Mutex<Option<CommandChild>>);
 #[tauri::command]
 fn get_api_token() -> Result<String, String> {
     let base = if cfg!(target_os = "macos") {
-        dirs::home_dir().map(|h| h.join("Library/Application Support/job-applicant"))
+        dirs::home_dir().map(|h| h.join("Library/Application Support/langhire"))
     } else if cfg!(target_os = "windows") {
-        dirs::home_dir().map(|h| h.join("AppData/Roaming/job-applicant"))
+        dirs::home_dir().map(|h| h.join("AppData/Roaming/langhire"))
     } else {
-        dirs::home_dir().map(|h| h.join(".config/job-applicant"))
+        dirs::home_dir().map(|h| h.join(".config/langhire"))
     }
     .ok_or("no home dir")?;
 
@@ -48,7 +48,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![get_api_token])
         .setup(|app| {
             let shell = app.shell();
-            match shell.sidecar("job-applicant-backend") {
+            match shell.sidecar("langhire-backend") {
                 Ok(sidecar) => match sidecar.args(["8742"]).spawn() {
                     Ok((_rx, child)) => {
                         log::info!("Backend sidecar started on port 8742");

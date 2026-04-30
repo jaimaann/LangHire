@@ -1,5 +1,5 @@
 """
-Configuration management for Job Applicant.
+Configuration management for LangHire.
 All settings stored in OS-appropriate app data directory.
 No hardcoded values.
 """
@@ -12,11 +12,11 @@ def get_data_dir() -> Path:
     """Get OS-appropriate data directory for the app."""
     system = platform.system()
     if system == "Darwin":
-        base = Path.home() / "Library" / "Application Support" / "job-applicant"
+        base = Path.home() / "Library" / "Application Support" / "langhire"
     elif system == "Windows":
-        base = Path.home() / "AppData" / "Roaming" / "job-applicant"
+        base = Path.home() / "AppData" / "Roaming" / "langhire"
     else:  # Linux
-        base = Path.home() / ".config" / "job-applicant"
+        base = Path.home() / ".config" / "langhire"
     base.mkdir(parents=True, exist_ok=True)
     return base
 
@@ -110,3 +110,4 @@ def save_settings(settings: dict):
             if isinstance(d, str) and d.strip()
         ]
     _save_json(get_data_dir() / "settings.json", settings)
+

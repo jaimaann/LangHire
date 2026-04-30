@@ -28,7 +28,7 @@ fi
 # Build with PyInstaller
 uv run pyinstaller \
   --onefile \
-  --name "job-applicant-backend-${TARGET}" \
+  --name "langhire-backend-${TARGET}" \
   --distpath src-tauri/binaries \
   --workpath build/pyinstaller \
   --specpath build \
@@ -59,5 +59,6 @@ uv run pyinstaller \
   --clean \
   backend/main.py
 
-echo "✅ Backend binary built: src-tauri/binaries/job-applicant-backend-${TARGET}"
-ls -lh "src-tauri/binaries/job-applicant-backend-${TARGET}"
+echo "✅ Backend binary built: src-tauri/binaries/langhire-backend-${TARGET}"
+ls -lh "src-tauri/binaries/langhire-backend-${TARGET}"
+

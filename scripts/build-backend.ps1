@@ -19,7 +19,7 @@ if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
 # Build with PyInstaller
 uv run pyinstaller `
   --onefile `
-  --name "job-applicant-backend-$Target" `
+  --name "langhire-backend-$Target" `
   --distpath src-tauri/binaries `
   --workpath build/pyinstaller `
   --specpath build `
@@ -50,5 +50,6 @@ uv run pyinstaller `
   --clean `
   backend/main.py
 
-Write-Host "Backend binary built: src-tauri/binaries/job-applicant-backend-$Target.exe"
-Get-Item "src-tauri/binaries/job-applicant-backend-$Target.exe" | Select-Object Name, Length
+Write-Host "Backend binary built: src-tauri/binaries/langhire-backend-$Target.exe"
+Get-Item "src-tauri/binaries/langhire-backend-$Target.exe" | Select-Object Name, Length
+

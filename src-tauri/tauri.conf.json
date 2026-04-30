@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Job Applicant",
+  "productName": "LangHire",
   "version": "1.0.0",
-  "identifier": "com.jobapplicant.desktop",
+  "identifier": "com.langhire.desktop",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Job Applicant — AI-Powered Job Applications",
+        "title": "LangHire — AI-Powered Job Applications",
         "width": 1200,
         "height": 800,
         "minWidth": 900,
@@ -30,7 +30,7 @@
     "active": true,
     "targets": "all",
     "externalBin": [
-      "binaries/job-applicant-backend"
+      "binaries/langhire-backend"
     ],
     "icon": [
       "icons/32x32.png",

@@ -110,7 +110,7 @@ export default function Guide() {
 
   return (
     <div className="max-w-3xl">
-      <PageHeader title="Guide" subtitle="Learn how to use Job Applicant and reference this anytime" />
+      <PageHeader title="Guide" subtitle="Learn how to use LangHire and reference this anytime" />
 
       {/* ── How It Works — Visual Pipeline ─────────────────────────────── */}
       <div className="card mb-6">
@@ -553,3 +553,4 @@ export default function Guide() {
     </div>
   );
 }
+

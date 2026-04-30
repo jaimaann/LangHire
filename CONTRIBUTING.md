@@ -1,4 +1,4 @@
-# 🤝 Contributing to Job Applicant
+# 🤝 Contributing to LangHire
 
 Thank you for your interest in contributing! This guide will help you get set up and make your first contribution.
 
@@ -44,11 +44,11 @@ Make sure you have these installed:
 # 1. Fork the repo on GitHub (click "Fork" button)
 
 # 2. Clone your fork
-git clone https://github.com/YOUR_USERNAME/job-applicant.git
-cd job-applicant
+git clone https://github.com/YOUR_USERNAME/langhire.git
+cd langhire
 
 # 3. Add upstream remote
-git remote add upstream https://github.com/ORIGINAL_OWNER/job-applicant.git
+git remote add upstream https://github.com/ORIGINAL_OWNER/langhire.git
 ```
 
 ### Install Dependencies

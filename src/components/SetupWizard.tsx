@@ -127,7 +127,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
               <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Briefcase className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-2">Welcome to Job Applicant!</h3>
+              <h3 className="text-2xl font-bold text-foreground mb-2">Welcome to LangHire!</h3>
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                 Let's get you set up in just a few minutes. This wizard will walk you through the essential configuration.
               </p>
@@ -303,3 +303,4 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
     </div>
   );
 }
+
