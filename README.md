@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform" />
-  <img src="https://img.shields.io/badge/UI-Tauri%20v2%20%2B%20React-purple" alt="UI" />
-  <img src="https://img.shields.io/badge/Backend-Python%20%2B%20FastAPI-green" alt="Backend" />
-  <img src="https://img.shields.io/badge/AI-OpenAI%20%7C%20Claude%20%7C%20Bedrock-orange" alt="AI" />
-  <img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="License" />
+ <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform" />
+ <img src="https://img.shields.io/badge/UI-Tauri%20v2%20%2B%20React-purple" alt="UI" />
+ <img src="https://img.shields.io/badge/Backend-Python%20%2B%20FastAPI-green" alt="Backend" />
+ <img src="https://img.shields.io/badge/AI-OpenAI%20%7C%20Claude%20%7C%20Bedrock-orange" alt="AI" />
+ <img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="License" />
 </p>
 
 # 🧑‍💼 LangHire
@@ -18,7 +18,7 @@ LangHire uses AI browser agents to automatically search LinkedIn for jobs, fill 
 
 ---
 
-## ✨ Features
+## Features
 
 ### 🖥 Native Desktop App
 - Runs on **macOS**, **Windows**, and **Linux** as a native app (not a browser tab)
@@ -91,10 +91,10 @@ Go to [**Releases**](../../releases) and download the installer for your OS:
 
 - **Python 3.13+** must be installed on your system ([python.org/downloads](https://www.python.org/downloads/))
 - **Chromium browser** installed via Playwright:
-  ```bash
-  pip install playwright
-  python -m playwright install chromium
-  ```
+ ```bash
+ pip install playwright
+ python -m playwright install chromium
+ ```
 - **An LLM API key** from OpenAI, Anthropic, or AWS
 
 ---
@@ -166,71 +166,71 @@ This produces platform-specific installers in `src-tauri/target/release/bundle/`
 
 ```
 langhire/
-├── src/                        # React frontend (TypeScript)
-│   ├── App.tsx                 # Router + layout
-│   ├── main.tsx                # Entry point
-│   ├── index.css               # Tailwind CSS
-│   ├── components/layout/      # Sidebar navigation
-│   ├── pages/                  # 7 page components
-│   │   ├── Dashboard.tsx       # Stats overview
-│   │   ├── Profile.tsx         # Candidate profile editor
-│   │   ├── LLMSettings.tsx     # LLM provider config
-│   │   ├── Jobs.tsx            # Job browser with filters
-│   │   ├── Apply.tsx           # Application controls
-│   │   ├── Memory.tsx          # Memory browser
-│   │   └── Settings.tsx        # App settings
-│   └── lib/
-│       ├── api.ts              # Backend API client
-│       └── types.ts            # TypeScript interfaces
+├── src/ # React frontend (TypeScript)
+│ ├── App.tsx # Router + layout
+│ ├── main.tsx # Entry point
+│ ├── index.css # Tailwind CSS
+│ ├── components/layout/ # Sidebar navigation
+│ ├── pages/ # 7 page components
+│ │ ├── Dashboard.tsx # Stats overview
+│ │ ├── Profile.tsx # Candidate profile editor
+│ │ ├── LLMSettings.tsx # LLM provider config
+│ │ ├── Jobs.tsx # Job browser with filters
+│ │ ├── Apply.tsx # Application controls
+│ │ ├── Memory.tsx # Memory browser
+│ │ └── Settings.tsx # App settings
+│ └── lib/
+│ ├── api.ts # Backend API client
+│ └── types.ts # TypeScript interfaces
 │
-├── backend/                    # Python backend (FastAPI)
-│   ├── main.py                 # FastAPI server (20+ endpoints)
-│   ├── requirements.txt        # Python dependencies
-│   └── core/
-│       ├── config.py           # OS-aware config management
-│       └── llm_factory.py      # Multi-provider LLM factory
+├── backend/ # Python backend (FastAPI)
+│ ├── main.py # FastAPI server (20+ endpoints)
+│ ├── requirements.txt # Python dependencies
+│ └── core/
+│ ├── config.py # OS-aware config management
+│ └── llm_factory.py # Multi-provider LLM factory
 │
-├── src-tauri/                  # Tauri native shell (Rust)
-│   ├── tauri.conf.json         # App config (window, permissions)
-│   ├── Cargo.toml              # Rust dependencies
-│   └── src/lib.rs              # Tauri plugins setup
+├── src-tauri/ # Tauri native shell (Rust)
+│ ├── tauri.conf.json # App config (window, permissions)
+│ ├── Cargo.toml # Rust dependencies
+│ └── src/lib.rs # Tauri plugins setup
 │
-├── memory/                     # Agent memory system (Python)
-│   ├── store.py                # SQLite memory store
-│   ├── extractors.py           # Post-run learning extraction
-│   └── metrics.py              # Run metrics tracking
+├── memory/ # Agent memory system (Python)
+│ ├── store.py # SQLite memory store
+│ ├── extractors.py # Post-run learning extraction
+│ └── metrics.py # Run metrics tracking
 │
-├── collect_jobs.py             # Job collection script
-├── apply_jobs.py               # Job application script
-├── apply_jobs_tailored.py      # Tailored resume application
-├── dashboard.py                # CLI performance dashboard
-├── memory_cli.py               # CLI memory management
+├── collect_jobs.py # Job collection script
+├── apply_jobs.py # Job application script
+├── apply_jobs_tailored.py # Tailored resume application
+├── dashboard.py # CLI performance dashboard
+├── memory_cli.py # CLI memory management
 │
-├── package.json                # Node dependencies
-├── pyproject.toml              # Python project config
-├── vite.config.ts              # Vite bundler config
-└── index.html                  # HTML entry point
+├── package.json # Node dependencies
+├── pyproject.toml # Python project config
+├── vite.config.ts # Vite bundler config
+└── index.html # HTML entry point
 ```
 
 ### Architecture
 
 ```
 ┌──────────────────────────────────────────────────────┐
-│                  Tauri Desktop Shell                  │
-│  ┌─────────────────────┐  ┌────────────────────────┐ │
-│  │   React Frontend    │  │   Python Backend       │ │
-│  │   (TypeScript)      │  │   (FastAPI sidecar)    │ │
-│  │                     │  │                        │ │
-│  │  • Profile Editor   │◄─┤  • browser-use agents  │ │
-│  │  • LLM Settings     │  │  • Playwright/Chromium │ │
-│  │  • Job Dashboard    │  │  • Memory system       │ │
-│  │  • Run Controls     │──►  • Multi-LLM factory   │ │
-│  │  • Memory Viewer    │  │  • All automation      │ │
-│  └─────────────────────┘  └────────────────────────┘ │
-│          ▲  HTTP (localhost:8742)  ▲                  │
-│          └────────────────────────┘                   │
-│                                                       │
-│  Data: SQLite + JSON in OS app data directory         │
+│ Tauri Desktop Shell │
+│ ┌─────────────────────┐ ┌────────────────────────┐ │
+│ │ React Frontend │ │ Python Backend │ │
+│ │ (TypeScript) │ │ (FastAPI sidecar) │ │
+│ │ │ │ │ │
+│ │ • Profile Editor │◄─┤ • browser-use agents │ │
+│ │ • LLM Settings │ │ • Playwright/Chromium │ │
+│ │ • Job Dashboard │ │ • Memory system │ │
+│ │ • Run Controls │──► • Multi-LLM factory │ │
+│ │ • Memory Viewer │ │ • All automation │ │
+│ └─────────────────────┘ └────────────────────────┘ │
+│ ▲ HTTP (localhost:8742) ▲ │
+│ └────────────────────────┘ │
+│ │
+│ Data: SQLite + JSON in OS app data directory │
 └──────────────────────────────────────────────────────┘
 ```
 
@@ -306,8 +306,8 @@ cd langhire
 npm install
 uv sync
 # Start developing (two terminals)
-uv run python backend/main.py  # Terminal 1
-npm run dev                     # Terminal 2
+uv run python backend/main.py # Terminal 1
+npm run dev # Terminal 2
 ```
 
 ### Areas We Need Help
@@ -328,7 +328,7 @@ npm run dev                     # Terminal 2
 
 ---
 
-## ⚠️ Disclaimer
+## ️ Disclaimer
 
 This tool automates job applications on LinkedIn and other platforms. Use responsibly:
 
@@ -341,5 +341,5 @@ This tool automates job applications on LinkedIn and other platforms. Use respon
 ---
 
 <p align="center">
-  Built with ❤️ using <a href="https://tauri.app">Tauri</a>, <a href="https://react.dev">React</a>, <a href="https://python.org">Python</a>, and <a href="https://github.com/browser-use/browser-use">browser-use</a>
+ Built with ️ using <a href="https://tauri.app">Tauri</a>, <a href="https://react.dev">React</a>, <a href="https://python.org">Python</a>, and <a href="https://github.com/browser-use/browser-use">browser-use</a>
 </p>
