@@ -78,9 +78,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: 'Job Applicant ${{ github.ref_name }}'
+          releaseName: 'LangHire ${{ github.ref_name }}'
           releaseBody: |
-            ## 📦 Download
+            ## Download
 
             | OS | File |
             |----|------|
