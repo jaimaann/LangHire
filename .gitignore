@@ -1,0 +1,73 @@
+# ── Python ────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[oc]
+*.egg-info
+wheels/
+
+# Virtual environments
+.venv
+.python-version
+
+# ── Node.js ───────────────────────────────────────────────────────────────
+node_modules/
+dist/
+*.local
+
+# ── Tauri ─────────────────────────────────────────────────────────────────
+src-tauri/target/
+src-tauri/gen/
+
+# ── User Data (sensitive / personal) ──────────────────────────────────────
+candidate_profile.json
+qa_repository.json
+jobs.json
+applied_jobs.json
+memory_store.db
+memory_store.db-wal
+memory_store.db-shm
+memory_export.json
+
+# Browser profiles (large, user-specific cookies/sessions)
+browser_profile/
+browser_profile_w*/
+
+# Logs (large, per-run conversation logs)
+logs/
+
+# Resumes (user-specific)
+resumes/
+
+# Fonts (redistributable but large)
+fonts/
+
+# Lock files
+jobs.json.lock
+uv.lock
+
+# ── OS Files ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── IDE ───────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+.kiro/
+*.swp
+*.swo
+
+# ── Environment / Secrets ─────────────────────────────────────────────────
+.env
+.env.local
+.env.production
+
+# ── PyInstaller ───────────────────────────────────────────────────────────
+build/
+src-tauri/binaries/
+
+# ── Build artifacts ───────────────────────────────────────────────────────
+*.dmg
+*.exe
+*.AppImage
+*.msi
+*.deb
+*.rpm

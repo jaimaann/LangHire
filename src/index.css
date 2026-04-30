@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@theme {
+  /* Airbnb-inspired palette */
+  --color-primary: #FF385C;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #F7F7F7;
+  --color-secondary-foreground: #222222;
+  --color-accent: #F7F7F7;
+  --color-accent-foreground: #222222;
+  --color-destructive: #C13515;
+  --color-destructive-foreground: #ffffff;
+  --color-muted: #F7F7F7;
+  --color-muted-foreground: #717171;
+  --color-border: #EBEBEB;
+  --color-ring: #FF385C;
+  --color-background: #ffffff;
+  --color-foreground: #222222;
+  --color-card: #ffffff;
+  --color-card-foreground: #222222;
+  --color-success: #008A05;
+  --color-warning: #E07912;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-[#E31C5F] active:scale-[0.98] transition-all cursor-pointer;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white text-foreground rounded-xl text-sm font-semibold border border-foreground/20 hover:border-foreground/40 active:scale-[0.98] transition-all cursor-pointer;
+  }
+  .btn-destructive {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-destructive text-destructive-foreground rounded-xl text-sm font-semibold hover:bg-[#A91102] active:scale-[0.98] transition-all cursor-pointer;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-foreground rounded-xl text-sm font-semibold hover:bg-secondary active:scale-[0.98] transition-all cursor-pointer;
+  }
+  .btn-dark {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-foreground text-white rounded-xl text-sm font-semibold hover:bg-foreground/90 active:scale-[0.98] transition-all cursor-pointer;
+  }
+  .input-base {
+    @apply w-full px-4 py-3 border border-border rounded-xl text-sm bg-white placeholder:text-muted-foreground focus:outline-none focus:border-foreground focus:ring-1 focus:ring-foreground transition-colors;
+  }
+  .card {
+    @apply bg-white rounded-2xl border border-border p-6 shadow-sm;
+  }
+  .error-banner {
+    @apply px-4 py-3 bg-[#FFF0F0] border border-[#FFD0D0] rounded-xl text-sm text-destructive;
+  }
+  .info-box {
+    @apply bg-[#F7F7F7] rounded-2xl p-4 text-[13px] text-foreground;
+  }
+  .section-title {
+    @apply text-lg font-bold text-foreground;
+  }
+  .log-viewer {
+    @apply bg-gray-950 text-gray-100 rounded-2xl p-4 font-mono text-[13px] max-h-96 overflow-y-auto;
+  }
+  .filter-tab {
+    @apply px-3.5 py-1.5 rounded-xl text-[13px] font-semibold transition-colors cursor-pointer;
+  }
+  .filter-tab-active {
+    @apply bg-foreground text-white;
+  }
+  .filter-tab-inactive {
+    @apply bg-white border border-border text-muted-foreground hover:text-foreground;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: "Nunito Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #ffffff;
+  color: #222222;
+}
+
+/* Airbnb-style scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #DDDDDD;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B0B0B0;
+}
