@@ -65,7 +65,7 @@ jobs:
           uv sync
 
       - name: Build Python backend (PyInstaller)
-        run: bash scripts/build-backend.sh
+        run: bash scripts/build-backend.sh ${{ matrix.target }}
         if: runner.os != 'Windows'
 
       - name: Build Python backend (PyInstaller, Windows)

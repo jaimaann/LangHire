@@ -10,19 +10,23 @@ cd "$PROJECT_DIR"
 
 echo "🔨 Building Python backend with PyInstaller..."
 
-# Detect target triple for Tauri sidecar naming
-ARCH=$(uname -m)
-OS=$(uname -s)
-if [ "$OS" = "Darwin" ]; then
-  if [ "$ARCH" = "arm64" ]; then
-    TARGET="aarch64-apple-darwin"
-  else
-    TARGET="x86_64-apple-darwin"
-  fi
-elif [ "$OS" = "Linux" ]; then
-  TARGET="x86_64-unknown-linux-gnu"
+# Use target triple from argument, or auto-detect from host
+if [ -n "$1" ]; then
+  TARGET="$1"
 else
-  TARGET="x86_64-pc-windows-msvc"
+  ARCH=$(uname -m)
+  OS=$(uname -s)
+  if [ "$OS" = "Darwin" ]; then
+    if [ "$ARCH" = "arm64" ]; then
+      TARGET="aarch64-apple-darwin"
+    else
+      TARGET="x86_64-apple-darwin"
+    fi
+  elif [ "$OS" = "Linux" ]; then
+    TARGET="x86_64-unknown-linux-gnu"
+  else
+    TARGET="x86_64-pc-windows-msvc"
+  fi
 fi
 
 # Build with PyInstaller
