@@ -45,7 +45,7 @@ It uses AI browser agents to search LinkedIn, collect matching jobs, fill out ap
 </tr>
 </table>
 
-<p align="center"><sub>Requires <a href="https://www.python.org/downloads/">Python 3.13+</a> and an LLM API key (OpenAI, Anthropic, or AWS). See <a href="#quick-start">Quick Start</a> for setup.</sub></p>
+<p align="center"><sub>Requires an LLM API key (OpenAI, Anthropic, or AWS). Chromium is installed automatically on first launch. See <a href="#quick-start">Quick Start</a>.</sub></p>
 
 > **Developers** -- See [Development Setup](#development-setup) to run from source.
 
@@ -69,12 +69,8 @@ It uses AI browser agents to search LinkedIn, collect matching jobs, fill out ap
 ## Quick Start
 
 1. **Download and install** from the [Download](#download) section above
-2. **Install Chromium** for browser automation:
-   ```bash
-   pip install playwright
-   python -m playwright install chromium
-   ```
-3. **Open the app** -- the setup wizard walks you through: **LLM provider** → **Resume upload** (auto-parses your profile) → **Review profile** → Ready
+2. **Open the app** -- Chromium downloads automatically on first launch (~400 MB, one time)
+3. **Setup wizard** walks you through: **LLM provider** → **Resume upload** (auto-parses your profile) → **Review profile** → Ready
 4. **Collect jobs** -- go to **Jobs** → enter a job title → **Start Collecting**
 5. **Apply** -- go to **Apply** → **Start Applying** and watch the dashboard as applications roll in
 
