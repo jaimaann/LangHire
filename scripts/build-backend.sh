@@ -26,7 +26,7 @@ else
 fi
 
 # Build with PyInstaller
-uv run pyinstaller \
+uv run python -m PyInstaller \
   --onefile \
   --name "langhire-backend-${TARGET}" \
   --distpath src-tauri/binaries \

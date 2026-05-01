@@ -17,7 +17,7 @@ if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
 }
 
 # Build with PyInstaller
-uv run pyinstaller `
+uv run python -m PyInstaller `
   --onefile `
   --name "langhire-backend-$Target" `
   --distpath src-tauri/binaries `
