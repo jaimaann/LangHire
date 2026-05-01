@@ -3,6 +3,7 @@ import { Briefcase, Search, ExternalLink, Loader2, CheckCircle, XCircle, Clock, 
 import { getJobs, getJobStats, startJobCollection, stopJobCollection, getCollectionStatus, startApplying, getApplyStatus } from "../lib/api";
 import type { Job, JobStatus, JobStats } from "../lib/types";
 import LogLine from "../components/LogLine";
+import AutomationDialog from "../components/AutomationDialog";
 import { PageHeader, ProgressBar } from "../components/ui";
 
 const STATUS_CONFIG: Record<JobStatus, { label: string; color: string; bg: string; icon: typeof CheckCircle }> = {
@@ -27,6 +28,8 @@ export default function Jobs() {
   const [collected, setCollected] = useState(0);
   const [showCollector, setShowCollector] = useState(true);
   const [applyingUrl, setApplyingUrl] = useState<string | null>(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [pendingApplyUrl, setPendingApplyUrl] = useState<string | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
 
   const fetchJobs = (isBackgroundRefresh = false) => {
@@ -84,7 +87,13 @@ export default function Jobs() {
     }
   }, [collectLog]);
 
-  const handleStartCollect = async () => {
+  const handleStartCollect = () => {
+    setPendingApplyUrl(null);
+    setShowConfirmDialog(true);
+  };
+
+  const confirmStartCollect = async () => {
+    setShowConfirmDialog(false);
     try {
       const res = await startJobCollection(collectTitle || undefined, collectMaxJobs ? Number(collectMaxJobs) : undefined);
       if (res.success) {
@@ -104,13 +113,22 @@ export default function Jobs() {
     setCollecting(false);
   };
 
-  const handleApplySingle = async (jobUrl: string) => {
+  const handleApplySingle = (jobUrl: string) => {
+    setPendingApplyUrl(jobUrl);
+    setShowConfirmDialog(true);
+  };
+
+  const confirmApplySingle = async () => {
+    setShowConfirmDialog(false);
+    if (!pendingApplyUrl) return;
     try {
-      const res = await startApplying({ job_url: jobUrl, workers: 1, mode: "all" });
+      const res = await startApplying({ job_url: pendingApplyUrl, workers: 1, mode: "all" });
       if (!res.success) { alert(res.message); return; }
-      setApplyingUrl(jobUrl);
+      setApplyingUrl(pendingApplyUrl);
     } catch (e) {
       alert(e instanceof Error ? e.message : "Failed to start");
+    } finally {
+      setPendingApplyUrl(null);
     }
   };
 
@@ -313,6 +331,13 @@ export default function Jobs() {
           Showing {jobs.length} job{jobs.length !== 1 ? "s" : ""}
         </p>
       )}
+
+      <AutomationDialog
+        open={showConfirmDialog}
+        title={pendingApplyUrl ? "Start Applying" : "Start Collecting"}
+        onConfirm={pendingApplyUrl ? confirmApplySingle : confirmStartCollect}
+        onCancel={() => { setShowConfirmDialog(false); setPendingApplyUrl(null); }}
+      />
     </div>
   );
 }

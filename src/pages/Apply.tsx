@@ -3,6 +3,7 @@ import { Play, Square, Terminal, Loader2, Briefcase } from "lucide-react";
 import { startApplying, stopApplying, getApplyStatus, getJobStats } from "../lib/api";
 import { useNavigate } from "react-router-dom";
 import LogLine from "../components/LogLine";
+import AutomationDialog from "../components/AutomationDialog";
 import { PageHeader, LoadingSpinner, EmptyState } from "../components/ui";
 
 export default function Apply() {
@@ -11,6 +12,7 @@ export default function Apply() {
   const [log, setLog] = useState<string[]>([]);
   const [pendingCount, setPendingCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const logRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -40,7 +42,12 @@ export default function Apply() {
     }
   }, [log]);
 
-  const handleStart = async () => {
+  const handleStart = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const confirmStart = async () => {
+    setShowConfirmDialog(false);
     try {
       const res = await startApplying({
         workers: 1,
@@ -147,6 +154,13 @@ export default function Apply() {
           </div>
         </div>
       )}
+
+      <AutomationDialog
+        open={showConfirmDialog}
+        title="Start Applying"
+        onConfirm={confirmStart}
+        onCancel={() => setShowConfirmDialog(false)}
+      />
     </div>
   );
 }
