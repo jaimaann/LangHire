@@ -533,6 +533,22 @@ async def test_llm(settings: dict):
         return {"success": False, "message": "LLM test failed. Check backend logs for details."}
 
 
+@app.post("/llm/ollama-models")
+async def list_ollama_models(body: dict):
+    """Fetch available models from an Ollama server."""
+    import httpx
+    base_url = body.get("base_url", "http://localhost:11434").rstrip("/")
+    try:
+        async with httpx.AsyncClient(timeout=5) as client:
+            resp = await client.get(f"{base_url}/api/tags")
+            resp.raise_for_status()
+            data = resp.json()
+            models = [m["name"] for m in data.get("models", [])]
+            return {"success": True, "models": models}
+    except Exception as e:
+        return {"success": False, "models": [], "message": str(e)}
+
+
 # ── App Settings ──────────────────────────────────────────────────────────
 @app.get("/settings")
 async def get_settings():
@@ -1372,6 +1388,9 @@ async def get_setup_status():
         else:
             # Profile mode — considered configured even with default profile
             llm_done = True
+    elif provider == "ollama":
+        ollama = llm.get("ollama") or {}
+        llm_done = bool(ollama.get("base_url", "").strip())
 
     resume_done = bool(settings.get("resume_path", "").strip())
     onboarding_completed = settings.get("onboarding_completed", False)

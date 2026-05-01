@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { TestTube, CheckCircle, XCircle, Loader2, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
-import { getLLMSettings, saveLLMSettings, testLLMConnection } from "../../lib/api";
+import { getLLMSettings, saveLLMSettings, testLLMConnection, fetchOllamaModels } from "../../lib/api";
 import type { LLMProvider, LLMSettings } from "../../lib/types";
 
 const PROVIDERS: { id: LLMProvider; name: string; description: string }[] = [
   { id: "openai", name: "OpenAI", description: "GPT-4o, GPT-4o-mini, and other OpenAI models" },
   { id: "anthropic", name: "Anthropic", description: "Claude Sonnet, Haiku, and Opus models (direct API)" },
   { id: "bedrock", name: "AWS Bedrock", description: "Claude and other models via AWS Bedrock" },
+  { id: "ollama", name: "Ollama", description: "Run open-source models locally — no API key needed" },
 ];
 
 const OPENAI_MODELS = ["gpt-5.4-nano", "gpt-5.4-mini", "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"];
@@ -23,6 +24,7 @@ const defaultSettings: LLMSettings = {
   openai: { api_key: "", model: "gpt-4o" },
   anthropic: { api_key: "", model: "claude-sonnet-4-20250514" },
   bedrock: { access_key: "", secret_key: "", region: "us-west-2", model: "us.anthropic.claude-sonnet-4-6", auth_mode: "profile", profile_name: "default" },
+  ollama: { base_url: "http://localhost:11434", model: "" },
 };
 
 interface LLMSettingsFormProps {
@@ -38,7 +40,10 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showGuide, setShowGuide] = useState(false);
+  const [ollamaModels, setOllamaModels] = useState<string[]>([]);
+  const [ollamaFetching, setOllamaFetching] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const ollamaFetchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     getLLMSettings()
@@ -48,8 +53,30 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
   }, []);
 
   useEffect(() => {
-    return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      if (ollamaFetchTimer.current) clearTimeout(ollamaFetchTimer.current);
+    };
   }, []);
+
+  const loadOllamaModels = useCallback((baseUrl: string) => {
+    if (ollamaFetchTimer.current) clearTimeout(ollamaFetchTimer.current);
+    ollamaFetchTimer.current = setTimeout(async () => {
+      if (!baseUrl.trim()) return;
+      setOllamaFetching(true);
+      try {
+        const result = await fetchOllamaModels(baseUrl);
+        if (result.success) setOllamaModels(result.models);
+      } catch { /* server unreachable */ }
+      finally { setOllamaFetching(false); }
+    }, 500);
+  }, []);
+
+  useEffect(() => {
+    if (settings.provider === "ollama" && settings.ollama?.base_url) {
+      loadOllamaModels(settings.ollama.base_url);
+    }
+  }, [settings.provider, settings.ollama?.base_url, loadOllamaModels]);
 
   // Autosave with debounce
   const autoSave = useCallback((newSettings: LLMSettings) => {
@@ -103,6 +130,12 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
     const ns = { ...settings, bedrock: { ...settings.bedrock!, [field]: value } };
     setSettings(ns);
     if (field === "auth_mode" || field === "model") immediateSave(ns); else autoSave(ns);
+  };
+
+  const updateOllama = (field: string, value: string) => {
+    const ns = { ...settings, ollama: { ...settings.ollama!, [field]: value } };
+    setSettings(ns);
+    if (field === "model") immediateSave(ns); else autoSave(ns);
   };
 
   const handleTest = async () => {
@@ -219,7 +252,7 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
 
       {/* Provider Config */}
       <div className={compact ? "" : "card"}>
-        {!compact && <h3 className="text-sm font-bold text-foreground mb-4">{settings.provider === "openai" ? "OpenAI" : settings.provider === "anthropic" ? "Anthropic" : "AWS Bedrock"} Configuration</h3>}
+        {!compact && <h3 className="text-sm font-bold text-foreground mb-4">{settings.provider === "openai" ? "OpenAI" : settings.provider === "anthropic" ? "Anthropic" : settings.provider === "ollama" ? "Ollama" : "AWS Bedrock"} Configuration</h3>}
 
         {settings.provider === "openai" && (
           <div className="space-y-3">
@@ -286,6 +319,35 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
               <select value={settings.bedrock?.model || ""} onChange={(e) => updateBedrock("model", e.target.value)} className="input-base">
                 {BEDROCK_MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
               </select>
+            </div>
+          </div>
+        )}
+
+        {settings.provider === "ollama" && (
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">Server URL</label>
+              <input value={settings.ollama?.base_url || "http://localhost:11434"} onChange={(e) => updateOllama("base_url", e.target.value)} placeholder="http://localhost:11434" className="input-base font-mono" />
+              <p className="text-xs text-muted-foreground mt-1">The URL where your Ollama server is running.</p>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">
+                Model
+                {ollamaFetching && <Loader2 className="w-3 h-3 animate-spin inline ml-2" />}
+              </label>
+              {ollamaModels.length > 0 ? (
+                <select value={settings.ollama?.model || ""} onChange={(e) => updateOllama("model", e.target.value)} className="input-base">
+                  <option value="">Select a model</option>
+                  {ollamaModels.map((m) => <option key={m} value={m}>{m}</option>)}
+                </select>
+              ) : (
+                <input value={settings.ollama?.model || ""} onChange={(e) => updateOllama("model", e.target.value)} placeholder="e.g. llama3.1" className="input-base" />
+              )}
+              <p className="text-xs text-muted-foreground mt-1">
+                {ollamaModels.length > 0
+                  ? `${ollamaModels.length} model${ollamaModels.length === 1 ? "" : "s"} found on your server.`
+                  : "Enter a model name, or start your Ollama server to see available models."}
+              </p>
             </div>
           </div>
         )}

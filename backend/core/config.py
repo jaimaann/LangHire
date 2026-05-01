@@ -79,6 +79,7 @@ def load_llm_settings() -> dict:
         "openai": {"api_key": "", "model": "gpt-4o"},
         "anthropic": {"api_key": "", "model": "claude-sonnet-4-20250514"},
         "bedrock": {"access_key": "", "secret_key": "", "region": "us-west-2", "model": "us.anthropic.claude-sonnet-4-6"},
+        "ollama": {"base_url": "http://localhost:11434", "model": ""},
     })
 
 

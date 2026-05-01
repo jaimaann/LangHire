@@ -121,6 +121,13 @@ export async function testLLMConnection(settings: LLMSettings) {
   });
 }
 
+export async function fetchOllamaModels(baseUrl: string) {
+  return request<{ success: boolean; models: string[]; message?: string }>("/llm/ollama-models", {
+    method: "POST",
+    body: JSON.stringify({ base_url: baseUrl }),
+  });
+}
+
 // ── App Settings ──────────────────────────────────────────────────────────
 export async function getSettings() {
   return request<AppSettings>("/settings");

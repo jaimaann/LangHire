@@ -67,6 +67,16 @@ def create_llm(settings: dict):
         patched_session = _PatchedSession(session, boto_config)
         return ChatAWSBedrock(model=model, session=patched_session)
 
+    elif provider == "ollama":
+        from browser_use.llm import ChatOpenAI
+        cfg = settings.get("ollama", {})
+        base_url = cfg.get("base_url", "http://localhost:11434").rstrip("/")
+        return ChatOpenAI(
+            model=cfg.get("model", "llama3.1"),
+            base_url=f"{base_url}/v1",
+            api_key="ollama",
+        )
+
     else:
         raise ValueError(f"Unknown LLM provider: {provider}")
 
