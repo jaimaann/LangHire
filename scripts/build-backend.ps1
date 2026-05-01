@@ -51,5 +51,6 @@ uv run pyinstaller `
   backend/main.py
 
 Write-Host "Backend binary built: src-tauri/binaries/langhire-backend-$Target.exe"
-Get-Item "src-tauri/binaries/langhire-backend-$Target.exe" | Select-Object Name, Length
+$binary = Get-Item "src-tauri/binaries/langhire-backend-$Target.exe"
+$binary | Select-Object Name, Length
 
