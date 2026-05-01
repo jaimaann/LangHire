@@ -22,8 +22,31 @@ Applying to jobs is tedious. You find a listing, click through to the applicatio
 
 It uses AI browser agents to search LinkedIn, collect matching jobs, fill out applications, upload your resume, and submit — while a **self-learning memory system** remembers how each applicant tracking system (ATS) works so it gets faster and more accurate over time. Everything runs locally on your machine. No data leaves your computer except LLM API calls.
 
-> **Non-technical users** -- Download a pre-built binary from [Releases](../../releases). No coding required.
->
+---
+
+## Download
+
+<table>
+<tr>
+<td align="center" width="33%">
+<img src="https://img.shields.io/badge/-macOS-000000?style=for-the-badge&logo=apple&logoColor=white" alt="macOS" /><br/><br/>
+<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_aarch64.dmg"><strong>Apple Silicon</strong></a> (M1/M2/M3/M4)<br/>
+<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_x64.dmg">Intel</a>
+</td>
+<td align="center" width="33%">
+<img src="https://img.shields.io/badge/-Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Windows" /><br/><br/>
+<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_x64-setup.exe"><strong>64-bit Installer</strong></a>
+</td>
+<td align="center" width="33%">
+<img src="https://img.shields.io/badge/-Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux" /><br/><br/>
+<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_amd64.AppImage"><strong>AppImage</strong></a> (Universal)<br/>
+<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_amd64.deb">Debian / Ubuntu (.deb)</a>
+</td>
+</tr>
+</table>
+
+<p align="center"><sub>Requires <a href="https://www.python.org/downloads/">Python 3.13+</a> and an LLM API key (OpenAI, Anthropic, or AWS). See <a href="#quick-start">Quick Start</a> for setup.</sub></p>
+
 > **Developers** -- See [Development Setup](#development-setup) to run from source.
 
 ---
@@ -45,35 +68,15 @@ It uses AI browser agents to search LinkedIn, collect matching jobs, fill out ap
 
 ## Quick Start
 
-### 1. Download
-
-Go to [**Releases**](../../releases) and grab the installer for your OS:
-
-| OS | File | Notes |
-|----|------|-------|
-| macOS | `langhire_x.x.x_aarch64.dmg` | Apple Silicon (M1/M2/M3/M4) |
-| macOS | `langhire_x.x.x_x64.dmg` | Intel |
-| Windows | `langhire_x.x.x_x64-setup.exe` | 64-bit Windows 10+ |
-| Linux | `langhire_x.x.x_amd64.AppImage` | Universal |
-| Linux | `langhire_x.x.x_amd64.deb` | Debian / Ubuntu |
-
-### 2. Prerequisites
-
-- **Python 3.13+** ([python.org/downloads](https://www.python.org/downloads/))
-- **Chromium** via Playwright:
-  ```bash
-  pip install playwright
-  python -m playwright install chromium
-  ```
-- **An LLM API key** from OpenAI, Anthropic, or AWS
-
-### 3. First Run
-
-1. Open the app
-2. The setup wizard walks you through: **LLM provider** → **Resume upload** (auto-parses your profile) → **Review profile** → Ready
-3. Go to **Jobs** → enter a job title → **Start Collecting**
-4. Go to **Apply** → **Start Applying**
-5. Watch the dashboard as applications roll in
+1. **Download and install** from the [Download](#download) section above
+2. **Install Chromium** for browser automation:
+   ```bash
+   pip install playwright
+   python -m playwright install chromium
+   ```
+3. **Open the app** -- the setup wizard walks you through: **LLM provider** → **Resume upload** (auto-parses your profile) → **Review profile** → Ready
+4. **Collect jobs** -- go to **Jobs** → enter a job title → **Start Collecting**
+5. **Apply** -- go to **Apply** → **Start Applying** and watch the dashboard as applications roll in
 
 ---
 
