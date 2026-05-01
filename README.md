@@ -30,7 +30,7 @@ It uses AI browser agents to search LinkedIn, collect matching jobs, fill out ap
 <tr>
 <td align="center" width="33%">
 <img src="https://img.shields.io/badge/-macOS-000000?style=for-the-badge&logo=apple&logoColor=white" alt="macOS" /><br/><br/>
-<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_aarch64.dmg"><strong>Apple Silicon</strong></a> (M1/M2/M3/M4)<br/>
+<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_aarch64.dmg"><strong>Apple Silicon</strong></a><br/>
 <a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_x64.dmg">Intel</a>
 </td>
 <td align="center" width="33%">
