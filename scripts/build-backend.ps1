@@ -8,7 +8,7 @@ $ProjectDir = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 if (-not $ProjectDir) { $ProjectDir = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path) }
 Set-Location $ProjectDir
 
-Write-Host "🔨 Building Python backend with PyInstaller..."
+Write-Host "Building Python backend with PyInstaller..."
 
 # Detect target triple for Tauri sidecar naming
 $Target = "x86_64-pc-windows-msvc"
