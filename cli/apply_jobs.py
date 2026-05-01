@@ -133,6 +133,15 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
 
     resume_path = resume_path_override or RESUME_PATH
 
+    # Profile email is for application forms; credentials email/password are for ATS login
+    agent_sensitive_data = {
+        "email": profile.get("email", "").strip(),
+        "account_email": SENSITIVE_DATA.get("email", "").strip(),
+        "password": SENSITIVE_DATA.get("password", ""),
+    }
+    if not agent_sensitive_data["email"]:
+        agent_sensitive_data["email"] = agent_sensitive_data["account_email"]
+
     login_preamble = (
         f"FIRST — LOGIN CHECK:\n"
         f"1. Go to https://www.linkedin.com/feed/ to check if you're logged into LinkedIn.\n"
@@ -151,8 +160,7 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
             f"Use resume at {resume_path}. Auto-fill all fields from candidate profile."
         )
     else:
-        # Check if password is available for external ATS sites
-        has_password = bool(SENSITIVE_DATA.get("password", "").strip())
+        has_password = bool(agent_sensitive_data.get("password", "").strip())
         password_note = ""
         if not has_password:
             password_note = (
@@ -160,8 +168,8 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
                 "account creation or login:\n"
                 "1. First check if you can apply as a guest (without creating an account)\n"
                 "2. Try 'Sign in with LinkedIn' or 'Sign in with Google' buttons\n"
-                "3. If no SSO option, CREATE A NEW ACCOUNT using the candidate email and a generated password "
-                "(use the email from the profile and create a strong password like 'JobApp2026!')\n"
+                "3. If no SSO option, CREATE A NEW ACCOUNT using <secret>account_email</secret> and a generated password "
+                "(create a strong password like 'JobApp2026!')\n"
                 "4. If account creation also fails, try 'Forgot password' → reset via email\n"
                 "5. If nothing works after 3 attempts, report failure and move to the next job\n"
             )
@@ -169,14 +177,16 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
         apply_instructions = (
             f"{login_preamble}"
             f"THEN: Go to {url} on LinkedIn. Click Apply and follow through to the external application page. "
-            f"Use resume at {resume_path}. Auto-fill all fields from candidate profile. "
-            f"If the page requires account creation, use credentials from sensitive_data. "
+            f"Use resume at {resume_path}. Auto-fill all fields from candidate profile.\n\n"
+            f"EMAIL USAGE:\n"
+            f"- For APPLICATION FORM fields (contact email, email address, etc.): use <secret>email</secret>\n"
+            f"- For LOGGING IN or CREATING ACCOUNTS on external ATS sites: use <secret>account_email</secret> and <secret>password</secret>\n"
             f"{password_note}"
             f"If it's a video funnel or recruitment pitch, report failure and stop. "
             f"If the external form is broken after 3 attempts, report failure and stop.\n\n"
             f"BLOCKED SITES — if redirected to any of these, immediately call done with success=false: {', '.join(BLOCKED_DOMAINS)}\n\n"
             f"OTP/VERIFICATION CODES: If the application asks for a verification code or OTP:\n"
-            f"1. Choose the EMAIL option (the configured email from Settings) if given a choice\n"
+            f"1. Choose the EMAIL option if given a choice\n"
             f"2. Open a new tab and go to https://mail.google.com\n"
             f"3. Find the most recent email with the verification/OTP code\n"
             f"4. Copy the code, switch back to the application tab, and enter it\n"
@@ -195,7 +205,7 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
         use_vision=True,
         llm_call_timeout=300,  # 5 minutes per step
         max_failures=10,
-        sensitive_data=SENSITIVE_DATA,
+        sensitive_data=agent_sensitive_data,
         available_file_paths=[resume_path],
         save_conversation_path=str(LOGS_DIR / f"apply_{company.replace(' ', '_')}_{title.replace(' ', '_')[:30]}"),
         calculate_cost=True,
