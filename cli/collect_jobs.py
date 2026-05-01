@@ -28,6 +28,7 @@ try:
         load_json, save_json, refresh_credentials, credential_refresh_loop,
         read_jobs, write_jobs, update_job,
     )
+    from core.agent_logger import on_step as _agent_on_step, on_done as _agent_on_done, log_run_start as _agent_log_start
 except ImportError:
     import backend.core.shared_config as config
     from backend.core.shared_config import (
@@ -35,6 +36,7 @@ except ImportError:
         load_json, save_json, refresh_credentials, credential_refresh_loop,
         read_jobs, write_jobs, update_job,
     )
+    from backend.core.agent_logger import on_step as _agent_on_step, on_done as _agent_on_done, log_run_start as _agent_log_start
 
 
 def load_jobs() -> dict:
@@ -119,6 +121,7 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
             print(f"    💾 Saved {len(new_in_step)} new jobs (total this title: {len(found)})")
 
     def on_step(browser_state, agent_output, step_num):
+        _agent_on_step(browser_state, agent_output, step_num)
         if not agent_output:
             return
         memory = getattr(agent_output, "memory", "") or ""
@@ -126,6 +129,7 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
 
     # Refresh credentials before each title to avoid mid-run expiry
     refresh_credentials()
+    _agent_log_start("collect", title)
 
     llm = config.get_llm()
     browser = BrowserSession(user_data_dir=str(BROWSER_PROFILE_DIR))
@@ -161,6 +165,7 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
         browser_session=browser,
         max_failures=10,
         register_new_step_callback=on_step,
+        register_done_callback=_agent_on_done,
         save_conversation_path=str(LOGS_DIR / f"collect_{title.replace(' ', '_')}"),
     )
 

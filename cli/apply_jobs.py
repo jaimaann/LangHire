@@ -32,6 +32,7 @@ try:
     )
     from memory import extract_learnings_from_markers, extract_learnings_via_llm, store_learnings
     from memory.metrics import MetricsStore
+    from core.agent_logger import on_step as _agent_on_step, on_done as _agent_on_done, log_run_start as _agent_log_start
 except ImportError:
     import backend.core.shared_config as config
     from backend.core.shared_config import (
@@ -44,6 +45,7 @@ except ImportError:
     )
     from backend.memory import extract_learnings_from_markers, extract_learnings_via_llm, store_learnings
     from backend.memory.metrics import MetricsStore
+    from backend.core.agent_logger import on_step as _agent_on_step, on_done as _agent_on_done, log_run_start as _agent_log_start
 
 # Lock for thread-safe QA file writes
 _qa_lock = asyncio.Lock()
@@ -193,6 +195,8 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
             f"5. This is NOT a blocker — always attempt to retrieve the code from Gmail"
         )
 
+    _agent_log_start("apply", f"{title} at {company}")
+
     agent = Agent(
         task=(
             f"{apply_instructions}\n\n"
@@ -209,6 +213,8 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
         available_file_paths=[resume_path],
         save_conversation_path=str(LOGS_DIR / f"apply_{company.replace(' ', '_')}_{title.replace(' ', '_')[:30]}"),
         calculate_cost=True,
+        register_new_step_callback=_agent_on_step,
+        register_done_callback=_agent_on_done,
     )
 
     try:
