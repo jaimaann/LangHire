@@ -53,10 +53,10 @@ It uses AI browser agents to search LinkedIn, collect matching jobs, fill out ap
 
 ## Features
 
-- **Native desktop app** -- macOS, Windows, and Linux via [Tauri v2](https://tauri.app) (~10 MB, not Electron)
+- **Native desktop app** -- macOS, Windows, and Linux
 - **Job collection** -- Searches LinkedIn for jobs matching your target titles and locations
 - **Automated applications** -- AI agent fills forms, uploads your resume, answers screening questions
-- **Tailored resumes** -- Auto-customizes your resume for each job description
+- **Tailored resumes** (beta) -- Auto-customizes your resume for each job description
 - **Self-learning memory** -- Stores per-ATS procedural knowledge (navigation patterns, form strategies, UI quirks). Lessons from one Workday site apply to all Workday sites.
 - **Smart Q&A reuse** -- Learns answers from previous applications and reuses them
 - **Multi-LLM support** -- OpenAI (GPT-4o, 4o-mini, 4-turbo), Anthropic (Claude Sonnet, Haiku, Opus), AWS Bedrock
@@ -244,13 +244,11 @@ npm run dev                     # Terminal 2
 
 **Areas where help is needed:**
 
-- More ATS integrations (Workday, Greenhouse, Lever, iCIMS)
-- UI/UX improvements (dark mode, animations, responsive layout)
-- Additional LLM providers (Google Gemini, Ollama for local inference, Azure OpenAI)
-- Dashboard charts and trend visualization
-- Testing (unit, integration, E2E)
-- Documentation and video walkthroughs
-- Internationalization
+- **More job platforms** -- Indeed, Glassdoor, and other job listing sites beyond LinkedIn
+- **Local LLM support** -- Ollama, llama.cpp, and other local inference options
+- **Multi-country support** -- Localized job sites, address formats, and work authorization flows
+- **Documentation** -- Tutorials, video walkthroughs, and guides
+- **Testing** -- Unit, integration, and E2E test coverage
 
 ---
 
