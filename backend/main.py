@@ -528,9 +528,14 @@ async def test_llm(settings: dict):
         if "api_key" in msg.lower() or "unauthorized" in msg.lower() or "401" in msg:
             return {"success": False, "message": "Invalid API key or unauthorized. Check your credentials."}
         if "timeout" in msg.lower() or "connect" in msg.lower():
-            return {"success": False, "message": "Connection failed. Check your network and provider settings."}
+            return {"success": False, "message": "Connection failed. Check your network and provider settings (is your local LLM server running?)"}
+        
+        from browser_use.llm.exceptions import ModelProviderError
+        if isinstance(e, ModelProviderError):
+            return {"success": False, "message": f"LLM Provider Error: {msg}"}
+            
         _log.error(f"LLM test failed: {e}", exc_info=True)
-        return {"success": False, "message": "LLM test failed. Check backend logs for details."}
+        return {"success": False, "message": f"LLM test failed: {msg}"}
 
 
 @app.post("/llm/ollama-models")

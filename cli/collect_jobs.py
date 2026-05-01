@@ -157,6 +157,7 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
         ),
         llm=llm,
         use_vision=True,
+        llm_call_timeout=300,  # 5 minutes per step
         browser_session=browser,
         max_failures=10,
         register_new_step_callback=on_step,

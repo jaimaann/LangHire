@@ -69,12 +69,39 @@ def create_llm(settings: dict):
 
     elif provider == "ollama":
         from browser_use.llm import ChatOpenAI
+        import httpx
+
+        class _OllamaInterceptor(httpx.AsyncClient):
+            """Intercepts requests to inject Ollama-specific options like num_ctx."""
+            async def request(self, method, url, **kwargs):
+                if method == "POST" and "/chat/completions" in str(url):
+                    if "json" in kwargs and kwargs["json"]:
+                        # Inject Ollama options into the body
+                        options = {
+                            "num_ctx": 32768,
+                            "num_predict": 4096,
+                            "temperature": 0.0,
+                        }
+                        from backend.core.config import logging
+                        logger = logging.getLogger("backend")
+                        logger.info(f"Ollama Interceptor: Injecting num_ctx=32768 into {url}")
+                        
+                        if "options" in kwargs["json"]:
+                            kwargs["json"]["options"].update(options)
+                        else:
+                            kwargs["json"]["options"] = options
+                return await super().request(method, url, **kwargs)
+
         cfg = settings.get("ollama", {})
         base_url = cfg.get("base_url", "http://localhost:11434").rstrip("/")
+        
+        # Use the interceptor to inject context window settings
         return ChatOpenAI(
             model=cfg.get("model", "llama3.1"),
             base_url=f"{base_url}/v1",
             api_key="ollama",
+            timeout=300,
+            http_client=_OllamaInterceptor(),
         )
 
     else:
@@ -87,11 +114,14 @@ async def test_connection(llm) -> str:
     import zlib
     from browser_use.llm.messages import UserMessage
     try:
+        # Increase timeout to 60s for local models
         response = await asyncio.wait_for(
             llm.ainvoke([UserMessage(content="Say 'hello' in one word.")]),
-            timeout=30,
+            timeout=60,
         )
         return f"Model responded: {response.completion}"
+    except (asyncio.TimeoutError, TimeoutError):
+        raise RuntimeError("LLM test timed out after 60 seconds. Your model might be slow to load or the server is busy.")
     except zlib.error:
         raise RuntimeError(
             "Decompression error communicating with AWS Bedrock. "

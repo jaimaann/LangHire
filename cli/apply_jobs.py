@@ -193,9 +193,8 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
         ),
         llm=llm,
         use_vision=True,
-        browser_session=browser,
-        extend_system_message=memory,
-        max_failures=8,
+        llm_call_timeout=300,  # 5 minutes per step
+        max_failures=10,
         sensitive_data=SENSITIVE_DATA,
         available_file_paths=[resume_path],
         save_conversation_path=str(LOGS_DIR / f"apply_{company.replace(' ', '_')}_{title.replace(' ', '_')[:30]}"),
