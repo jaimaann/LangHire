@@ -4,7 +4,7 @@
 
 $ErrorActionPreference = "Stop"
 
-$ProjectDir = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+$ProjectDir = Split-Path -Parent $PSScriptRoot
 if (-not $ProjectDir) { $ProjectDir = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path) }
 Set-Location $ProjectDir
 
