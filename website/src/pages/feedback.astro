@@ -1,0 +1,187 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const GITHUB_TOKEN = import.meta.env.PUBLIC_GITHUB_TOKEN || "";
+---
+
+<BaseLayout
+  title="Feedback - LangHire"
+  description="Share feedback, request features, or report bugs for LangHire. Your input helps us build a better job application tool."
+>
+  <section class="max-w-2xl mx-auto px-6 py-16">
+    <h1 class="text-4xl font-extrabold tracking-tight mb-2">Feedback</h1>
+    <p class="text-lg text-muted-foreground mb-10">
+      Help us improve LangHire. Choose a category and tell us what's on your mind.
+    </p>
+
+    <form id="feedback-form" class="space-y-5">
+      <div class="card">
+        <label class="block text-sm font-semibold text-foreground mb-2">Category</label>
+        <div class="flex gap-2 flex-wrap">
+          <button type="button" data-category="Feature Request" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-foreground text-white transition-all">Feature Request</button>
+          <button type="button" data-category="Bug Report" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-secondary text-muted-foreground hover:bg-border transition-all">Bug Report</button>
+          <button type="button" data-category="General Feedback" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-secondary text-muted-foreground hover:bg-border transition-all">General Feedback</button>
+        </div>
+        <input type="hidden" name="category" value="Feature Request" />
+      </div>
+
+      <div class="card">
+        <label for="title" class="block text-sm font-semibold text-foreground mb-1.5">Title</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          required
+          placeholder="Brief summary of your feedback"
+          class="w-full px-4 py-2.5 rounded-xl border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+        />
+      </div>
+
+      <div class="card">
+        <label for="description" class="block text-sm font-semibold text-foreground mb-1.5">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          required
+          rows="5"
+          placeholder="Describe your feature request, bug, or feedback in detail..."
+          class="w-full px-4 py-2.5 rounded-xl border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-y"
+        ></textarea>
+      </div>
+
+      <div class="card">
+        <label for="email" class="block text-sm font-semibold text-foreground mb-1.5">
+          Email <span class="text-muted-foreground font-normal">(optional)</span>
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="your@email.com"
+          class="w-full px-4 py-2.5 rounded-xl border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+        />
+        <p class="text-[11px] text-muted-foreground mt-1.5">Include your email if you'd like us to follow up.</p>
+      </div>
+
+      <div id="error-msg" class="hidden px-4 py-3 bg-destructive/10 text-destructive text-sm rounded-xl"></div>
+
+      <div id="success-msg" class="hidden card text-center py-10">
+        <svg class="w-12 h-12 text-success mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <h2 class="text-lg font-bold mb-2">Feedback Submitted!</h2>
+        <p class="text-sm text-muted-foreground mb-4">Your feedback has been posted to GitHub Discussions.</p>
+        <a id="discussion-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-primary text-xs inline-flex items-center gap-2">
+          View Discussion
+        </a>
+      </div>
+
+      <button
+        type="submit"
+        id="submit-btn"
+        class="btn-primary w-full"
+      >
+        Submit Feedback
+      </button>
+    </form>
+
+    <div class="mt-8 text-center">
+      <p class="text-sm text-muted-foreground">
+        You can also browse existing feedback on
+        <a href="https://github.com/jaimaann/LangHire/discussions" target="_blank" rel="noopener noreferrer" class="text-primary font-semibold hover:underline">GitHub Discussions</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ GITHUB_TOKEN }}>
+  const GRAPHQL_URL = "https://api.github.com/graphql";
+  const REPO_OWNER = "jaimaann";
+  const REPO_NAME = "LangHire";
+
+  const form = document.getElementById('feedback-form');
+  const categoryInput = form.querySelector('input[name="category"]');
+  const categoryBtns = form.querySelectorAll('.category-btn');
+  const errorMsg = document.getElementById('error-msg');
+  const successMsg = document.getElementById('success-msg');
+  const submitBtn = document.getElementById('submit-btn');
+  const discussionLink = document.getElementById('discussion-link');
+
+  categoryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      categoryBtns.forEach(b => {
+        b.classList.remove('bg-foreground', 'text-white');
+        b.classList.add('bg-secondary', 'text-muted-foreground');
+      });
+      btn.classList.add('bg-foreground', 'text-white');
+      btn.classList.remove('bg-secondary', 'text-muted-foreground');
+      categoryInput.value = btn.dataset.category || '';
+    });
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorMsg.classList.add('hidden');
+
+    const title = form.querySelector('#title').value.trim();
+    const description = form.querySelector('#description').value.trim();
+    const email = form.querySelector('#email').value.trim();
+    const category = categoryInput.value;
+
+    if (!title || !description) {
+      errorMsg.textContent = 'Please fill in both the title and description.';
+      errorMsg.classList.remove('hidden');
+      return;
+    }
+
+    if (!GITHUB_TOKEN) {
+      errorMsg.textContent = 'Feedback submission is temporarily unavailable.';
+      errorMsg.classList.remove('hidden');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    try {
+      const headers = { Authorization: `Bearer ${GITHUB_TOKEN}`, "Content-Type": "application/json" };
+
+      const repoRes = await fetch(GRAPHQL_URL, {
+        method: "POST", headers,
+        body: JSON.stringify({ query: `{ repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") { id, discussionCategories(first: 25) { nodes { id, name } } } }` }),
+      });
+      const repoData = await repoRes.json();
+      if (repoData.errors) throw new Error(repoData.errors[0].message);
+
+      const repoId = repoData.data.repository.id;
+      const cats = repoData.data.repository.discussionCategories.nodes;
+      const cat = cats.find(c => c.name.toLowerCase() === category.toLowerCase()) || cats[0];
+      if (!cat) throw new Error("No discussion categories found.");
+
+      let body = description;
+      if (email) body += `\n\n---\n*Contact: ${email}*`;
+
+      const mutRes = await fetch(GRAPHQL_URL, {
+        method: "POST", headers,
+        body: JSON.stringify({
+          query: `mutation($repoId: ID!, $catId: ID!, $title: String!, $body: String!) { createDiscussion(input: {repositoryId: $repoId, categoryId: $catId, title: $title, body: $body}) { discussion { url } } }`,
+          variables: { repoId, catId: cat.id, title, body },
+        }),
+      });
+      const mutData = await mutRes.json();
+      if (mutData.errors) throw new Error(mutData.errors[0].message);
+
+      const url = mutData.data.createDiscussion.discussion.url;
+      discussionLink.href = url;
+      successMsg.classList.remove('hidden');
+      submitBtn.classList.add('hidden');
+      form.querySelector('#title').value = '';
+      form.querySelector('#description').value = '';
+      form.querySelector('#email').value = '';
+    } catch (err) {
+      errorMsg.textContent = err.message || 'Failed to submit feedback.';
+      errorMsg.classList.remove('hidden');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Feedback';
+    }
+  });
+</script>

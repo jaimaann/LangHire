@@ -10,6 +10,7 @@ import {
   Settings,
   BookOpen,
   ScrollText,
+  MessageSquare,
 } from "lucide-react";
 import { checkHealth } from "../../lib/api";
 
@@ -23,6 +24,7 @@ const navItems = [
   { to: "/memory", icon: Brain, label: "Memory" },
   { to: "/logs", icon: ScrollText, label: "Logs" },
   { to: "/settings", icon: Settings, label: "Settings" },
+  { to: "/feedback", icon: MessageSquare, label: "Feedback" },
 ];
 
 export default function Sidebar() {

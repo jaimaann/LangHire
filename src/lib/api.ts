@@ -290,3 +290,4 @@ export async function parseResumeToProfile() {
     fields_filled?: number;
   }>("/profile/parse-resume", { method: "POST" });
 }
+

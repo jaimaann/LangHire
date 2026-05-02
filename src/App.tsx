@@ -15,6 +15,7 @@ const Memory = lazy(() => import("./pages/Memory"));
 const SettingsPage = lazy(() => import("./pages/Settings"));
 const Logs = lazy(() => import("./pages/Logs"));
 const Guide = lazy(() => import("./pages/Guide"));
+const Feedback = lazy(() => import("./pages/Feedback"));
 
 function PageLoader() {
   return (
@@ -96,6 +97,7 @@ export default function App() {
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/logs" element={<Logs />} />
               <Route path="/guide" element={<Guide />} />
+              <Route path="/feedback" element={<Feedback />} />
             </Routes>
           </Suspense>
         </ErrorBoundary>
