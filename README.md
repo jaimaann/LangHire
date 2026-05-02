@@ -27,10 +27,14 @@ It uses AI browser agents to search LinkedIn, collect matching jobs, fill out ap
 
 ## Download
 
+<div align="center">
+
 | macOS | Windows | Linux |
 |:---:|:---:|:---:|
 | [**Apple Silicon (.dmg)**](https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_aarch64.dmg) | [**64-bit Installer (.exe)**](https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_x64-setup.exe) | [**AppImage (Universal)**](https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_amd64.AppImage) |
 | [Intel (.dmg)](https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_x64.dmg) | | [Debian / Ubuntu (.deb)](https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_amd64.deb) |
+
+</div>
 
 <p align="center"><sub>Requires an LLM API key (OpenAI, Anthropic, or AWS). Chromium is installed automatically on first launch. See <a href="#quick-start">Quick Start</a>.</sub></p>
 
