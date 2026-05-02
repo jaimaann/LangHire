@@ -55,7 +55,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
   }}
 >
   <StructuredData data={articleSchema} />
-  <article class="max-w-3xl mx-auto px-6 py-16">
+  <article class="max-w-4xl mx-auto px-6 py-16">
     <header class="mb-10">
       <div class="flex items-center gap-3 text-sm text-muted-foreground mb-4">
         <time datetime={date.toISOString()}>{formattedDate}</time>
@@ -80,6 +80,14 @@ const formattedDate = date.toLocaleDateString('en-US', {
       prose-pre:bg-[#1a1a2e] prose-pre:rounded-2xl
       prose-img:rounded-2xl prose-img:shadow-sm
       prose-blockquote:border-primary prose-blockquote:bg-secondary/50 prose-blockquote:rounded-r-xl prose-blockquote:py-1
+      prose-table:border-collapse prose-table:w-full prose-table:text-sm
+      prose-th:bg-secondary prose-th:text-foreground prose-th:font-bold prose-th:px-4 prose-th:py-3 prose-th:text-left prose-th:border prose-th:border-border
+      prose-td:px-4 prose-td:py-3 prose-td:border prose-td:border-border prose-td:text-foreground/80
+      prose-li:text-foreground/90
+      prose-strong:text-foreground
+      prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
+      prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+      prose-ul:my-4 prose-ol:my-4
     ">
       <slot />
     </div>
