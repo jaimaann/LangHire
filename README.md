@@ -9,6 +9,7 @@
 </p>
 
 <p align="center">
+  <a href="https://langhire.org"><img src="https://img.shields.io/badge/Website-langhire.org-FF385C?style=flat&logo=globe&logoColor=white" alt="Website" /></a>
   <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform" />
   <img src="https://img.shields.io/badge/Tauri%20v2-React%20%2B%20TypeScript-purple" alt="UI" />
   <img src="https://img.shields.io/badge/Backend-Python%20%2B%20FastAPI-green" alt="Backend" />
@@ -26,24 +27,10 @@ It uses AI browser agents to search LinkedIn, collect matching jobs, fill out ap
 
 ## Download
 
-<table>
-<tr>
-<td align="center" width="33%">
-<img src="https://img.shields.io/badge/-macOS-000000?style=for-the-badge&logo=apple&logoColor=white" alt="macOS" /><br/><br/>
-<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_aarch64.dmg"><strong>Apple Silicon</strong></a><br/>
-<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_x64.dmg">Intel</a>
-</td>
-<td align="center" width="33%">
-<img src="https://img.shields.io/badge/-Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Windows" /><br/><br/>
-<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_x64-setup.exe"><strong>64-bit Installer</strong></a>
-</td>
-<td align="center" width="33%">
-<img src="https://img.shields.io/badge/-Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux" /><br/><br/>
-<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_amd64.AppImage"><strong>AppImage</strong></a> (Universal)<br/>
-<a href="https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_amd64.deb">Debian / Ubuntu (.deb)</a>
-</td>
-</tr>
-</table>
+| macOS | Windows | Linux |
+|:---:|:---:|:---:|
+| [**Apple Silicon (.dmg)**](https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_aarch64.dmg) | [**64-bit Installer (.exe)**](https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_x64-setup.exe) | [**AppImage (Universal)**](https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_amd64.AppImage) |
+| [Intel (.dmg)](https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_x64.dmg) | | [Debian / Ubuntu (.deb)](https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_amd64.deb) |
 
 <p align="center"><sub>Requires an LLM API key (OpenAI, Anthropic, or AWS). Chromium is installed automatically on first launch. See <a href="#quick-start">Quick Start</a>.</sub></p>
 
