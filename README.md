@@ -49,6 +49,52 @@ It uses AI browser agents to search LinkedIn, collect matching jobs, fill out ap
 
 > **Developers** -- See [Development Setup](#development-setup) to run from source.
 
+### Installation Notes
+
+The app binaries are not code-signed, so your OS will likely show a security warning on first launch. This is normal for open-source desktop apps.
+
+<details>
+<summary><strong>macOS</strong> -- "LangHire is damaged" or "unidentified developer"</summary>
+
+1. Open the `.dmg` and drag **LangHire** to Applications
+2. **Don't double-click to open the first time.** Instead:
+   - Open **System Settings** → **Privacy & Security**
+   - Scroll down to the security section — you'll see a message about LangHire being blocked
+   - Click **Open Anyway**
+   - Alternatively, right-click the app → **Open** → **Open** in the dialog
+
+If you get the "app is damaged" error, run this in Terminal:
+```bash
+xattr -cr /Applications/LangHire.app
+```
+Then open the app normally.
+</details>
+
+<details>
+<summary><strong>Windows</strong> -- "Windows protected your PC" (SmartScreen)</summary>
+
+1. Run the `.exe` installer
+2. If you see **"Windows protected your PC"**:
+   - Click **More info**
+   - Click **Run anyway**
+3. Complete the installer and launch LangHire
+</details>
+
+<details>
+<summary><strong>Linux</strong> -- AppImage or .deb</summary>
+
+**AppImage:**
+```bash
+chmod +x LangHire_1.0.0_amd64.AppImage
+./LangHire_1.0.0_amd64.AppImage
+```
+
+**Debian / Ubuntu:**
+```bash
+sudo dpkg -i LangHire_1.0.0_amd64.deb
+```
+</details>
+
 ---
 
 ## Features
