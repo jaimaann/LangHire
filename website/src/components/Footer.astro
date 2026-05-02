@@ -1,0 +1,65 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-secondary border-t border-border">
+  <div class="max-w-6xl mx-auto px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- Brand -->
+      <div class="md:col-span-1">
+        <a href="/" class="flex items-center gap-3 mb-3">
+          <img src="/icon.png" alt="" width="28" height="28" class="rounded-lg" />
+          <span class="text-base font-bold text-foreground">LangHire</span>
+        </a>
+        <p class="text-sm text-muted-foreground leading-relaxed">
+          AI-powered job application automation. Open source and 100% local.
+        </p>
+      </div>
+
+      <!-- Product -->
+      <div>
+        <h3 class="text-sm font-bold text-foreground mb-3">Product</h3>
+        <ul class="space-y-2">
+          <li><a href="/#features" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a></li>
+          <li><a href="/#how-it-works" class="text-sm text-muted-foreground hover:text-foreground transition-colors">How It Works</a></li>
+          <li><a href="/#download" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Download</a></li>
+          <li><a href="/#screenshots" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Screenshots</a></li>
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div>
+        <h3 class="text-sm font-bold text-foreground mb-3">Resources</h3>
+        <ul class="space-y-2">
+          <li><a href="/blog" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Blog</a></li>
+          <li><a href="https://github.com/jaimaann/LangHire" target="_blank" rel="noopener noreferrer" class="text-sm text-muted-foreground hover:text-foreground transition-colors">GitHub</a></li>
+          <li><a href="https://github.com/jaimaann/LangHire/issues" target="_blank" rel="noopener noreferrer" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Issues</a></li>
+          <li><a href="https://github.com/jaimaann/LangHire/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Contributing</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <h3 class="text-sm font-bold text-foreground mb-3">Legal</h3>
+        <ul class="space-y-2">
+          <li><a href="/privacy" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy</a></li>
+          <li><a href="https://github.com/jaimaann/LangHire/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="text-sm text-muted-foreground hover:text-foreground transition-colors">MIT License</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-muted-foreground">
+        &copy; {currentYear} LangHire. Built with
+        <a href="https://tauri.app" target="_blank" rel="noopener noreferrer" class="hover:text-foreground">Tauri</a>,
+        <a href="https://react.dev" target="_blank" rel="noopener noreferrer" class="hover:text-foreground">React</a>,
+        <a href="https://python.org" target="_blank" rel="noopener noreferrer" class="hover:text-foreground">Python</a>, and
+        <a href="https://github.com/browser-use/browser-use" target="_blank" rel="noopener noreferrer" class="hover:text-foreground">browser-use</a>.
+      </p>
+      <a href="/rss.xml" class="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"/></svg>
+        RSS Feed
+      </a>
+    </div>
+  </div>
+</footer>

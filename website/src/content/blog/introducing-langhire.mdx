@@ -1,0 +1,44 @@
+---
+title: "Introducing LangHire: AI-Powered Job Application Automation"
+description: "LangHire automates the entire job application loop — from searching LinkedIn to submitting applications — using AI browser agents with a self-learning memory system."
+date: 2026-05-01
+author: "LangHire Team"
+tags: ["announcement", "open-source"]
+---
+
+Applying to jobs is tedious. You find a listing, click through to the application, fill in the same fields you filled in yesterday, answer the same screening questions, upload your resume again — repeat fifty times.
+
+LangHire automates the entire loop.
+
+## What is LangHire?
+
+LangHire is a free, open-source desktop application that uses AI browser agents to automate job applications. It runs on macOS, Windows, and Linux with a modern native UI built on Tauri and React.
+
+Here's what it does:
+
+- **Collects jobs** from LinkedIn matching your target titles and locations
+- **Fills out applications** using your profile — forms, screening questions, resume uploads
+- **Learns from every application** — the memory system stores per-ATS knowledge so it gets faster and more accurate over time
+
+## The Self-Learning Memory System
+
+This is what makes LangHire different from a simple browser macro. After each application, the system extracts procedural learnings:
+
+- How to navigate a specific ATS (which buttons to click, where forms are)
+- Form-filling strategies (dropdown handling, file upload patterns)
+- Site structure knowledge (single-page vs multi-step applications)
+
+These memories are stored per-domain with confidence scores. When LangHire encounters the same ATS again — even on a different company's site — it already knows how to handle it. Lessons from one Workday site apply to all Workday sites.
+
+## 100% Local
+
+Everything runs on your machine. Your profile, resume, job listings, application history, and learned memories are stored in a local SQLite database. The only external communication is LLM API calls to your chosen provider (OpenAI, Anthropic, or AWS Bedrock).
+
+## Getting Started
+
+1. Download LangHire from the [home page](/)
+2. The setup wizard walks you through: LLM provider, resume upload, and profile review
+3. Go to **Jobs** and start collecting
+4. Go to **Apply** and watch the dashboard as applications roll in
+
+LangHire is MIT licensed and open source. Check out the [GitHub repository](https://github.com/jaimaann/LangHire) to contribute or report issues.

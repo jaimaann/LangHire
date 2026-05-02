@@ -1,0 +1,67 @@
+---
+const platforms = [
+  {
+    name: 'macOS',
+    icon: '<svg class="w-10 h-10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>',
+    color: 'text-foreground',
+    links: [
+      { label: 'Apple Silicon (.dmg)', href: 'https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_aarch64.dmg', primary: true },
+      { label: 'Intel (.dmg)', href: 'https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_x64.dmg', primary: false },
+    ],
+  },
+  {
+    name: 'Windows',
+    icon: '<svg class="w-10 h-10" viewBox="0 0 24 24" fill="currentColor"><path d="M3 12V6.75l6-1.32v6.48L3 12zm6.98.01l.02 6.5-6.98-1V12l6.96.01zM10 5.19L20 3v9h-10V5.19zM20 12.01V21l-10-1.39v-7.6h10z"/></svg>',
+    color: 'text-[#0078D4]',
+    links: [
+      { label: '64-bit Installer (.exe)', href: 'https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_x64-setup.exe', primary: true },
+    ],
+  },
+  {
+    name: 'Linux',
+    icon: '<svg class="w-10 h-10" viewBox="0 0 24 24" fill="currentColor"><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.368 1.884 1.536.302.07.663-.001.82-.105a.820.82 0 00.28-.312c.779-.003.993-.527 1.042-1.045.05-.472-.054-.962-.048-1.35.055-.478.543.074.907-.167.025-.009.056-.026.084-.048.371-.27.548-.667.596-1.064.043-.373-.013-.645-.063-.917l.003-.003c-.1-.532-.217-.99-.028-1.519.213-.594.636-1.15.882-1.766.276-.696.351-1.511.131-2.327-.292-1.06-.864-2.14-1.7-3.193-.839-1.05-1.16-1.918-1.229-2.98-.067-1.068-.028-2.253-.265-3.293-.224-.992-.689-1.826-1.612-2.324-.918-.498-2.053-.601-3.217-.601zm.005 1.022c1.028 0 2.055.097 2.834.524.777.424 1.154 1.128 1.351 2.016.218.957.177 2.118.247 3.228.069 1.115.447 2.11 1.322 3.202.804 1.003 1.33 2.002 1.586 2.932.192.697.127 1.356-.096 1.918-.231.581-.645 1.106-.847 1.669-.238.651-.125 1.206-.016 1.76.051.26.1.529.064.85-.035.318-.164.551-.453.758-.196.133-.492.161-.762.056a.825.825 0 01-.375-.23c-.217-.254-.292-.538-.325-.906-.036-.422.064-.898.014-1.41-.063-.587-.337-.962-.646-1.295a.820.82 0 00-.122-.159c-.041-.065-.08-.131-.08-.2v-.009c.019-.109.1-.174.169-.236.145-.13.298-.262.379-.437a.730.73 0 00.062-.36c-.018-.144-.088-.271-.182-.388-.186-.23-.441-.394-.691-.534-.254-.14-.502-.258-.714-.424-.214-.171-.403-.387-.466-.706-.049-.309.066-.617.225-.878.164-.265.374-.491.503-.771a.430.43 0 00.029-.327.530.53 0 00-.157-.23.630.63 0 00-.206-.131.818.818 0 00-.461-.04c-.274.057-.444.228-.586.424-.141.195-.252.413-.363.632-.223.438-.405.893-.615 1.34-.215.451-.488.819-.905 1.024-.42.198-.958.182-1.554.03a4.460 4.46 0 01-.698-.222c-.154-.068-.3-.2-.439-.192-.089.001-.209.076-.358.22-.147.14-.31.34-.512.538-.404.4-.862.731-1.399.828-.541.099-1.117-.007-1.737-.27-.558-.238-1.227-.188-1.822-.195-.598-.004-1.196-.016-1.633-.226-.22-.105-.386-.291-.454-.581-.068-.288-.028-.664.214-1.344.229-.603.174-1.058.088-1.488-.04-.2-.072-.4-.072-.593-.003-.195.026-.393.108-.548.1-.197.256-.26.542-.394.284-.133.644-.21.892-.46.247-.24.415-.577.674-.845a.530.53 0 01.197-.155c-.04-.476-.02-1.001.161-1.572.55-1.666 1.693-3.226 2.565-4.26.787-.934 1.091-1.921 1.176-3.108.075-1.294-.44-4.562 2.56-4.846.139-.012.282-.019.428-.019z"/></svg>',
+    color: 'text-[#FCC624]',
+    links: [
+      { label: 'AppImage (Universal)', href: 'https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_amd64.AppImage', primary: true },
+      { label: 'Debian / Ubuntu (.deb)', href: 'https://github.com/jaimaann/LangHire/releases/latest/download/LangHire_1.0.0_amd64.deb', primary: false },
+    ],
+  },
+];
+---
+
+<section id="download" class="py-20 md:py-28">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">Download LangHire</h2>
+      <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+        Free and open source. Requires an LLM API key (OpenAI, Anthropic, or AWS Bedrock).
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+      {platforms.map(platform => (
+        <div class="card text-center hover:shadow-md transition-shadow">
+          <div class={`inline-flex mb-4 ${platform.color}`}>
+            <Fragment set:html={platform.icon} />
+          </div>
+          <h3 class="text-lg font-bold mb-4">{platform.name}</h3>
+          <div class="space-y-2">
+            {platform.links.map(link => (
+              <a
+                href={link.href}
+                class={link.primary ? 'btn-primary w-full text-xs' : 'btn-secondary w-full text-xs'}
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="text-center text-xs text-muted-foreground mt-8 max-w-lg mx-auto">
+      The binaries are not code-signed. Your OS may show a security warning on first launch &mdash;
+      see the <a href="https://github.com/jaimaann/LangHire#installation-notes" class="text-primary hover:underline">installation notes</a> for instructions.
+    </p>
+  </div>
+</section>

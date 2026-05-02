@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+import SEO from '../components/SEO.astro';
+import StructuredData from '../components/StructuredData.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: string;
+  article?: {
+    publishedTime: string;
+    modifiedTime?: string;
+    author?: string;
+    tags?: string[];
+  };
+}
+
+const props = Astro.props;
+
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'LangHire',
+  url: 'https://langhire.org',
+  logo: 'https://langhire.org/icon.png',
+  description: 'AI-powered job application automation',
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <SEO {...props} />
+    <StructuredData data={orgSchema} />
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/NunitoSans-Variable.woff2" crossorigin />
+  </head>
+  <body class="min-h-screen flex flex-col bg-background text-foreground">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-xl">
+      Skip to content
+    </a>
+    <Header />
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

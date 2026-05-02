@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Privacy - LangHire"
+  description="LangHire is 100% local. All your data stays on your machine. Nothing leaves your computer except LLM API calls."
+>
+  <article class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="text-4xl font-extrabold tracking-tight mb-8">Privacy</h1>
+
+    <div class="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-foreground prose-p:text-foreground/90 prose-p:leading-relaxed">
+      <p>
+        LangHire is designed with privacy as a core principle. Everything runs locally on your machine.
+      </p>
+
+      <h2>What stays on your machine</h2>
+      <ul>
+        <li><strong>Your profile data</strong> &mdash; name, email, resume, work history, and all personal information</li>
+        <li><strong>Job listings</strong> &mdash; all collected jobs are stored in a local SQLite database</li>
+        <li><strong>Application history</strong> &mdash; records of which jobs you applied to and their status</li>
+        <li><strong>Memory system</strong> &mdash; all learned ATS knowledge, navigation patterns, and form strategies</li>
+        <li><strong>Logs</strong> &mdash; all application and agent logs</li>
+      </ul>
+
+      <h2>What leaves your machine</h2>
+      <ul>
+        <li><strong>LLM API calls</strong> &mdash; when the AI agent needs to make decisions (filling forms, answering questions), it sends context to your configured LLM provider (OpenAI, Anthropic, or AWS Bedrock). This is the only external communication.</li>
+        <li><strong>Browser automation</strong> &mdash; the agent interacts with LinkedIn and ATS websites through a real browser on your machine, just as you would manually.</li>
+      </ul>
+
+      <h2>Data storage</h2>
+      <p>All data is stored in your OS application data directory:</p>
+      <ul>
+        <li><strong>macOS:</strong> <code>~/Library/Application Support/langhire/</code></li>
+        <li><strong>Windows:</strong> <code>%APPDATA%/langhire/</code></li>
+        <li><strong>Linux:</strong> <code>~/.config/langhire/</code></li>
+      </ul>
+      <p>You can delete this directory at any time to remove all LangHire data from your machine.</p>
+
+      <h2>No telemetry</h2>
+      <p>LangHire does not collect analytics, telemetry, crash reports, or usage data of any kind. There is no phone-home behavior.</p>
+
+      <h2>This website</h2>
+      <p>This website (langhire.org) is a static site. It does not use cookies, tracking pixels, or third-party analytics.</p>
+    </div>
+  </article>
+</BaseLayout>

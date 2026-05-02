@@ -1,0 +1,90 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import StructuredData from '../components/StructuredData.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  updated?: Date;
+  author?: string;
+  image?: string;
+  tags?: string[];
+}
+
+const { title, description, date, updated, author = 'LangHire Team', image, tags = [] } = Astro.props;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  author: { '@type': 'Person', name: author },
+  datePublished: date.toISOString(),
+  ...(updated && { dateModified: updated.toISOString() }),
+  ...(image && { image: new URL(image, 'https://langhire.org').href }),
+  publisher: {
+    '@type': 'Organization',
+    name: 'LangHire',
+    logo: { '@type': 'ImageObject', url: 'https://langhire.org/icon.png' },
+  },
+};
+
+const readingTime = (text: string) => {
+  const words = text.split(/\s+/).length;
+  return Math.ceil(words / 200);
+};
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout
+  title={`${title} - LangHire Blog`}
+  description={description}
+  image={image}
+  type="article"
+  article={{
+    publishedTime: date.toISOString(),
+    modifiedTime: updated?.toISOString(),
+    author,
+    tags,
+  }}
+>
+  <StructuredData data={articleSchema} />
+  <article class="max-w-3xl mx-auto px-6 py-16">
+    <header class="mb-10">
+      <div class="flex items-center gap-3 text-sm text-muted-foreground mb-4">
+        <time datetime={date.toISOString()}>{formattedDate}</time>
+        <span>&middot;</span>
+        <span>{author}</span>
+      </div>
+      <h1 class="text-4xl font-extrabold tracking-tight mb-4">{title}</h1>
+      <p class="text-lg text-muted-foreground">{description}</p>
+      {tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mt-4">
+          {tags.map(tag => (
+            <span class="px-3 py-1 bg-secondary rounded-lg text-xs font-semibold text-muted-foreground">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+    <div class="prose prose-lg max-w-none
+      prose-headings:font-bold prose-headings:text-foreground
+      prose-p:text-foreground/90 prose-p:leading-relaxed
+      prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+      prose-code:bg-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-sm
+      prose-pre:bg-[#1a1a2e] prose-pre:rounded-2xl
+      prose-img:rounded-2xl prose-img:shadow-sm
+      prose-blockquote:border-primary prose-blockquote:bg-secondary/50 prose-blockquote:rounded-r-xl prose-blockquote:py-1
+    ">
+      <slot />
+    </div>
+    <footer class="mt-16 pt-8 border-t border-border">
+      <a href="/blog" class="text-sm font-semibold text-primary hover:underline">&larr; Back to all posts</a>
+    </footer>
+  </article>
+</BaseLayout>

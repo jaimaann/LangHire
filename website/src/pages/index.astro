@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StructuredData from '../components/StructuredData.astro';
+import Hero from '../components/Hero.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import FeaturesGrid from '../components/FeaturesGrid.astro';
+import ScreenshotShowcase from '../components/ScreenshotShowcase.astro';
+import DownloadSection from '../components/DownloadSection.astro';
+
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'LangHire',
+  description: 'AI-powered job application automation with a native desktop UI. Uses browser agents to search LinkedIn, fill out applications, and submit — with a self-learning memory system.',
+  applicationCategory: 'ProductivityApplication',
+  operatingSystem: 'macOS, Windows, Linux',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  downloadUrl: 'https://github.com/jaimaann/LangHire/releases/latest',
+  softwareVersion: '1.0.0',
+  license: 'https://opensource.org/licenses/MIT',
+};
+---
+
+<BaseLayout
+  title="LangHire - AI-Powered Job Application Automation"
+  description="Automate your job applications with AI. LangHire uses browser agents to search LinkedIn, fill out applications, upload your resume, and submit — with a self-learning memory system. Free, open source, 100% local."
+>
+  <StructuredData data={softwareSchema} />
+  <Hero />
+  <HowItWorks />
+  <FeaturesGrid />
+  <ScreenshotShowcase />
+  <DownloadSection />
+</BaseLayout>

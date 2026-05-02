@@ -1,0 +1,55 @@
+---
+const screenshots = [
+  {
+    src: '/images/screenshots/dashboard.png',
+    alt: 'LangHire dashboard showing job application stats including total jobs, applied, pending, success rate, and memories',
+    title: 'Dashboard',
+    description: 'Track your application progress at a glance',
+  },
+  {
+    src: '/images/screenshots/jobs.png',
+    alt: 'LangHire jobs page with job collector, search filters, and job listings with status badges',
+    title: 'Jobs',
+    description: 'Collect and manage job listings from LinkedIn',
+  },
+  {
+    src: '/images/screenshots/memory.png',
+    alt: 'LangHire memory page showing learned ATS knowledge organized by domain with confidence scores',
+    title: 'Memory',
+    description: 'Self-learning knowledge base that improves over time',
+  },
+];
+---
+
+<section id="screenshots" class="py-20 md:py-28 bg-secondary">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">See It in Action</h2>
+      <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+        A clean, modern interface that keeps you in control.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {screenshots.map(screenshot => (
+        <div class="group">
+          <div class="rounded-2xl overflow-hidden shadow-sm border border-border/50 group-hover:shadow-lg transition-shadow">
+            <img
+              src={screenshot.src}
+              alt={screenshot.alt}
+              width="700"
+              height="450"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-auto"
+            />
+          </div>
+          <div class="mt-4 text-center">
+            <h3 class="text-base font-bold">{screenshot.title}</h3>
+            <p class="text-sm text-muted-foreground">{screenshot.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://langhire.org/sitemap-index.xml

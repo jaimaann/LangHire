@@ -1,0 +1,60 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  url?: string;
+  type?: string;
+  article?: {
+    publishedTime: string;
+    modifiedTime?: string;
+    author?: string;
+    tags?: string[];
+  };
+}
+
+const {
+  title,
+  description,
+  image = '/og-image.png',
+  url = Astro.url.href,
+  type = 'website',
+  article,
+} = Astro.props;
+
+const siteName = 'LangHire';
+const fullImageUrl = new URL(image, Astro.site).href;
+const canonicalUrl = new URL(url, Astro.site).href;
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={fullImageUrl} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={siteName} />
+
+{article && (
+  <>
+    <meta property="article:published_time" content={article.publishedTime} />
+    {article.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime} />}
+    {article.author && <meta property="article:author" content={article.author} />}
+    {article.tags?.map(tag => <meta property="article:tag" content={tag} />)}
+  </>
+)}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={fullImageUrl} />
+
+<!-- Additional SEO -->
+<meta name="robots" content="index, follow" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="alternate" type="application/rss+xml" title={`${siteName} Blog`} href="/rss.xml" />
