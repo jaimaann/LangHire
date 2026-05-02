@@ -66,6 +66,25 @@ It uses AI browser agents to search LinkedIn, collect matching jobs, fill out ap
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/dashboard.png" alt="Dashboard" width="700" />
+  <br/><em>Dashboard — overview of your job application progress</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/jobs.png" alt="Jobs" width="700" />
+  <br/><em>Jobs — collect listings from LinkedIn and apply with one click</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/memory.png" alt="Memory" width="700" />
+  <br/><em>Memory — self-learning knowledge base organized by ATS domain</em>
+</p>
+
+---
+
 ## Quick Start
 
 1. **Download and install** from the [Download](#download) section above
