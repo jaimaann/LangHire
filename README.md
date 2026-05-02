@@ -68,20 +68,30 @@ It uses AI browser agents to search LinkedIn, collect matching jobs, fill out ap
 
 ## Screenshots
 
-<p align="center">
-  <img src="screenshots/dashboard.png" alt="Dashboard" width="700" />
-  <br/><em>Dashboard — overview of your job application progress</em>
-</p>
+<table>
+<tr>
+<td align="center" width="33%">
+<details>
+<summary><img src="screenshots/dashboard.png" alt="Dashboard" width="280" /><br/><strong>Dashboard</strong></summary>
+<img src="screenshots/dashboard.png" alt="Dashboard" width="800" />
+</details>
+</td>
+<td align="center" width="33%">
+<details>
+<summary><img src="screenshots/jobs.png" alt="Jobs" width="280" /><br/><strong>Jobs</strong></summary>
+<img src="screenshots/jobs.png" alt="Jobs" width="800" />
+</details>
+</td>
+<td align="center" width="33%">
+<details>
+<summary><img src="screenshots/memory.png" alt="Memory" width="280" /><br/><strong>Memory</strong></summary>
+<img src="screenshots/memory.png" alt="Memory" width="800" />
+</details>
+</td>
+</tr>
+</table>
 
-<p align="center">
-  <img src="screenshots/jobs.png" alt="Jobs" width="700" />
-  <br/><em>Jobs — collect listings from LinkedIn and apply with one click</em>
-</p>
-
-<p align="center">
-  <img src="screenshots/memory.png" alt="Memory" width="700" />
-  <br/><em>Memory — self-learning knowledge base organized by ATS domain</em>
-</p>
+<p align="center"><sub>Click any screenshot to expand</sub></p>
 
 ---
 
