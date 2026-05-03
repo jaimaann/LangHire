@@ -42,27 +42,16 @@ It uses AI browser agents to search LinkedIn, collect matching jobs, fill out ap
 
 ### Installation Notes
 
-The app binaries are not code-signed, so your OS will likely show a security warning on first launch. This is normal for open-source desktop apps.
-
 <details>
-<summary><strong>macOS</strong> -- "LangHire is damaged" or "unidentified developer"</summary>
+<summary><strong>macOS</strong></summary>
 
-1. Open the `.dmg` and drag **LangHire** to Applications
-2. **Don't double-click to open the first time.** Instead:
-   - Open **System Settings** → **Privacy & Security**
-   - Scroll down to the security section — you'll see a message about LangHire being blocked
-   - Click **Open Anyway**
-   - Alternatively, right-click the app → **Open** → **Open** in the dialog
-
-If you get the "app is damaged" error, run this in Terminal:
-```bash
-xattr -cr /Applications/LangHire.app
-```
-Then open the app normally.
+The macOS release is **signed and notarized** by Apple. Just open the `.dmg`, drag LangHire to Applications, and double-click to launch. No extra steps needed.
 </details>
 
 <details>
 <summary><strong>Windows</strong> -- "Windows protected your PC" (SmartScreen)</summary>
+
+The Windows installer is not code-signed. You may see a SmartScreen warning:
 
 1. Run the `.exe` installer
 2. If you see **"Windows protected your PC"**:
