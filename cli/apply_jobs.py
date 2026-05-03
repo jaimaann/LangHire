@@ -215,12 +215,25 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
 
     _agent_log_start("apply", f"{title} at {company}")
 
+    MAX_STEPS = 30
+    _step_count = {"n": 0}
+
+    def _on_step_with_limit(browser_state, agent_output, step_num):
+        _agent_on_step(browser_state, agent_output, step_num)
+        _step_count["n"] += 1
+        if _step_count["n"] >= MAX_STEPS:
+            raise Exception(f"Reached maximum of {MAX_STEPS} steps — stopping to avoid wasting tokens")
+
     agent = Agent(
         task=(
             f"{apply_instructions}\n\n"
-            f"PERSISTENCE: Do NOT give up easily. Try at least 3 different approaches before reporting failure. "
-            f"Scroll the page, look for alternative buttons, try clicking different elements. "
-            f"Only call done with success=false after genuinely exhausting all options.\n\n"
+            f"PERSISTENCE & EFFICIENCY:\n"
+            f"- Try at least 3 DIFFERENT approaches before reporting failure.\n"
+            f"- If an element doesn't respond after 2-3 clicks, try a completely different method (keyboard, scrolling, different selector).\n"
+            f"- Do NOT repeat the same failing action more than 3 times — switch strategies.\n"
+            f"- If you've been stuck on the same form field for more than 5 steps, skip it or call done with success=false.\n"
+            f"- Do NOT use evaluate/JavaScript to interact with elements — use click, input, and keyboard actions only.\n"
+            f"- You have a maximum of 30 steps total. Budget your steps wisely.\n\n"
             f"TRACKING: Include in memory field after submission:\n"
             f'@@JOB_APPLIED: {{"title": "{title}", "company": "{company}", "location": "{job.get("location", "")}"}}\n'
             f"For each form question: @@QUESTION: {{\"question\": \"...\", \"answer\": \"...\", \"type\": \"...\"}}"
@@ -229,13 +242,15 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
         use_vision=True,
         llm_call_timeout=300,  # 5 minutes per step
         max_failures=10,
+        loop_detection_enabled=True,
+        loop_detection_window=5,
         browser_session=browser,
         sensitive_data=agent_sensitive_data,
         extend_system_message=memory,
         available_file_paths=[resume_path],
         save_conversation_path=str(LOGS_DIR / f"apply_{company.replace(' ', '_')}_{title.replace(' ', '_')[:30]}"),
         calculate_cost=True,
-        register_new_step_callback=_agent_on_step,
+        register_new_step_callback=_on_step_with_limit,
         register_done_callback=_agent_on_done,
     )
 
