@@ -232,7 +232,6 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
             f"- If an element doesn't respond after 2-3 clicks, try a completely different method (keyboard, scrolling, different selector).\n"
             f"- Do NOT repeat the same failing action more than 3 times — switch strategies.\n"
             f"- If you've been stuck on the same form field for more than 5 steps, skip it or call done with success=false.\n"
-            f"- Do NOT use evaluate/JavaScript to interact with elements — use click, input, and keyboard actions only.\n"
             f"- You have a maximum of 70 steps total. Budget your steps wisely.\n\n"
             f"TRACKING: Include in memory field after submission:\n"
             f'@@JOB_APPLIED: {{"title": "{title}", "company": "{company}", "location": "{job.get("location", "")}"}}\n'
