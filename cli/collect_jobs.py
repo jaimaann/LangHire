@@ -163,6 +163,10 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
         llm_call_timeout=300,  # 5 minutes per step
         browser_session=browser,
         max_failures=10,
+        message_compaction=True,
+        max_history_items=10,
+        max_clickable_elements_length=5000,
+        include_recent_events=5,
         register_new_step_callback=on_step,
         register_done_callback=_agent_on_done,
         save_conversation_path=str(LOGS_DIR / f"collect_{title.replace(' ', '_')}"),
@@ -211,6 +215,10 @@ async def fetch_description_for_job(url: str, job: dict) -> str:
         use_vision=True,
         browser_session=browser,
         max_failures=5,
+        message_compaction=True,
+        max_history_items=5,
+        max_clickable_elements_length=3000,
+        include_recent_events=3,
         save_conversation_path=str(LOGS_DIR / f"desc_{company.replace(' ', '_')}_{title.replace(' ', '_')[:20]}"),
     )
 
