@@ -237,8 +237,6 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
         calculate_cost=True,
         message_compaction=True,
         max_history_items=10,
-        max_clickable_elements_length=5000,
-        include_recent_events=True,
         register_new_step_callback=_agent_on_step,
         register_done_callback=_agent_on_done,
     )
