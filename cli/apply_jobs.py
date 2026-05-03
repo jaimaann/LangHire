@@ -235,8 +235,6 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
         available_file_paths=[resume_path],
         save_conversation_path=str(LOGS_DIR / f"apply_{company.replace(' ', '_')}_{title.replace(' ', '_')[:30]}"),
         calculate_cost=True,
-        message_compaction=True,
-        max_history_items=10,
         register_new_step_callback=_agent_on_step,
         register_done_callback=_agent_on_done,
     )

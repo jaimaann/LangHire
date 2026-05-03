@@ -163,8 +163,6 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
         llm_call_timeout=300,  # 5 minutes per step
         browser_session=browser,
         max_failures=10,
-        message_compaction=True,
-        max_history_items=10,
         register_new_step_callback=on_step,
         register_done_callback=_agent_on_done,
         save_conversation_path=str(LOGS_DIR / f"collect_{title.replace(' ', '_')}"),
