@@ -133,6 +133,9 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
     llm = config.get_llm()
     browser = BrowserSession(user_data_dir=str(BROWSER_PROFILE_DIR))
 
+    from urllib.parse import quote
+    search_url = f"https://www.linkedin.com/jobs/search/?keywords={quote(title)}&location={quote(locations)}&f_TPR=r604800"
+
     agent = Agent(
         task=(
             f"FIRST — LOGIN CHECK:\n"
@@ -143,8 +146,10 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
             f"   - If you see the Gmail inbox (list of emails) → logged in ✓\n"
             f"   - If you see a Google sign-in page or redirect → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.\n"
             f"3. Close the Gmail tab and switch back to LinkedIn.\n\n"
-            f"THEN: Go to https://www.linkedin.com/jobs and search for '{title}' in '{locations}' "
-            f"posted in the last 10 days. Look for entry level jobs asking up to 2 years of experience.\n\n"
+            f"THEN: Navigate directly to this URL (already filtered by keyword, location, and past week):\n"
+            f"{search_url}\n\n"
+            f"The search results are pre-filtered. Do NOT re-search or modify the filters. "
+            f"Just start scrolling through the results and collecting jobs.\n\n"
             f"CRITICAL — For EACH job you see, you MUST output a @@JOB_FOUND marker in your memory field IMMEDIATELY in the SAME step you see it. "
             f"Do NOT batch them. Do NOT wait until the end. Output them one by one as you scroll.\n"
             f"Format (one per job, in your memory field):\n"
