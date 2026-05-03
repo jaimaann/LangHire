@@ -75,12 +75,12 @@ def save_profile(profile: dict):
 
 def load_llm_settings() -> dict:
     return _load_json(get_data_dir() / "llm_settings.json", {
-        "provider": "openai",
+        "provider": "openrouter",
         "openai": {"api_key": "", "model": "gpt-4o"},
         "anthropic": {"api_key": "", "model": "claude-sonnet-4-20250514"},
         "bedrock": {"access_key": "", "secret_key": "", "region": "us-west-2", "model": "us.anthropic.claude-sonnet-4-6"},
         "ollama": {"base_url": "http://localhost:11434", "model": ""},
-        "openrouter": {"api_key": "", "model": "openai/gpt-4o"},
+        "openrouter": {"api_key": "", "model": "qwen/qwen3.6-plus"},
     })
 
 

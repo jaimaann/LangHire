@@ -4,16 +4,22 @@ import { getLLMSettings, saveLLMSettings, testLLMConnection, fetchOllamaModels }
 import type { LLMProvider, LLMSettings } from "../../lib/types";
 
 const PROVIDERS: { id: LLMProvider; name: string; description: string }[] = [
+  { id: "openrouter", name: "OpenRouter", description: "100+ vision models (GPT, Claude, Gemini, Qwen, Llama) via a single API key" },
   { id: "openai", name: "OpenAI", description: "GPT-4o, GPT-4o-mini, and other OpenAI models" },
   { id: "anthropic", name: "Anthropic", description: "Claude Sonnet, Haiku, and Opus models (direct API)" },
   { id: "bedrock", name: "AWS Bedrock", description: "Claude and other models via AWS Bedrock" },
   { id: "ollama", name: "Ollama", description: "Run open-source models locally — no API key needed" },
-  { id: "openrouter", name: "OpenRouter", description: "100+ models (GPT, Claude, Gemini, Llama, Mistral) via a single API key" },
 ];
 
 const OPENAI_MODELS = ["gpt-5.4-nano", "gpt-5.4-mini", "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"];
 const ANTHROPIC_MODELS = ["claude-sonnet-4-20250514", "claude-haiku-4-20250414", "claude-opus-4-20250514"];
 const OPENROUTER_FALLBACK_MODELS = [
+  "qwen/qwen3.6-plus",
+  "qwen/qwen3.6-27b",
+  "qwen/qwen3-vl-32b-instruct",
+  "qwen/qwen2.5-vl-72b-instruct",
+  "bytedance-seed/seed-2.0-lite",
+  "bytedance-seed/seed-1.6",
   "openai/gpt-4o",
   "openai/gpt-4.1",
   "openai/gpt-4.1-mini",
@@ -23,8 +29,6 @@ const OPENROUTER_FALLBACK_MODELS = [
   "google/gemini-2.5-flash-preview",
   "meta-llama/llama-4-maverick",
   "mistralai/mistral-large-2411",
-  "qwen/qwen2.5-vl-72b-instruct",
-  "qwen/qwen3-vl-32b-instruct",
 ];
 const BEDROCK_MODELS = [
   "us.anthropic.claude-sonnet-4-6",
@@ -34,12 +38,12 @@ const BEDROCK_MODELS = [
 ];
 
 const defaultSettings: LLMSettings = {
-  provider: "openai",
+  provider: "openrouter",
   openai: { api_key: "", model: "gpt-4o" },
   anthropic: { api_key: "", model: "claude-sonnet-4-20250514" },
   bedrock: { access_key: "", secret_key: "", region: "us-west-2", model: "us.anthropic.claude-sonnet-4-6", auth_mode: "profile", profile_name: "default" },
   ollama: { base_url: "http://localhost:11434", model: "" },
-  openrouter: { api_key: "", model: "openai/gpt-4o" },
+  openrouter: { api_key: "", model: "qwen/qwen3.6-plus" },
 };
 
 interface LLMSettingsFormProps {
