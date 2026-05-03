@@ -104,6 +104,15 @@ def create_llm(settings: dict):
             http_client=_OllamaInterceptor(),
         )
 
+    elif provider == "openrouter":
+        from browser_use.llm import ChatOpenAI
+        cfg = settings.get("openrouter", {})
+        return ChatOpenAI(
+            model=cfg.get("model", "openai/gpt-4o"),
+            api_key=cfg.get("api_key", "").strip(),
+            base_url="https://openrouter.ai/api/v1",
+        )
+
     else:
         raise ValueError(f"Unknown LLM provider: {provider}")
 

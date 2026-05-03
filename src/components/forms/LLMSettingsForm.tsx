@@ -8,10 +8,23 @@ const PROVIDERS: { id: LLMProvider; name: string; description: string }[] = [
   { id: "anthropic", name: "Anthropic", description: "Claude Sonnet, Haiku, and Opus models (direct API)" },
   { id: "bedrock", name: "AWS Bedrock", description: "Claude and other models via AWS Bedrock" },
   { id: "ollama", name: "Ollama", description: "Run open-source models locally — no API key needed" },
+  { id: "openrouter", name: "OpenRouter", description: "100+ models (GPT, Claude, Gemini, Llama, Mistral) via a single API key" },
 ];
 
 const OPENAI_MODELS = ["gpt-5.4-nano", "gpt-5.4-mini", "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"];
 const ANTHROPIC_MODELS = ["claude-sonnet-4-20250514", "claude-haiku-4-20250414", "claude-opus-4-20250514"];
+const OPENROUTER_MODELS = [
+  "openai/gpt-4o",
+  "openai/gpt-4.1",
+  "openai/gpt-4.1-mini",
+  "anthropic/claude-sonnet-4",
+  "anthropic/claude-haiku-4",
+  "google/gemini-2.5-pro-preview",
+  "google/gemini-2.5-flash-preview",
+  "meta-llama/llama-4-maverick",
+  "mistralai/mistral-large-2411",
+  "qwen/qwen2.5-vl-72b-instruct",
+];
 const BEDROCK_MODELS = [
   "us.anthropic.claude-sonnet-4-6",
   "us.anthropic.claude-haiku-4-6",
@@ -25,6 +38,7 @@ const defaultSettings: LLMSettings = {
   anthropic: { api_key: "", model: "claude-sonnet-4-20250514" },
   bedrock: { access_key: "", secret_key: "", region: "us-west-2", model: "us.anthropic.claude-sonnet-4-6", auth_mode: "profile", profile_name: "default" },
   ollama: { base_url: "http://localhost:11434", model: "" },
+  openrouter: { api_key: "", model: "openai/gpt-4o" },
 };
 
 interface LLMSettingsFormProps {
@@ -138,6 +152,12 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
     if (field === "model") immediateSave(ns); else autoSave(ns);
   };
 
+  const updateOpenRouter = (field: string, value: string) => {
+    const ns = { ...settings, openrouter: { ...settings.openrouter!, [field]: value } };
+    setSettings(ns);
+    if (field === "model") immediateSave(ns); else autoSave(ns);
+  };
+
   const handleTest = async () => {
     setTestStatus("testing");
     setTestMessage("");
@@ -156,14 +176,14 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
   return (
     <div className="space-y-4">
       {/* API Key Guide — OpenAI & Anthropic only */}
-      {(settings.provider === "openai" || settings.provider === "anthropic") && (
+      {(settings.provider === "openai" || settings.provider === "anthropic" || settings.provider === "openrouter") && (
         <div className="rounded-2xl border border-border overflow-hidden">
           <button
             onClick={() => setShowGuide(!showGuide)}
             className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-secondary/50 transition-colors"
           >
             <span className="text-[13px] font-semibold text-primary">
-              How to get your {settings.provider === "openai" ? "OpenAI" : "Anthropic"} API key
+              How to get your {{ openai: "OpenAI", anthropic: "Anthropic", openrouter: "OpenRouter" }[settings.provider]} API key
             </span>
             {showGuide ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
           </button>
@@ -199,7 +219,7 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                     <strong className="text-foreground">Note:</strong> This is separate from your ChatGPT subscription. The API has its own pay-as-you-go billing. GPT-4o costs roughly $0.01-0.03 per job application.
                   </div>
                 </div>
-              ) : (
+              ) : settings.provider === "anthropic" ? (
                 <div className="space-y-4">
                   <div className="space-y-2.5">
                     {[
@@ -228,6 +248,34 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                     <strong className="text-foreground">Note:</strong> Claude Sonnet costs roughly $0.01-0.03 per job application. The API is pay-as-you-go.
                   </div>
                 </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="space-y-2.5">
+                    {[
+                      { step: 1, text: "Go to OpenRouter and create a free account (or sign in).", link: "https://openrouter.ai", linkText: "openrouter.ai" },
+                      { step: 2, text: "Go to the API keys page.", link: "https://openrouter.ai/keys", linkText: "openrouter.ai/keys" },
+                      { step: 3, text: 'Click "Create Key", give it a name, then click Create.' },
+                      { step: 4, text: "Copy the key and paste it below. It starts with sk-or-v1-." },
+                    ].map(({ step, text, link, linkText }) => (
+                      <div key={step} className="flex gap-3">
+                        <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-xs font-bold text-foreground">{step}</span>
+                        </div>
+                        <div className="text-[13px] text-foreground leading-relaxed">
+                          {text}
+                          {link && (
+                            <a href={link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-primary font-semibold hover:underline ml-1">
+                              {linkText} <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-[#F7F7F7] rounded-xl p-3 text-[12px] text-muted-foreground">
+                    <strong className="text-foreground">Note:</strong> OpenRouter gives you access to 100+ models with a single key. Add credits at openrouter.ai/credits. Pricing varies per model.
+                  </div>
+                </div>
               )}
             </div>
           )}
@@ -252,7 +300,7 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
 
       {/* Provider Config */}
       <div className={compact ? "" : "card"}>
-        {!compact && <h3 className="text-sm font-bold text-foreground mb-4">{settings.provider === "openai" ? "OpenAI" : settings.provider === "anthropic" ? "Anthropic" : settings.provider === "ollama" ? "Ollama" : "AWS Bedrock"} Configuration</h3>}
+        {!compact && <h3 className="text-sm font-bold text-foreground mb-4">{{ openai: "OpenAI", anthropic: "Anthropic", bedrock: "AWS Bedrock", ollama: "Ollama", openrouter: "OpenRouter" }[settings.provider]} Configuration</h3>}
 
         {settings.provider === "openai" && (
           <div className="space-y-3">
@@ -347,6 +395,29 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                 {ollamaModels.length > 0
                   ? `${ollamaModels.length} model${ollamaModels.length === 1 ? "" : "s"} found on your server.`
                   : "Enter a model name, or start your Ollama server to see available models."}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {settings.provider === "openrouter" && (
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">API Key</label>
+              <input type="password" value={settings.openrouter?.api_key || ""} onChange={(e) => updateOpenRouter("api_key", e.target.value)} placeholder="sk-or-v1-..." className="input-base font-mono" />
+              <p className="text-xs text-muted-foreground mt-1">
+                Get your key at{" "}
+                <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">openrouter.ai/keys</a>
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">Model</label>
+              <select value={settings.openrouter?.model || "openai/gpt-4o"} onChange={(e) => updateOpenRouter("model", e.target.value)} className="input-base">
+                {OPENROUTER_MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
+              </select>
+              <p className="text-xs text-muted-foreground mt-1">
+                All models above support vision. Browse 100+ more at{" "}
+                <a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">openrouter.ai/models</a>
               </p>
             </div>
           </div>
