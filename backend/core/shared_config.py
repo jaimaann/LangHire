@@ -202,8 +202,18 @@ def build_memory_context(
     if applied_labels:
         parts.append("Already applied — SKIP:\n" + "\n".join(f"- {j}" for j in applied_labels))
 
-    if qa:
-        qa_list = "\n".join(f'Q: {q}\nA: {a}' for q, a in qa.items() if a)
+    # Try SQLite Q&A first, fall back to passed-in dict
+    qa_for_prompt = qa
+    try:
+        store = get_memory_store()
+        if store:
+            db_qa = store.qa_get_all_for_prompt()
+            if db_qa:
+                qa_for_prompt = db_qa
+    except Exception:
+        pass
+    if qa_for_prompt:
+        qa_list = "\n".join(f'Q: {q}\nA: {a}' for q, a in qa_for_prompt.items() if a)
         if qa_list:
             parts.append(f"Pre-filled answers for application questions:\n{qa_list}")
 

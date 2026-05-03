@@ -178,6 +178,27 @@ class MemoryStore:
         current_version = row[0] if row and row[0] else 0
         if current_version < 1:
             conn.execute("INSERT OR REPLACE INTO schema_version VALUES (1)")
+
+        if current_version < 2:
+            conn.executescript("""
+                CREATE TABLE IF NOT EXISTS qa_repository (
+                    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                    question        TEXT NOT NULL,
+                    normalized      TEXT NOT NULL,
+                    answer          TEXT DEFAULT '',
+                    question_type   TEXT DEFAULT 'text',
+                    source_domain   TEXT DEFAULT '',
+                    times_seen      INTEGER DEFAULT 1,
+                    merged_into_id  INTEGER,
+                    created_at      TEXT NOT NULL,
+                    updated_at      TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_qa_normalized ON qa_repository(normalized);
+                CREATE INDEX IF NOT EXISTS idx_qa_merged ON qa_repository(merged_into_id);
+            """)
+            conn.execute("INSERT OR REPLACE INTO schema_version VALUES (2)")
+            self._migrate_qa_json()
+
         conn.commit()
 
     # ── Domain / ATS helpers ──────────────────────────────────────────────
@@ -536,3 +557,143 @@ class MemoryStore:
                 parts.append(f"  • {item}")
 
         return "\n".join(parts)
+
+    # ── Q&A Repository ───────────────────────────────────────────────────
+
+    @staticmethod
+    def _normalize_qa(q: str) -> str:
+        return _re.sub(r"[^\w\s]", "", q.lower()).strip()
+
+    @staticmethod
+    def _token_overlap(a: str, b: str) -> float:
+        tokens_a = set(a.split())
+        tokens_b = set(b.split())
+        if not tokens_a or not tokens_b:
+            return 0.0
+        intersection = tokens_a & tokens_b
+        return len(intersection) / max(len(tokens_a), len(tokens_b))
+
+    def _migrate_qa_json(self):
+        """Import existing qa_repository.json into SQLite on first schema upgrade."""
+        import json
+        try:
+            if getattr(sys, 'frozen', False):
+                qa_path = get_data_dir() / "qa_repository.json"
+            else:
+                qa_path = Path(__file__).parent.parent.parent / "qa_repository.json"
+            if not qa_path.exists():
+                return
+            with open(qa_path, "r") as f:
+                qa = json.load(f)
+            now = datetime.now(timezone.utc).isoformat()
+            conn = self._get_conn()
+            for question, answer in qa.items():
+                normalized = self._normalize_qa(question)
+                conn.execute(
+                    "INSERT OR IGNORE INTO qa_repository (question, normalized, answer, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+                    (question, normalized, answer or "", now, now)
+                )
+            conn.commit()
+        except Exception:
+            pass
+
+    def qa_add(self, question: str, answer: str = "", question_type: str = "text", source_domain: str = "") -> dict | None:
+        """Add a question. Returns the question dict, or None if it was a duplicate (increments times_seen)."""
+        normalized = self._normalize_qa(question)
+        conn = self._get_conn()
+        now = datetime.now(timezone.utc).isoformat()
+
+        existing = conn.execute(
+            "SELECT id, times_seen FROM qa_repository WHERE normalized = ? AND merged_into_id IS NULL", (normalized,)
+        ).fetchone()
+        if existing:
+            conn.execute("UPDATE qa_repository SET times_seen = times_seen + 1, updated_at = ? WHERE id = ?", (now, existing["id"]))
+            conn.commit()
+            return None
+
+        # Fuzzy match against existing canonical questions
+        all_qs = conn.execute("SELECT id, normalized FROM qa_repository WHERE merged_into_id IS NULL").fetchall()
+        for row in all_qs:
+            if self._token_overlap(normalized, row["normalized"]) > 0.85:
+                conn.execute("UPDATE qa_repository SET times_seen = times_seen + 1, updated_at = ? WHERE id = ?", (now, row["id"]))
+                conn.commit()
+                return None
+
+        conn.execute(
+            "INSERT INTO qa_repository (question, normalized, answer, question_type, source_domain, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (question, normalized, answer, question_type, source_domain, now, now)
+        )
+        conn.commit()
+        row = conn.execute("SELECT * FROM qa_repository WHERE normalized = ? AND merged_into_id IS NULL", (normalized,)).fetchone()
+        return dict(row) if row else None
+
+    def qa_list(self, search: str = "", unanswered_only: bool = False) -> list[dict]:
+        conn = self._get_conn()
+        query = "SELECT * FROM qa_repository WHERE merged_into_id IS NULL"
+        params: list = []
+        if search:
+            query += " AND (question LIKE ? OR answer LIKE ?)"
+            params.extend([f"%{search}%", f"%{search}%"])
+        if unanswered_only:
+            query += " AND (answer IS NULL OR answer = '')"
+        query += " ORDER BY times_seen DESC, updated_at DESC"
+        return [dict(r) for r in conn.execute(query, params).fetchall()]
+
+    def qa_stats(self) -> dict:
+        conn = self._get_conn()
+        total = conn.execute("SELECT COUNT(*) FROM qa_repository WHERE merged_into_id IS NULL").fetchone()[0]
+        answered = conn.execute("SELECT COUNT(*) FROM qa_repository WHERE merged_into_id IS NULL AND answer != ''").fetchone()[0]
+        return {"total": total, "answered": answered, "unanswered": total - answered}
+
+    def qa_update(self, qa_id: int, answer: str) -> bool:
+        conn = self._get_conn()
+        now = datetime.now(timezone.utc).isoformat()
+        conn.execute("UPDATE qa_repository SET answer = ?, updated_at = ? WHERE id = ?", (answer, now, qa_id))
+        conn.commit()
+        return conn.total_changes > 0
+
+    def qa_delete(self, qa_id: int) -> bool:
+        conn = self._get_conn()
+        conn.execute("DELETE FROM qa_repository WHERE id = ? OR merged_into_id = ?", (qa_id, qa_id))
+        conn.commit()
+        return conn.total_changes > 0
+
+    def qa_merge(self, source_id: int, target_id: int) -> bool:
+        conn = self._get_conn()
+        now = datetime.now(timezone.utc).isoformat()
+        source = conn.execute("SELECT times_seen FROM qa_repository WHERE id = ?", (source_id,)).fetchone()
+        if not source:
+            return False
+        conn.execute("UPDATE qa_repository SET merged_into_id = ?, updated_at = ? WHERE id = ?", (target_id, now, source_id))
+        conn.execute("UPDATE qa_repository SET times_seen = times_seen + ?, updated_at = ? WHERE id = ?", (source["times_seen"], now, target_id))
+        conn.commit()
+        return True
+
+    def qa_auto_squash(self) -> int:
+        """Run fuzzy dedup across all unmerged questions. Returns number of merges."""
+        conn = self._get_conn()
+        rows = conn.execute("SELECT id, normalized, times_seen FROM qa_repository WHERE merged_into_id IS NULL ORDER BY times_seen DESC").fetchall()
+        merged_count = 0
+        merged_ids: set[int] = set()
+        now = datetime.now(timezone.utc).isoformat()
+
+        for i, a in enumerate(rows):
+            if a["id"] in merged_ids:
+                continue
+            for b in rows[i + 1:]:
+                if b["id"] in merged_ids:
+                    continue
+                if self._token_overlap(a["normalized"], b["normalized"]) > 0.85:
+                    conn.execute("UPDATE qa_repository SET merged_into_id = ?, updated_at = ? WHERE id = ?", (a["id"], now, b["id"]))
+                    conn.execute("UPDATE qa_repository SET times_seen = times_seen + ?, updated_at = ? WHERE id = ?", (b["times_seen"], now, a["id"]))
+                    merged_ids.add(b["id"])
+                    merged_count += 1
+
+        conn.commit()
+        return merged_count
+
+    def qa_get_all_for_prompt(self) -> dict[str, str]:
+        """Get all canonical Q&A pairs as a dict for agent prompt injection."""
+        conn = self._get_conn()
+        rows = conn.execute("SELECT question, answer FROM qa_repository WHERE merged_into_id IS NULL AND answer != ''").fetchall()
+        return {r["question"]: r["answer"] for r in rows}

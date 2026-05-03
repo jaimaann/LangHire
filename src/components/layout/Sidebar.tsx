@@ -11,6 +11,7 @@ import {
   BookOpen,
   ScrollText,
   MessageSquare,
+  HelpCircle,
 } from "lucide-react";
 import { checkHealth } from "../../lib/api";
 
@@ -22,6 +23,7 @@ const navItems = [
   { to: "/jobs", icon: Briefcase, label: "Jobs" },
   { to: "/apply", icon: Play, label: "Apply" },
   { to: "/memory", icon: Brain, label: "Memory" },
+  { to: "/qa", icon: HelpCircle, label: "Q&A" },
   { to: "/logs", icon: ScrollText, label: "Logs" },
   { to: "/settings", icon: Settings, label: "Settings" },
   { to: "/feedback", icon: MessageSquare, label: "Feedback" },

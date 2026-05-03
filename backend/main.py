@@ -1498,6 +1498,101 @@ async def get_runs_with_logs(limit: int = Query(50)):
     return []
 
 
+# ── Q&A Repository ────────────────────────────────────────────────────────
+
+@app.get("/qa")
+async def get_qa(search: str = Query(""), unanswered: bool = Query(False)):
+    store = _get_memory_store()
+    if not store:
+        return []
+    return store.qa_list(search=search, unanswered_only=unanswered)
+
+@app.get("/qa/stats")
+async def get_qa_stats():
+    store = _get_memory_store()
+    if not store:
+        return {"total": 0, "answered": 0, "unanswered": 0}
+    return store.qa_stats()
+
+@app.put("/qa/{qa_id}")
+async def update_qa(qa_id: int, body: dict):
+    store = _get_memory_store()
+    if not store:
+        return _api_error("no_store", "Memory store not available")
+    answer = body.get("answer", "")
+    store.qa_update(qa_id, answer)
+    return {"success": True}
+
+@app.delete("/qa/{qa_id}")
+async def delete_qa(qa_id: int):
+    store = _get_memory_store()
+    if not store:
+        return _api_error("no_store", "Memory store not available")
+    store.qa_delete(qa_id)
+    return {"success": True}
+
+@app.post("/qa/{source_id}/merge/{target_id}")
+async def merge_qa(source_id: int, target_id: int):
+    store = _get_memory_store()
+    if not store:
+        return _api_error("no_store", "Memory store not available")
+    store.qa_merge(source_id, target_id)
+    return {"success": True}
+
+@app.post("/qa/auto-squash")
+async def auto_squash_qa():
+    store = _get_memory_store()
+    if not store:
+        return _api_error("no_store", "Memory store not available")
+    merged = store.qa_auto_squash()
+    return {"success": True, "merged": merged}
+
+@app.post("/qa/smart-squash")
+async def smart_squash_qa():
+    """LLM-based semantic deduplication of Q&A questions."""
+    store = _get_memory_store()
+    if not store:
+        return _api_error("no_store", "Memory store not available")
+    questions = store.qa_list()
+    if len(questions) < 2:
+        return {"success": True, "merged": 0}
+
+    from core.llm_factory import create_llm
+    llm_settings = load_llm_settings()
+    if not llm_settings.get("provider"):
+        return _api_error("no_llm", "No LLM configured. Set up an LLM provider in Settings first.")
+
+    llm = create_llm(llm_settings)
+    q_list = "\n".join(f"[{q['id']}] {q['question']}" for q in questions)
+    prompt = (
+        "Below is a numbered list of screening questions from job applications. "
+        "Find groups of questions that ask the same thing in different words. "
+        "Return ONLY a JSON array of merge instructions: [{\"keep\": <id_to_keep>, \"merge\": [<ids_to_merge>]}, ...]. "
+        "Only group questions that are truly semantically identical. If no duplicates exist, return [].\n\n"
+        f"{q_list}"
+    )
+    try:
+        response = llm.invoke(prompt)
+        import json as _json
+        text = response.content if hasattr(response, "content") else str(response)
+        # Extract JSON from response
+        import re as _re_mod
+        match = _re_mod.search(r"\[.*\]", text, _re_mod.DOTALL)
+        if not match:
+            return {"success": True, "merged": 0}
+        groups = _json.loads(match.group(0))
+        merged_count = 0
+        for group in groups:
+            keep_id = group.get("keep")
+            merge_ids = group.get("merge", [])
+            for mid in merge_ids:
+                store.qa_merge(mid, keep_id)
+                merged_count += 1
+        return {"success": True, "merged": merged_count}
+    except Exception as e:
+        return _api_error("llm_error", f"Smart squash failed: {str(e)}", 500)
+
+
 # ── Main ──────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     def _handle_sigterm(signum, frame):

@@ -85,17 +85,22 @@ async def save_job_status(url: str, status: str, error: str | None = None):
     update_job(url, **fields)
 
 
-async def save_new_qa(new_questions: dict):
+async def save_new_qa(new_questions: dict, source_domain: str = ""):
     if not new_questions:
         return
     async with _qa_lock:
-        qa = load_json(QA_FILE, {})
-        existing_norms = {normalize_question(k) for k in qa}
-        for q, a in new_questions.items():
-            if normalize_question(q) not in existing_norms:
-                qa[q] = a
-                existing_norms.add(normalize_question(q))
-        save_json(QA_FILE, qa)
+        store = get_memory_store()
+        if store:
+            for q, a in new_questions.items():
+                store.qa_add(question=q, answer=a or "", source_domain=source_domain)
+        else:
+            qa = load_json(QA_FILE, {})
+            existing_norms = {normalize_question(k) for k in qa}
+            for q, a in new_questions.items():
+                if normalize_question(q) not in existing_norms:
+                    qa[q] = a
+                    existing_norms.add(normalize_question(q))
+            save_json(QA_FILE, qa)
 
 
 async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[str], easy_apply: bool, worker_id: int, resume_path_override: str | None = None) -> str:
@@ -209,6 +214,7 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
         use_vision=True,
         llm_call_timeout=300,  # 5 minutes per step
         max_failures=10,
+        browser_session=browser,
         sensitive_data=agent_sensitive_data,
         available_file_paths=[resume_path],
         save_conversation_path=str(LOGS_DIR / f"apply_{company.replace(' ', '_')}_{title.replace(' ', '_')[:30]}"),
@@ -222,7 +228,15 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
 
         # Extract Q&A from history
         _, new_questions = extract_from_history(result)
-        await save_new_qa(new_questions)
+        domain = ""
+        try:
+            from urllib.parse import urlparse
+            domain = urlparse(url).hostname or ""
+            if domain.startswith("www."):
+                domain = domain[4:]
+        except Exception:
+            pass
+        await save_new_qa(new_questions, source_domain=domain)
 
         # Determine success/failure
         success = result.is_successful()

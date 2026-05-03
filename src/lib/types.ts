@@ -224,6 +224,26 @@ export interface SetupStatus {
   has_jobs: boolean;
 }
 
+// ── Q&A Repository ───────────────────────────────────────────────────────
+export interface QAEntry {
+  id: number;
+  question: string;
+  normalized: string;
+  answer: string;
+  question_type: string;
+  source_domain: string;
+  times_seen: number;
+  merged_into_id: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface QAStats {
+  total: number;
+  answered: number;
+  unanswered: number;
+}
+
 // ── Run Logs ─────────────────────────────────────────────────────────────
 export interface RunLog {
   id: number;

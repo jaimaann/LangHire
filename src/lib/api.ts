@@ -19,6 +19,8 @@ import type {
   DomainInfo,
   RunLog,
   RunWithLogs,
+  QAEntry,
+  QAStats,
 } from "./types";
 
 const DEFAULT_PORT = 8742;
@@ -289,5 +291,41 @@ export async function parseResumeToProfile() {
     profile?: Record<string, unknown>;
     fields_filled?: number;
   }>("/profile/parse-resume", { method: "POST" });
+}
+
+// ── Q&A Repository ────────────────────────────────────────────────────────
+export async function getQAList(params?: { search?: string; unanswered?: boolean }) {
+  const qs = new URLSearchParams();
+  if (params?.search) qs.set("search", params.search);
+  if (params?.unanswered) qs.set("unanswered", "true");
+  const query = qs.toString();
+  return request<QAEntry[]>(`/qa${query ? `?${query}` : ""}`);
+}
+
+export async function getQAStats() {
+  return request<QAStats>("/qa/stats");
+}
+
+export async function updateQA(id: number, answer: string) {
+  return request<{ success: boolean }>(`/qa/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({ answer }),
+  });
+}
+
+export async function deleteQA(id: number) {
+  return request<{ success: boolean }>(`/qa/${id}`, { method: "DELETE" });
+}
+
+export async function mergeQA(sourceId: number, targetId: number) {
+  return request<{ success: boolean }>(`/qa/${sourceId}/merge/${targetId}`, { method: "POST" });
+}
+
+export async function autoSquashQA() {
+  return request<{ success: boolean; merged: number }>("/qa/auto-squash", { method: "POST" });
+}
+
+export async function smartSquashQA() {
+  return request<{ success: boolean; merged: number }>("/qa/smart-squash", { method: "POST" });
 }
 

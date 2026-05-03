@@ -16,6 +16,7 @@ const SettingsPage = lazy(() => import("./pages/Settings"));
 const Logs = lazy(() => import("./pages/Logs"));
 const Guide = lazy(() => import("./pages/Guide"));
 const Feedback = lazy(() => import("./pages/Feedback"));
+const QA = lazy(() => import("./pages/QA"));
 
 function PageLoader() {
   return (
@@ -98,6 +99,7 @@ export default function App() {
               <Route path="/logs" element={<Logs />} />
               <Route path="/guide" element={<Guide />} />
               <Route path="/feedback" element={<Feedback />} />
+              <Route path="/qa" element={<QA />} />
             </Routes>
           </Suspense>
         </ErrorBoundary>
