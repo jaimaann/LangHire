@@ -13,7 +13,7 @@ const PROVIDERS: { id: LLMProvider; name: string; description: string }[] = [
 
 const OPENAI_MODELS = ["gpt-5.4-nano", "gpt-5.4-mini", "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"];
 const ANTHROPIC_MODELS = ["claude-sonnet-4-20250514", "claude-haiku-4-20250414", "claude-opus-4-20250514"];
-const OPENROUTER_MODELS = [
+const OPENROUTER_FALLBACK_MODELS = [
   "openai/gpt-4o",
   "openai/gpt-4.1",
   "openai/gpt-4.1-mini",
@@ -24,6 +24,7 @@ const OPENROUTER_MODELS = [
   "meta-llama/llama-4-maverick",
   "mistralai/mistral-large-2411",
   "qwen/qwen2.5-vl-72b-instruct",
+  "qwen/qwen3-vl-32b-instruct",
 ];
 const BEDROCK_MODELS = [
   "us.anthropic.claude-sonnet-4-6",
@@ -56,6 +57,8 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
   const [showGuide, setShowGuide] = useState(false);
   const [ollamaModels, setOllamaModels] = useState<string[]>([]);
   const [ollamaFetching, setOllamaFetching] = useState(false);
+  const [openrouterModels, setOpenrouterModels] = useState<{ id: string; name: string }[]>([]);
+  const [openrouterFetching, setOpenrouterFetching] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const ollamaFetchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -91,6 +94,24 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
       loadOllamaModels(settings.ollama.base_url);
     }
   }, [settings.provider, settings.ollama?.base_url, loadOllamaModels]);
+
+  useEffect(() => {
+    if (settings.provider !== "openrouter" || openrouterModels.length > 0) return;
+    setOpenrouterFetching(true);
+    fetch("https://openrouter.ai/api/v1/models")
+      .then(r => r.json())
+      .then(data => {
+        const vision = (data.data || [])
+          .filter((m: { architecture?: { input_modalities?: string[] } }) =>
+            m.architecture?.input_modalities?.includes("image")
+          )
+          .map((m: { id: string; name: string }) => ({ id: m.id, name: m.name }))
+          .sort((a: { id: string }, b: { id: string }) => a.id.localeCompare(b.id));
+        if (vision.length > 0) setOpenrouterModels(vision);
+      })
+      .catch(() => {})
+      .finally(() => setOpenrouterFetching(false));
+  }, [settings.provider, openrouterModels.length]);
 
   // Autosave with debounce
   const autoSave = useCallback((newSettings: LLMSettings) => {
@@ -411,12 +432,21 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
               </p>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-foreground mb-1.5">Model</label>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">
+                Model (Vision)
+                {openrouterFetching && <Loader2 className="w-3 h-3 animate-spin inline ml-2" />}
+              </label>
               <select value={settings.openrouter?.model || "openai/gpt-4o"} onChange={(e) => updateOpenRouter("model", e.target.value)} className="input-base">
-                {OPENROUTER_MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
+                {(openrouterModels.length > 0
+                  ? openrouterModels
+                  : OPENROUTER_FALLBACK_MODELS.map(m => ({ id: m, name: m }))
+                ).map((m) => <option key={m.id} value={m.id}>{openrouterModels.length > 0 ? `${m.name} (${m.id})` : m.id}</option>)}
               </select>
               <p className="text-xs text-muted-foreground mt-1">
-                All models above support vision. Browse 100+ more at{" "}
+                {openrouterModels.length > 0
+                  ? `${openrouterModels.length} vision models available.`
+                  : "Showing curated list. Connect to load all vision models."}
+                {" "}Browse at{" "}
                 <a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">openrouter.ai/models</a>
               </p>
             </div>
