@@ -215,7 +215,7 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
 
     _agent_log_start("apply", f"{title} at {company}")
 
-    MAX_STEPS = 30
+    MAX_STEPS = 70
     _step_count = {"n": 0}
 
     def _on_step_with_limit(browser_state, agent_output, step_num):
@@ -233,7 +233,7 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
             f"- Do NOT repeat the same failing action more than 3 times — switch strategies.\n"
             f"- If you've been stuck on the same form field for more than 5 steps, skip it or call done with success=false.\n"
             f"- Do NOT use evaluate/JavaScript to interact with elements — use click, input, and keyboard actions only.\n"
-            f"- You have a maximum of 30 steps total. Budget your steps wisely.\n\n"
+            f"- You have a maximum of 70 steps total. Budget your steps wisely.\n\n"
             f"TRACKING: Include in memory field after submission:\n"
             f'@@JOB_APPLIED: {{"title": "{title}", "company": "{company}", "location": "{job.get("location", "")}"}}\n'
             f"For each form question: @@QUESTION: {{\"question\": \"...\", \"answer\": \"...\", \"type\": \"...\"}}"
