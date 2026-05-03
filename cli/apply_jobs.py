@@ -160,11 +160,21 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
         f"3. Close the Gmail tab and switch back to LinkedIn.\n\n"
     )
 
+    otp_instructions = (
+        "\n\nOTP/VERIFICATION CODES: If ANY site asks for a verification code, OTP, or 2FA token:\n"
+        "1. Choose the EMAIL option if given a choice\n"
+        "2. Open a new tab and go to https://mail.google.com\n"
+        "3. Find the most recent email with the verification/OTP code\n"
+        "4. Copy the code, switch back to the application tab, and enter it\n"
+        "5. This is NOT a blocker — always attempt to retrieve the code from Gmail before giving up"
+    )
+
     if easy_apply:
         apply_instructions = (
             f"{login_preamble}"
             f"THEN: Go to {url} on LinkedIn. Click Easy Apply and complete the application. "
             f"Use resume at {resume_path}. Auto-fill all fields from candidate profile."
+            f"{otp_instructions}"
         )
     else:
         has_password = bool(agent_sensitive_data.get("password", "").strip())
@@ -191,13 +201,8 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
             f"{password_note}"
             f"If it's a video funnel or recruitment pitch, report failure and stop. "
             f"If the external form is broken after 3 attempts, report failure and stop.\n\n"
-            f"BLOCKED SITES — if redirected to any of these, immediately call done with success=false: {', '.join(BLOCKED_DOMAINS)}\n\n"
-            f"OTP/VERIFICATION CODES: If the application asks for a verification code or OTP:\n"
-            f"1. Choose the EMAIL option if given a choice\n"
-            f"2. Open a new tab and go to https://mail.google.com\n"
-            f"3. Find the most recent email with the verification/OTP code\n"
-            f"4. Copy the code, switch back to the application tab, and enter it\n"
-            f"5. This is NOT a blocker — always attempt to retrieve the code from Gmail"
+            f"BLOCKED SITES — if redirected to any of these, immediately call done with success=false: {', '.join(BLOCKED_DOMAINS)}"
+            f"{otp_instructions}"
         )
 
     _agent_log_start("apply", f"{title} at {company}")
