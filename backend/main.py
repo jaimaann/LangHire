@@ -1572,7 +1572,7 @@ async def smart_squash_qa():
         f"{q_list}"
     )
     try:
-        response = llm.invoke(prompt)
+        response = await llm.ainvoke(prompt)
         import json as _json
         text = response.content if hasattr(response, "content") else str(response)
         # Extract JSON from response
