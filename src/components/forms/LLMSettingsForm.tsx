@@ -15,11 +15,11 @@ const OPENAI_MODELS = ["gpt-5.4-nano", "gpt-5.4-mini", "gpt-4o", "gpt-4o-mini", 
 const ANTHROPIC_MODELS = ["claude-sonnet-4-20250514", "claude-haiku-4-20250414", "claude-opus-4-20250514"];
 const OPENROUTER_FALLBACK_MODELS = [
   "qwen/qwen3.6-plus",
+  "bytedance-seed/seed-2.0-lite",
+  "bytedance-seed/seed-1.6",
   "qwen/qwen3.6-27b",
   "qwen/qwen3-vl-32b-instruct",
   "qwen/qwen2.5-vl-72b-instruct",
-  "bytedance-seed/seed-2.0-lite",
-  "bytedance-seed/seed-1.6",
   "openai/gpt-4o",
   "openai/gpt-4.1",
   "openai/gpt-4.1-mini",
