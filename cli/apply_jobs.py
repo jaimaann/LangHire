@@ -195,6 +195,14 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
             f"{login_preamble}"
             f"THEN: Go to {url} on LinkedIn. Click Apply and follow through to the external application page. "
             f"Use resume at {resume_path}. Auto-fill all fields from candidate profile.\n\n"
+            f"NAVIGATING EXTERNAL SITES:\n"
+            f"- The LinkedIn 'Apply' button often opens a company careers page, NOT the application form directly.\n"
+            f"- You MUST explore the landing page: look for 'Apply Now', 'Submit Application', or similar buttons.\n"
+            f"- Scroll down — the apply button is often below the job description.\n"
+            f"- If you see a job listing page, click on the specific job title first, then look for the apply button.\n"
+            f"- Some sites require you to click through 2-3 pages before reaching the actual form.\n"
+            f"- If the page looks blank or is loading, wait 3-5 seconds and try scrolling.\n"
+            f"- NEVER give up just because the form isn't immediately visible — always explore the page first.\n\n"
             f"EMAIL USAGE:\n"
             f"- For APPLICATION FORM fields (contact email, email address, etc.): use <secret>email</secret>\n"
             f"- For LOGGING IN or CREATING ACCOUNTS on external ATS sites: use <secret>account_email</secret> and <secret>password</secret>\n"
@@ -210,7 +218,9 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
     agent = Agent(
         task=(
             f"{apply_instructions}\n\n"
-            f"If you get stuck for more than 3 attempts, call done with success=false.\n\n"
+            f"PERSISTENCE: Do NOT give up easily. Try at least 3 different approaches before reporting failure. "
+            f"Scroll the page, look for alternative buttons, try clicking different elements. "
+            f"Only call done with success=false after genuinely exhausting all options.\n\n"
             f"TRACKING: Include in memory field after submission:\n"
             f'@@JOB_APPLIED: {{"title": "{title}", "company": "{company}", "location": "{job.get("location", "")}"}}\n'
             f"For each form question: @@QUESTION: {{\"question\": \"...\", \"answer\": \"...\", \"type\": \"...\"}}"
