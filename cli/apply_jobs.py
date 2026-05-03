@@ -216,6 +216,7 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
         max_failures=10,
         browser_session=browser,
         sensitive_data=agent_sensitive_data,
+        extend_system_message=memory,
         available_file_paths=[resume_path],
         save_conversation_path=str(LOGS_DIR / f"apply_{company.replace(' ', '_')}_{title.replace(' ', '_')[:30]}"),
         calculate_cost=True,
@@ -253,16 +254,17 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
             def _llm_call(prompt):
                 """Use the user's configured LLM for memory extraction."""
                 import asyncio
+                from browser_use.llm.messages import UserMessage
                 extraction_llm = config.get_llm()
                 loop = asyncio.new_event_loop()
                 try:
                     resp = loop.run_until_complete(
                         asyncio.wait_for(
-                            extraction_llm.ainvoke([{"role": "user", "content": prompt}]),
+                            extraction_llm.ainvoke([UserMessage(content=prompt)]),
                             timeout=30,
                         )
                     )
-                    return resp.content if hasattr(resp, 'content') else str(resp)
+                    return resp.completion if hasattr(resp, 'completion') else (resp.content if hasattr(resp, 'content') else str(resp))
                 finally:
                     loop.close()
 
