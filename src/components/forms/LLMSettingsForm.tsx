@@ -4,7 +4,7 @@ import { getLLMSettings, saveLLMSettings, testLLMConnection, fetchOllamaModels }
 import type { LLMProvider, LLMSettings } from "../../lib/types";
 
 const PROVIDERS: { id: LLMProvider; name: string; description: string }[] = [
-  { id: "openrouter", name: "OpenRouter", description: "100+ vision models (GPT, Claude, Gemini, Qwen, Llama) via a single API key" },
+  { id: "openrouter", name: "OpenRouter (Recommended)", description: "100+ vision models (GPT, Claude, Gemini, Qwen, Llama) via a single API key" },
   { id: "openai", name: "OpenAI", description: "GPT-4o, GPT-4o-mini, and other OpenAI models" },
   { id: "anthropic", name: "Anthropic", description: "Claude Sonnet, Haiku, and Opus models (direct API)" },
   { id: "bedrock", name: "AWS Bedrock", description: "Claude and other models via AWS Bedrock" },
