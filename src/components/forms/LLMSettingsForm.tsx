@@ -57,7 +57,7 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
   const [showGuide, setShowGuide] = useState(false);
   const [ollamaModels, setOllamaModels] = useState<string[]>([]);
   const [ollamaFetching, setOllamaFetching] = useState(false);
-  const [openrouterModels, setOpenrouterModels] = useState<{ id: string; name: string }[]>([]);
+  const [openrouterModels, setOpenrouterModels] = useState<{ id: string; name: string; context: number; promptPrice: string; completionPrice: string }[]>([]);
   const [openrouterFetching, setOpenrouterFetching] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const ollamaFetchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -101,11 +101,24 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
     fetch("https://openrouter.ai/api/v1/models")
       .then(r => r.json())
       .then(data => {
+        const formatPrice = (p: string | number | undefined) => {
+          if (!p) return "free";
+          const n = typeof p === "string" ? parseFloat(p) : p;
+          if (n === 0) return "free";
+          const perMillion = n * 1_000_000;
+          return perMillion < 1 ? `$${perMillion.toFixed(2)}/M` : `$${perMillion.toFixed(1)}/M`;
+        };
         const vision = (data.data || [])
           .filter((m: { architecture?: { input_modalities?: string[] } }) =>
             m.architecture?.input_modalities?.includes("image")
           )
-          .map((m: { id: string; name: string }) => ({ id: m.id, name: m.name }))
+          .map((m: { id: string; name: string; context_length?: number; pricing?: { prompt?: string; completion?: string } }) => ({
+            id: m.id,
+            name: m.name,
+            context: m.context_length || 0,
+            promptPrice: formatPrice(m.pricing?.prompt),
+            completionPrice: formatPrice(m.pricing?.completion),
+          }))
           .sort((a: { id: string }, b: { id: string }) => a.id.localeCompare(b.id));
         if (vision.length > 0) setOpenrouterModels(vision);
       })
@@ -437,14 +450,28 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                 {openrouterFetching && <Loader2 className="w-3 h-3 animate-spin inline ml-2" />}
               </label>
               <select value={settings.openrouter?.model || "openai/gpt-4o"} onChange={(e) => updateOpenRouter("model", e.target.value)} className="input-base">
-                {(openrouterModels.length > 0
-                  ? openrouterModels
-                  : OPENROUTER_FALLBACK_MODELS.map(m => ({ id: m, name: m }))
-                ).map((m) => <option key={m.id} value={m.id}>{openrouterModels.length > 0 ? `${m.name} (${m.id})` : m.id}</option>)}
-              </select>
-              <p className="text-xs text-muted-foreground mt-1">
                 {openrouterModels.length > 0
-                  ? `${openrouterModels.length} vision models available.`
+                  ? openrouterModels.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name} — in: {m.promptPrice} · out: {m.completionPrice} · {m.context >= 1000 ? `${Math.round(m.context / 1000)}K` : m.context} ctx
+                    </option>
+                  ))
+                  : OPENROUTER_FALLBACK_MODELS.map(m => <option key={m} value={m}>{m}</option>)
+                }
+              </select>
+              {openrouterModels.length > 0 && (() => {
+                const selected = openrouterModels.find(m => m.id === (settings.openrouter?.model || "openai/gpt-4o"));
+                return selected ? (
+                  <div className="flex gap-3 mt-2 text-[11px] text-muted-foreground">
+                    <span>Input: <strong className="text-foreground">{selected.promptPrice}</strong></span>
+                    <span>Output: <strong className="text-foreground">{selected.completionPrice}</strong></span>
+                    <span>Context: <strong className="text-foreground">{selected.context >= 1000 ? `${Math.round(selected.context / 1000)}K tokens` : `${selected.context} tokens`}</strong></span>
+                  </div>
+                ) : null;
+              })()}
+              <p className="text-xs text-muted-foreground mt-1.5">
+                {openrouterModels.length > 0
+                  ? `${openrouterModels.length} vision models available. Prices per million tokens.`
                   : "Showing curated list. Connect to load all vision models."}
                 {" "}Browse at{" "}
                 <a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">openrouter.ai/models</a>
