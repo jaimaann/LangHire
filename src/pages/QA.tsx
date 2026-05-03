@@ -207,7 +207,7 @@ function QACard({
 }) {
   const [answer, setAnswer] = useState(entry.answer);
   const [saving, setSaving] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const handleChange = (val: string) => {
     setAnswer(val);
