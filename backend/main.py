@@ -1572,9 +1572,10 @@ async def smart_squash_qa():
         f"{q_list}"
     )
     try:
-        response = await llm.ainvoke(prompt)
+        from browser_use.llm.messages import UserMessage
+        response = await llm.ainvoke([UserMessage(content=prompt)])
         import json as _json
-        text = response.content if hasattr(response, "content") else str(response)
+        text = response.completion if hasattr(response, "completion") else (response.content if hasattr(response, "content") else str(response))
         # Extract JSON from response
         import re as _re_mod
         match = _re_mod.search(r"\[.*\]", text, _re_mod.DOTALL)
