@@ -175,7 +175,7 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
 
     result = await agent.run()
 
-    # Extract jobs from the final done text (agent often puts @@JOB_FOUND there)
+    # Extract jobs from the full history (agent may put @@JOB_FOUND in memory or done text)
     if result and result.history:
         for item in result.history:
             if not item.model_output:
@@ -184,10 +184,17 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
             memory = getattr(item.model_output, "memory", "") or ""
             if "@@JOB_FOUND" in memory:
                 _extract_jobs_from_text(memory)
-            # Check done action text
+            # Check done action text (handles both object and dict formats)
             actions = getattr(item.model_output, "action", []) or []
             for act in actions:
+                # Object attribute
                 text = getattr(act, "text", "") or ""
+                if not text:
+                    # Dict format: {'done': {'text': '...'}}
+                    if isinstance(act, dict):
+                        done_data = act.get("done", {})
+                        if isinstance(done_data, dict):
+                            text = done_data.get("text", "") or ""
                 if "@@JOB_FOUND" in text:
                     _extract_jobs_from_text(text)
 
