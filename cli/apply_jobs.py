@@ -346,7 +346,8 @@ async def worker(name: str, worker_id: int, queue: asyncio.Queue, profile: dict,
         except asyncio.QueueEmpty:
             break
 
-        status = await apply_to_job(job, profile, qa, applied_labels, easy_apply, worker_id)
+        job_easy_apply = job.get("easy_apply", easy_apply) if job.get("easy_apply") is not None else easy_apply
+        status = await apply_to_job(job, profile, qa, applied_labels, job_easy_apply, worker_id)
         stats[status] = stats.get(status, 0) + 1
 
         # On retry, put back in queue
