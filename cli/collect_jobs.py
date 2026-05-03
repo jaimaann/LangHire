@@ -146,21 +146,33 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
             f"   - If you see the Gmail inbox (list of emails) → logged in ✓\n"
             f"   - If you see a Google sign-in page or redirect → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.\n"
             f"3. Close the Gmail tab and switch back to LinkedIn.\n\n"
-            f"THEN: Navigate directly to this URL (already filtered by keyword, location, and past week):\n"
-            f"{search_url}\n\n"
-            f"The search results are pre-filtered. Do NOT re-search or modify the filters. "
-            f"Just start scrolling through the results and collecting jobs.\n\n"
-            f"CRITICAL — For EACH job you see, you MUST output a @@JOB_FOUND marker in your memory field IMMEDIATELY in the SAME step you see it. "
-            f"Do NOT batch them. Do NOT wait until the end. Output them one by one as you scroll.\n"
-            f"Format (one per job, in your memory field):\n"
+            f"THEN: Navigate directly to this pre-filtered search URL:\n"
+            f"{search_url}\n"
+            f"Do NOT re-search or modify the filters. Results are ready.\n\n"
+
+            f"HOW TO COLLECT JOBS — follow this exact process:\n"
+            f"1. You will see a list of jobs on the left side of the page.\n"
+            f"2. Click on a job in the list. The job details appear on the right.\n"
+            f"3. After clicking, look at the browser URL bar — it will contain 'currentJobId=XXXXXXX'.\n"
+            f"   The job URL is: https://www.linkedin.com/jobs/view/XXXXXXX/\n"
+            f"4. Read the job title, company, and location from the details panel on the right.\n"
+            f"5. Check if the job has an 'Easy Apply' button (easy_apply: true) or just 'Apply' (easy_apply: false).\n"
+            f"6. Output a @@JOB_FOUND marker in your MEMORY field for this job.\n"
+            f"7. Click the NEXT job in the list and repeat.\n"
+            f"8. When you reach the bottom of the visible list, scroll down in the left panel to load more jobs.\n\n"
+
+            f"IMPORTANT RULES:\n"
+            f"- Output ONE @@JOB_FOUND marker per step in your MEMORY field. Do NOT batch them.\n"
+            f"- Do NOT use extract, find_elements, or evaluate to get URLs. Just click and read the URL bar.\n"
+            f"- Do NOT apply to any jobs — only collect listings.\n"
+            f"- Include BOTH Easy Apply and non-Easy Apply jobs.\n"
+            f"- Skip jobs requiring languages other than: {', '.join(profile['languages'])}.\n"
+            f"{'- Stop after collecting ' + str(max_jobs) + ' NEW jobs (not in the known list below) and call done.' + chr(10) if max_jobs > 0 else ''}"
+            f"- After scrolling through all results, call done.\n\n"
+
+            f"@@JOB_FOUND format (in your memory field):\n"
             f'@@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", '
-            f'"url": "<linkedin job URL>", "easy_apply": true/false}}\n\n'
-            f"Scroll through results and collect jobs. "
-            f"{'Stop after collecting ' + str(max_jobs) + ' NEW jobs (not already in the known list) and call done. ' if max_jobs > 0 else ''}"
-            f"Include BOTH Easy Apply and non-Easy Apply jobs. "
-            f"Do NOT apply to any jobs — only collect the listings.\n\n"
-            f"Skip jobs requiring languages other than: {', '.join(profile['languages'])}.\n"
-            f"After scrolling through all results, call done."
+            f'"url": "https://www.linkedin.com/jobs/view/<currentJobId>/", "easy_apply": true/false}}'
             f"{resume_hint}"
         ),
         llm=llm,
