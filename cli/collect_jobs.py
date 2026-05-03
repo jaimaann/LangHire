@@ -63,11 +63,10 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
     resume_hint = ""
     if known_count > 0:
         resume_hint = (
-            f"\n\nRESUME CONTEXT: {known_count} jobs were already collected for this search. "
-            f"As you scroll, if you see jobs you've already passed (duplicates), keep scrolling past them. "
-            f"Once you start seeing NEW jobs not in the known list below, begin collecting from there. "
-            f"If an entire page of results contains only known jobs, you've caught up — keep going to find new ones.\n"
-            f"Known job URLs (already collected — skip these):\n"
+            f"\n\nIMPORTANT — SKIP KNOWN JOBS: {known_count} jobs were already collected for this search. "
+            f"Do NOT count these toward your target. Only count NEW jobs not in the list below. "
+            f"As you scroll, skip any jobs with these URLs — keep scrolling past them to find new ones.\n"
+            f"Known job URLs (already collected — DO NOT count these):\n"
             + "\n".join(known_urls[-50:])
         )
 
@@ -152,7 +151,7 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
             f'@@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", '
             f'"url": "<linkedin job URL>", "easy_apply": true/false}}\n\n'
             f"Scroll through results and collect jobs. "
-            f"{'Stop after collecting ' + str(max_jobs) + ' jobs and call done. ' if max_jobs > 0 else ''}"
+            f"{'Stop after collecting ' + str(max_jobs) + ' NEW jobs (not already in the known list) and call done. ' if max_jobs > 0 else ''}"
             f"Include BOTH Easy Apply and non-Easy Apply jobs. "
             f"Do NOT apply to any jobs — only collect the listings.\n\n"
             f"Skip jobs requiring languages other than: {', '.join(profile['languages'])}.\n"
