@@ -1393,6 +1393,8 @@ async def get_setup_status():
         else:
             # Profile mode — considered configured even with default profile
             llm_done = True
+    elif provider == "openrouter":
+        llm_done = bool((llm.get("openrouter") or {}).get("api_key", "").strip())
     elif provider == "ollama":
         ollama = llm.get("ollama") or {}
         llm_done = bool(ollama.get("base_url", "").strip())
