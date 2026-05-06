@@ -29,7 +29,7 @@ from core.config import load_llm_settings, save_llm_settings
 
 # Project root for data files
 PROJECT_ROOT = Path(__file__).parent.parent
-DEFAULT_PORT = 8742
+DEFAULT_PORT = 8743
 MAX_LOG_LINES = 500
 CREDENTIAL_REFRESH_MINUTES = 14
 

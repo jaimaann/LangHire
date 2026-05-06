@@ -49,9 +49,9 @@ pub fn run() {
         .setup(|app| {
             let shell = app.shell();
             match shell.sidecar("langhire-backend") {
-                Ok(sidecar) => match sidecar.args(["8742"]).spawn() {
+                Ok(sidecar) => match sidecar.args(["8743"]).spawn() {
                     Ok((_rx, child)) => {
-                        log::info!("Backend sidecar started on port 8742");
+                        log::info!("Backend sidecar started on port 8743");
                         *app.state::<Backend>().0.lock().unwrap() = Some(child);
                     }
                     Err(e) => log::error!("Failed to spawn backend sidecar: {e}"),

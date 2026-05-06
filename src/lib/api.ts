@@ -23,7 +23,7 @@ import type {
   QAStats,
 } from "./types";
 
-const DEFAULT_PORT = 8742;
+const DEFAULT_PORT = 8743;
 
 let backendPort = DEFAULT_PORT;
 let tokenPromise: Promise<string> | null = null;
