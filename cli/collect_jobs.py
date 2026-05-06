@@ -131,7 +131,7 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
     _agent_log_start("collect", title)
 
     llm = config.get_llm()
-    browser = BrowserSession(user_data_dir=str(BROWSER_PROFILE_DIR))
+    browser = BrowserSession(user_data_dir=str(BROWSER_PROFILE_DIR), chromium_sandbox=(sys.platform != "linux"))
 
     from urllib.parse import quote
     search_url = f"https://www.linkedin.com/jobs/search/?keywords={quote(title)}&location={quote(locations)}&f_TPR=r604800"
@@ -217,7 +217,7 @@ async def fetch_description_for_job(url: str, job: dict) -> str:
     """Visit a single LinkedIn job page and extract the full description."""
     refresh_credentials()
     llm = config.get_llm()
-    browser = BrowserSession(user_data_dir=str(BROWSER_PROFILE_DIR))
+    browser = BrowserSession(user_data_dir=str(BROWSER_PROFILE_DIR), chromium_sandbox=(sys.platform != "linux"))
 
     title = job.get("title", "Unknown")
     company = job.get("company", "unknown")

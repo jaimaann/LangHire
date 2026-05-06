@@ -1118,10 +1118,14 @@ async def auth_login(service: str):
                 _log.info("Playwright started, launching persistent context...")
                 # Find actual Chromium binary (critical for frozen/PyInstaller builds)
                 chromium_path = _find_playwright_chromium()
+                launch_args = ["--no-first-run", "--no-default-browser-check"]
+                if sys.platform == "linux":
+                    launch_args.append("--no-sandbox")
+
                 launch_kwargs = {
                     "user_data_dir": profile_dir,
                     "headless": False,
-                    "args": ["--no-first-run", "--no-default-browser-check"],
+                    "args": launch_args,
                     "ignore_default_args": ["--enable-automation"],
                 }
                 if chromium_path:

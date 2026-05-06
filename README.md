@@ -71,8 +71,18 @@ chmod +x LangHire_1.0.0_amd64.AppImage
 
 **Debian / Ubuntu:**
 ```bash
-sudo dpkg -i LangHire_1.0.0_amd64.deb
+# Install uv package manager (required for browser management)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install the app
+sudo dpkg -i LangHire_1.0.0_arm64.deb
 ```
+
+> [!TIP]
+> **If Chromium doesn't launch:** Some Linux distributions (like Ubuntu 24.04+) have sandbox restrictions. Run this to manually install browsers and dependencies:
+> ```bash
+> uvx playwright install --with-deps chromium
+> ```
 </details>
 
 ---

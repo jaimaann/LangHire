@@ -48,7 +48,7 @@ async def fetch_job_description(job: dict, worker_id: int) -> str:
 
     refresh_credentials()
     llm = config.get_llm()
-    browser = BrowserSession(user_data_dir=str(BASE_DIR / "browser_profile"))
+    browser = BrowserSession(user_data_dir=str(BASE_DIR / "browser_profile"), chromium_sandbox=(sys.platform != "linux"))
 
     agent = Agent(
         task=(
