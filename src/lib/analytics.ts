@@ -1,34 +1,52 @@
 const GA_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || "";
+const GA_ENDPOINT = "https://www.google-analytics.com/mp/collect";
+const GA_API_SECRET = import.meta.env.VITE_GA_API_SECRET || "";
 
 let initialized = false;
 let telemetryEnabled = true;
 let sessionStart = 0;
+let clientId = "";
 
-declare global {
-  interface Window {
-    dataLayer: unknown[];
-    gtag: (...args: unknown[]) => void;
-    [key: `ga-disable-${string}`]: boolean;
+function getClientId(): string {
+  if (clientId) return clientId;
+  let stored = localStorage.getItem("langhire_ga_client_id");
+  if (!stored) {
+    stored = `${Date.now()}.${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem("langhire_ga_client_id", stored);
   }
+  clientId = stored;
+  return clientId;
+}
+
+function sendToGA(events: Array<{ name: string; params?: Record<string, unknown> }>): void {
+  if (!initialized || !telemetryEnabled || !GA_ID) return;
+
+  const payload = {
+    client_id: getClientId(),
+    events: events.map((e) => ({
+      name: e.name,
+      params: { ...e.params, engagement_time_msec: "100" },
+    })),
+  };
+
+  const url = GA_API_SECRET
+    ? `${GA_ENDPOINT}?measurement_id=${GA_ID}&api_secret=${GA_API_SECRET}`
+    : `${GA_ENDPOINT}?measurement_id=${GA_ID}`;
+
+  fetch(url, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    keepalive: true,
+  }).catch(() => {});
 }
 
 export async function initAnalytics(enabled: boolean): Promise<void> {
   telemetryEnabled = enabled;
   if (!GA_ID || !enabled || initialized) return;
 
-  const script = document.createElement("script");
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-  document.head.appendChild(script);
-
-  window.dataLayer = window.dataLayer || [];
-  // eslint-disable-next-line prefer-rest-params
-  window.gtag = function () { window.dataLayer.push(arguments); };
-  window.gtag("js", new Date());
-  window.gtag("config", GA_ID, { send_page_view: false });
-
   initialized = true;
   sessionStart = Date.now();
+  getClientId();
 
   setupCrashReporting();
   trackEvent("app_launch");
@@ -45,30 +63,19 @@ export async function initAnalytics(enabled: boolean): Promise<void> {
 export function setTelemetryEnabled(enabled: boolean): void {
   telemetryEnabled = enabled;
   localStorage.setItem("langhire_telemetry", String(enabled));
-
-  if (GA_ID) {
-    if (!enabled) {
-      window[`ga-disable-${GA_ID}`] = true;
-    } else {
-      window[`ga-disable-${GA_ID}`] = false;
-      if (!initialized) initAnalytics(true);
-    }
-  }
+  if (enabled && !initialized && GA_ID) initAnalytics(true);
 }
 
 export function trackPageView(path: string): void {
-  if (!initialized || !telemetryEnabled) return;
-  window.gtag("event", "page_view", { page_path: path });
+  sendToGA([{ name: "page_view", params: { page_path: path } }]);
 }
 
 export function trackEvent(name: string, params?: Record<string, unknown>): void {
-  if (!initialized || !telemetryEnabled) return;
-  window.gtag("event", name, params);
+  sendToGA([{ name, params }]);
 }
 
 export function trackException(description: string, fatal = false): void {
-  if (!initialized || !telemetryEnabled) return;
-  window.gtag("event", "exception", { description: description.slice(0, 500), fatal });
+  sendToGA([{ name: "exception", params: { description: description.slice(0, 500), fatal } }]);
 }
 
 function setupCrashReporting(): void {
