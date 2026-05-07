@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { TestTube, CheckCircle, XCircle, Loader2, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { getLLMSettings, saveLLMSettings, testLLMConnection, fetchOllamaModels } from "../../lib/api";
+import { trackEvent } from "../../lib/analytics";
 import type { LLMProvider, LLMSettings } from "../../lib/types";
 
 const PROVIDERS: { id: LLMProvider; name: string; description: string }[] = [
@@ -154,6 +155,7 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
       await saveLLMSettings(newSettings);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
+      trackEvent("llm_provider_configured", { provider: newSettings.provider });
       onSaved?.();
     } catch { /* silent */ }
     finally { setSaving(false); }

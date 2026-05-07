@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Play, Square, Terminal, Loader2, Briefcase } from "lucide-react";
 import { startApplying, stopApplying, getApplyStatus, getJobStats } from "../lib/api";
+import { trackEvent } from "../lib/analytics";
 import { useNavigate } from "react-router-dom";
 import LogLine from "../components/LogLine";
 import AutomationDialog from "../components/AutomationDialog";
@@ -28,7 +29,13 @@ export default function Apply() {
     let active = true;
     const poll = setInterval(() => {
       getApplyStatus().then((s) => {
-        if (active) { setRunning(s.running); setLog(s.log || []); }
+        if (active) {
+          if (!s.running) {
+            trackEvent("apply_completed", { error: s.error || null });
+          }
+          setRunning(s.running);
+          setLog(s.log || []);
+        }
       }).catch(() => {});
     }, 2000);
     return () => { active = false; clearInterval(poll); };
@@ -57,6 +64,7 @@ export default function Apply() {
       if (res.success) {
         setRunning(true);
         setLog(["Starting..."]);
+        trackEvent("apply_started", { limit: limit || "unlimited", pending: pendingCount });
       } else {
         alert(res.message);
       }

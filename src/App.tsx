@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./components/layout/Sidebar";
 import ErrorBoundary from "./components/ErrorBoundary";
 import SetupWizard from "./components/SetupWizard";
-import { getSetupStatus } from "./lib/api";
+import { getSetupStatus, getSettings } from "./lib/api";
+import { initAnalytics, trackPageView } from "./lib/analytics";
+import { trackStartupComplete, markStart, measureAndTrack } from "./lib/perf";
 import { Wand2, Loader2 } from "lucide-react";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -31,14 +33,32 @@ export default function App() {
   const [wizardChecked, setWizardChecked] = useState(false);
   const [wizardPaused, setWizardPaused] = useState(false);
   const [wizardStep, setWizardStep] = useState(0);
+  const location = useLocation();
+
+  useEffect(() => {
+    trackStartupComplete();
+    markStart("backend_connect");
+    getSettings()
+      .then((s) => {
+        measureAndTrack("backend_connect");
+        initAnalytics(s.telemetry_enabled !== false);
+      })
+      .catch(() => initAnalytics(true));
+  }, []);
+
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location.pathname]);
 
   useEffect(() => {
     let cancelled = false;
+    markStart("backend_startup");
     async function check() {
       for (let i = 0; i < 15; i++) {
         try {
           const status = await getSetupStatus();
           if (!cancelled) {
+            measureAndTrack("backend_startup");
             if (!status.onboarding_completed) {
               setShowWizard(true);
             }

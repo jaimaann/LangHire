@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Save, FolderOpen, X } from "lucide-react";
 import { getSettings, saveSettings } from "../lib/api";
+import { setTelemetryEnabled as setAnalyticsTelemetry } from "../lib/analytics";
 import { open } from "@tauri-apps/plugin-dialog";
 import { PageHeader, LoadingSpinner, Section } from "../components/ui";
 import TagInput from "../components/ui/TagInput";
@@ -12,6 +13,7 @@ export default function SettingsPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [maxFailures, setMaxFailures] = useState(8);
+  const [telemetryEnabled, setTelemetryEnabled] = useState(true);
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -22,6 +24,7 @@ export default function SettingsPage() {
         setResumePath(data.resume_path || "");
         setBlockedDomains(data.blocked_domains || []);
         setMaxFailures(data.max_failures || 8);
+        setTelemetryEnabled(data.telemetry_enabled !== false);
         const sens = data.sensitive_data || { email: "", password: "" };
         setEmail(sens.email || "");
         setPassword(sens.password || "");
@@ -49,6 +52,7 @@ export default function SettingsPage() {
         blocked_domains: blockedDomains,
         sensitive_data: { email, password },
         max_failures: maxFailures,
+        telemetry_enabled: telemetryEnabled,
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -128,6 +132,31 @@ export default function SettingsPage() {
           <p className="text-[13px] text-muted-foreground mt-1.5">
             Agent stops trying after this many consecutive failures on a single job.
           </p>
+        </div>
+      </Section>
+
+      {/* Privacy & Telemetry */}
+      <Section title="Privacy & Telemetry">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-semibold text-foreground">Usage Analytics</p>
+            <p className="text-[13px] text-muted-foreground mt-1">
+              Help improve LangHire by sending anonymous usage data (feature usage, crash reports).
+              No personal information or job data is transmitted.
+            </p>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
+            <input
+              type="checkbox"
+              checked={telemetryEnabled}
+              onChange={(e) => {
+                setTelemetryEnabled(e.target.checked);
+                setAnalyticsTelemetry(e.target.checked);
+              }}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+          </label>
         </div>
       </Section>
 

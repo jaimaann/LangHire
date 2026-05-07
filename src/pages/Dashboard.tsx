@@ -12,7 +12,9 @@ import {
   FileText,
   ArrowRight,
 } from "lucide-react";
-import { getDashboardData, checkHealth, getSetupStatus, getChromiumStatus, type SetupStatus } from "../lib/api";
+import { getDashboardData, checkHealth, getSetupStatus, getChromiumStatus, getQAStats, type SetupStatus } from "../lib/api";
+import { trackEvent } from "../lib/analytics";
+import { markStart, measureAndTrack } from "../lib/perf";
 import { Download, Loader2 as Spinner } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader, LoadingSpinner, ProgressBar } from "../components/ui";
@@ -31,6 +33,7 @@ export default function Dashboard() {
     let cancelled = false;
 
     async function init() {
+      markStart("dashboard_load");
       for (let i = 0; i < 10; i++) {
         try {
           await checkHealth();
@@ -43,9 +46,10 @@ export default function Dashboard() {
       }
 
       try {
-        const [data, setup] = await Promise.all([
+        const [data, setup, qaStats] = await Promise.all([
           getDashboardData(),
           getSetupStatus().catch(() => null),
+          getQAStats().catch(() => ({ total: 0, answered: 0, unanswered: 0 })),
         ]);
 
         const jobs = data.jobs || { total: 0, applied: 0, failed: 0, pending: 0, blocked: 0, in_progress: 0 };
@@ -62,9 +66,21 @@ export default function Dashboard() {
             totalMemories: mem.total_memories || 0,
           });
           if (setup) setSetupStatus(setup);
+          trackEvent("dashboard_stats", {
+            jobs_collected: total,
+            jobs_applied: applied,
+            jobs_failed: jobs.failed || 0,
+            jobs_pending: jobs.pending || 0,
+            jobs_in_progress: jobs.in_progress || 0,
+            memories_created: mem.total_memories || 0,
+            questions_extracted: qaStats.total || 0,
+          });
         }
-      } catch {}
-      if (!cancelled) setLoading(false);
+      } catch { /* API failures handled gracefully */ }
+      if (!cancelled) {
+        setLoading(false);
+        measureAndTrack("dashboard_load");
+      }
     }
 
     init();

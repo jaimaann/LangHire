@@ -1,5 +1,7 @@
 import { Component, type ReactNode } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
+import { trackException } from "../lib/analytics";
+import * as Sentry from "@sentry/browser";
 
 interface Props {
   children: ReactNode;
@@ -19,6 +21,8 @@ export default class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     console.error("ErrorBoundary caught:", error, info.componentStack);
+    trackException(`${error.message} | ${(info.componentStack || "").slice(0, 200)}`, true);
+    Sentry.captureException(error, { contexts: { react: { componentStack: info.componentStack || "" } } });
   }
 
   handleReset = () => {

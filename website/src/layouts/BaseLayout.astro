@@ -20,6 +20,8 @@ interface Props {
 
 const props = Astro.props;
 
+const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+
 const orgSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -41,6 +43,17 @@ const orgSchema = {
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/NunitoSans-Variable.woff2" crossorigin />
+    {gaId && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+        <script define:vars={{ gaId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      </>
+    )}
   </head>
   <body class="min-h-screen flex flex-col bg-background text-foreground">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-xl">

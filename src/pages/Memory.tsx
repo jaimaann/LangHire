@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Brain, Search, Trash2, Download, ChevronRight, RefreshCw, Globe, Loader2 } from "lucide-react";
 import { getMemoryStats, getMemoryDomains, getMemoriesForDomain, searchMemories, cleanupMemories, decayMemories, exportMemories } from "../lib/api";
+import { trackEvent } from "../lib/analytics";
+import { markStart, measureAndTrack } from "../lib/perf";
 import type { DomainInfo, Memory } from "../lib/types";
 import { PageHeader, LoadingSpinner } from "../components/ui";
 
@@ -24,6 +26,7 @@ export default function Memory() {
   const [loadingMemories, setLoadingMemories] = useState(false);
 
   useEffect(() => {
+    markStart("memory_page_load");
     Promise.all([
       getMemoryStats(),
       getMemoryDomains(),
@@ -33,7 +36,7 @@ export default function Memory() {
         setDomains(Array.isArray(d) ? (d as DomainInfo[]) : []);
       })
       .catch(() => {})
-      .finally(() => setLoading(false));
+      .finally(() => { setLoading(false); measureAndTrack("memory_page_load"); });
   }, []);
 
   const selectDomain = (domain: string) => {
@@ -60,17 +63,20 @@ export default function Memory() {
   const handleDecay = async () => {
     if (!confirm("Reduce confidence of memories not updated in 30+ days?")) return;
     const result = await decayMemories(30);
+    trackEvent("memory_decay", { affected: result.affected });
     alert(`Decayed ${result.affected} memories`);
   };
 
   const handleCleanup = async () => {
     if (!confirm("Delete all memories with confidence below 0.3?")) return;
     const result = await cleanupMemories();
+    trackEvent("memory_cleanup", { deleted: result.deleted });
     alert(`Deleted ${result.deleted} memories`);
   };
 
   const handleExport = async () => {
     const data = await exportMemories();
+    trackEvent("memory_export", { count: data.length });
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");

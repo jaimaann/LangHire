@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Search, Trash2, Merge, Sparkles, Zap, HelpCircle, X } from "lucide-react";
 import { getQAList, getQAStats, updateQA, deleteQA, mergeQA, autoSquashQA, smartSquashQA } from "../lib/api";
+import { trackEvent } from "../lib/analytics";
 import type { QAEntry, QAStats } from "../lib/types";
 
 export default function QA() {
@@ -41,6 +42,7 @@ export default function QA() {
   const handleUpdate = async (id: number, answer: string) => {
     await updateQA(id, answer);
     setQuestions(prev => prev.map(q => q.id === id ? { ...q, answer } : q));
+    trackEvent("qa_answer_updated");
   };
 
   const handleDelete = async (id: number) => {
@@ -73,6 +75,7 @@ export default function QA() {
       const res = await smartSquashQA();
       fetchData();
       showToast(res.merged > 0 ? `Smart-merged ${res.merged} duplicate(s)` : "No semantic duplicates found");
+      trackEvent("qa_smart_squash", { merged: res.merged });
     } catch (e) {
       showToast(e instanceof Error ? e.message : "Smart squash failed");
     }

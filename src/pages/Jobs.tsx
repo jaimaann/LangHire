@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Briefcase, Search, ExternalLink, Loader2, CheckCircle, XCircle, Clock, Ban, Play, Square, Terminal } from "lucide-react";
 import { getJobs, getJobStats, startJobCollection, stopJobCollection, getCollectionStatus, startApplying, getApplyStatus } from "../lib/api";
+import { trackEvent } from "../lib/analytics";
+import { markStart, measureAndTrack } from "../lib/perf";
 import type { Job, JobStatus, JobStats } from "../lib/types";
 import LogLine from "../components/LogLine";
 import AutomationDialog from "../components/AutomationDialog";
@@ -33,7 +35,10 @@ export default function Jobs() {
   const logRef = useRef<HTMLDivElement>(null);
 
   const fetchJobs = (isBackgroundRefresh = false) => {
-    if (!isBackgroundRefresh) setLoading(true);
+    if (!isBackgroundRefresh) {
+      setLoading(true);
+      markStart("jobs_page_load");
+    }
     const params: Record<string, string | number> = {};
     if (statusFilter) params.status = statusFilter;
     if (searchQuery) params.search = searchQuery;
@@ -46,7 +51,10 @@ export default function Jobs() {
         setStats(statsData || {total: 0, pending: 0, applied: 0, failed: 0, blocked: 0, in_progress: 0});
       })
       .catch(() => {})
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        if (!isBackgroundRefresh) measureAndTrack("jobs_page_load");
+      });
   };
 
   useEffect(() => { fetchJobs(); }, [statusFilter]);
@@ -66,9 +74,14 @@ export default function Jobs() {
   useEffect(() => {
     if (!showCollector) return;
     let active = true;
+    let wasRunning = collecting;
     const poll = setInterval(() => {
       getCollectionStatus().then((s) => {
         if (!active) return;
+        if (wasRunning && !s.running) {
+          trackEvent("collection_completed", { jobs_collected: s.collected || 0 });
+        }
+        wasRunning = s.running;
         setCollecting(s.running);
         setCollectLog(s.log || []);
         setCollected(s.collected || 0);
@@ -100,6 +113,7 @@ export default function Jobs() {
         setCollecting(true);
         setCollectLog(["Starting collection..."]);
         setShowCollector(true);
+        trackEvent("collection_started", { title: collectTitle || "all", max_jobs: collectMaxJobs || "unlimited" });
       } else {
         alert(res.message);
       }

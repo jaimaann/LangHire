@@ -22,6 +22,7 @@ import {
   parseResumeToProfile,
   type SetupStatus,
 } from "../lib/api";
+import { trackEvent } from "../lib/analytics";
 import { useNavigate } from "react-router-dom";
 import LLMSettingsForm from "./forms/LLMSettingsForm";
 import ResumePickerForm from "./forms/ResumePickerForm";
@@ -76,6 +77,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
 
   const handleFinish = async () => {
     try { await completeOnboarding(); } catch { /* non-fatal */ }
+    trackEvent("onboarding_completed");
     onClose();
   };
 

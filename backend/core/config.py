@@ -98,6 +98,7 @@ def load_settings() -> dict:
         "max_failures": 8,
         "stagger_delay": 5,
         "data_dir": str(get_data_dir()),
+        "telemetry_enabled": True,
     })
 
 
