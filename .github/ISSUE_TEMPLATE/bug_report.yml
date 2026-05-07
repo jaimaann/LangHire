@@ -1,0 +1,81 @@
+name: Bug Report
+description: Report something that isn't working correctly
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened? Be specific.
+      placeholder: "When I click 'Start Applying', the app crashes with..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this?
+      placeholder: |
+        1. Go to the Apply page
+        2. Set limit to 5
+        3. Click 'Start Applying'
+        4. See error in log
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should have happened instead?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - macOS (Apple Silicon)
+        - macOS (Intel)
+        - Windows
+        - Linux (x64)
+        - Linux (ARM64)
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: LangHire Version
+      description: "Check in app: Dashboard footer or About"
+      placeholder: "v1.4.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: llm_provider
+    attributes:
+      label: LLM Provider
+      options:
+        - OpenRouter
+        - OpenAI
+        - Anthropic
+        - AWS Bedrock
+        - Ollama
+        - Not applicable
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs
+      description: Paste any error messages or log output
+      render: shell
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain the problem
