@@ -3,8 +3,10 @@ import { Search, Trash2, Merge, Sparkles, Zap, HelpCircle, X } from "lucide-reac
 import { getQAList, getQAStats, updateQA, deleteQA, mergeQA, autoSquashQA, smartSquashQA } from "../lib/api";
 import { trackEvent } from "../lib/analytics";
 import type { QAEntry, QAStats } from "../lib/types";
+import { useTranslation } from "react-i18next";
 
 export default function QA() {
+  const { t } = useTranslation("qa");
   const [questions, setQuestions] = useState<QAEntry[]>([]);
   const [stats, setStats] = useState<QAStats>({ total: 0, answered: 0, unanswered: 0 });
   const [search, setSearch] = useState("");
@@ -26,11 +28,11 @@ export default function QA() {
       setStats(st);
       setError(null);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load Q&A");
+      setError(e instanceof Error ? e.message : t("error.loadFailed"));
     } finally {
       setLoading(false);
     }
-  }, [search, filter]);
+  }, [search, filter, t]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
@@ -48,7 +50,7 @@ export default function QA() {
   const handleDelete = async (id: number) => {
     await deleteQA(id);
     fetchData();
-    showToast("Question deleted");
+    showToast(t("toast.deleted"));
   };
 
   const handleMerge = async (targetId: number) => {
@@ -56,7 +58,7 @@ export default function QA() {
     await mergeQA(mergeSource.id, targetId);
     setMergeSource(null);
     fetchData();
-    showToast("Questions merged");
+    showToast(t("toast.merged"));
   };
 
   const handleAutoSquash = async () => {
@@ -64,8 +66,8 @@ export default function QA() {
     try {
       const res = await autoSquashQA();
       fetchData();
-      showToast(res.merged > 0 ? `Merged ${res.merged} duplicate(s)` : "No duplicates found");
-    } catch { showToast("Auto-squash failed"); }
+      showToast(res.merged > 0 ? t("toast.squashResult", { count: res.merged }) : t("toast.noDuplicates"));
+    } catch { showToast(t("toast.autoSquashFailed")); }
     finally { setSquashing(false); }
   };
 
@@ -74,10 +76,10 @@ export default function QA() {
     try {
       const res = await smartSquashQA();
       fetchData();
-      showToast(res.merged > 0 ? `Smart-merged ${res.merged} duplicate(s)` : "No semantic duplicates found");
+      showToast(res.merged > 0 ? t("toast.smartSquashResult", { count: res.merged }) : t("toast.noSemanticDuplicates"));
       trackEvent("qa_smart_squash", { merged: res.merged });
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "Smart squash failed");
+      showToast(e instanceof Error ? e.message : t("toast.smartSquashFailed"));
     }
     finally { setSmartSquashing(false); }
   };
@@ -94,19 +96,21 @@ export default function QA() {
     <div className="max-w-3xl">
       <div className="flex items-start justify-between mb-1">
         <div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">Q&A Repository</h1>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">{t("title")}</h1>
           <p className="text-[13px] text-muted-foreground mt-1">
-            {stats.total} question{stats.total !== 1 ? "s" : ""} &middot; {stats.answered} answered &middot; {stats.unanswered} unanswered
+            {stats.total !== 1
+              ? t("subtitle_plural", { total: stats.total, answered: stats.answered, unanswered: stats.unanswered })
+              : t("subtitle", { total: stats.total, answered: stats.answered, unanswered: stats.unanswered })}
           </p>
         </div>
         <div className="flex gap-2">
-          <button onClick={handleAutoSquash} disabled={squashing} className="btn-secondary text-xs" title="Merge questions with similar text">
+          <button onClick={handleAutoSquash} disabled={squashing} className="btn-secondary text-xs" title={t("actions.autoSquashTitle")}>
             <Zap className="w-3.5 h-3.5" />
-            {squashing ? "Squashing..." : "Auto-Squash"}
+            {squashing ? t("actions.squashing") : t("actions.autoSquash")}
           </button>
-          <button onClick={handleSmartSquash} disabled={smartSquashing} className="btn-secondary text-xs" title="Use LLM to find semantically identical questions">
+          <button onClick={handleSmartSquash} disabled={smartSquashing} className="btn-secondary text-xs" title={t("actions.smartSquashTitle")}>
             <Sparkles className="w-3.5 h-3.5" />
-            {smartSquashing ? "Analyzing..." : "Smart Squash"}
+            {smartSquashing ? t("actions.analyzing") : t("actions.smartSquash")}
           </button>
         </div>
       </div>
@@ -121,7 +125,7 @@ export default function QA() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search questions or answers..."
+            placeholder={t("searchPlaceholder")}
             className="input-base pl-9"
           />
         </div>
@@ -136,7 +140,7 @@ export default function QA() {
                   : "bg-secondary text-muted-foreground hover:bg-border"
               }`}
             >
-              {f === "all" ? `All (${stats.total})` : `Unanswered (${stats.unanswered})`}
+              {f === "all" ? t("filter.all", { count: stats.total }) : t("filter.unanswered", { count: stats.unanswered })}
             </button>
           ))}
         </div>
@@ -146,7 +150,7 @@ export default function QA() {
       {mergeSource && (
         <div className="bg-primary/10 border border-primary/20 rounded-xl px-4 py-3 mb-4 flex items-center justify-between">
           <p className="text-sm text-foreground">
-            <strong>Merge mode:</strong> Click a question below to merge &ldquo;{mergeSource.question.substring(0, 60)}...&rdquo; into it.
+            <strong>{t("mergeMode.label")}</strong> {t("mergeMode.banner", { question: mergeSource.question.substring(0, 60) })}
           </p>
           <button onClick={() => setMergeSource(null)} className="text-muted-foreground hover:text-foreground">
             <X className="w-4 h-4" />
@@ -160,8 +164,8 @@ export default function QA() {
           <HelpCircle className="w-10 h-10 text-border mx-auto mb-3" />
           <p className="text-muted-foreground text-sm">
             {search || filter === "unanswered"
-              ? "No matching questions found."
-              : "No questions yet. Questions will appear here as the agent applies to jobs."}
+              ? t("emptyState.noMatching")
+              : t("emptyState.noQuestions")}
           </p>
         </div>
       ) : (
@@ -208,6 +212,7 @@ function QACard({
   isMerging: boolean;
   isMergeSource: boolean;
 }) {
+  const { t } = useTranslation("qa");
   const [answer, setAnswer] = useState(entry.answer);
   const [saving, setSaving] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -244,7 +249,7 @@ function QACard({
       <textarea
         value={answer}
         onChange={(e) => handleChange(e.target.value)}
-        placeholder="Type your answer here..."
+        placeholder={t("card.answerPlaceholder")}
         rows={2}
         className="input-base resize-y text-sm mb-2"
         onClick={(e) => e.stopPropagation()}
@@ -253,21 +258,21 @@ function QACard({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
           {entry.source_domain && <span>{entry.source_domain}</span>}
-          {saving && <span className="text-primary">Saving...</span>}
-          {!saving && answer !== entry.answer && <span className="text-primary">Unsaved</span>}
+          {saving && <span className="text-primary">{t("card.saving")}</span>}
+          {!saving && answer !== entry.answer && <span className="text-primary">{t("card.unsaved")}</span>}
         </div>
         <div className="flex items-center gap-1">
           <button
             onClick={(e) => { e.stopPropagation(); onMergeStart(); }}
             className="p-1.5 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
-            title="Merge into another question"
+            title={t("card.mergeTitle")}
           >
             <Merge className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onDelete(entry.id); }}
             className="p-1.5 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-            title="Delete question"
+            title={t("card.deleteTitle")}
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>

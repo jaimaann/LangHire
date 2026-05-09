@@ -1,0 +1,32 @@
+{
+  "title": "Apply",
+  "subtitle": "Automated job applications · {{count}} pending jobs",
+  "emptyState": {
+    "title": "No jobs to apply to yet",
+    "description": "Collect jobs from LinkedIn first, then come back here to apply automatically.",
+    "action": "Go to Jobs & Collect"
+  },
+  "controls": {
+    "title": "Application Controls",
+    "loginInfo": "<strong>Login:</strong> A browser will open and check LinkedIn & Gmail. If you're not logged in, the agent will wait for you to log in manually — then proceed automatically.",
+    "limitLabel": "Limit (optional)",
+    "limitPlaceholder": "No limit — apply to all",
+    "limitHelp": "Leave blank to apply to all {{count}} pending jobs",
+    "stop": "Stop",
+    "startApplying": "Start Applying"
+  },
+  "comingSoon": {
+    "badge": "Coming Soon",
+    "title": "Tailored Resumes",
+    "description": "Auto-customize your resume for each job by extracting skills from the job description."
+  },
+  "log": {
+    "liveOutput": "Live Output",
+    "outputLog": "Output Log",
+    "applicationLog": "Application Log"
+  },
+  "dialog": {
+    "title": "Start Applying"
+  },
+  "starting": "Starting..."
+}

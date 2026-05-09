@@ -1,0 +1,46 @@
+{
+  "title": "Q&A Repository",
+  "subtitle": "{{total}} question · {{answered}} answered · {{unanswered}} unanswered",
+  "subtitle_plural": "{{total}} questions · {{answered}} answered · {{unanswered}} unanswered",
+  "actions": {
+    "autoSquash": "Auto-Squash",
+    "squashing": "Squashing...",
+    "smartSquash": "Smart Squash",
+    "analyzing": "Analyzing...",
+    "autoSquashTitle": "Merge questions with similar text",
+    "smartSquashTitle": "Use LLM to find semantically identical questions"
+  },
+  "filter": {
+    "all": "All ({{count}})",
+    "unanswered": "Unanswered ({{count}})"
+  },
+  "searchPlaceholder": "Search questions or answers...",
+  "mergeMode": {
+    "banner": "Click a question below to merge “{{question}}” into it.",
+    "label": "Merge mode:"
+  },
+  "emptyState": {
+    "noMatching": "No matching questions found.",
+    "noQuestions": "No questions yet. Questions will appear here as the agent applies to jobs."
+  },
+  "card": {
+    "answerPlaceholder": "Type your answer here...",
+    "saving": "Saving...",
+    "unsaved": "Unsaved",
+    "mergeTitle": "Merge into another question",
+    "deleteTitle": "Delete question"
+  },
+  "toast": {
+    "deleted": "Question deleted",
+    "merged": "Questions merged",
+    "squashResult": "Merged {{count}} duplicate(s)",
+    "noDuplicates": "No duplicates found",
+    "smartSquashResult": "Smart-merged {{count}} duplicate(s)",
+    "noSemanticDuplicates": "No semantic duplicates found",
+    "autoSquashFailed": "Auto-squash failed",
+    "smartSquashFailed": "Smart squash failed"
+  },
+  "error": {
+    "loadFailed": "Failed to load Q&A"
+  }
+}

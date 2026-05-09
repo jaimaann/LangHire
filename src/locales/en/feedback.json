@@ -1,0 +1,34 @@
+{
+  "title": "Feedback",
+  "subtitle": "Help us improve LangHire with your thoughts",
+  "viewDiscussions": "View Discussions",
+  "categories": {
+    "featureRequest": "Feature Request",
+    "bugReport": "Bug Report",
+    "generalFeedback": "General Feedback"
+  },
+  "form": {
+    "categoryLabel": "Category",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Brief summary of your feedback",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe your feature request, bug, or feedback in detail...",
+    "emailLabel": "Email",
+    "emailOptional": "(optional)",
+    "emailPlaceholder": "your@email.com",
+    "emailHelp": "Include your email if you'd like us to follow up.",
+    "submit": "Submit Feedback",
+    "submitting": "Submitting..."
+  },
+  "success": {
+    "title": "Feedback Submitted!",
+    "description": "Your feedback has been posted to GitHub Discussions.",
+    "viewDiscussion": "View Discussion",
+    "submitAnother": "Submit Another"
+  },
+  "error": {
+    "fillRequired": "Please fill in both the title and description.",
+    "notConfigured": "Feedback is not configured. The VITE_GITHUB_TOKEN environment variable is missing.",
+    "submitFailed": "Failed to submit feedback"
+  }
+}

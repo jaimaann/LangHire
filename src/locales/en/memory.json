@@ -1,0 +1,38 @@
+{
+  "title": "Memory",
+  "subtitle": "{{total}} memories across {{domains}} domains",
+  "actions": {
+    "export": "Export",
+    "decay": "Decay",
+    "cleanup": "Cleanup"
+  },
+  "search": {
+    "placeholder": "Search memories...",
+    "button": "Search"
+  },
+  "domains": {
+    "title": "Domains",
+    "empty": "No domains yet",
+    "memoryCount": "{{count}} memories",
+    "confidence": "{{percent}}% conf"
+  },
+  "memories": {
+    "searchResults": "Search Results ({{count}})",
+    "domainTitle": "{{domain}} ({{count}})",
+    "selectDomain": "Select a domain",
+    "noMemoriesFound": "No memories found",
+    "selectDomainPrompt": "Select a domain to view its memories",
+    "success": "✓ success",
+    "failure": "✗ failure",
+    "confidence": "{{percent}}% confidence",
+    "accesses": "{{count}} accesses"
+  },
+  "confirm": {
+    "decay": "Reduce confidence of memories not updated in 30+ days?",
+    "cleanup": "Delete all memories with confidence below 0.3?"
+  },
+  "toast": {
+    "decayed": "Decayed {{count}} memories",
+    "deleted": "Deleted {{count}} memories"
+  }
+}

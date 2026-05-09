@@ -1,0 +1,17 @@
+{
+  "title": "Logs",
+  "subtitle": "Historical run logs for debugging and monitoring",
+  "refresh": "Refresh",
+  "runs": {
+    "title": "Recent Runs ({{count}})",
+    "empty": "No runs recorded yet. Collect or apply to jobs to see logs here.",
+    "unknown": "Unknown",
+    "lines": "{{count}} lines"
+  },
+  "detail": {
+    "runTitle": "Run {{id}}",
+    "selectPrompt": "Select a run to view logs",
+    "selectFromPanel": "Select a run from the left panel to view its logs",
+    "noLogs": "No logs recorded for this run (pre-logging-upgrade run)"
+  }
+}

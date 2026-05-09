@@ -3,8 +3,9 @@ import { Brain, Search, Trash2, Download, ChevronRight, RefreshCw, Globe, Loader
 import { getMemoryStats, getMemoryDomains, getMemoriesForDomain, searchMemories, cleanupMemories, decayMemories, exportMemories } from "../lib/api";
 import { trackEvent } from "../lib/analytics";
 import { markStart, measureAndTrack } from "../lib/perf";
-import type { DomainInfo, Memory } from "../lib/types";
+import type { DomainInfo, Memory as MemoryType } from "../lib/types";
 import { PageHeader, LoadingSpinner } from "../components/ui";
+import { useTranslation } from "react-i18next";
 
 const CATEGORY_COLORS: Record<string, string> = {
   navigation: "bg-[#F0F4FF] text-[#3B5998]",
@@ -16,12 +17,13 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export default function Memory() {
+  const { t } = useTranslation("memory");
   const [stats, setStats] = useState({ total_memories: 0, unique_domains: 0, by_category: {} as Record<string, number> });
   const [domains, setDomains] = useState<DomainInfo[]>([]);
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
-  const [memories, setMemories] = useState<Memory[]>([]);
+  const [memories, setMemories] = useState<MemoryType[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<Memory[] | null>(null);
+  const [searchResults, setSearchResults] = useState<MemoryType[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadingMemories, setLoadingMemories] = useState(false);
 
@@ -44,7 +46,7 @@ export default function Memory() {
     setSearchResults(null);
     setLoadingMemories(true);
     getMemoriesForDomain(domain)
-      .then((data) => setMemories((data as Memory[]) || []))
+      .then((data) => setMemories((data as MemoryType[]) || []))
       .catch(() => setMemories([]))
       .finally(() => setLoadingMemories(false));
   };
@@ -55,23 +57,23 @@ export default function Memory() {
     setSelectedDomain(null);
     setLoadingMemories(true);
     searchMemories(searchQuery)
-      .then((data) => setSearchResults((data as Memory[]) || []))
+      .then((data) => setSearchResults((data as MemoryType[]) || []))
       .catch(() => setSearchResults([]))
       .finally(() => setLoadingMemories(false));
   };
 
   const handleDecay = async () => {
-    if (!confirm("Reduce confidence of memories not updated in 30+ days?")) return;
+    if (!confirm(t("confirm.decay"))) return;
     const result = await decayMemories(30);
     trackEvent("memory_decay", { affected: result.affected });
-    alert(`Decayed ${result.affected} memories`);
+    alert(t("toast.decayed", { count: result.affected }));
   };
 
   const handleCleanup = async () => {
-    if (!confirm("Delete all memories with confidence below 0.3?")) return;
+    if (!confirm(t("confirm.cleanup"))) return;
     const result = await cleanupMemories();
     trackEvent("memory_cleanup", { deleted: result.deleted });
-    alert(`Deleted ${result.deleted} memories`);
+    alert(t("toast.deleted", { count: result.deleted }));
   };
 
   const handleExport = async () => {
@@ -93,13 +95,13 @@ export default function Memory() {
   return (
     <div>
       <PageHeader
-        title="Memory"
-        subtitle={`${stats.total_memories} memories across ${stats.unique_domains} domains`}
+        title={t("title")}
+        subtitle={t("subtitle", { total: stats.total_memories, domains: stats.unique_domains })}
         actions={
           <>
-            <button onClick={handleExport} className="btn-secondary"><Download className="w-4 h-4" /> Export</button>
-            <button onClick={handleDecay} className="btn-secondary"><RefreshCw className="w-4 h-4" /> Decay</button>
-            <button onClick={handleCleanup} className="btn-destructive"><Trash2 className="w-4 h-4" /> Cleanup</button>
+            <button onClick={handleExport} className="btn-secondary"><Download className="w-4 h-4" /> {t("actions.export")}</button>
+            <button onClick={handleDecay} className="btn-secondary"><RefreshCw className="w-4 h-4" /> {t("actions.decay")}</button>
+            <button onClick={handleCleanup} className="btn-destructive"><Trash2 className="w-4 h-4" /> {t("actions.cleanup")}</button>
           </>
         }
       />
@@ -121,9 +123,9 @@ export default function Memory() {
           <div className="flex-1 relative">
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-muted-foreground" />
             <input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search memories..." className="w-full pl-9 pr-3 py-2 border border-border rounded-lg text-sm" />
+              placeholder={t("search.placeholder")} className="w-full pl-9 pr-3 py-2 border border-border rounded-lg text-sm" />
           </div>
-          <button type="submit" className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium">Search</button>
+          <button type="submit" className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium">{t("search.button")}</button>
         </div>
       </form>
 
@@ -131,12 +133,12 @@ export default function Memory() {
         {/* Domain List */}
         <div className="col-span-1 bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
           <div className="p-3 border-b border-border">
-            <h3 className="text-sm font-bold text-foreground">Domains</h3>
+            <h3 className="text-sm font-bold text-foreground">{t("domains.title")}</h3>
           </div>
           {domains.length === 0 ? (
             <div className="p-4 text-center">
               <Globe className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-              <p className="text-xs text-muted-foreground">No domains yet</p>
+              <p className="text-xs text-muted-foreground">{t("domains.empty")}</p>
             </div>
           ) : (
             <div className="divide-y divide-border max-h-[500px] overflow-y-auto">
@@ -165,8 +167,8 @@ export default function Memory() {
         <div className="col-span-2 bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
           <div className="p-3 border-b border-border">
             <h3 className="text-sm font-bold text-foreground">
-              {searchResults !== null ? `Search Results (${searchResults.length})` :
-               selectedDomain ? `${selectedDomain} (${memories.length})` : "Select a domain"}
+              {searchResults !== null ? t("memories.searchResults", { count: searchResults.length }) :
+               selectedDomain ? t("memories.domainTitle", { domain: selectedDomain, count: memories.length }) : t("memories.selectDomain")}
             </h3>
           </div>
           {loadingMemories ? (
@@ -177,7 +179,7 @@ export default function Memory() {
             <div className="p-8 text-center">
               <Brain className="w-10 h-10 text-muted-foreground mx-auto mb-2" />
               <p className="text-sm text-muted-foreground">
-                {selectedDomain || searchResults !== null ? "No memories found" : "Select a domain to view its memories"}
+                {selectedDomain || searchResults !== null ? t("memories.noMemoriesFound") : t("memories.selectDomainPrompt")}
               </p>
             </div>
           ) : (
@@ -195,13 +197,13 @@ export default function Memory() {
                   <div className="flex items-center gap-3 mt-1.5">
                     <span className="text-[10px] text-muted-foreground">{m.website_domain}</span>
                     <span className={`text-[10px] ${m.success ? "text-green-600" : "text-red-500"}`}>
-                      {m.success ? "✓ success" : "✗ failure"}
+                      {m.success ? t("memories.success") : t("memories.failure")}
                     </span>
                     <span className="text-[10px] text-muted-foreground">
-                      {Math.round(m.confidence * 100)}% confidence
+                      {t("memories.confidence", { percent: Math.round(m.confidence * 100) })}
                     </span>
                     <span className="text-[10px] text-muted-foreground">
-                      {m.access_count} accesses
+                      {t("memories.accesses", { count: m.access_count })}
                     </span>
                   </div>
                 </div>

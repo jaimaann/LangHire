@@ -1,12 +1,18 @@
 import { useState } from "react";
 import { Send, ExternalLink, CheckCircle, MessageSquare } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN || "";
 const GITHUB_GRAPHQL_URL = "https://api.github.com/graphql";
 const REPO_OWNER = "jaimaann";
 const REPO_NAME = "LangHire";
 
-const categories = ["Feature Request", "Bug Report", "General Feedback"];
+const CATEGORY_KEYS = ["featureRequest", "bugReport", "generalFeedback"] as const;
+const CATEGORY_MAP: Record<string, string> = {
+  featureRequest: "Feature Request",
+  bugReport: "Bug Report",
+  generalFeedback: "General Feedback",
+};
 
 async function createDiscussion(title: string, body: string, categoryName: string): Promise<string> {
   const headers = { Authorization: `Bearer ${GITHUB_TOKEN}`, "Content-Type": "application/json" };
@@ -45,9 +51,10 @@ async function createDiscussion(title: string, body: string, categoryName: strin
 }
 
 export default function Feedback() {
+  const { t } = useTranslation("feedback");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState(categories[0]);
+  const [categoryKey, setCategoryKey] = useState<string>(CATEGORY_KEYS[0]);
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
@@ -55,11 +62,11 @@ export default function Feedback() {
 
   const handleSubmit = async () => {
     if (!title.trim() || !description.trim()) {
-      setError("Please fill in both the title and description.");
+      setError(t("error.fillRequired"));
       return;
     }
     if (!GITHUB_TOKEN) {
-      setError("Feedback is not configured. The VITE_GITHUB_TOKEN environment variable is missing.");
+      setError(t("error.notConfigured"));
       return;
     }
     setError(null);
@@ -68,13 +75,13 @@ export default function Feedback() {
       let body = description.trim();
       if (email.trim()) body += `\n\n---\n*Contact: ${email.trim()}*`;
 
-      const url = await createDiscussion(title.trim(), body, category);
+      const url = await createDiscussion(title.trim(), body, CATEGORY_MAP[categoryKey]);
       setSuccess(url);
       setTitle("");
       setDescription("");
       setEmail("");
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Failed to submit feedback");
+      setError(e instanceof Error ? e.message : t("error.submitFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -84,8 +91,8 @@ export default function Feedback() {
     <div className="max-w-2xl">
       <div className="flex items-center justify-between mb-1">
         <div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">Feedback</h1>
-          <p className="text-[13px] text-muted-foreground mt-1">Help us improve LangHire with your thoughts</p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">{t("title")}</h1>
+          <p className="text-[13px] text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <a
           href="https://github.com/jaimaann/LangHire/discussions"
@@ -94,7 +101,7 @@ export default function Feedback() {
           className="btn-secondary text-xs"
         >
           <MessageSquare className="w-3.5 h-3.5" />
-          View Discussions
+          {t("viewDiscussions")}
         </a>
       </div>
 
@@ -105,9 +112,9 @@ export default function Feedback() {
       {success ? (
         <div className="mt-6 card text-center py-10">
           <CheckCircle className="w-12 h-12 text-success mx-auto mb-4" />
-          <h2 className="text-lg font-bold mb-2">Feedback Submitted!</h2>
+          <h2 className="text-lg font-bold mb-2">{t("success.title")}</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Your feedback has been posted to GitHub Discussions.
+            {t("success.description")}
           </p>
           <div className="flex items-center justify-center gap-3">
             <a
@@ -117,51 +124,51 @@ export default function Feedback() {
               className="btn-primary text-xs"
             >
               <ExternalLink className="w-3.5 h-3.5" />
-              View Discussion
+              {t("success.viewDiscussion")}
             </a>
             <button onClick={() => setSuccess(null)} className="btn-secondary text-xs">
-              Submit Another
+              {t("success.submitAnother")}
             </button>
           </div>
         </div>
       ) : (
         <div className="mt-6 space-y-5">
           <div className="card">
-            <label className="block text-sm font-semibold text-foreground mb-1.5">Category</label>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">{t("form.categoryLabel")}</label>
             <div className="flex gap-2">
-              {categories.map((c) => (
+              {CATEGORY_KEYS.map((c) => (
                 <button
                   key={c}
-                  onClick={() => setCategory(c)}
+                  onClick={() => setCategoryKey(c)}
                   className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-                    category === c
+                    categoryKey === c
                       ? "bg-foreground text-white"
                       : "bg-secondary text-muted-foreground hover:bg-border"
                   }`}
                 >
-                  {c}
+                  {t(`categories.${c}`)}
                 </button>
               ))}
             </div>
           </div>
 
           <div className="card">
-            <label className="block text-sm font-semibold text-foreground mb-1.5">Title</label>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">{t("form.titleLabel")}</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Brief summary of your feedback"
+              placeholder={t("form.titlePlaceholder")}
               className="input-base"
             />
           </div>
 
           <div className="card">
-            <label className="block text-sm font-semibold text-foreground mb-1.5">Description</label>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">{t("form.descriptionLabel")}</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your feature request, bug, or feedback in detail..."
+              placeholder={t("form.descriptionPlaceholder")}
               rows={6}
               className="input-base resize-y"
             />
@@ -169,17 +176,17 @@ export default function Feedback() {
 
           <div className="card">
             <label className="block text-sm font-semibold text-foreground mb-1.5">
-              Email <span className="text-muted-foreground font-normal">(optional)</span>
+              {t("form.emailLabel")} <span className="text-muted-foreground font-normal">{t("form.emailOptional")}</span>
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@email.com"
+              placeholder={t("form.emailPlaceholder")}
               className="input-base"
             />
             <p className="text-[11px] text-muted-foreground mt-1.5">
-              Include your email if you'd like us to follow up.
+              {t("form.emailHelp")}
             </p>
           </div>
 
@@ -189,7 +196,7 @@ export default function Feedback() {
             className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send className="w-4 h-4" />
-            {submitting ? "Submitting..." : "Submit Feedback"}
+            {submitting ? t("form.submitting") : t("form.submit")}
           </button>
         </div>
       )}

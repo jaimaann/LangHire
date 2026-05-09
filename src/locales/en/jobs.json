@@ -1,0 +1,76 @@
+{
+  "title": "Jobs",
+  "subtitle": "{{total}} jobs collected · {{applied}} applied · {{pending}} pending",
+  "hideCollector": "Hide Collector",
+  "collectJobs": "Collect Jobs",
+  "status": {
+    "pending": "Pending",
+    "applied": "Applied",
+    "failed": "Failed",
+    "blocked": "Blocked",
+    "inProgress": "In Progress"
+  },
+  "filter": {
+    "all": "All"
+  },
+  "search": "Search",
+  "searchPlaceholder": "Search by job title or company...",
+  "collector": {
+    "title": "Job Collector",
+    "description": "Search for job listings matching your profile. Select a source platform, enter a job title, and start collecting. Collection typically takes 3-10 minutes per job title as the agent scrolls through results.",
+    "loginInfo": "<strong>Login:</strong> A browser will open and check if you're logged into the selected platform. If not, the agent will wait for you to log in manually — then proceed automatically.",
+    "sourcePlatform": "Source Platform",
+    "jobTitlePlaceholder": "Job title (e.g. 'Data Analyst') or leave blank for all",
+    "maxJobsPlaceholder": "Max jobs",
+    "maxJobsTitle": "Max jobs to collect (per title)",
+    "stop": "Stop",
+    "start": "Start",
+    "startingCollection": "Starting collection...",
+    "collectedProgress": "Collected {{collected}} of {{max}} jobs",
+    "collectionLog": "Collection Log"
+  },
+  "emptyState": {
+    "noMatching": "No matching jobs",
+    "noJobsYet": "No jobs collected yet",
+    "tryChanging": "Try changing your search or filter.",
+    "clickCollect": "Click 'Collect Jobs' above to search LinkedIn for matching listings.",
+    "startCollecting": "Start Collecting"
+  },
+  "jobItem": {
+    "untitled": "Untitled",
+    "easyApply": "Easy Apply",
+    "unknown": "Unknown",
+    "error": "Error: {{error}}",
+    "collected": "Collected {{date}}",
+    "applied": " · Applied {{date}}",
+    "coverLetter": "Cover Letter",
+    "coverLetterTitle": "Generate a tailored cover letter for this job",
+    "applyRunningTitle": "An application is already running",
+    "retryTitle": "Retry this job",
+    "applyTitle": "Apply to this job",
+    "applying": "Applying...",
+    "retry": "Retry",
+    "apply": "Apply",
+    "openOnLinkedIn": "Open on LinkedIn"
+  },
+  "showingJobs": "Showing {{count}} job",
+  "showingJobs_plural": "Showing {{count}} jobs",
+  "dialog": {
+    "startApplying": "Start Applying",
+    "startCollecting": "Start Collecting"
+  },
+  "coverLetterModal": {
+    "title": "Generate Cover Letter",
+    "jobAt": "{{title}} at {{company}}",
+    "noDescription": "No job description available. Paste the description below to generate a cover letter.",
+    "pastePlaceholder": "Paste the job description here...",
+    "generate": "Generate",
+    "generating": "Generating cover letter...",
+    "generatedLabel": "Generated Cover Letter",
+    "copy": "Copy",
+    "saved": "Saved!",
+    "saveToProfile": "Save to Profile",
+    "failedGenerate": "Failed to generate cover letter",
+    "failedSave": "Failed to save to profile"
+  }
+}
