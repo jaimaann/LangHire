@@ -174,6 +174,43 @@ def test_chromium_status():
     assert state in ("ready", "installed", "installing", "not_installed", "checking"), f"Unexpected chromium state: {state}"
 
 
+def test_chromium_launches():
+    result = subprocess.run(
+        [sys.executable, "-c",
+         "from playwright.sync_api import sync_playwright; "
+         "p = sync_playwright().start(); "
+         "b = p.chromium.launch(headless=True); "
+         "page = b.new_page(); "
+         "page.goto('about:blank'); "
+         "assert page.title() is not None; "
+         "b.close(); p.stop(); "
+         "print('CHROMIUM_OK')"],
+        capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, f"Chromium failed to launch: {result.stderr[-500:]}"
+    assert "CHROMIUM_OK" in result.stdout, f"Chromium didn't complete: {result.stdout}"
+
+
+def test_chromium_navigates():
+    result = subprocess.run(
+        [sys.executable, "-c",
+         "from playwright.sync_api import sync_playwright; "
+         "p = sync_playwright().start(); "
+         "b = p.chromium.launch(headless=True); "
+         "page = b.new_page(); "
+         "page.goto('https://example.com'); "
+         "title = page.title(); "
+         "assert 'Example' in title, f'Unexpected title: {title}'; "
+         "content = page.content(); "
+         "assert 'Example Domain' in content; "
+         "b.close(); p.stop(); "
+         "print('NAVIGATE_OK')"],
+        capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, f"Chromium navigation failed: {result.stderr[-500:]}"
+    assert "NAVIGATE_OK" in result.stdout, f"Navigation didn't complete: {result.stdout}"
+
+
 def test_cover_letter_generation():
     api_key = os.environ.get("TEST_OPENROUTER_API_KEY", "")
     if not api_key:
@@ -248,6 +285,8 @@ def main():
         test("Plugin structure valid", lambda: None)  # covered by test_plugins assertions
         test("Profile round-trip (international)", test_profile_roundtrip)
         test("Chromium status", test_chromium_status)
+        test("Chromium launches (headless)", test_chromium_launches)
+        test("Chromium navigates to URL", test_chromium_navigates)
         test("LLM connection (OpenRouter)", test_llm_connection)
         test("Cover letter generation", test_cover_letter_generation)
         test("Collection dry-run", test_collection_dry_run)
