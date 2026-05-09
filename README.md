@@ -19,7 +19,17 @@
 </p>
 
 <p align="center">
-  <sub>English &middot; हिन्दी &middot; Deutsch &middot; Français &middot; Español &middot; العربية &middot; Nederlands &middot; 日本語 &middot; 한국어 &middot; Português &middot; Bahasa Melayu</sub>
+  <a href="#readme"><strong>English</strong></a> &middot;
+  <a href="docs/README.hi.md">हिन्दी</a> &middot;
+  <a href="docs/README.de.md">Deutsch</a> &middot;
+  <a href="docs/README.fr.md">Français</a> &middot;
+  <a href="docs/README.es.md">Español</a> &middot;
+  <a href="docs/README.ar.md">العربية</a> &middot;
+  <a href="docs/README.nl.md">Nederlands</a> &middot;
+  <a href="docs/README.ja.md">日本語</a> &middot;
+  <a href="docs/README.ko.md">한국어</a> &middot;
+  <a href="docs/README.pt.md">Português</a> &middot;
+  <a href="docs/README.ms.md">Bahasa Melayu</a>
 </p>
 
 ---
