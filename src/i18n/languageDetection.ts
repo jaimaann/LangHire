@@ -1,12 +1,17 @@
 export type SupportedLanguage = 'en' | 'hi' | 'de' | 'fr' | 'nl' | 'ar' | 'ms' | 'ja' | 'ko' | 'pt' | 'es';
 
 const COUNTRY_TO_LANGUAGE: Record<string, SupportedLanguage> = {
-  US: 'en', GB: 'en', AU: 'en', CA: 'en', NZ: 'en', IE: 'en', SG: 'en',
+  US: 'en', GB: 'en', AU: 'en', CA: 'en', NZ: 'en', IE: 'en', SG: 'en', CN: 'en',
   IN: 'hi',
   DE: 'de',
   FR: 'fr',
   NL: 'nl',
   AE: 'ar',
+  JP: 'ja',
+  KR: 'ko',
+  BR: 'pt',
+  ES: 'es',
+  MX: 'es',
 };
 
 export const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
