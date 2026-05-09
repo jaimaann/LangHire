@@ -50,20 +50,25 @@ i18n
     },
   });
 
+const ALL_NAMESPACES = ['common', 'dashboard', 'settings', 'jobs', 'apply', 'memory', 'qa', 'logs', 'feedback', 'profile', 'llm', 'wizard', 'guide'];
+
 export async function loadLanguage(lang: string): Promise<void> {
   if (lang === 'en' || !lang) {
     await i18n.changeLanguage('en');
     return;
   }
 
-  try {
-    const common = await import(`../locales/${lang}/common.json`);
-    i18n.addResourceBundle(lang, 'common', common.default, true, true);
-  } catch {
-    // Fallback to English if translation file doesn't exist yet
-  }
+  const loadPromises = ALL_NAMESPACES.map(async (ns) => {
+    if (i18n.hasResourceBundle(lang, ns)) return;
+    try {
+      const module = await import(`../locales/${lang}/${ns}.json`);
+      i18n.addResourceBundle(lang, ns, module.default, true, true);
+    } catch {
+      // Namespace not available for this language — English fallback will be used
+    }
+  });
 
-  // Load page-specific namespaces lazily as they're needed
+  await Promise.all(loadPromises);
   await i18n.changeLanguage(lang);
 }
 
