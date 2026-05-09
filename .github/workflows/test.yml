@@ -1,0 +1,117 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+            label: macOS-ARM64
+          - platform: macos-13
+            target: x86_64-apple-darwin
+            label: macOS-x64
+          - platform: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            label: Linux-x64
+          - platform: windows-latest
+            target: x86_64-pc-windows-msvc
+            label: Windows-x64
+
+    runs-on: ${{ matrix.platform }}
+    name: Test (${{ matrix.label }})
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libsoup-3.0-dev libjavascriptcoregtk-4.1-dev
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Install Python dependencies
+        run: |
+          pip install uv
+          uv sync
+
+      # ── Static Analysis ──────────────────────────────────────────────
+      - name: TypeScript type check
+        run: npx tsc --noEmit --skipLibCheck
+
+      - name: ESLint
+        run: npx eslint . --max-warnings 0
+        continue-on-error: true
+
+      - name: Frontend build (Vite)
+        run: npm run build
+
+      # ── Install Chromium ─────────────────────────────────────────────
+      - name: Install Playwright Chromium
+        run: uv run python -m playwright install chromium
+
+      # ── Integration Tests (Source) ───────────────────────────────────
+      - name: Run integration tests (source)
+        env:
+          TEST_OPENROUTER_API_KEY: ${{ secrets.TEST_OPENROUTER_API_KEY }}
+        run: uv run python scripts/integration-test.py
+
+      # ── Build Backend Binary ─────────────────────────────────────────
+      - name: Build backend binary (Unix)
+        if: runner.os != 'Windows'
+        run: bash scripts/build-backend.sh ${{ matrix.target }}
+
+      - name: Build backend binary (Windows)
+        if: runner.os == 'Windows'
+        run: powershell -ExecutionPolicy Bypass -File scripts/build-backend.ps1
+
+      # ── Integration Tests (Built Binary) ─────────────────────────────
+      - name: Run integration tests (binary, Unix)
+        if: runner.os != 'Windows'
+        env:
+          TEST_OPENROUTER_API_KEY: ${{ secrets.TEST_OPENROUTER_API_KEY }}
+        run: |
+          uv run python scripts/integration-test.py --binary src-tauri/binaries/langhire-backend-${{ matrix.target }}
+
+      - name: Run integration tests (binary, Windows)
+        if: runner.os == 'Windows'
+        env:
+          TEST_OPENROUTER_API_KEY: ${{ secrets.TEST_OPENROUTER_API_KEY }}
+        run: |
+          uv run python scripts/integration-test.py --binary src-tauri/binaries/langhire-backend-${{ matrix.target }}.exe
+
+  summary:
+    needs: test
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Test Summary
+        run: |
+          if [ "${{ needs.test.result }}" = "success" ]; then
+            echo "✅ All integration tests passed on all platforms"
+          else
+            echo "❌ Some integration tests failed"
+            exit 1
+          fi
