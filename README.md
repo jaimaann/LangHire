@@ -106,12 +106,16 @@ sudo dpkg -i LangHire_1.0.0_arm64.deb
 ## Features
 
 - **Native desktop app** -- macOS, Windows, and Linux
-- **Job collection** -- Searches LinkedIn for jobs matching your target titles and locations
+- **Plugin-based job sources** -- LinkedIn, Indeed, SEEK, Naukri, Reed, StepStone ship as built-in YAML plugins. Write your own plugin for any job site in minutes — no code required, just a YAML file with prompts. Import community plugins via the UI.
+- **Global ATS support** -- 30+ applicant tracking systems supported out of the box (Workday, Greenhouse, Lever, iCIMS, SmartRecruiters, Taleo, SuccessFactors, Personio, Teamtailor, Darwinbox, and more). The self-learning memory system transfers knowledge across all sites using the same ATS — apply on one Workday site, and every future Workday application benefits.
+- **18 countries, 11 languages** -- Country-aware profiles (date formats, currencies, work authorization, notice periods) with full UI translation. Auto-detects language from your country.
+- **Job collection** -- AI browser agent searches your selected platform for jobs matching your target titles and locations
 - **Automated applications** -- AI agent fills forms, uploads your resume, answers screening questions
+- **AI cover letter generation** -- One-click tailored cover letters using your LLM, customized per job description
 - **Tailored resumes** (beta) -- Auto-customizes your resume for each job description
-- **Self-learning memory** -- Stores per-ATS procedural knowledge (navigation patterns, form strategies, UI quirks). Lessons from one Workday site apply to all Workday sites.
+- **Self-learning memory** -- Stores per-ATS procedural knowledge (navigation patterns, form strategies, UI quirks). Lessons from one Workday site apply to all Workday sites globally.
 - **Smart Q&A reuse** -- Learns answers from previous applications and reuses them
-- **Multi-LLM support** -- OpenAI, Anthropic, AWS Bedrock, or Ollama for local models
+- **Multi-LLM support** -- OpenAI, Anthropic, AWS Bedrock, Ollama, or OpenRouter (100+ models)
 - **Dashboard** -- Real-time stats, success rates, per-domain performance, memory impact analysis
 - **CLI tools** -- Power-user scripts for collection, application, memory management, and analytics
 - **100% local** -- All data stored on your machine in your OS app data directory
