@@ -1,0 +1,73 @@
+{
+  "title": "Setup Wizard",
+  "steps": {
+    "welcome": "Welcome",
+    "llm": "AI Provider",
+    "resume": "Resume & Profile",
+    "profile": "Review Profile",
+    "ready": "Ready!"
+  },
+  "welcome": {
+    "heading": "Welcome to LangHire!",
+    "description": "Let's get you set up in just a few minutes. This wizard will walk you through the essential configuration.",
+    "howItWorks": "How it works:",
+    "items": {
+      "configureAi": "Configure AI provider",
+      "configureAiDesc": "The brain that fills out forms",
+      "uploadResume": "Upload your resume",
+      "uploadResumeDesc": "AI reads it and auto-fills your profile",
+      "reviewProfile": "Review your profile",
+      "reviewProfileDesc": "Verify the AI-extracted info",
+      "loginLinkedIn": "Log into LinkedIn",
+      "loginLinkedInDesc": "Where we find and apply to jobs"
+    }
+  },
+  "llmStep": {
+    "heading": "Configure Your AI Provider",
+    "description": "Set up the AI model that powers everything — resume parsing, form filling, and job applications."
+  },
+  "resumeStep": {
+    "heading": "Resume & Auto-Fill Profile",
+    "description": "Set your resume path, then let AI read it and auto-fill your candidate profile.",
+    "autoFill": {
+      "title": "AI Auto-Fill Profile",
+      "description": "Extract name, email, phone, skills, education, experience, languages, and suggested job titles from your resume.",
+      "button": "Auto-fill Profile from Resume",
+      "parsing": "Parsing your resume...",
+      "nextHint": "Click \"Next\" to review your auto-filled profile.",
+      "tryAgain": "Try again"
+    },
+    "prerequisite": "Save your AI provider (Step 1) and resume path above first.",
+    "prerequisiteLabel": "To auto-fill:"
+  },
+  "profileStep": {
+    "heading": "Review Your Profile",
+    "descriptionParsed": "Your profile was auto-filled from your resume! Open the Profile page to review and fine-tune.",
+    "descriptionManual": "Fill in your candidate information on the Profile page. The agent uses this for applications.",
+    "profileConfigured": "Profile is configured",
+    "profileNeeded": "Profile needs your name at minimum",
+    "keyFields": "Key fields: Name, Email, Phone, Skills, Target Job Titles, Target Locations, Education.",
+    "reviewEdit": "Review & Edit Profile",
+    "goToProfile": "Go to Profile",
+    "autoFilledHint": "Check Target Job Titles and Target Locations — these drive the job collection search.",
+    "autoFilledLabel": "Auto-filled!"
+  },
+  "readyStep": {
+    "heading": "You're All Set!",
+    "descriptionDone": "Everything is configured. Start collecting and applying!",
+    "descriptionIncomplete": "You can finish setup later. Check the Guide page anytime.",
+    "setupStatus": "Setup Status:",
+    "aiProvider": "AI Provider",
+    "resume": "Resume",
+    "profile": "Profile",
+    "collectJobs": "Collect Jobs",
+    "viewGuide": "View Guide"
+  },
+  "nav": {
+    "back": "Back",
+    "skipForNow": "Skip for now",
+    "letsGo": "Let's Go",
+    "next": "Next",
+    "finishSetup": "Finish Setup"
+  }
+}

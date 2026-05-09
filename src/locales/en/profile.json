@@ -1,0 +1,87 @@
+{
+  "title": "Candidate Profile",
+  "subtitle": "Your personal information used for job applications",
+  "save": "Save Profile",
+  "saved": "Saved",
+  "saveError": "Failed to save profile. Please try again.",
+  "country": {
+    "title": "Country",
+    "label": "Your Country",
+    "selectPlaceholder": "Select country...",
+    "dateFormat": "Date format: {{format}}",
+    "currency": "Currency: {{currency}}"
+  },
+  "personal": {
+    "title": "Personal Information",
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "phonePrefix": "+1",
+    "phonePlaceholder": "Phone number",
+    "currentRole": "Current Role",
+    "nationality": "Nationality",
+    "dateOfBirth": "Date of Birth"
+  },
+  "address": {
+    "title": "Address",
+    "street": "Street",
+    "city": "City",
+    "state": "State",
+    "zip": "ZIP/Postal Code",
+    "country": "Country"
+  },
+  "work": {
+    "title": "Work Preferences",
+    "workAuth": "Work Authorization",
+    "workAuthPlaceholder": "Select...",
+    "workMode": "Work Mode",
+    "remote": "Remote",
+    "hybrid": "Hybrid",
+    "onsite": "On-site",
+    "visaSponsorship": "Visa Sponsorship Needed",
+    "willingToRelocate": "Willing to Relocate",
+    "yearsOfExperience": "Years of Experience",
+    "noticePeriod": "Notice Period",
+    "noticePeriodPlaceholder": "Select..."
+  },
+  "education": {
+    "title": "Education",
+    "degree": "Degree",
+    "school": "School",
+    "graduation": "Graduation"
+  },
+  "salary": {
+    "title": "Salary Expectation",
+    "minimum": "Minimum",
+    "maximum": "Maximum",
+    "currency": "Currency",
+    "period": "Period",
+    "annual": "Annual",
+    "monthly": "Monthly"
+  },
+  "coverLetter": {
+    "title": "Cover Letter",
+    "description": "Default cover letter template used when applications request one.",
+    "placeholder": "Write your default cover letter here..."
+  },
+  "targetJobTitles": {
+    "title": "Target Job Titles",
+    "placeholder": "Add a job title..."
+  },
+  "targetLocations": {
+    "title": "Target Locations",
+    "placeholder": "Add a location..."
+  },
+  "skills": {
+    "title": "Skills",
+    "placeholder": "Add a skill..."
+  },
+  "languages": {
+    "title": "Languages",
+    "placeholder": "Add a language..."
+  },
+  "notes": {
+    "title": "Notes",
+    "placeholder": "Any special instructions for the AI agent..."
+  }
+}

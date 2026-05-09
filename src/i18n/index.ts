@@ -11,6 +11,10 @@ import memoryEn from '../locales/en/memory.json';
 import qaEn from '../locales/en/qa.json';
 import logsEn from '../locales/en/logs.json';
 import feedbackEn from '../locales/en/feedback.json';
+import profileEn from '../locales/en/profile.json';
+import llmEn from '../locales/en/llm.json';
+import wizardEn from '../locales/en/wizard.json';
+import guideEn from '../locales/en/guide.json';
 
 const resources = {
   en: {
@@ -23,6 +27,10 @@ const resources = {
     qa: qaEn,
     logs: logsEn,
     feedback: feedbackEn,
+    profile: profileEn,
+    llm: llmEn,
+    wizard: wizardEn,
+    guide: guideEn,
   },
 };
 
@@ -33,7 +41,7 @@ i18n
     lng: getSavedLanguage() || 'en',
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'dashboard', 'settings', 'jobs', 'apply', 'memory', 'qa', 'logs', 'feedback'],
+    ns: ['common', 'dashboard', 'settings', 'jobs', 'apply', 'memory', 'qa', 'logs', 'feedback', 'profile', 'llm', 'wizard', 'guide'],
     interpolation: {
       escapeValue: false,
     },

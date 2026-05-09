@@ -6,6 +6,7 @@ import { PageHeader, LoadingSpinner, Section } from "../components/ui";
 import TagInputShared from "../components/ui/TagInput";
 import { getLanguageFromCountry, getSavedLanguage } from "../i18n/languageDetection";
 import { loadLanguage } from "../i18n";
+import { useTranslation } from "react-i18next";
 
 const defaultProfile: CandidateProfile = {
   name: "",
@@ -35,6 +36,7 @@ const defaultProfile: CandidateProfile = {
 };
 
 export default function Profile() {
+  const { t } = useTranslation("profile");
   const [profile, setProfile] = useState<CandidateProfile>(defaultProfile);
   const [countries, setCountries] = useState<Record<string, CountryConfig>>({});
   const [noticePeriodOptions, setNoticePeriodOptions] = useState<string[]>([]);
@@ -117,7 +119,7 @@ export default function Profile() {
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (e) {
-      setSaveError("Failed to save profile. Please try again.");
+      setSaveError(t("saveError"));
       console.error("Failed to save profile:", e);
     }
   };
@@ -127,12 +129,12 @@ export default function Profile() {
   return (
     <div className="max-w-3xl">
       <PageHeader
-        title="Candidate Profile"
-        subtitle="Your personal information used for job applications"
+        title={t("title")}
+        subtitle={t("subtitle")}
         actions={
           <button onClick={handleSave} className="btn-primary">
             <Save className="w-4 h-4" />
-            {saved ? "Saved" : "Save Profile"}
+            {saved ? t("saved") : t("save")}
           </button>
         }
       />
@@ -141,16 +143,16 @@ export default function Profile() {
       )}
 
       {/* Country Selection */}
-      <Section title="Country">
+      <Section title={t("country.title")}>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-semibold text-foreground mb-1.5">Your Country</label>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">{t("country.label")}</label>
             <select
               value={profile.country}
               onChange={(e) => handleCountryChange(e.target.value)}
               className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
             >
-              <option value="">Select country...</option>
+              <option value="">{t("country.selectPlaceholder")}</option>
               {Object.entries(countries).map(([code, config]) => (
                 <option key={code} value={code}>{config.flag} {config.name}</option>
               ))}
@@ -159,7 +161,7 @@ export default function Profile() {
           {countryConfig && (
             <div className="flex items-end">
               <p className="text-sm text-muted-foreground">
-                Date format: {countryConfig.date_format} &middot; Currency: {countryConfig.currency}
+                {t("country.dateFormat", { format: countryConfig.date_format })} &middot; {t("country.currency", { currency: countryConfig.currency })}
               </p>
             </div>
           )}
@@ -167,62 +169,62 @@ export default function Profile() {
       </Section>
 
       {/* Personal Info */}
-      <Section title="Personal Information">
+      <Section title={t("personal.title")}>
         <div className="grid grid-cols-2 gap-4">
-          <Input label="Full Name" value={profile.name} onChange={(v) => update("name", v)} />
-          <Input label="Email" type="email" value={profile.email} onChange={(v) => update("email", v)} />
+          <Input label={t("personal.fullName")} value={profile.name} onChange={(v) => update("name", v)} />
+          <Input label={t("personal.email")} type="email" value={profile.email} onChange={(v) => update("email", v)} />
           <div>
-            <label className="block text-sm font-semibold text-foreground mb-1.5">Phone</label>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">{t("personal.phone")}</label>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={profile.phone_country_code}
                 onChange={(e) => update("phone_country_code", e.target.value)}
                 className="input-base w-20"
-                placeholder="+1"
+                placeholder={t("personal.phonePrefix")}
               />
               <input
                 type="text"
                 value={profile.phone}
                 onChange={(e) => update("phone", e.target.value)}
                 className="input-base flex-1"
-                placeholder="Phone number"
+                placeholder={t("personal.phonePlaceholder")}
               />
             </div>
           </div>
-          <Input label="Current Role" value={profile.current_role} onChange={(v) => update("current_role", v)} />
+          <Input label={t("personal.currentRole")} value={profile.current_role} onChange={(v) => update("current_role", v)} />
           {countryConfig?.show_nationality && (
-            <Input label="Nationality" value={profile.nationality} onChange={(v) => update("nationality", v)} />
+            <Input label={t("personal.nationality")} value={profile.nationality} onChange={(v) => update("nationality", v)} />
           )}
           {countryConfig?.show_date_of_birth && (
-            <Input label="Date of Birth" value={profile.date_of_birth} onChange={(v) => update("date_of_birth", v)} placeholder={countryConfig.date_format} />
+            <Input label={t("personal.dateOfBirth")} value={profile.date_of_birth} onChange={(v) => update("date_of_birth", v)} placeholder={countryConfig.date_format} />
           )}
         </div>
       </Section>
 
       {/* Address */}
-      <Section title="Address">
+      <Section title={t("address.title")}>
         <div className="grid grid-cols-2 gap-4">
-          <Input label="Street" value={profile.address.street} onChange={(v) => updateNested("address", "street", v)} className="col-span-2" />
-          <Input label="City" value={profile.address.city} onChange={(v) => updateNested("address", "city", v)} />
-          <Input label={countryConfig?.address_labels?.state || "State"} value={profile.address.state} onChange={(v) => updateNested("address", "state", v)} />
-          <Input label={countryConfig?.address_labels?.zip || "ZIP/Postal Code"} value={profile.address.zip} onChange={(v) => updateNested("address", "zip", v)} />
-          <Input label="Country" value={profile.address.country} onChange={(v) => updateNested("address", "country", v)} />
+          <Input label={t("address.street")} value={profile.address.street} onChange={(v) => updateNested("address", "street", v)} className="col-span-2" />
+          <Input label={t("address.city")} value={profile.address.city} onChange={(v) => updateNested("address", "city", v)} />
+          <Input label={countryConfig?.address_labels?.state || t("address.state")} value={profile.address.state} onChange={(v) => updateNested("address", "state", v)} />
+          <Input label={countryConfig?.address_labels?.zip || t("address.zip")} value={profile.address.zip} onChange={(v) => updateNested("address", "zip", v)} />
+          <Input label={t("address.country")} value={profile.address.country} onChange={(v) => updateNested("address", "country", v)} />
         </div>
       </Section>
 
       {/* Work Preferences */}
-      <Section title="Work Preferences">
+      <Section title={t("work.title")}>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-semibold text-foreground mb-1.5">Work Authorization</label>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">{t("work.workAuth")}</label>
             {countryConfig?.work_auth_options ? (
               <select
                 value={profile.work_authorization}
                 onChange={(e) => update("work_authorization", e.target.value)}
                 className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
               >
-                <option value="">Select...</option>
+                <option value="">{t("work.workAuthPlaceholder")}</option>
                 {countryConfig.work_auth_options.map((opt) => (
                   <option key={opt} value={opt}>{opt}</option>
                 ))}
@@ -237,29 +239,29 @@ export default function Profile() {
             )}
           </div>
           <div>
-            <label className="block text-sm font-semibold text-foreground mb-1.5">Work Mode</label>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">{t("work.workMode")}</label>
             <select
               value={profile.preferred_work_mode}
               onChange={(e) => update("preferred_work_mode", e.target.value)}
               className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
             >
-              <option value="remote">Remote</option>
-              <option value="hybrid">Hybrid</option>
-              <option value="onsite">On-site</option>
+              <option value="remote">{t("work.remote")}</option>
+              <option value="hybrid">{t("work.hybrid")}</option>
+              <option value="onsite">{t("work.onsite")}</option>
             </select>
           </div>
-          <Checkbox label="Visa Sponsorship Needed" checked={profile.visa_sponsorship_needed} onChange={(v) => update("visa_sponsorship_needed", v)} />
-          <Checkbox label="Willing to Relocate" checked={profile.willing_to_relocate} onChange={(v) => update("willing_to_relocate", v)} />
-          <Input label="Years of Experience" type="number" value={String(profile.years_of_experience)} onChange={(v) => update("years_of_experience", Number(v))} />
+          <Checkbox label={t("work.visaSponsorship")} checked={profile.visa_sponsorship_needed} onChange={(v) => update("visa_sponsorship_needed", v)} />
+          <Checkbox label={t("work.willingToRelocate")} checked={profile.willing_to_relocate} onChange={(v) => update("willing_to_relocate", v)} />
+          <Input label={t("work.yearsOfExperience")} type="number" value={String(profile.years_of_experience)} onChange={(v) => update("years_of_experience", Number(v))} />
           {countryConfig?.show_notice_period && (
             <div>
-              <label className="block text-sm font-semibold text-foreground mb-1.5">Notice Period</label>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("work.noticePeriod")}</label>
               <select
                 value={profile.notice_period}
                 onChange={(e) => update("notice_period", e.target.value)}
                 className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
               >
-                <option value="">Select...</option>
+                <option value="">{t("work.noticePeriodPlaceholder")}</option>
                 {noticePeriodOptions.map((opt) => (
                   <option key={opt} value={opt}>{opt}</option>
                 ))}
@@ -270,29 +272,29 @@ export default function Profile() {
       </Section>
 
       {/* Education */}
-      <Section title="Education">
+      <Section title={t("education.title")}>
         <div className="grid grid-cols-2 gap-4">
-          <Input label="Degree" value={profile.education.degree} onChange={(v) => updateNested("education", "degree", v)} />
-          <Input label="School" value={profile.education.school} onChange={(v) => updateNested("education", "school", v)} />
-          <Input label="Graduation" value={profile.education.graduation} onChange={(v) => updateNested("education", "graduation", v)} />
+          <Input label={t("education.degree")} value={profile.education.degree} onChange={(v) => updateNested("education", "degree", v)} />
+          <Input label={t("education.school")} value={profile.education.school} onChange={(v) => updateNested("education", "school", v)} />
+          <Input label={t("education.graduation")} value={profile.education.graduation} onChange={(v) => updateNested("education", "graduation", v)} />
         </div>
       </Section>
 
       {/* Salary */}
-      <Section title="Salary Expectation">
+      <Section title={t("salary.title")}>
         <div className="grid grid-cols-2 gap-4">
-          <Input label="Minimum" type="number" value={String(profile.salary_expectation.min)} onChange={(v) => updateNested("salary_expectation", "min", Number(v))} />
-          <Input label="Maximum" type="number" value={String(profile.salary_expectation.max)} onChange={(v) => updateNested("salary_expectation", "max", Number(v))} />
-          <Input label="Currency" value={profile.salary_expectation.currency} onChange={(v) => updateNested("salary_expectation", "currency", v)} />
+          <Input label={t("salary.minimum")} type="number" value={String(profile.salary_expectation.min)} onChange={(v) => updateNested("salary_expectation", "min", Number(v))} />
+          <Input label={t("salary.maximum")} type="number" value={String(profile.salary_expectation.max)} onChange={(v) => updateNested("salary_expectation", "max", Number(v))} />
+          <Input label={t("salary.currency")} value={profile.salary_expectation.currency} onChange={(v) => updateNested("salary_expectation", "currency", v)} />
           <div>
-            <label className="block text-sm font-semibold text-foreground mb-1.5">Period</label>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">{t("salary.period")}</label>
             <select
               value={profile.salary_expectation.period}
               onChange={(e) => updateNested("salary_expectation", "period", e.target.value)}
               className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
             >
-              <option value="annual">Annual</option>
-              <option value="monthly">Monthly</option>
+              <option value="annual">{t("salary.annual")}</option>
+              <option value="monthly">{t("salary.monthly")}</option>
             </select>
           </div>
         </div>
@@ -300,46 +302,46 @@ export default function Profile() {
 
       {/* Cover Letter (conditional) */}
       {countryConfig?.show_cover_letter && (
-        <Section title="Cover Letter">
+        <Section title={t("coverLetter.title")}>
           <p className="text-sm text-muted-foreground mb-2">
-            Default cover letter template used when applications request one.
+            {t("coverLetter.description")}
           </p>
           <textarea value={profile.cover_letter} onChange={(e) => update("cover_letter", e.target.value)}
             rows={6} className="input-base"
-            placeholder="Write your default cover letter here..." />
+            placeholder={t("coverLetter.placeholder")} />
         </Section>
       )}
 
       {/* Tag Lists */}
-      <Section title="Target Job Titles">
+      <Section title={t("targetJobTitles.title")}>
         <TagInputShared tags={profile.target_job_titles} value={newTitle} onChange={setNewTitle}
           onAdd={() => addToList("target_job_titles", newTitle, setNewTitle)}
-          onRemove={(v) => removeFromList("target_job_titles", v)} placeholder="Add a job title..." />
+          onRemove={(v) => removeFromList("target_job_titles", v)} placeholder={t("targetJobTitles.placeholder")} />
       </Section>
 
-      <Section title="Target Locations">
+      <Section title={t("targetLocations.title")}>
         <TagInputShared tags={profile.target_locations} value={newLocation} onChange={setNewLocation}
           onAdd={() => addToList("target_locations", newLocation, setNewLocation)}
-          onRemove={(v) => removeFromList("target_locations", v)} placeholder="Add a location..." />
+          onRemove={(v) => removeFromList("target_locations", v)} placeholder={t("targetLocations.placeholder")} />
       </Section>
 
-      <Section title="Skills">
+      <Section title={t("skills.title")}>
         <TagInputShared tags={profile.skills} value={newSkill} onChange={setNewSkill}
           onAdd={() => addToList("skills", newSkill, setNewSkill)}
-          onRemove={(v) => removeFromList("skills", v)} placeholder="Add a skill..." />
+          onRemove={(v) => removeFromList("skills", v)} placeholder={t("skills.placeholder")} />
       </Section>
 
-      <Section title="Languages">
+      <Section title={t("languages.title")}>
         <TagInputShared tags={profile.languages} value={newLanguage} onChange={setNewLanguage}
           onAdd={() => addToList("languages", newLanguage, setNewLanguage)}
-          onRemove={(v) => removeFromList("languages", v)} placeholder="Add a language..." />
+          onRemove={(v) => removeFromList("languages", v)} placeholder={t("languages.placeholder")} />
       </Section>
 
       {/* Notes */}
-      <Section title="Notes">
+      <Section title={t("notes.title")}>
         <textarea value={profile.notes} onChange={(e) => update("notes", e.target.value)}
           rows={3} className="input-base"
-          placeholder="Any special instructions for the AI agent..." />
+          placeholder={t("notes.placeholder")} />
       </Section>
     </div>
   );
@@ -368,4 +370,3 @@ function Checkbox({ label, checked, onChange }: {
     </label>
   );
 }
-

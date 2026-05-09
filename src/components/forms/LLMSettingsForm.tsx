@@ -3,13 +3,14 @@ import { TestTube, CheckCircle, XCircle, Loader2, ChevronDown, ChevronUp, Extern
 import { getLLMSettings, saveLLMSettings, testLLMConnection, fetchOllamaModels } from "../../lib/api";
 import { trackEvent } from "../../lib/analytics";
 import type { LLMProvider, LLMSettings } from "../../lib/types";
+import { useTranslation } from "react-i18next";
 
-const PROVIDERS: { id: LLMProvider; name: string; description: string }[] = [
-  { id: "openrouter", name: "OpenRouter (Recommended)", description: "100+ vision models (GPT, Claude, Gemini, Qwen, Llama) via a single API key" },
-  { id: "openai", name: "OpenAI", description: "GPT-4o, GPT-4o-mini, and other OpenAI models" },
-  { id: "anthropic", name: "Anthropic", description: "Claude Sonnet, Haiku, and Opus models (direct API)" },
-  { id: "bedrock", name: "AWS Bedrock", description: "Claude and other models via AWS Bedrock" },
-  { id: "ollama", name: "Ollama", description: "Run open-source models locally — no API key needed" },
+const PROVIDERS: { id: LLMProvider; nameKey: string; descKey: string }[] = [
+  { id: "openrouter", nameKey: "providers.openrouter.name", descKey: "providers.openrouter.description" },
+  { id: "openai", nameKey: "providers.openai.name", descKey: "providers.openai.description" },
+  { id: "anthropic", nameKey: "providers.anthropic.name", descKey: "providers.anthropic.description" },
+  { id: "bedrock", nameKey: "providers.bedrock.name", descKey: "providers.bedrock.description" },
+  { id: "ollama", nameKey: "providers.ollama.name", descKey: "providers.ollama.description" },
 ];
 
 const OPENAI_MODELS = ["gpt-5.4-nano", "gpt-5.4-mini", "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"];
@@ -47,12 +48,21 @@ const defaultSettings: LLMSettings = {
   openrouter: { api_key: "", model: "qwen/qwen3.6-plus" },
 };
 
+const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
+  openai: "OpenAI",
+  anthropic: "Anthropic",
+  bedrock: "AWS Bedrock",
+  ollama: "Ollama",
+  openrouter: "OpenRouter",
+};
+
 interface LLMSettingsFormProps {
   onSaved?: () => void;
   compact?: boolean;
 }
 
 export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormProps) {
+  const { t } = useTranslation("llm");
   const [settings, setSettings] = useState<LLMSettings>(defaultSettings);
   const [testStatus, setTestStatus] = useState<"idle" | "testing" | "success" | "error">("idle");
   const [testMessage, setTestMessage] = useState("");
@@ -204,10 +214,10 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
     try {
       const result = await testLLMConnection(settings);
       setTestStatus(result.success ? "success" : "error");
-      setTestMessage(result.message || (result.success ? "Connection successful!" : "Connection failed."));
+      setTestMessage(result.message || (result.success ? t("status.connectionSuccessful") : t("status.connectionFailed")));
     } catch (e) {
       setTestStatus("error");
-      setTestMessage(e instanceof Error ? e.message : "Connection failed.");
+      setTestMessage(e instanceof Error ? e.message : t("status.connectionFailed"));
     }
   };
 
@@ -223,7 +233,7 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
             className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-secondary/50 transition-colors"
           >
             <span className="text-[13px] font-semibold text-primary">
-              How to get your {{ openai: "OpenAI", anthropic: "Anthropic", openrouter: "OpenRouter" }[settings.provider]} API key
+              {t("guide.howToGetKey", { provider: PROVIDER_DISPLAY_NAMES[settings.provider] })}
             </span>
             {showGuide ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
           </button>
@@ -234,11 +244,11 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                 <div className="space-y-4">
                   <div className="space-y-2.5">
                     {[
-                      { step: 1, text: "Go to the OpenAI platform and create a free account (or sign in).", link: "https://platform.openai.com/signup", linkText: "platform.openai.com/signup" },
-                      { step: 2, text: "Add a payment method under Settings > Billing. API access requires billing even if you have ChatGPT Plus.", link: "https://platform.openai.com/settings/organization/billing/overview", linkText: "Add billing" },
-                      { step: 3, text: "Go to the API keys page.", link: "https://platform.openai.com/api-keys", linkText: "platform.openai.com/api-keys" },
-                      { step: 4, text: 'Click "Create new secret key", give it a name, then click Create.' },
-                      { step: 5, text: "Copy the key and paste it below. It starts with sk- and is only shown once." },
+                      { step: 1, text: t("guide.openai.step1"), link: "https://platform.openai.com/signup", linkText: t("guide.openai.step1Link") },
+                      { step: 2, text: t("guide.openai.step2"), link: "https://platform.openai.com/settings/organization/billing/overview", linkText: t("guide.openai.step2Link") },
+                      { step: 3, text: t("guide.openai.step3"), link: "https://platform.openai.com/api-keys", linkText: t("guide.openai.step3Link") },
+                      { step: 4, text: t("guide.openai.step4") },
+                      { step: 5, text: t("guide.openai.step5") },
                     ].map(({ step, text, link, linkText }) => (
                       <div key={step} className="flex gap-3">
                         <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -256,18 +266,18 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                     ))}
                   </div>
                   <div className="bg-[#F7F7F7] rounded-xl p-3 text-[12px] text-muted-foreground">
-                    <strong className="text-foreground">Note:</strong> This is separate from your ChatGPT subscription. The API has its own pay-as-you-go billing. GPT-4o costs roughly $0.01-0.03 per job application.
+                    <strong className="text-foreground">{t("guide.note")}</strong> {t("guide.openai.note")}
                   </div>
                 </div>
               ) : settings.provider === "anthropic" ? (
                 <div className="space-y-4">
                   <div className="space-y-2.5">
                     {[
-                      { step: 1, text: "Go to the Anthropic console and create a free account (or sign in).", link: "https://console.anthropic.com/signup", linkText: "console.anthropic.com/signup" },
-                      { step: 2, text: "Add a payment method under Settings > Billing. A small free trial credit may be available.", link: "https://console.anthropic.com/settings/billing", linkText: "Add billing" },
-                      { step: 3, text: "Go to the API keys page.", link: "https://console.anthropic.com/settings/keys", linkText: "console.anthropic.com/settings/keys" },
-                      { step: 4, text: 'Click "Create Key", give it a name, then click Create.' },
-                      { step: 5, text: "Copy the key and paste it below. It starts with sk-ant- and is only shown once." },
+                      { step: 1, text: t("guide.anthropic.step1"), link: "https://console.anthropic.com/signup", linkText: t("guide.anthropic.step1Link") },
+                      { step: 2, text: t("guide.anthropic.step2"), link: "https://console.anthropic.com/settings/billing", linkText: t("guide.anthropic.step2Link") },
+                      { step: 3, text: t("guide.anthropic.step3"), link: "https://console.anthropic.com/settings/keys", linkText: t("guide.anthropic.step3Link") },
+                      { step: 4, text: t("guide.anthropic.step4") },
+                      { step: 5, text: t("guide.anthropic.step5") },
                     ].map(({ step, text, link, linkText }) => (
                       <div key={step} className="flex gap-3">
                         <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -285,17 +295,17 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                     ))}
                   </div>
                   <div className="bg-[#F7F7F7] rounded-xl p-3 text-[12px] text-muted-foreground">
-                    <strong className="text-foreground">Note:</strong> Claude Sonnet costs roughly $0.01-0.03 per job application. The API is pay-as-you-go.
+                    <strong className="text-foreground">{t("guide.note")}</strong> {t("guide.anthropic.note")}
                   </div>
                 </div>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2.5">
                     {[
-                      { step: 1, text: "Go to OpenRouter and create a free account (or sign in).", link: "https://openrouter.ai", linkText: "openrouter.ai" },
-                      { step: 2, text: "Go to the API keys page.", link: "https://openrouter.ai/keys", linkText: "openrouter.ai/keys" },
-                      { step: 3, text: 'Click "Create Key", give it a name, then click Create.' },
-                      { step: 4, text: "Copy the key and paste it below. It starts with sk-or-v1-." },
+                      { step: 1, text: t("guide.openrouter.step1"), link: "https://openrouter.ai", linkText: t("guide.openrouter.step1Link") },
+                      { step: 2, text: t("guide.openrouter.step2"), link: "https://openrouter.ai/keys", linkText: t("guide.openrouter.step2Link") },
+                      { step: 3, text: t("guide.openrouter.step3") },
+                      { step: 4, text: t("guide.openrouter.step4") },
                     ].map(({ step, text, link, linkText }) => (
                       <div key={step} className="flex gap-3">
                         <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -313,7 +323,7 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                     ))}
                   </div>
                   <div className="bg-[#F7F7F7] rounded-xl p-3 text-[12px] text-muted-foreground">
-                    <strong className="text-foreground">Note:</strong> OpenRouter gives you access to 100+ models with a single key. Add credits at openrouter.ai/credits. Pricing varies per model.
+                    <strong className="text-foreground">{t("guide.note")}</strong> {t("guide.openrouter.note")}
                   </div>
                 </div>
               )}
@@ -324,14 +334,14 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
 
       {/* Provider Selection */}
       <div className={compact ? "" : "card"}>
-        {!compact && <h3 className="text-sm font-bold text-foreground mb-4">Select Provider</h3>}
+        {!compact && <h3 className="text-sm font-bold text-foreground mb-4">{t("selectProvider")}</h3>}
         <div className="space-y-2">
-          {PROVIDERS.map(({ id, name, description }) => (
+          {PROVIDERS.map(({ id, nameKey, descKey }) => (
             <label key={id} className={`flex items-start gap-3 p-4 rounded-2xl border cursor-pointer transition-all ${settings.provider === id ? "border-foreground bg-secondary" : "border-border hover:border-gray-300"}`}>
               <input type="radio" name="provider" value={id} checked={settings.provider === id} onChange={() => updateProvider(id)} className="mt-1" />
               <div>
-                <p className="text-sm font-medium text-foreground">{name}</p>
-                <p className="text-xs text-muted-foreground">{description}</p>
+                <p className="text-sm font-medium text-foreground">{t(nameKey)}</p>
+                <p className="text-xs text-muted-foreground">{t(descKey)}</p>
               </div>
             </label>
           ))}
@@ -340,16 +350,16 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
 
       {/* Provider Config */}
       <div className={compact ? "" : "card"}>
-        {!compact && <h3 className="text-sm font-bold text-foreground mb-4">{{ openai: "OpenAI", anthropic: "Anthropic", bedrock: "AWS Bedrock", ollama: "Ollama", openrouter: "OpenRouter" }[settings.provider]} Configuration</h3>}
+        {!compact && <h3 className="text-sm font-bold text-foreground mb-4">{t("configuration", { provider: PROVIDER_DISPLAY_NAMES[settings.provider] })}</h3>}
 
         {settings.provider === "openai" && (
           <div className="space-y-3">
             <div>
-              <label className="block text-sm font-semibold text-foreground mb-1.5">API Key</label>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.apiKey")}</label>
               <input type="password" value={settings.openai?.api_key || ""} onChange={(e) => updateOpenAI("api_key", e.target.value)} placeholder="sk-..." className="input-base font-mono" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-foreground mb-1.5">Model</label>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.model")}</label>
               <select value={settings.openai?.model || "gpt-4o"} onChange={(e) => updateOpenAI("model", e.target.value)} className="input-base">
                 {OPENAI_MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
               </select>
@@ -360,11 +370,11 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
         {settings.provider === "anthropic" && (
           <div className="space-y-3">
             <div>
-              <label className="block text-sm font-semibold text-foreground mb-1.5">API Key</label>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.apiKey")}</label>
               <input type="password" value={settings.anthropic?.api_key || ""} onChange={(e) => updateAnthropic("api_key", e.target.value)} placeholder="sk-ant-..." className="input-base font-mono" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-foreground mb-1.5">Model</label>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.model")}</label>
               <select value={settings.anthropic?.model || "claude-sonnet-4-20250514"} onChange={(e) => updateAnthropic("model", e.target.value)} className="input-base">
                 {ANTHROPIC_MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
               </select>
@@ -375,35 +385,35 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
         {settings.provider === "bedrock" && (
           <div className="space-y-3">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Authentication</label>
+              <label className="block text-sm font-medium text-foreground mb-2">{t("labels.authentication")}</label>
               <div className="flex gap-2">
-                <button onClick={() => updateBedrock("auth_mode", "profile")} className={`filter-tab ${(settings.bedrock?.auth_mode || "profile") === "profile" ? "filter-tab-active" : "filter-tab-inactive"}`}>AWS CLI Profile</button>
-                <button onClick={() => updateBedrock("auth_mode", "keys")} className={`filter-tab ${settings.bedrock?.auth_mode === "keys" ? "filter-tab-active" : "filter-tab-inactive"}`}>Access Key / Secret Key</button>
+                <button onClick={() => updateBedrock("auth_mode", "profile")} className={`filter-tab ${(settings.bedrock?.auth_mode || "profile") === "profile" ? "filter-tab-active" : "filter-tab-inactive"}`}>{t("labels.awsCliProfile")}</button>
+                <button onClick={() => updateBedrock("auth_mode", "keys")} className={`filter-tab ${settings.bedrock?.auth_mode === "keys" ? "filter-tab-active" : "filter-tab-inactive"}`}>{t("labels.accessKeySecretKey")}</button>
               </div>
             </div>
             {(settings.bedrock?.auth_mode || "profile") === "profile" ? (
               <div>
-                <label className="block text-sm font-semibold text-foreground mb-1.5">Profile Name</label>
+                <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.profileName")}</label>
                 <input value={settings.bedrock?.profile_name || "default"} onChange={(e) => updateBedrock("profile_name", e.target.value)} className="input-base" />
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-semibold text-foreground mb-1.5">Access Key</label>
+                  <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.accessKey")}</label>
                   <input type="password" value={settings.bedrock?.access_key || ""} onChange={(e) => updateBedrock("access_key", e.target.value)} placeholder="AKIA..." className="input-base font-mono" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-foreground mb-1.5">Secret Key</label>
+                  <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.secretKey")}</label>
                   <input type="password" value={settings.bedrock?.secret_key || ""} onChange={(e) => updateBedrock("secret_key", e.target.value)} className="input-base font-mono" />
                 </div>
               </div>
             )}
             <div>
-              <label className="block text-sm font-semibold text-foreground mb-1.5">Region</label>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.region")}</label>
               <input value={settings.bedrock?.region || "us-west-2"} onChange={(e) => updateBedrock("region", e.target.value)} className="input-base" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-foreground mb-1.5">Model</label>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.model")}</label>
               <select value={settings.bedrock?.model || ""} onChange={(e) => updateBedrock("model", e.target.value)} className="input-base">
                 {BEDROCK_MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
               </select>
@@ -414,18 +424,18 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
         {settings.provider === "ollama" && (
           <div className="space-y-3">
             <div>
-              <label className="block text-sm font-semibold text-foreground mb-1.5">Server URL</label>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.serverUrl")}</label>
               <input value={settings.ollama?.base_url || "http://localhost:11434"} onChange={(e) => updateOllama("base_url", e.target.value)} placeholder="http://localhost:11434" className="input-base font-mono" />
-              <p className="text-xs text-muted-foreground mt-1">The URL where your Ollama server is running.</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("ollama.serverUrlHint")}</p>
             </div>
             <div>
               <label className="block text-sm font-semibold text-foreground mb-1.5">
-                Model
+                {t("labels.model")}
                 {ollamaFetching && <Loader2 className="w-3 h-3 animate-spin inline ml-2" />}
               </label>
               {ollamaModels.length > 0 ? (
                 <select value={settings.ollama?.model || ""} onChange={(e) => updateOllama("model", e.target.value)} className="input-base">
-                  <option value="">Select a model</option>
+                  <option value="">{t("labels.selectModel")}</option>
                   {ollamaModels.map((m) => <option key={m} value={m}>{m}</option>)}
                 </select>
               ) : (
@@ -433,8 +443,8 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
               )}
               <p className="text-xs text-muted-foreground mt-1">
                 {ollamaModels.length > 0
-                  ? `${ollamaModels.length} model${ollamaModels.length === 1 ? "" : "s"} found on your server.`
-                  : "Enter a model name, or start your Ollama server to see available models."}
+                  ? t("ollama.modelsFound", { count: ollamaModels.length })
+                  : t("ollama.noModelsHint")}
               </p>
             </div>
           </div>
@@ -443,16 +453,16 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
         {settings.provider === "openrouter" && (
           <div className="space-y-3">
             <div>
-              <label className="block text-sm font-semibold text-foreground mb-1.5">API Key</label>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.apiKey")}</label>
               <input type="password" value={settings.openrouter?.api_key || ""} onChange={(e) => updateOpenRouter("api_key", e.target.value)} placeholder="sk-or-v1-..." className="input-base font-mono" />
               <p className="text-xs text-muted-foreground mt-1">
-                Get your key at{" "}
+                {t("openrouter.keyHint")}{" "}
                 <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">openrouter.ai/keys</a>
               </p>
             </div>
             <div>
               <label className="block text-sm font-semibold text-foreground mb-1.5">
-                Model (Vision)
+                {t("labels.modelVision")}
                 {openrouterFetching && <Loader2 className="w-3 h-3 animate-spin inline ml-2" />}
               </label>
               <select value={settings.openrouter?.model || "openai/gpt-4o"} onChange={(e) => updateOpenRouter("model", e.target.value)} className="input-base">
@@ -477,9 +487,9 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
               })()}
               <p className="text-xs text-muted-foreground mt-1.5">
                 {openrouterModels.length > 0
-                  ? `${openrouterModels.length} vision models available. Prices per million tokens.`
-                  : "Showing curated list. Connect to load all vision models."}
-                {" "}Browse at{" "}
+                  ? t("openrouter.modelsAvailable", { count: openrouterModels.length })
+                  : t("openrouter.curatedList")}
+                {" "}{t("openrouter.browseAt")}{" "}
                 <a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">openrouter.ai/models</a>
               </p>
             </div>
@@ -490,12 +500,12 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
       {/* Status + Test */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 h-5">
-          {saving && <span className="flex items-center gap-1 text-xs text-muted-foreground"><Loader2 className="w-3 h-3 animate-spin" /> Saving...</span>}
-          {saved && !saving && <span className="flex items-center gap-1 text-xs text-green-600"><CheckCircle className="w-3 h-3" /> Saved ✓</span>}
+          {saving && <span className="flex items-center gap-1 text-xs text-muted-foreground"><Loader2 className="w-3 h-3 animate-spin" /> {t("status.saving")}</span>}
+          {saved && !saving && <span className="flex items-center gap-1 text-xs text-green-600"><CheckCircle className="w-3 h-3" /> {t("status.saved")}</span>}
         </div>
         <button onClick={handleTest} disabled={testStatus === "testing"} className="btn-secondary disabled:opacity-50 ml-auto">
           {testStatus === "testing" ? <Loader2 className="w-4 h-4 animate-spin" /> : <TestTube className="w-4 h-4" />}
-          {testStatus === "testing" ? "Testing..." : "Test Connection"}
+          {testStatus === "testing" ? t("status.testing") : t("status.testConnection")}
         </button>
       </div>
       {testStatus === "success" && <div className="flex items-center gap-2 text-green-600"><CheckCircle className="w-4 h-4" /><span className="text-sm">{testMessage}</span></div>}

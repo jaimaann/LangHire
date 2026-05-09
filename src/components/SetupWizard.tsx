@@ -24,6 +24,7 @@ import {
 } from "../lib/api";
 import { trackEvent } from "../lib/analytics";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import LLMSettingsForm from "./forms/LLMSettingsForm";
 import ResumePickerForm from "./forms/ResumePickerForm";
 
@@ -34,14 +35,15 @@ interface SetupWizardProps {
 }
 
 const STEPS = [
-  { id: "welcome", label: "Welcome", icon: Rocket },
-  { id: "llm", label: "AI Provider", icon: Cpu },
-  { id: "resume", label: "Resume & Profile", icon: FileText },
-  { id: "profile", label: "Review Profile", icon: User },
-  { id: "ready", label: "Ready!", icon: CheckCircle },
+  { id: "welcome", icon: Rocket },
+  { id: "llm", icon: Cpu },
+  { id: "resume", icon: FileText },
+  { id: "profile", icon: User },
+  { id: "ready", icon: CheckCircle },
 ];
 
 export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }: SetupWizardProps) {
+  const { t } = useTranslation("wizard");
   const [step, setStep] = useState(initialStep);
   const [status, setStatus] = useState<SetupStatus | null>(null);
   const [parsing, setParsing] = useState(false);
@@ -51,6 +53,14 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
     fields_filled?: number;
   } | null>(null);
   const navigate = useNavigate();
+
+  const stepLabels = [
+    t("steps.welcome"),
+    t("steps.llm"),
+    t("steps.resume"),
+    t("steps.profile"),
+    t("steps.ready"),
+  ];
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -93,7 +103,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
             <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center">
               <Briefcase className="w-4 h-4 text-white" />
             </div>
-            <h2 className="text-lg font-bold text-foreground">Setup Wizard</h2>
+            <h2 className="text-lg font-bold text-foreground">{t("title")}</h2>
           </div>
           <button onClick={onClose} className="p-2 text-muted-foreground hover:text-foreground rounded-xl hover:bg-secondary transition-colors">
             <X className="w-5 h-5" />
@@ -112,7 +122,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs ${isDone ? "bg-green-100 text-green-700" : isActive ? "bg-primary text-primary-foreground" : "bg-gray-100 text-gray-400"}`}>
                     {isDone ? <CheckCircle className="w-4 h-4" /> : <Icon className="w-3.5 h-3.5" />}
                   </div>
-                  <span className={`text-xs font-medium hidden sm:inline ${isActive ? "text-foreground" : isDone ? "text-green-700" : "text-muted-foreground"}`}>{s.label}</span>
+                  <span className={`text-xs font-medium hidden sm:inline ${isActive ? "text-foreground" : isDone ? "text-green-700" : "text-muted-foreground"}`}>{stepLabels[i]}</span>
                   {i < STEPS.length - 1 && <div className={`w-4 h-px mx-1 ${isDone ? "bg-green-300" : "bg-gray-200"}`} />}
                 </div>
               );
@@ -129,18 +139,18 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
               <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Briefcase className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-2">Welcome to LangHire!</h3>
+              <h3 className="text-2xl font-bold text-foreground mb-2">{t("welcome.heading")}</h3>
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                Let's get you set up in just a few minutes. This wizard will walk you through the essential configuration.
+                {t("welcome.description")}
               </p>
               <div className="bg-gray-50 rounded-xl p-5 max-w-md mx-auto text-left">
-                <h4 className="text-sm font-semibold text-foreground mb-3">How it works:</h4>
+                <h4 className="text-sm font-semibold text-foreground mb-3">{t("welcome.howItWorks")}</h4>
                 <div className="space-y-3">
                   {[
-                    { icon: Cpu, title: "Configure AI provider", desc: "The brain that fills out forms" },
-                    { icon: FileText, title: "Upload your resume", desc: "AI reads it and auto-fills your profile" },
-                    { icon: User, title: "Review your profile", desc: "Verify the AI-extracted info" },
-                    { icon: Key, title: "Log into LinkedIn", desc: "Where we find and apply to jobs" },
+                    { icon: Cpu, title: t("welcome.items.configureAi"), desc: t("welcome.items.configureAiDesc") },
+                    { icon: FileText, title: t("welcome.items.uploadResume"), desc: t("welcome.items.uploadResumeDesc") },
+                    { icon: User, title: t("welcome.items.reviewProfile"), desc: t("welcome.items.reviewProfileDesc") },
+                    { icon: Key, title: t("welcome.items.loginLinkedIn"), desc: t("welcome.items.loginLinkedInDesc") },
                   ].map((item) => (
                     <div key={item.title} className="flex items-start gap-3">
                       <div className="w-8 h-8 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
@@ -160,9 +170,9 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
           {/* Step 1: LLM Provider — INLINE FORM */}
           {step === 1 && (
             <div>
-              <h3 className="text-xl font-bold text-foreground mb-2">Configure Your AI Provider</h3>
+              <h3 className="text-xl font-bold text-foreground mb-2">{t("llmStep.heading")}</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Set up the AI model that powers everything — resume parsing, form filling, and job applications.
+                {t("llmStep.description")}
               </p>
               <LLMSettingsForm compact onSaved={fetchStatus} />
             </div>
@@ -171,9 +181,9 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
           {/* Step 2: Resume + Auto-Fill Profile — INLINE FORM */}
           {step === 2 && (
             <div>
-              <h3 className="text-xl font-bold text-foreground mb-2">Resume & Auto-Fill Profile</h3>
+              <h3 className="text-xl font-bold text-foreground mb-2">{t("resumeStep.heading")}</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Set your resume path, then let AI read it and auto-fill your candidate profile.
+                {t("resumeStep.description")}
               </p>
 
               {/* Inline resume picker */}
@@ -186,15 +196,15 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
                 <div className="bg-indigo-50 rounded-xl p-5 border border-indigo-200">
                   <div className="flex items-center gap-2 mb-2">
                     <Sparkles className="w-5 h-5 text-indigo-600" />
-                    <h4 className="text-sm font-semibold text-indigo-900">AI Auto-Fill Profile</h4>
+                    <h4 className="text-sm font-semibold text-indigo-900">{t("resumeStep.autoFill.title")}</h4>
                   </div>
                   <p className="text-xs text-indigo-700 mb-4">
-                    Extract name, email, phone, skills, education, experience, languages, and suggested job titles from your resume.
+                    {t("resumeStep.autoFill.description")}
                   </p>
                   {!parseResult && (
                     <button onClick={handleParseResume} disabled={parsing}
                       className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50">
-                      {parsing ? <><Loader2 className="w-4 h-4 animate-spin" /> Parsing your resume...</> : <><Sparkles className="w-4 h-4" /> 🪄 Auto-fill Profile from Resume</>}
+                      {parsing ? <><Loader2 className="w-4 h-4 animate-spin" /> {t("resumeStep.autoFill.parsing")}</> : <><Sparkles className="w-4 h-4" /> {t("resumeStep.autoFill.button")}</>}
                     </button>
                   )}
                   {parseResult && (
@@ -202,8 +212,8 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
                       {parseResult.success ? <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" /> : <XCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />}
                       <div>
                         <p className={`text-sm font-medium ${parseResult.success ? "text-green-700" : "text-red-700"}`}>{parseResult.message}</p>
-                        {parseResult.success && <p className="text-xs text-green-600 mt-1">Click "Next" to review your auto-filled profile.</p>}
-                        {!parseResult.success && <button onClick={() => setParseResult(null)} className="text-xs text-red-600 underline mt-1">Try again</button>}
+                        {parseResult.success && <p className="text-xs text-green-600 mt-1">{t("resumeStep.autoFill.nextHint")}</p>}
+                        {!parseResult.success && <button onClick={() => setParseResult(null)} className="text-xs text-red-600 underline mt-1">{t("resumeStep.autoFill.tryAgain")}</button>}
                       </div>
                     </div>
                   )}
@@ -212,7 +222,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
 
               {(!status?.llm || !status?.resume) && (
                 <div className="bg-amber-50 rounded-lg p-4 border border-amber-200 mt-4">
-                  <p className="text-xs text-amber-700"><strong>To auto-fill:</strong> Save your AI provider (Step 1) and resume path above first.</p>
+                  <p className="text-xs text-amber-700"><strong>{t("resumeStep.prerequisiteLabel")}</strong> {t("resumeStep.prerequisite")}</p>
                 </div>
               )}
             </div>
@@ -221,26 +231,26 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
           {/* Step 3: Review Profile */}
           {step === 3 && (
             <div>
-              <h3 className="text-xl font-bold text-foreground mb-2">Review Your Profile</h3>
+              <h3 className="text-xl font-bold text-foreground mb-2">{t("profileStep.heading")}</h3>
               <p className="text-sm text-muted-foreground mb-4">
                 {parseResult?.success
-                  ? "Your profile was auto-filled from your resume! Open the Profile page to review and fine-tune."
-                  : "Fill in your candidate information on the Profile page. The agent uses this for applications."}
+                  ? t("profileStep.descriptionParsed")
+                  : t("profileStep.descriptionManual")}
               </p>
               <div className="bg-gray-50 rounded-xl p-5 mb-4">
                 <div className="flex items-center gap-3 mb-3">
                   {status?.profile ? <CheckCircle className="w-5 h-5 text-green-600" /> : <XCircle className="w-5 h-5 text-amber-500" />}
-                  <span className="text-sm font-medium text-foreground">{status?.profile ? "Profile is configured ✓" : "Profile needs your name at minimum"}</span>
+                  <span className="text-sm font-medium text-foreground">{status?.profile ? t("profileStep.profileConfigured") : t("profileStep.profileNeeded")}</span>
                 </div>
-                <p className="text-xs text-muted-foreground mb-3">Key fields: Name, Email, Phone, Skills, Target Job Titles, Target Locations, Education.</p>
+                <p className="text-xs text-muted-foreground mb-3">{t("profileStep.keyFields")}</p>
                 <button onClick={() => { onNavigateAway(step); navigate("/profile"); }}
                   className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90">
-                  <User className="w-4 h-4" /> {status?.profile ? "Review & Edit Profile →" : "Go to Profile →"}
+                  <User className="w-4 h-4" /> {status?.profile ? t("profileStep.reviewEdit") : t("profileStep.goToProfile")}
                 </button>
               </div>
               {parseResult?.success && (
                 <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-                  <p className="text-xs text-green-700"><strong>Auto-filled!</strong> Check Target Job Titles and Target Locations — these drive the job collection search.</p>
+                  <p className="text-xs text-green-700"><strong>{t("profileStep.autoFilledLabel")}</strong> {t("profileStep.autoFilledHint")}</p>
                 </div>
               )}
             </div>
@@ -252,17 +262,17 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
               <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-2">You're All Set!</h3>
+              <h3 className="text-2xl font-bold text-foreground mb-2">{t("readyStep.heading")}</h3>
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                {status?.all_required_done ? "Everything is configured. Start collecting and applying!" : "You can finish setup later. Check the Guide page anytime."}
+                {status?.all_required_done ? t("readyStep.descriptionDone") : t("readyStep.descriptionIncomplete")}
               </p>
               <div className="bg-gray-50 rounded-xl p-5 max-w-sm mx-auto mb-6 text-left">
-                <h4 className="text-sm font-semibold text-foreground mb-3">Setup Status:</h4>
+                <h4 className="text-sm font-semibold text-foreground mb-3">{t("readyStep.setupStatus")}</h4>
                 <div className="space-y-2">
                   {[
-                    { label: "AI Provider", done: status?.llm },
-                    { label: "Resume", done: status?.resume },
-                    { label: "Profile", done: status?.profile },
+                    { label: t("readyStep.aiProvider"), done: status?.llm },
+                    { label: t("readyStep.resume"), done: status?.resume },
+                    { label: t("readyStep.profile"), done: status?.profile },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center gap-2">
                       {item.done ? <CheckCircle className="w-4 h-4 text-green-600" /> : <XCircle className="w-4 h-4 text-amber-500" />}
@@ -272,8 +282,8 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
                 </div>
               </div>
               <div className="flex gap-3 justify-center">
-                <button onClick={() => { handleFinish(); navigate("/jobs"); }} className="btn-primary"><Search className="w-4 h-4" /> Collect Jobs</button>
-                <button onClick={() => { handleFinish(); navigate("/guide"); }} className="btn-secondary"><BookOpen className="w-4 h-4" /> View Guide</button>
+                <button onClick={() => { handleFinish(); navigate("/jobs"); }} className="btn-primary"><Search className="w-4 h-4" /> {t("readyStep.collectJobs")}</button>
+                <button onClick={() => { handleFinish(); navigate("/guide"); }} className="btn-secondary"><BookOpen className="w-4 h-4" /> {t("readyStep.viewGuide")}</button>
               </div>
             </div>
           )}
@@ -284,19 +294,19 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
           <div>
             {step > 0 && step < STEPS.length - 1 && (
               <button onClick={prev} className="flex items-center gap-1 px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
-                <ChevronLeft className="w-4 h-4" /> Back
+                <ChevronLeft className="w-4 h-4" /> {t("nav.back")}
               </button>
             )}
           </div>
           <div className="flex items-center gap-2">
-            {step < STEPS.length - 1 && <button onClick={onClose} className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip for now</button>}
+            {step < STEPS.length - 1 && <button onClick={onClose} className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground">{t("nav.skipForNow")}</button>}
             {step < STEPS.length - 1 ? (
               <button onClick={next} disabled={parsing} className="flex items-center gap-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 disabled:opacity-50">
-                {step === 0 ? "Let's Go" : "Next"} <ChevronRight className="w-4 h-4" />
+                {step === 0 ? t("nav.letsGo") : t("nav.next")} <ChevronRight className="w-4 h-4" />
               </button>
             ) : (
               <button onClick={handleFinish} className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700">
-                Finish Setup <CheckCircle className="w-4 h-4" />
+                {t("nav.finishSetup")} <CheckCircle className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -305,4 +315,3 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
     </div>
   );
 }
-

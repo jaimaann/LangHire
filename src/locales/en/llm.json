@@ -1,0 +1,97 @@
+{
+  "title": "LLM Settings",
+  "subtitle": "Configure your AI model provider for job applications",
+  "selectProvider": "Select Provider",
+  "configuration": "{{provider}} Configuration",
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (Recommended)",
+      "description": "100+ vision models (GPT, Claude, Gemini, Qwen, Llama) via a single API key"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "GPT-4o, GPT-4o-mini, and other OpenAI models"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "Claude Sonnet, Haiku, and Opus models (direct API)"
+    },
+    "bedrock": {
+      "name": "AWS Bedrock",
+      "description": "Claude and other models via AWS Bedrock"
+    },
+    "ollama": {
+      "name": "Ollama",
+      "description": "Run open-source models locally — no API key needed"
+    }
+  },
+  "labels": {
+    "apiKey": "API Key",
+    "model": "Model",
+    "modelVision": "Model (Vision)",
+    "region": "Region",
+    "accessKey": "Access Key",
+    "secretKey": "Secret Key",
+    "profileName": "Profile Name",
+    "serverUrl": "Server URL",
+    "authentication": "Authentication",
+    "awsCliProfile": "AWS CLI Profile",
+    "accessKeySecretKey": "Access Key / Secret Key",
+    "selectModel": "Select a model"
+  },
+  "guide": {
+    "howToGetKey": "How to get your {{provider}} API key",
+    "openai": {
+      "step1": "Go to the OpenAI platform and create a free account (or sign in).",
+      "step1Link": "platform.openai.com/signup",
+      "step2": "Add a payment method under Settings > Billing. API access requires billing even if you have ChatGPT Plus.",
+      "step2Link": "Add billing",
+      "step3": "Go to the API keys page.",
+      "step3Link": "platform.openai.com/api-keys",
+      "step4": "Click \"Create new secret key\", give it a name, then click Create.",
+      "step5": "Copy the key and paste it below. It starts with sk- and is only shown once.",
+      "note": "This is separate from your ChatGPT subscription. The API has its own pay-as-you-go billing. GPT-4o costs roughly $0.01-0.03 per job application."
+    },
+    "anthropic": {
+      "step1": "Go to the Anthropic console and create a free account (or sign in).",
+      "step1Link": "console.anthropic.com/signup",
+      "step2": "Add a payment method under Settings > Billing. A small free trial credit may be available.",
+      "step2Link": "Add billing",
+      "step3": "Go to the API keys page.",
+      "step3Link": "console.anthropic.com/settings/keys",
+      "step4": "Click \"Create Key\", give it a name, then click Create.",
+      "step5": "Copy the key and paste it below. It starts with sk-ant- and is only shown once.",
+      "note": "Claude Sonnet costs roughly $0.01-0.03 per job application. The API is pay-as-you-go."
+    },
+    "openrouter": {
+      "step1": "Go to OpenRouter and create a free account (or sign in).",
+      "step1Link": "openrouter.ai",
+      "step2": "Go to the API keys page.",
+      "step2Link": "openrouter.ai/keys",
+      "step3": "Click \"Create Key\", give it a name, then click Create.",
+      "step4": "Copy the key and paste it below. It starts with sk-or-v1-.",
+      "note": "OpenRouter gives you access to 100+ models with a single key. Add credits at openrouter.ai/credits. Pricing varies per model."
+    },
+    "note": "Note:"
+  },
+  "ollama": {
+    "serverUrlHint": "The URL where your Ollama server is running.",
+    "modelsFound": "{{count}} model found on your server.",
+    "modelsFound_other": "{{count}} models found on your server.",
+    "noModelsHint": "Enter a model name, or start your Ollama server to see available models."
+  },
+  "openrouter": {
+    "keyHint": "Get your key at",
+    "modelsAvailable": "{{count}} vision models available. Prices per million tokens.",
+    "curatedList": "Showing curated list. Connect to load all vision models.",
+    "browseAt": "Browse at"
+  },
+  "status": {
+    "saving": "Saving...",
+    "saved": "Saved",
+    "testing": "Testing...",
+    "testConnection": "Test Connection",
+    "connectionSuccessful": "Connection successful!",
+    "connectionFailed": "Connection failed."
+  }
+}
