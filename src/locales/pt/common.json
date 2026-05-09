@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "dashboard": "Painel",
+    "guide": "Guia",
+    "profile": "Perfil",
+    "llmSettings": "Configurações LLM",
+    "jobs": "Vagas",
+    "apply": "Candidatar-se",
+    "memory": "Memória",
+    "qa": "Perguntas e Respostas",
+    "logs": "Registros",
+    "settings": "Configurações",
+    "feedback": "Feedback"
+  },
+  "app": {
+    "title": "LangHire",
+    "tagline": "Candidaturas com IA"
+  },
+  "status": {
+    "connected": "Conectado",
+    "startingBackend": "Iniciando backend...",
+    "connecting": "Conectando..."
+  },
+  "btn": {
+    "save": "Salvar",
+    "saved": "Salvo",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "search": "Buscar",
+    "export": "Exportar",
+    "start": "Iniciar",
+    "stop": "Parar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "finish": "Concluir",
+    "browse": "Procurar",
+    "import": "Importar",
+    "copy": "Copiar",
+    "retry": "Tentar novamente",
+    "close": "Fechar"
+  },
+  "jobStatus": {
+    "pending": "Pendente",
+    "applied": "Candidatado",
+    "failed": "Falhou",
+    "blocked": "Bloqueado",
+    "inProgress": "Em andamento"
+  }
+}

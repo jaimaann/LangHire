@@ -93,3 +93,18 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #B0B0B0;
 }
+
+/* RTL support for Arabic */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="rtl"] .fixed.left-0 {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .ml-60 {
+  margin-left: 0;
+  margin-right: 15rem;
+}

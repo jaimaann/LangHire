@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "guide": "Handleiding",
+    "profile": "Profiel",
+    "llmSettings": "LLM-instellingen",
+    "jobs": "Vacatures",
+    "apply": "Solliciteren",
+    "memory": "Geheugen",
+    "qa": "Vragen & Antwoorden",
+    "logs": "Logboeken",
+    "settings": "Instellingen",
+    "feedback": "Feedback"
+  },
+  "app": {
+    "title": "LangHire",
+    "tagline": "AI-gestuurde sollicitaties"
+  },
+  "status": {
+    "connected": "Verbonden",
+    "startingBackend": "Backend starten...",
+    "connecting": "Verbinden..."
+  },
+  "btn": {
+    "save": "Opslaan",
+    "saved": "Opgeslagen",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "search": "Zoeken",
+    "export": "Exporteren",
+    "start": "Starten",
+    "stop": "Stoppen",
+    "back": "Terug",
+    "next": "Volgende",
+    "finish": "Voltooien",
+    "browse": "Bladeren",
+    "import": "Importeren",
+    "copy": "Kopiëren",
+    "retry": "Opnieuw proberen",
+    "close": "Sluiten"
+  },
+  "jobStatus": {
+    "pending": "In afwachting",
+    "applied": "Gesolliciteerd",
+    "failed": "Mislukt",
+    "blocked": "Geblokkeerd",
+    "inProgress": "Bezig"
+  }
+}

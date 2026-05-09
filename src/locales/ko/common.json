@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "dashboard": "대시보드",
+    "guide": "가이드",
+    "profile": "프로필",
+    "llmSettings": "LLM 설정",
+    "jobs": "채용공고",
+    "apply": "지원하기",
+    "memory": "메모리",
+    "qa": "Q&A",
+    "logs": "로그",
+    "settings": "설정",
+    "feedback": "피드백"
+  },
+  "app": {
+    "title": "LangHire",
+    "tagline": "AI 기반 입사지원"
+  },
+  "status": {
+    "connected": "연결됨",
+    "startingBackend": "백엔드 시작 중...",
+    "connecting": "연결 중..."
+  },
+  "btn": {
+    "save": "저장",
+    "saved": "저장됨",
+    "cancel": "취소",
+    "delete": "삭제",
+    "search": "검색",
+    "export": "내보내기",
+    "start": "시작",
+    "stop": "중지",
+    "back": "뒤로",
+    "next": "다음",
+    "finish": "완료",
+    "browse": "찾아보기",
+    "import": "가져오기",
+    "copy": "복사",
+    "retry": "다시 시도",
+    "close": "닫기"
+  },
+  "jobStatus": {
+    "pending": "대기 중",
+    "applied": "지원 완료",
+    "failed": "실패",
+    "blocked": "차단됨",
+    "inProgress": "진행 중"
+  }
+}

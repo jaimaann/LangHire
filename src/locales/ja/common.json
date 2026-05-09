@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "dashboard": "ダッシュボード",
+    "guide": "ガイド",
+    "profile": "プロフィール",
+    "llmSettings": "LLM設定",
+    "jobs": "求人",
+    "apply": "応募",
+    "memory": "メモリー",
+    "qa": "Q&A",
+    "logs": "ログ",
+    "settings": "設定",
+    "feedback": "フィードバック"
+  },
+  "app": {
+    "title": "LangHire",
+    "tagline": "AI搭載の求人応募"
+  },
+  "status": {
+    "connected": "接続済み",
+    "startingBackend": "バックエンド起動中...",
+    "connecting": "接続中..."
+  },
+  "btn": {
+    "save": "保存",
+    "saved": "保存済み",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "search": "検索",
+    "export": "エクスポート",
+    "start": "開始",
+    "stop": "停止",
+    "back": "戻る",
+    "next": "次へ",
+    "finish": "完了",
+    "browse": "参照",
+    "import": "インポート",
+    "copy": "コピー",
+    "retry": "再試行",
+    "close": "閉じる"
+  },
+  "jobStatus": {
+    "pending": "保留中",
+    "applied": "応募済み",
+    "failed": "失敗",
+    "blocked": "ブロック",
+    "inProgress": "進行中"
+  }
+}

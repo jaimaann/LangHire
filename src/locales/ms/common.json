@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "dashboard": "Papan Pemuka",
+    "guide": "Panduan",
+    "profile": "Profil",
+    "llmSettings": "Tetapan LLM",
+    "jobs": "Pekerjaan",
+    "apply": "Memohon",
+    "memory": "Memori",
+    "qa": "Soal Jawab",
+    "logs": "Log",
+    "settings": "Tetapan",
+    "feedback": "Maklum Balas"
+  },
+  "app": {
+    "title": "LangHire",
+    "tagline": "Permohonan Dikuasakan AI"
+  },
+  "status": {
+    "connected": "Disambung",
+    "startingBackend": "Memulakan backend...",
+    "connecting": "Menyambung..."
+  },
+  "btn": {
+    "save": "Simpan",
+    "saved": "Disimpan",
+    "cancel": "Batal",
+    "delete": "Padam",
+    "search": "Cari",
+    "export": "Eksport",
+    "start": "Mula",
+    "stop": "Berhenti",
+    "back": "Kembali",
+    "next": "Seterusnya",
+    "finish": "Selesai",
+    "browse": "Layari",
+    "import": "Import",
+    "copy": "Salin",
+    "retry": "Cuba semula",
+    "close": "Tutup"
+  },
+  "jobStatus": {
+    "pending": "Belum selesai",
+    "applied": "Sudah memohon",
+    "failed": "Gagal",
+    "blocked": "Disekat",
+    "inProgress": "Sedang dijalankan"
+  }
+}
