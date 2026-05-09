@@ -1,0 +1,37 @@
+{
+  "title": "ダッシュボード",
+  "subtitle": "求人応募の進捗状況の概要",
+  "cards": {
+    "totalJobs": "求人総数",
+    "applied": "応募済み",
+    "failed": "失敗",
+    "pending": "保留中",
+    "successRate": "成功率",
+    "memories": "メモリー"
+  },
+  "quickActions": {
+    "title": "クイックアクション",
+    "collectJobs": "求人を収集",
+    "startApplying": "応募開始",
+    "viewMemories": "メモリーを表示"
+  },
+  "setup": {
+    "complete": "セットアップ完了",
+    "gettingStarted": "はじめに",
+    "viewGuide": "ガイド全文を見る",
+    "allDone": "必要なセットアップはすべて完了しました！求人の収集と応募の準備ができています。",
+    "needHelp": "ヘルプが必要ですか？ステップバイステップの手順は<guide>ガイド</guide>をご覧ください。",
+    "stepsComplete": "{{total}}ステップ中{{completed}}完了",
+    "setUp": "設定する",
+    "configureAI": "AIプロバイダーを設定",
+    "setResume": "履歴書のパスを設定",
+    "setupProfile": "プロフィールを設定"
+  },
+  "chromium": {
+    "installing": "Chromiumブラウザをインストール中",
+    "installFailed": "Chromiumのインストールに失敗しました: {{message}}。<code>python3 -m playwright install chromium</code>を手動で実行してください。"
+  },
+  "backend": {
+    "notConnected": "Backendに接続されていません。次のコマンドで起動してください: <code>uv run python backend/main.py</code>"
+  }
+}

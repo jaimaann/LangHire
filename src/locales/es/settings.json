@@ -1,0 +1,41 @@
+{
+  "title": "Configuración",
+  "subtitle": "Configuración general de la aplicación",
+  "resume": {
+    "title": "Currículum",
+    "description": "Archivo PDF del currículum usado para solicitudes de empleo"
+  },
+  "credentials": {
+    "title": "Credenciales de cuenta",
+    "description": "Se usan para crear cuentas en plataformas ATS externas durante las solicitudes. Almacenadas localmente en texto plano. Prefiere usar SSO (Iniciar sesión con LinkedIn/Google) cuando sea posible.",
+    "email": "Correo electrónico",
+    "password": "Contraseña"
+  },
+  "agent": {
+    "title": "Configuración del agente",
+    "maxFailures": "Máx. fallos por empleo",
+    "maxFailuresDesc": "El agente deja de intentar después de este número de fallos consecutivos en un mismo empleo."
+  },
+  "telemetry": {
+    "title": "Privacidad y telemetría",
+    "usageAnalytics": "Análisis de uso",
+    "description": "Ayuda a mejorar LangHire enviando datos de uso anónimos (uso de funciones, informes de fallos). No se transmite información personal ni datos de empleo."
+  },
+  "blockedDomains": {
+    "title": "Dominios bloqueados",
+    "description": "Los empleos en estos dominios se omitirán automáticamente.",
+    "empty": "Sin dominios bloqueados"
+  },
+  "plugins": {
+    "title": "Plugins de fuentes de empleo",
+    "description": "Administrar plugins de fuentes de empleo. Los plugins integrados proporcionan LinkedIn, Indeed, SEEK, Naukri, Reed y StepStone. Importa plugins de la comunidad (archivos .yaml) para sitios de empleo adicionales.",
+    "builtin": "Integrado",
+    "importPlugin": "Importar plugin"
+  },
+  "language": {
+    "title": "Idioma",
+    "label": "Idioma de la interfaz",
+    "auto": "Automático (según país)",
+    "description": "Elige el idioma de la interfaz de la aplicación. Establece en 'Automático' para coincidir con tu país seleccionado."
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "title": "Emplois",
+  "subtitle": "{{total}} emplois collectés · {{applied}} postulés · {{pending}} en attente",
+  "hideCollector": "Masquer le collecteur",
+  "collectJobs": "Collecter des emplois",
+  "status": {
+    "pending": "En attente",
+    "applied": "Postulé",
+    "failed": "Échoué",
+    "blocked": "Bloqué",
+    "inProgress": "En cours"
+  },
+  "filter": {
+    "all": "Tous"
+  },
+  "search": "Rechercher",
+  "searchPlaceholder": "Rechercher par titre de poste ou entreprise...",
+  "collector": {
+    "title": "Collecteur d'emplois",
+    "description": "Recherchez des offres d'emploi correspondant à votre profil. Sélectionnez une plateforme source, entrez un titre de poste et lancez la collecte. La collecte prend généralement 3 à 10 minutes par titre de poste car l'agent fait défiler les résultats.",
+    "loginInfo": "<strong>Connexion :</strong> Un navigateur s'ouvrira et vérifiera si vous êtes connecté à la plateforme sélectionnée. Sinon, l'agent attendra que vous vous connectiez manuellement — puis continuera automatiquement.",
+    "sourcePlatform": "Plateforme source",
+    "jobTitlePlaceholder": "Titre du poste (ex. 'Analyste de données') ou laisser vide pour tous",
+    "maxJobsPlaceholder": "Max emplois",
+    "maxJobsTitle": "Max emplois à collecter (par titre)",
+    "stop": "Arrêter",
+    "start": "Démarrer",
+    "startingCollection": "Démarrage de la collecte...",
+    "collectedProgress": "{{collected}} sur {{max}} emplois collectés",
+    "collectionLog": "Journal de collecte"
+  },
+  "emptyState": {
+    "noMatching": "Aucun emploi correspondant",
+    "noJobsYet": "Aucun emploi collecté pour l'instant",
+    "tryChanging": "Essayez de modifier votre recherche ou filtre.",
+    "clickCollect": "Cliquez sur 'Collecter des emplois' ci-dessus pour rechercher des offres correspondantes.",
+    "startCollecting": "Commencer la collecte"
+  },
+  "jobItem": {
+    "untitled": "Sans titre",
+    "easyApply": "Easy Apply",
+    "unknown": "Inconnu",
+    "error": "Erreur : {{error}}",
+    "collected": "Collecté le {{date}}",
+    "applied": " · Postulé le {{date}}",
+    "coverLetter": "Lettre de motivation",
+    "coverLetterTitle": "Générer une lettre de motivation adaptée pour cet emploi",
+    "applyRunningTitle": "Une candidature est déjà en cours",
+    "retryTitle": "Réessayer cet emploi",
+    "applyTitle": "Postuler à cet emploi",
+    "applying": "Candidature en cours...",
+    "retry": "Réessayer",
+    "apply": "Postuler",
+    "openOnLinkedIn": "Ouvrir sur LinkedIn"
+  },
+  "showingJobs": "Affichage de {{count}} emploi",
+  "showingJobs_plural": "Affichage de {{count}} emplois",
+  "dialog": {
+    "startApplying": "Commencer à postuler",
+    "startCollecting": "Commencer la collecte"
+  },
+  "coverLetterModal": {
+    "title": "Générer une lettre de motivation",
+    "jobAt": "{{title}} chez {{company}}",
+    "noDescription": "Aucune description de poste disponible. Collez la description ci-dessous pour générer une lettre de motivation.",
+    "pastePlaceholder": "Collez la description du poste ici...",
+    "generate": "Générer",
+    "generating": "Génération de la lettre de motivation...",
+    "generatedLabel": "Lettre de motivation générée",
+    "copy": "Copier",
+    "saved": "Enregistré !",
+    "saveToProfile": "Enregistrer dans le profil",
+    "failedGenerate": "Échec de la génération de la lettre de motivation",
+    "failedSave": "Échec de l'enregistrement dans le profil"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "title": "Tetapan LLM",
+  "subtitle": "Konfigurasi pembekal model AI anda untuk permohonan kerja",
+  "selectProvider": "Pilih Pembekal",
+  "configuration": "Konfigurasi {{provider}}",
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (Disyorkan)",
+      "description": "100+ model penglihatan (GPT, Claude, Gemini, Qwen, Llama) melalui satu kunci API"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "GPT-4o, GPT-4o-mini, dan model OpenAI lain"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "Model Claude Sonnet, Haiku, dan Opus (API langsung)"
+    },
+    "bedrock": {
+      "name": "AWS Bedrock",
+      "description": "Claude dan model lain melalui AWS Bedrock"
+    },
+    "ollama": {
+      "name": "Ollama",
+      "description": "Jalankan model sumber terbuka secara tempatan — tiada kunci API diperlukan"
+    }
+  },
+  "labels": {
+    "apiKey": "Kunci API",
+    "model": "Model",
+    "modelVision": "Model (Penglihatan)",
+    "region": "Wilayah",
+    "accessKey": "Kunci Akses",
+    "secretKey": "Kunci Rahsia",
+    "profileName": "Nama Profil",
+    "serverUrl": "URL Pelayan",
+    "authentication": "Pengesahan",
+    "awsCliProfile": "Profil AWS CLI",
+    "accessKeySecretKey": "Kunci Akses / Kunci Rahsia",
+    "selectModel": "Pilih model"
+  },
+  "guide": {
+    "howToGetKey": "Cara mendapatkan kunci API {{provider}} anda",
+    "openai": {
+      "step1": "Pergi ke platform OpenAI dan buat akaun percuma (atau log masuk).",
+      "step1Link": "platform.openai.com/signup",
+      "step2": "Tambah kaedah pembayaran di Settings > Billing. Akses API memerlukan pengebilan walaupun anda mempunyai ChatGPT Plus.",
+      "step2Link": "Tambah pengebilan",
+      "step3": "Pergi ke halaman kunci API.",
+      "step3Link": "platform.openai.com/api-keys",
+      "step4": "Klik \"Create new secret key\", beri nama, kemudian klik Create.",
+      "step5": "Salin kunci dan tampal di bawah. Ia bermula dengan sk- dan hanya ditunjukkan sekali.",
+      "note": "Ini berasingan daripada langganan ChatGPT anda. API mempunyai pengebilan bayar-semasa-guna sendiri. GPT-4o berharga kira-kira $0.01-0.03 setiap permohonan kerja."
+    },
+    "anthropic": {
+      "step1": "Pergi ke konsol Anthropic dan buat akaun percuma (atau log masuk).",
+      "step1Link": "console.anthropic.com/signup",
+      "step2": "Tambah kaedah pembayaran di Settings > Billing. Kredit percubaan percuma kecil mungkin tersedia.",
+      "step2Link": "Tambah pengebilan",
+      "step3": "Pergi ke halaman kunci API.",
+      "step3Link": "console.anthropic.com/settings/keys",
+      "step4": "Klik \"Create Key\", beri nama, kemudian klik Create.",
+      "step5": "Salin kunci dan tampal di bawah. Ia bermula dengan sk-ant- dan hanya ditunjukkan sekali.",
+      "note": "Claude Sonnet berharga kira-kira $0.01-0.03 setiap permohonan kerja. API adalah bayar-semasa-guna."
+    },
+    "openrouter": {
+      "step1": "Pergi ke OpenRouter dan buat akaun percuma (atau log masuk).",
+      "step1Link": "openrouter.ai",
+      "step2": "Pergi ke halaman kunci API.",
+      "step2Link": "openrouter.ai/keys",
+      "step3": "Klik \"Create Key\", beri nama, kemudian klik Create.",
+      "step4": "Salin kunci dan tampal di bawah. Ia bermula dengan sk-or-v1-.",
+      "note": "OpenRouter memberi akses kepada 100+ model dengan satu kunci. Tambah kredit di openrouter.ai/credits. Harga berbeza mengikut model."
+    },
+    "note": "Nota:"
+  },
+  "ollama": {
+    "serverUrlHint": "URL di mana pelayan Ollama anda berjalan.",
+    "modelsFound": "{{count}} model ditemui pada pelayan anda.",
+    "modelsFound_other": "{{count}} model ditemui pada pelayan anda.",
+    "noModelsHint": "Masukkan nama model, atau mulakan pelayan Ollama anda untuk melihat model yang tersedia."
+  },
+  "openrouter": {
+    "keyHint": "Dapatkan kunci anda di",
+    "modelsAvailable": "{{count}} model penglihatan tersedia. Harga per juta token.",
+    "curatedList": "Menunjukkan senarai terpilih. Sambung untuk memuatkan semua model penglihatan.",
+    "browseAt": "Layari di"
+  },
+  "status": {
+    "saving": "Menyimpan...",
+    "saved": "Disimpan",
+    "testing": "Menguji...",
+    "testConnection": "Uji Sambungan",
+    "connectionSuccessful": "Sambungan berjaya!",
+    "connectionFailed": "Sambungan gagal."
+  }
+}

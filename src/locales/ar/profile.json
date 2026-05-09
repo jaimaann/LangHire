@@ -1,0 +1,87 @@
+{
+  "title": "الملف الشخصي للمرشح",
+  "subtitle": "معلوماتك الشخصية المستخدمة في طلبات التوظيف",
+  "save": "حفظ الملف الشخصي",
+  "saved": "تم الحفظ",
+  "saveError": "فشل في حفظ الملف الشخصي. يرجى المحاولة مرة أخرى.",
+  "country": {
+    "title": "البلد",
+    "label": "بلدك",
+    "selectPlaceholder": "اختر البلد...",
+    "dateFormat": "صيغة التاريخ: {{format}}",
+    "currency": "العملة: {{currency}}"
+  },
+  "personal": {
+    "title": "المعلومات الشخصية",
+    "fullName": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "phonePrefix": "+966",
+    "phonePlaceholder": "رقم الهاتف",
+    "currentRole": "المنصب الحالي",
+    "nationality": "الجنسية",
+    "dateOfBirth": "تاريخ الميلاد"
+  },
+  "address": {
+    "title": "العنوان",
+    "street": "الشارع",
+    "city": "المدينة",
+    "state": "المنطقة",
+    "zip": "الرمز البريدي",
+    "country": "البلد"
+  },
+  "work": {
+    "title": "تفضيلات العمل",
+    "workAuth": "تصريح العمل",
+    "workAuthPlaceholder": "اختر...",
+    "workMode": "نمط العمل",
+    "remote": "عن بُعد",
+    "hybrid": "هجين",
+    "onsite": "حضوري",
+    "visaSponsorship": "بحاجة إلى كفالة تأشيرة",
+    "willingToRelocate": "مستعد للانتقال",
+    "yearsOfExperience": "سنوات الخبرة",
+    "noticePeriod": "فترة الإشعار",
+    "noticePeriodPlaceholder": "اختر..."
+  },
+  "education": {
+    "title": "التعليم",
+    "degree": "الدرجة العلمية",
+    "school": "المؤسسة التعليمية",
+    "graduation": "التخرج"
+  },
+  "salary": {
+    "title": "توقعات الراتب",
+    "minimum": "الحد الأدنى",
+    "maximum": "الحد الأقصى",
+    "currency": "العملة",
+    "period": "الفترة",
+    "annual": "سنوي",
+    "monthly": "شهري"
+  },
+  "coverLetter": {
+    "title": "خطاب التقديم",
+    "description": "قالب خطاب التقديم الافتراضي المستخدم عند طلب التطبيقات.",
+    "placeholder": "اكتب خطاب التقديم الافتراضي هنا..."
+  },
+  "targetJobTitles": {
+    "title": "المسميات الوظيفية المستهدفة",
+    "placeholder": "أضف مسمى وظيفي..."
+  },
+  "targetLocations": {
+    "title": "المواقع المستهدفة",
+    "placeholder": "أضف موقع..."
+  },
+  "skills": {
+    "title": "المهارات",
+    "placeholder": "أضف مهارة..."
+  },
+  "languages": {
+    "title": "اللغات",
+    "placeholder": "أضف لغة..."
+  },
+  "notes": {
+    "title": "ملاحظات",
+    "placeholder": "أي تعليمات خاصة لوكيل AI..."
+  }
+}

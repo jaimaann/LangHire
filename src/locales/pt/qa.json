@@ -1,0 +1,46 @@
+{
+  "title": "Repositório Q&A",
+  "subtitle": "{{total}} pergunta · {{answered}} respondida · {{unanswered}} sem resposta",
+  "subtitle_plural": "{{total}} perguntas · {{answered}} respondidas · {{unanswered}} sem resposta",
+  "actions": {
+    "autoSquash": "Auto-mesclar",
+    "squashing": "Mesclando...",
+    "smartSquash": "Mesclagem inteligente",
+    "analyzing": "Analisando...",
+    "autoSquashTitle": "Mesclar perguntas com texto semelhante",
+    "smartSquashTitle": "Usar LLM para encontrar perguntas semanticamente idênticas"
+  },
+  "filter": {
+    "all": "Todas ({{count}})",
+    "unanswered": "Sem resposta ({{count}})"
+  },
+  "searchPlaceholder": "Buscar perguntas ou respostas...",
+  "mergeMode": {
+    "banner": "Clique em uma pergunta abaixo para mesclar \"{{question}}\" nela.",
+    "label": "Modo de mesclagem:"
+  },
+  "emptyState": {
+    "noMatching": "Nenhuma pergunta correspondente encontrada.",
+    "noQuestions": "Nenhuma pergunta ainda. As perguntas aparecerão aqui quando o agente se candidatar a vagas."
+  },
+  "card": {
+    "answerPlaceholder": "Digite sua resposta aqui...",
+    "saving": "Salvando...",
+    "unsaved": "Não salvo",
+    "mergeTitle": "Mesclar com outra pergunta",
+    "deleteTitle": "Excluir pergunta"
+  },
+  "toast": {
+    "deleted": "Pergunta excluída",
+    "merged": "Perguntas mescladas",
+    "squashResult": "{{count}} duplicata(s) mesclada(s)",
+    "noDuplicates": "Nenhuma duplicata encontrada",
+    "smartSquashResult": "{{count}} duplicata(s) mesclada(s) inteligentemente",
+    "noSemanticDuplicates": "Nenhuma duplicata semântica encontrada",
+    "autoSquashFailed": "Auto-mesclagem falhou",
+    "smartSquashFailed": "Mesclagem inteligente falhou"
+  },
+  "error": {
+    "loadFailed": "Falha ao carregar Q&A"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "title": "Assistant de configuration",
+  "steps": {
+    "welcome": "Bienvenue",
+    "llm": "Fournisseur AI",
+    "resume": "CV & Profil",
+    "profile": "Vérifier le profil",
+    "ready": "Prêt !"
+  },
+  "welcome": {
+    "heading": "Bienvenue sur LangHire !",
+    "description": "Configurons tout en quelques minutes. Cet assistant vous guidera à travers la configuration essentielle.",
+    "howItWorks": "Comment ça marche :",
+    "items": {
+      "configureAi": "Configurer le fournisseur AI",
+      "configureAiDesc": "Le cerveau qui remplit les formulaires",
+      "uploadResume": "Télécharger votre CV",
+      "uploadResumeDesc": "L'AI le lit et remplit automatiquement votre profil",
+      "reviewProfile": "Vérifier votre profil",
+      "reviewProfileDesc": "Vérifiez les infos extraites par l'AI",
+      "loginLinkedIn": "Se connecter à LinkedIn",
+      "loginLinkedInDesc": "Où nous trouvons et postulez aux emplois"
+    }
+  },
+  "llmStep": {
+    "heading": "Configurez votre fournisseur AI",
+    "description": "Configurez le modèle AI qui alimente tout — analyse du CV, remplissage de formulaires et candidatures."
+  },
+  "resumeStep": {
+    "heading": "CV & Remplissage automatique du profil",
+    "description": "Définissez le chemin de votre CV, puis laissez l'AI le lire et remplir automatiquement votre profil candidat.",
+    "autoFill": {
+      "title": "Remplissage automatique AI",
+      "description": "Extraire nom, e-mail, téléphone, compétences, formation, expérience, langues et titres de poste suggérés de votre CV.",
+      "button": "Remplir le profil depuis le CV",
+      "parsing": "Analyse de votre CV...",
+      "nextHint": "Cliquez sur \"Suivant\" pour vérifier votre profil rempli automatiquement.",
+      "tryAgain": "Réessayer"
+    },
+    "prerequisite": "Enregistrez d'abord votre fournisseur AI (Étape 1) et le chemin du CV ci-dessus.",
+    "prerequisiteLabel": "Pour le remplissage auto :"
+  },
+  "profileStep": {
+    "heading": "Vérifiez votre profil",
+    "descriptionParsed": "Votre profil a été rempli automatiquement depuis votre CV ! Ouvrez la page Profil pour vérifier et ajuster.",
+    "descriptionManual": "Remplissez vos informations candidat sur la page Profil. L'agent les utilise pour les candidatures.",
+    "profileConfigured": "Le profil est configuré",
+    "profileNeeded": "Le profil nécessite au minimum votre nom",
+    "keyFields": "Champs clés : Nom, E-mail, Téléphone, Compétences, Postes recherchés, Lieux recherchés, Formation.",
+    "reviewEdit": "Vérifier et modifier",
+    "goToProfile": "Aller au profil",
+    "autoFilledHint": "Vérifiez les Postes et Lieux recherchés — ils dirigent la recherche d'emplois.",
+    "autoFilledLabel": "Rempli automatiquement !"
+  },
+  "readyStep": {
+    "heading": "Tout est prêt !",
+    "descriptionDone": "Tout est configuré. Commencez à collecter et postuler !",
+    "descriptionIncomplete": "Vous pouvez terminer la configuration plus tard. Consultez la page Guide à tout moment.",
+    "setupStatus": "État de la configuration :",
+    "aiProvider": "Fournisseur AI",
+    "resume": "CV",
+    "profile": "Profil",
+    "collectJobs": "Collecter des emplois",
+    "viewGuide": "Voir le guide"
+  },
+  "nav": {
+    "back": "Retour",
+    "skipForNow": "Passer pour l'instant",
+    "letsGo": "C'est parti",
+    "next": "Suivant",
+    "finishSetup": "Terminer la configuration"
+  }
+}

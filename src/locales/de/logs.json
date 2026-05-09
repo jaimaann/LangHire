@@ -1,0 +1,17 @@
+{
+  "title": "Protokolle",
+  "subtitle": "Historische Ausführungsprotokolle zur Fehlerbehebung und Überwachung",
+  "refresh": "Aktualisieren",
+  "runs": {
+    "title": "Letzte Ausführungen ({{count}})",
+    "empty": "Noch keine Ausführungen aufgezeichnet. Sammle oder bewirb dich auf Jobs, um hier Protokolle zu sehen.",
+    "unknown": "Unbekannt",
+    "lines": "{{count}} Zeilen"
+  },
+  "detail": {
+    "runTitle": "Ausführung {{id}}",
+    "selectPrompt": "Wähle eine Ausführung, um Protokolle anzuzeigen",
+    "selectFromPanel": "Wähle eine Ausführung aus dem linken Panel, um ihre Protokolle anzuzeigen",
+    "noLogs": "Keine Protokolle für diese Ausführung aufgezeichnet (vor dem Logging-Upgrade)"
+  }
+}

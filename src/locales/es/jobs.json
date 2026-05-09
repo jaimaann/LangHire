@@ -1,0 +1,76 @@
+{
+  "title": "Empleos",
+  "subtitle": "{{total}} empleos recopilados · {{applied}} aplicados · {{pending}} pendientes",
+  "hideCollector": "Ocultar recopilador",
+  "collectJobs": "Recopilar empleos",
+  "status": {
+    "pending": "Pendiente",
+    "applied": "Aplicado",
+    "failed": "Fallido",
+    "blocked": "Bloqueado",
+    "inProgress": "En progreso"
+  },
+  "filter": {
+    "all": "Todos"
+  },
+  "search": "Buscar",
+  "searchPlaceholder": "Buscar por título o empresa...",
+  "collector": {
+    "title": "Recopilador de empleos",
+    "description": "Busca ofertas de empleo que coincidan con tu perfil. Selecciona una plataforma fuente, ingresa un título de puesto y comienza a recopilar. La recopilación suele tardar 3-10 minutos por título mientras el agente recorre los resultados.",
+    "loginInfo": "<strong>Inicio de sesión:</strong> Se abrirá un navegador y verificará si estás conectado a la plataforma seleccionada. Si no, el agente esperará a que inicies sesión manualmente — luego continuará automáticamente.",
+    "sourcePlatform": "Plataforma fuente",
+    "jobTitlePlaceholder": "Título del puesto (ej. 'Analista de Datos') o dejar vacío para todos",
+    "maxJobsPlaceholder": "Máx. empleos",
+    "maxJobsTitle": "Máx. empleos a recopilar (por título)",
+    "stop": "Detener",
+    "start": "Iniciar",
+    "startingCollection": "Iniciando recopilación...",
+    "collectedProgress": "{{collected}} de {{max}} empleos recopilados",
+    "collectionLog": "Registro de recopilación"
+  },
+  "emptyState": {
+    "noMatching": "No hay empleos que coincidan",
+    "noJobsYet": "Aún no se han recopilado empleos",
+    "tryChanging": "Intenta cambiar tu búsqueda o filtro.",
+    "clickCollect": "Haz clic en 'Recopilar empleos' arriba para buscar ofertas coincidentes.",
+    "startCollecting": "Comenzar a recopilar"
+  },
+  "jobItem": {
+    "untitled": "Sin título",
+    "easyApply": "Easy Apply",
+    "unknown": "Desconocido",
+    "error": "Error: {{error}}",
+    "collected": "Recopilado el {{date}}",
+    "applied": " · Aplicado el {{date}}",
+    "coverLetter": "Carta de presentación",
+    "coverLetterTitle": "Generar una carta de presentación personalizada para este empleo",
+    "applyRunningTitle": "Ya hay una solicitud en curso",
+    "retryTitle": "Reintentar este empleo",
+    "applyTitle": "Aplicar a este empleo",
+    "applying": "Aplicando...",
+    "retry": "Reintentar",
+    "apply": "Aplicar",
+    "openOnLinkedIn": "Abrir en LinkedIn"
+  },
+  "showingJobs": "Mostrando {{count}} empleo",
+  "showingJobs_plural": "Mostrando {{count}} empleos",
+  "dialog": {
+    "startApplying": "Comenzar a aplicar",
+    "startCollecting": "Comenzar a recopilar"
+  },
+  "coverLetterModal": {
+    "title": "Generar carta de presentación",
+    "jobAt": "{{title}} en {{company}}",
+    "noDescription": "No hay descripción de empleo disponible. Pega la descripción abajo para generar una carta de presentación.",
+    "pastePlaceholder": "Pega la descripción del empleo aquí...",
+    "generate": "Generar",
+    "generating": "Generando carta de presentación...",
+    "generatedLabel": "Carta de presentación generada",
+    "copy": "Copiar",
+    "saved": "¡Guardado!",
+    "saveToProfile": "Guardar en perfil",
+    "failedGenerate": "Error al generar la carta de presentación",
+    "failedSave": "Error al guardar en el perfil"
+  }
+}

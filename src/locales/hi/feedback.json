@@ -1,0 +1,34 @@
+{
+  "title": "प्रतिक्रिया",
+  "subtitle": "अपने विचारों से LangHire को बेहतर बनाने में मदद करें",
+  "viewDiscussions": "चर्चाएँ देखें",
+  "categories": {
+    "featureRequest": "फ़ीचर अनुरोध",
+    "bugReport": "बग रिपोर्ट",
+    "generalFeedback": "सामान्य प्रतिक्रिया"
+  },
+  "form": {
+    "categoryLabel": "श्रेणी",
+    "titleLabel": "शीर्षक",
+    "titlePlaceholder": "अपनी प्रतिक्रिया का संक्षिप्त सारांश",
+    "descriptionLabel": "विवरण",
+    "descriptionPlaceholder": "अपने फ़ीचर अनुरोध, बग, या प्रतिक्रिया का विस्तार से वर्णन करें...",
+    "emailLabel": "ईमेल",
+    "emailOptional": "(वैकल्पिक)",
+    "emailPlaceholder": "your@email.com",
+    "emailHelp": "यदि आप चाहते हैं कि हम आपसे संपर्क करें तो अपना ईमेल शामिल करें।",
+    "submit": "प्रतिक्रिया सबमिट करें",
+    "submitting": "सबमिट हो रहा है..."
+  },
+  "success": {
+    "title": "प्रतिक्रिया सबमिट हुई!",
+    "description": "आपकी प्रतिक्रिया GitHub Discussions पर पोस्ट की गई है।",
+    "viewDiscussion": "चर्चा देखें",
+    "submitAnother": "एक और सबमिट करें"
+  },
+  "error": {
+    "fillRequired": "कृपया शीर्षक और विवरण दोनों भरें।",
+    "notConfigured": "प्रतिक्रिया कॉन्फ़िगर नहीं है। VITE_GITHUB_TOKEN एनवायरनमेंट वेरिएबल गायब है।",
+    "submitFailed": "प्रतिक्रिया सबमिट करने में विफल"
+  }
+}

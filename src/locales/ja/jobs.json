@@ -1,0 +1,76 @@
+{
+  "title": "求人",
+  "subtitle": "{{total}}件収集 · {{applied}}件応募済み · {{pending}}件保留中",
+  "hideCollector": "コレクターを隠す",
+  "collectJobs": "求人を収集",
+  "status": {
+    "pending": "保留中",
+    "applied": "応募済み",
+    "failed": "失敗",
+    "blocked": "ブロック",
+    "inProgress": "進行中"
+  },
+  "filter": {
+    "all": "すべて"
+  },
+  "search": "検索",
+  "searchPlaceholder": "職種名または会社名で検索...",
+  "collector": {
+    "title": "求人コレクター",
+    "description": "プロフィールに合った求人を検索します。ソースプラットフォームを選択し、職種名を入力して収集を開始してください。エージェントが結果をスクロールするため、職種名1つにつき通常3〜10分かかります。",
+    "loginInfo": "<strong>ログイン:</strong> ブラウザが開き、選択したプラットフォームにログインしているか確認します。ログインしていない場合、エージェントは手動ログインを待ち、その後自動的に続行します。",
+    "sourcePlatform": "ソースプラットフォーム",
+    "jobTitlePlaceholder": "職種名（例：'データアナリスト'）またはすべてを対象にする場合は空欄",
+    "maxJobsPlaceholder": "最大件数",
+    "maxJobsTitle": "収集する最大求人数（タイトルごと）",
+    "stop": "停止",
+    "start": "開始",
+    "startingCollection": "収集を開始しています...",
+    "collectedProgress": "{{max}}件中{{collected}}件を収集",
+    "collectionLog": "収集ログ"
+  },
+  "emptyState": {
+    "noMatching": "一致する求人がありません",
+    "noJobsYet": "まだ求人が収集されていません",
+    "tryChanging": "検索条件やフィルターを変更してみてください。",
+    "clickCollect": "上の「求人を収集」をクリックして、一致する求人を検索してください。",
+    "startCollecting": "収集を開始"
+  },
+  "jobItem": {
+    "untitled": "無題",
+    "easyApply": "Easy Apply",
+    "unknown": "不明",
+    "error": "エラー: {{error}}",
+    "collected": "{{date}}に収集",
+    "applied": " · {{date}}に応募",
+    "coverLetter": "カバーレター",
+    "coverLetterTitle": "この求人に合わせたカバーレターを生成",
+    "applyRunningTitle": "応募が既に実行中です",
+    "retryTitle": "この求人を再試行",
+    "applyTitle": "この求人に応募",
+    "applying": "応募中...",
+    "retry": "再試行",
+    "apply": "応募",
+    "openOnLinkedIn": "LinkedInで開く"
+  },
+  "showingJobs": "{{count}}件の求人を表示中",
+  "showingJobs_plural": "{{count}}件の求人を表示中",
+  "dialog": {
+    "startApplying": "応募を開始",
+    "startCollecting": "収集を開始"
+  },
+  "coverLetterModal": {
+    "title": "カバーレターを生成",
+    "jobAt": "{{company}}の{{title}}",
+    "noDescription": "求人の説明がありません。カバーレターを生成するには、下に説明を貼り付けてください。",
+    "pastePlaceholder": "求人の説明をここに貼り付け...",
+    "generate": "生成",
+    "generating": "カバーレターを生成中...",
+    "generatedLabel": "生成されたカバーレター",
+    "copy": "コピー",
+    "saved": "保存しました！",
+    "saveToProfile": "プロフィールに保存",
+    "failedGenerate": "カバーレターの生成に失敗しました",
+    "failedSave": "プロフィールへの保存に失敗しました"
+  }
+}

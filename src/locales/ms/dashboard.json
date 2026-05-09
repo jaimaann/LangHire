@@ -1,0 +1,37 @@
+{
+  "title": "Papan Pemuka",
+  "subtitle": "Gambaran keseluruhan kemajuan permohonan kerja anda",
+  "cards": {
+    "totalJobs": "Jumlah Kerja",
+    "applied": "Dimohon",
+    "failed": "Gagal",
+    "pending": "Menunggu",
+    "successRate": "Kadar Kejayaan",
+    "memories": "Memori"
+  },
+  "quickActions": {
+    "title": "Tindakan Pantas",
+    "collectJobs": "Kumpul Kerja",
+    "startApplying": "Mula Memohon",
+    "viewMemories": "Lihat Memori"
+  },
+  "setup": {
+    "complete": "Persediaan Selesai",
+    "gettingStarted": "Bermula",
+    "viewGuide": "Lihat panduan penuh",
+    "allDone": "Semua persediaan yang diperlukan telah selesai! Anda bersedia untuk mengumpul dan memohon kerja.",
+    "needHelp": "Perlukan bantuan? Layari <guide>Panduan</guide> untuk arahan langkah demi langkah.",
+    "stepsComplete": "{{completed}} daripada {{total}} langkah selesai",
+    "setUp": "Sediakan",
+    "configureAI": "Konfigurasi pembekal AI",
+    "setResume": "Tetapkan laluan resume",
+    "setupProfile": "Sediakan profil anda"
+  },
+  "chromium": {
+    "installing": "Memasang pelayar Chromium",
+    "installFailed": "Pemasangan Chromium gagal: {{message}}. Jalankan <code>python3 -m playwright install chromium</code> secara manual."
+  },
+  "backend": {
+    "notConnected": "Backend tidak disambungkan. Mulakannya dengan: <code>uv run python backend/main.py</code>"
+  }
+}

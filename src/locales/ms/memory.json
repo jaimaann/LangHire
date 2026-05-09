@@ -1,0 +1,38 @@
+{
+  "title": "Memori",
+  "subtitle": "{{total}} memori merentasi {{domains}} domain",
+  "actions": {
+    "export": "Eksport",
+    "decay": "Pereput",
+    "cleanup": "Bersihkan"
+  },
+  "search": {
+    "placeholder": "Cari memori...",
+    "button": "Cari"
+  },
+  "domains": {
+    "title": "Domain",
+    "empty": "Belum ada domain",
+    "memoryCount": "{{count}} memori",
+    "confidence": "{{percent}}% keyakinan"
+  },
+  "memories": {
+    "searchResults": "Hasil Carian ({{count}})",
+    "domainTitle": "{{domain}} ({{count}})",
+    "selectDomain": "Pilih domain",
+    "noMemoriesFound": "Tiada memori ditemui",
+    "selectDomainPrompt": "Pilih domain untuk melihat memorinya",
+    "success": "✓ berjaya",
+    "failure": "✗ gagal",
+    "confidence": "{{percent}}% keyakinan",
+    "accesses": "{{count}} akses"
+  },
+  "confirm": {
+    "decay": "Kurangkan keyakinan memori yang tidak dikemas kini dalam 30+ hari?",
+    "cleanup": "Padam semua memori dengan keyakinan di bawah 0.3?"
+  },
+  "toast": {
+    "decayed": "{{count}} memori telah dipereputan",
+    "deleted": "{{count}} memori dipadam"
+  }
+}

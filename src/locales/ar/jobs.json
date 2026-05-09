@@ -1,0 +1,76 @@
+{
+  "title": "الوظائف",
+  "subtitle": "{{total}} وظيفة مجمعة · {{applied}} تم التقديم · {{pending}} قيد الانتظار",
+  "hideCollector": "إخفاء المجمّع",
+  "collectJobs": "جمع الوظائف",
+  "status": {
+    "pending": "قيد الانتظار",
+    "applied": "تم التقديم",
+    "failed": "فشل",
+    "blocked": "محظور",
+    "inProgress": "قيد التنفيذ"
+  },
+  "filter": {
+    "all": "الكل"
+  },
+  "search": "بحث",
+  "searchPlaceholder": "البحث بعنوان الوظيفة أو الشركة...",
+  "collector": {
+    "title": "مجمّع الوظائف",
+    "description": "ابحث عن إعلانات الوظائف المطابقة لملفك الشخصي. اختر منصة المصدر، أدخل عنوان الوظيفة، وابدأ الجمع. يستغرق الجمع عادة 3-10 دقائق لكل عنوان وظيفة حيث يقوم الوكيل بتصفح النتائج.",
+    "loginInfo": "<strong>تسجيل الدخول:</strong> سيفتح متصفح ويتحقق مما إذا كنت مسجلاً في المنصة المختارة. إذا لم تكن، سينتظر الوكيل حتى تسجل الدخول يدوياً — ثم يتابع تلقائياً.",
+    "sourcePlatform": "منصة المصدر",
+    "jobTitlePlaceholder": "عنوان الوظيفة (مثل 'محلل بيانات') أو اتركه فارغاً للجميع",
+    "maxJobsPlaceholder": "الحد الأقصى للوظائف",
+    "maxJobsTitle": "الحد الأقصى للوظائف المراد جمعها (لكل عنوان)",
+    "stop": "إيقاف",
+    "start": "بدء",
+    "startingCollection": "جارٍ بدء الجمع...",
+    "collectedProgress": "تم جمع {{collected}} من {{max}} وظيفة",
+    "collectionLog": "سجل الجمع"
+  },
+  "emptyState": {
+    "noMatching": "لا توجد وظائف مطابقة",
+    "noJobsYet": "لم يتم جمع وظائف بعد",
+    "tryChanging": "حاول تغيير البحث أو الفلتر.",
+    "clickCollect": "انقر على 'جمع الوظائف' أعلاه للبحث عن إعلانات مطابقة.",
+    "startCollecting": "بدء الجمع"
+  },
+  "jobItem": {
+    "untitled": "بدون عنوان",
+    "easyApply": "Easy Apply",
+    "unknown": "غير معروف",
+    "error": "خطأ: {{error}}",
+    "collected": "تم الجمع {{date}}",
+    "applied": " · تم التقديم {{date}}",
+    "coverLetter": "خطاب التقديم",
+    "coverLetterTitle": "إنشاء خطاب تقديم مخصص لهذه الوظيفة",
+    "applyRunningTitle": "يوجد طلب قيد التنفيذ بالفعل",
+    "retryTitle": "إعادة محاولة هذه الوظيفة",
+    "applyTitle": "التقديم لهذه الوظيفة",
+    "applying": "جارٍ التقديم...",
+    "retry": "إعادة المحاولة",
+    "apply": "تقديم",
+    "openOnLinkedIn": "فتح على LinkedIn"
+  },
+  "showingJobs": "عرض {{count}} وظيفة",
+  "showingJobs_plural": "عرض {{count}} وظائف",
+  "dialog": {
+    "startApplying": "بدء التقديم",
+    "startCollecting": "بدء الجمع"
+  },
+  "coverLetterModal": {
+    "title": "إنشاء خطاب تقديم",
+    "jobAt": "{{title}} في {{company}}",
+    "noDescription": "لا يوجد وصف للوظيفة. الصق الوصف أدناه لإنشاء خطاب تقديم.",
+    "pastePlaceholder": "الصق وصف الوظيفة هنا...",
+    "generate": "إنشاء",
+    "generating": "جارٍ إنشاء خطاب التقديم...",
+    "generatedLabel": "خطاب التقديم المُنشأ",
+    "copy": "نسخ",
+    "saved": "تم الحفظ!",
+    "saveToProfile": "حفظ في الملف الشخصي",
+    "failedGenerate": "فشل في إنشاء خطاب التقديم",
+    "failedSave": "فشل في الحفظ في الملف الشخصي"
+  }
+}

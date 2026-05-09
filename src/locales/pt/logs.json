@@ -1,0 +1,17 @@
+{
+  "title": "Logs",
+  "subtitle": "Logs históricos de execução para depuração e monitoramento",
+  "refresh": "Atualizar",
+  "runs": {
+    "title": "Execuções recentes ({{count}})",
+    "empty": "Nenhuma execução registrada ainda. Colete ou candidate-se a vagas para ver logs aqui.",
+    "unknown": "Desconhecido",
+    "lines": "{{count}} linhas"
+  },
+  "detail": {
+    "runTitle": "Execução {{id}}",
+    "selectPrompt": "Selecione uma execução para ver os logs",
+    "selectFromPanel": "Selecione uma execução no painel esquerdo para ver seus logs",
+    "noLogs": "Nenhum log registrado para esta execução (execução anterior à atualização de logging)"
+  }
+}

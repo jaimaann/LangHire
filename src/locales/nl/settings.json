@@ -1,0 +1,41 @@
+{
+  "title": "Instellingen",
+  "subtitle": "Algemene applicatie-instellingen",
+  "resume": {
+    "title": "CV",
+    "description": "PDF-cv dat wordt gebruikt voor sollicitaties"
+  },
+  "credentials": {
+    "title": "Accountgegevens",
+    "description": "Gebruikt voor het aanmaken van accounts op externe ATS-platformen tijdens sollicitaties. Lokaal opgeslagen in platte tekst. Gebruik bij voorkeur SSO (Inloggen met LinkedIn/Google) wanneer mogelijk.",
+    "email": "E-mail",
+    "password": "Wachtwoord"
+  },
+  "agent": {
+    "title": "Agent-instellingen",
+    "maxFailures": "Max. mislukkingen per baan",
+    "maxFailuresDesc": "De agent stopt met proberen na dit aantal opeenvolgende mislukkingen bij een enkele baan."
+  },
+  "telemetry": {
+    "title": "Privacy & telemetrie",
+    "usageAnalytics": "Gebruiksanalyse",
+    "description": "Help LangHire te verbeteren door anonieme gebruiksgegevens te verzenden (functiegebruik, crashrapporten). Er worden geen persoonlijke gegevens of baangegevens verzonden."
+  },
+  "blockedDomains": {
+    "title": "Geblokkeerde domeinen",
+    "description": "Banen op deze domeinen worden automatisch overgeslagen.",
+    "empty": "Geen geblokkeerde domeinen"
+  },
+  "plugins": {
+    "title": "Baanbron-plugins",
+    "description": "Beheer baanbron-plugins. Ingebouwde plugins bieden LinkedIn, Indeed, SEEK, Naukri, Reed en StepStone. Importeer community-plugins (.yaml-bestanden) voor extra vacaturesites.",
+    "builtin": "Ingebouwd",
+    "importPlugin": "Plugin importeren"
+  },
+  "language": {
+    "title": "Taal",
+    "label": "Interfacetaal",
+    "auto": "Automatisch (op basis van land)",
+    "description": "Kies de taal van de applicatie-interface. Stel in op 'Automatisch' om overeen te komen met je geselecteerde land."
+  }
+}

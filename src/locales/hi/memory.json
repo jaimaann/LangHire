@@ -1,0 +1,38 @@
+{
+  "title": "मेमोरी",
+  "subtitle": "{{domains}} डोमेन में {{total}} स्मृतियाँ",
+  "actions": {
+    "export": "निर्यात",
+    "decay": "क्षय",
+    "cleanup": "सफ़ाई"
+  },
+  "search": {
+    "placeholder": "स्मृतियाँ खोजें...",
+    "button": "खोजें"
+  },
+  "domains": {
+    "title": "डोमेन",
+    "empty": "अभी तक कोई डोमेन नहीं",
+    "memoryCount": "{{count}} स्मृतियाँ",
+    "confidence": "{{percent}}% विश्वास"
+  },
+  "memories": {
+    "searchResults": "खोज परिणाम ({{count}})",
+    "domainTitle": "{{domain}} ({{count}})",
+    "selectDomain": "एक डोमेन चुनें",
+    "noMemoriesFound": "कोई स्मृतियाँ नहीं मिलीं",
+    "selectDomainPrompt": "स्मृतियाँ देखने के लिए एक डोमेन चुनें",
+    "success": "✓ सफल",
+    "failure": "✗ विफल",
+    "confidence": "{{percent}}% विश्वास",
+    "accesses": "{{count}} एक्सेस"
+  },
+  "confirm": {
+    "decay": "30+ दिनों से अपडेट नहीं हुई स्मृतियों का विश्वास कम करें?",
+    "cleanup": "0.3 से कम विश्वास वाली सभी स्मृतियाँ हटाएँ?"
+  },
+  "toast": {
+    "decayed": "{{count}} स्मृतियों का क्षय किया गया",
+    "deleted": "{{count}} स्मृतियाँ हटाई गईं"
+  }
+}

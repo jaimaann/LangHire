@@ -1,0 +1,46 @@
+{
+  "title": "Q&A 저장소",
+  "subtitle": "{{total}}개 질문 · {{answered}}개 답변됨 · {{unanswered}}개 미답변",
+  "subtitle_plural": "{{total}}개 질문 · {{answered}}개 답변됨 · {{unanswered}}개 미답변",
+  "actions": {
+    "autoSquash": "자동 병합",
+    "squashing": "병합 중...",
+    "smartSquash": "스마트 병합",
+    "analyzing": "분석 중...",
+    "autoSquashTitle": "유사한 텍스트의 질문 병합",
+    "smartSquashTitle": "LLM을 사용하여 의미적으로 동일한 질문 찾기"
+  },
+  "filter": {
+    "all": "전체 ({{count}})",
+    "unanswered": "미답변 ({{count}})"
+  },
+  "searchPlaceholder": "질문 또는 답변 검색...",
+  "mergeMode": {
+    "banner": "아래 질문을 클릭하여 \"{{question}}\"을 병합하세요.",
+    "label": "병합 모드:"
+  },
+  "emptyState": {
+    "noMatching": "일치하는 질문을 찾을 수 없습니다.",
+    "noQuestions": "아직 질문이 없습니다. 에이전트가 채용에 지원하면 여기에 질문이 표시됩니다."
+  },
+  "card": {
+    "answerPlaceholder": "여기에 답변을 입력하세요...",
+    "saving": "저장 중...",
+    "unsaved": "저장되지 않음",
+    "mergeTitle": "다른 질문으로 병합",
+    "deleteTitle": "질문 삭제"
+  },
+  "toast": {
+    "deleted": "질문 삭제됨",
+    "merged": "질문 병합됨",
+    "squashResult": "{{count}}개 중복 병합됨",
+    "noDuplicates": "중복을 찾을 수 없음",
+    "smartSquashResult": "{{count}}개 중복 스마트 병합됨",
+    "noSemanticDuplicates": "의미적 중복을 찾을 수 없음",
+    "autoSquashFailed": "자동 병합 실패",
+    "smartSquashFailed": "스마트 병합 실패"
+  },
+  "error": {
+    "loadFailed": "Q&A 로드 실패"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "title": "الذاكرة",
+  "subtitle": "{{total}} ذكرى عبر {{domains}} نطاقات",
+  "actions": {
+    "export": "تصدير",
+    "decay": "تحلل",
+    "cleanup": "تنظيف"
+  },
+  "search": {
+    "placeholder": "البحث في الذكريات...",
+    "button": "بحث"
+  },
+  "domains": {
+    "title": "النطاقات",
+    "empty": "لا توجد نطاقات بعد",
+    "memoryCount": "{{count}} ذكريات",
+    "confidence": "{{percent}}% ثقة"
+  },
+  "memories": {
+    "searchResults": "نتائج البحث ({{count}})",
+    "domainTitle": "{{domain}} ({{count}})",
+    "selectDomain": "اختر نطاقاً",
+    "noMemoriesFound": "لم يتم العثور على ذكريات",
+    "selectDomainPrompt": "اختر نطاقاً لعرض ذكرياته",
+    "success": "✓ نجاح",
+    "failure": "✗ فشل",
+    "confidence": "{{percent}}% ثقة",
+    "accesses": "{{count}} وصول"
+  },
+  "confirm": {
+    "decay": "تقليل ثقة الذكريات التي لم يتم تحديثها منذ 30+ يوماً؟",
+    "cleanup": "حذف جميع الذكريات ذات الثقة أقل من 0.3؟"
+  },
+  "toast": {
+    "decayed": "تم تحلل {{count}} ذكريات",
+    "deleted": "تم حذف {{count}} ذكريات"
+  }
+}

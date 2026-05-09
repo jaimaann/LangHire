@@ -1,0 +1,97 @@
+{
+  "title": "إعدادات LLM",
+  "subtitle": "قم بتكوين مزود نموذج AI الخاص بك لطلبات التوظيف",
+  "selectProvider": "اختر المزود",
+  "configuration": "تكوين {{provider}}",
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (موصى به)",
+      "description": "100+ نموذج رؤية (GPT, Claude, Gemini, Qwen, Llama) عبر مفتاح API واحد"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "GPT-4o و GPT-4o-mini ونماذج OpenAI الأخرى"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "نماذج Claude Sonnet و Haiku و Opus (API مباشر)"
+    },
+    "bedrock": {
+      "name": "AWS Bedrock",
+      "description": "Claude ونماذج أخرى عبر AWS Bedrock"
+    },
+    "ollama": {
+      "name": "Ollama",
+      "description": "تشغيل نماذج مفتوحة المصدر محلياً — لا حاجة لمفتاح API"
+    }
+  },
+  "labels": {
+    "apiKey": "مفتاح API",
+    "model": "النموذج",
+    "modelVision": "النموذج (رؤية)",
+    "region": "المنطقة",
+    "accessKey": "مفتاح الوصول",
+    "secretKey": "المفتاح السري",
+    "profileName": "اسم الملف الشخصي",
+    "serverUrl": "عنوان URL للخادم",
+    "authentication": "المصادقة",
+    "awsCliProfile": "ملف AWS CLI الشخصي",
+    "accessKeySecretKey": "مفتاح الوصول / المفتاح السري",
+    "selectModel": "اختر نموذجاً"
+  },
+  "guide": {
+    "howToGetKey": "كيفية الحصول على مفتاح API الخاص بـ {{provider}}",
+    "openai": {
+      "step1": "اذهب إلى منصة OpenAI وأنشئ حساباً مجانياً (أو سجّل الدخول).",
+      "step1Link": "platform.openai.com/signup",
+      "step2": "أضف طريقة دفع تحت Settings > Billing. يتطلب الوصول لـ API الفوترة حتى مع ChatGPT Plus.",
+      "step2Link": "إضافة الفوترة",
+      "step3": "اذهب إلى صفحة مفاتيح API.",
+      "step3Link": "platform.openai.com/api-keys",
+      "step4": "انقر على \"Create new secret key\"، أعطه اسماً، ثم انقر Create.",
+      "step5": "انسخ المفتاح والصقه أدناه. يبدأ بـ sk- ويُعرض مرة واحدة فقط.",
+      "note": "هذا منفصل عن اشتراك ChatGPT الخاص بك. لدى API فوترة خاصة بالاستخدام. يكلف GPT-4o حوالي $0.01-0.03 لكل طلب توظيف."
+    },
+    "anthropic": {
+      "step1": "اذهب إلى وحدة تحكم Anthropic وأنشئ حساباً مجانياً (أو سجّل الدخول).",
+      "step1Link": "console.anthropic.com/signup",
+      "step2": "أضف طريقة دفع تحت Settings > Billing. قد يتوفر رصيد تجريبي مجاني صغير.",
+      "step2Link": "إضافة الفوترة",
+      "step3": "اذهب إلى صفحة مفاتيح API.",
+      "step3Link": "console.anthropic.com/settings/keys",
+      "step4": "انقر على \"Create Key\"، أعطه اسماً، ثم انقر Create.",
+      "step5": "انسخ المفتاح والصقه أدناه. يبدأ بـ sk-ant- ويُعرض مرة واحدة فقط.",
+      "note": "يكلف Claude Sonnet حوالي $0.01-0.03 لكل طلب توظيف. API بالدفع حسب الاستخدام."
+    },
+    "openrouter": {
+      "step1": "اذهب إلى OpenRouter وأنشئ حساباً مجانياً (أو سجّل الدخول).",
+      "step1Link": "openrouter.ai",
+      "step2": "اذهب إلى صفحة مفاتيح API.",
+      "step2Link": "openrouter.ai/keys",
+      "step3": "انقر على \"Create Key\"، أعطه اسماً، ثم انقر Create.",
+      "step4": "انسخ المفتاح والصقه أدناه. يبدأ بـ sk-or-v1-.",
+      "note": "يمنحك OpenRouter الوصول إلى 100+ نموذج بمفتاح واحد. أضف رصيداً في openrouter.ai/credits. تختلف الأسعار حسب النموذج."
+    },
+    "note": "ملاحظة:"
+  },
+  "ollama": {
+    "serverUrlHint": "عنوان URL حيث يعمل خادم Ollama الخاص بك.",
+    "modelsFound": "تم العثور على {{count}} نموذج على خادمك.",
+    "modelsFound_other": "تم العثور على {{count}} نماذج على خادمك.",
+    "noModelsHint": "أدخل اسم نموذج، أو ابدأ خادم Ollama لرؤية النماذج المتاحة."
+  },
+  "openrouter": {
+    "keyHint": "احصل على مفتاحك من",
+    "modelsAvailable": "{{count}} نموذج رؤية متاح. الأسعار لكل مليون رمز.",
+    "curatedList": "عرض قائمة مختارة. اتصل لتحميل جميع نماذج الرؤية.",
+    "browseAt": "تصفح في"
+  },
+  "status": {
+    "saving": "جارٍ الحفظ...",
+    "saved": "تم الحفظ",
+    "testing": "جارٍ الاختبار...",
+    "testConnection": "اختبار الاتصال",
+    "connectionSuccessful": "الاتصال ناجح!",
+    "connectionFailed": "فشل الاتصال."
+  }
+}

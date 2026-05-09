@@ -1,0 +1,76 @@
+{
+  "title": "Banen",
+  "subtitle": "{{total}} banen verzameld · {{applied}} gesolliciteerd · {{pending}} in afwachting",
+  "hideCollector": "Verzamelaar verbergen",
+  "collectJobs": "Banen verzamelen",
+  "status": {
+    "pending": "In afwachting",
+    "applied": "Gesolliciteerd",
+    "failed": "Mislukt",
+    "blocked": "Geblokkeerd",
+    "inProgress": "Bezig"
+  },
+  "filter": {
+    "all": "Alle"
+  },
+  "search": "Zoeken",
+  "searchPlaceholder": "Zoek op functietitel of bedrijf...",
+  "collector": {
+    "title": "Banenverzamelaar",
+    "description": "Zoek naar vacatures die bij je profiel passen. Selecteer een bronplatform, voer een functietitel in en start de verzameling. Het verzamelen duurt doorgaans 3-10 minuten per functietitel terwijl de agent door de resultaten scrollt.",
+    "loginInfo": "<strong>Inloggen:</strong> Er opent een browser die controleert of je bent ingelogd op het geselecteerde platform. Zo niet, dan wacht de agent tot je handmatig inlogt — en gaat daarna automatisch verder.",
+    "sourcePlatform": "Bronplatform",
+    "jobTitlePlaceholder": "Functietitel (bijv. 'Data Analyst') of leeg laten voor alle",
+    "maxJobsPlaceholder": "Max. banen",
+    "maxJobsTitle": "Max. banen om te verzamelen (per titel)",
+    "stop": "Stop",
+    "start": "Start",
+    "startingCollection": "Verzameling wordt gestart...",
+    "collectedProgress": "{{collected}} van {{max}} banen verzameld",
+    "collectionLog": "Verzamelingslog"
+  },
+  "emptyState": {
+    "noMatching": "Geen overeenkomende banen",
+    "noJobsYet": "Nog geen banen verzameld",
+    "tryChanging": "Probeer je zoekopdracht of filter te wijzigen.",
+    "clickCollect": "Klik hierboven op 'Banen verzamelen' om te zoeken naar passende vacatures.",
+    "startCollecting": "Begin met verzamelen"
+  },
+  "jobItem": {
+    "untitled": "Naamloos",
+    "easyApply": "Easy Apply",
+    "unknown": "Onbekend",
+    "error": "Fout: {{error}}",
+    "collected": "Verzameld op {{date}}",
+    "applied": " · Gesolliciteerd op {{date}}",
+    "coverLetter": "Motivatiebrief",
+    "coverLetterTitle": "Een op maat gemaakte motivatiebrief genereren voor deze baan",
+    "applyRunningTitle": "Er loopt al een sollicitatie",
+    "retryTitle": "Deze baan opnieuw proberen",
+    "applyTitle": "Solliciteren op deze baan",
+    "applying": "Bezig met solliciteren...",
+    "retry": "Opnieuw proberen",
+    "apply": "Solliciteren",
+    "openOnLinkedIn": "Openen op LinkedIn"
+  },
+  "showingJobs": "{{count}} baan weergegeven",
+  "showingJobs_plural": "{{count}} banen weergegeven",
+  "dialog": {
+    "startApplying": "Begin met solliciteren",
+    "startCollecting": "Begin met verzamelen"
+  },
+  "coverLetterModal": {
+    "title": "Motivatiebrief genereren",
+    "jobAt": "{{title}} bij {{company}}",
+    "noDescription": "Geen vacaturebeschrijving beschikbaar. Plak de beschrijving hieronder om een motivatiebrief te genereren.",
+    "pastePlaceholder": "Plak de vacaturebeschrijving hier...",
+    "generate": "Genereren",
+    "generating": "Motivatiebrief wordt gegenereerd...",
+    "generatedLabel": "Gegenereerde motivatiebrief",
+    "copy": "Kopiëren",
+    "saved": "Opgeslagen!",
+    "saveToProfile": "Opslaan in profiel",
+    "failedGenerate": "Motivatiebrief genereren mislukt",
+    "failedSave": "Opslaan in profiel mislukt"
+  }
+}

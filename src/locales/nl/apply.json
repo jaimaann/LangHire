@@ -1,0 +1,32 @@
+{
+  "title": "Solliciteren",
+  "subtitle": "Geautomatiseerde sollicitaties · {{count}} banen in afwachting",
+  "emptyState": {
+    "title": "Nog geen banen om op te solliciteren",
+    "description": "Verzamel eerst banen van LinkedIn en kom dan hier terug om automatisch te solliciteren.",
+    "action": "Ga naar Banen & Verzamel"
+  },
+  "controls": {
+    "title": "Sollicitatiebesturing",
+    "loginInfo": "<strong>Inloggen:</strong> Er opent een browser die LinkedIn en Gmail controleert. Als je niet bent ingelogd, wacht de agent tot je handmatig inlogt — en gaat daarna automatisch verder.",
+    "limitLabel": "Limiet (optioneel)",
+    "limitPlaceholder": "Geen limiet — solliciteer op alle",
+    "limitHelp": "Laat leeg om op alle {{count}} openstaande banen te solliciteren",
+    "stop": "Stop",
+    "startApplying": "Begin met solliciteren"
+  },
+  "comingSoon": {
+    "badge": "Binnenkort",
+    "title": "Op maat gemaakte CV's",
+    "description": "Pas je CV automatisch aan voor elke baan door vaardigheden uit de vacaturebeschrijving te extraheren."
+  },
+  "log": {
+    "liveOutput": "Live uitvoer",
+    "outputLog": "Uitvoerlog",
+    "applicationLog": "Sollicitatielogboek"
+  },
+  "dialog": {
+    "title": "Begin met solliciteren"
+  },
+  "starting": "Wordt gestart..."
+}

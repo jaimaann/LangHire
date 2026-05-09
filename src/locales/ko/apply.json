@@ -1,0 +1,32 @@
+{
+  "title": "지원",
+  "subtitle": "자동 구직 지원 · {{count}}개 대기 중인 채용",
+  "emptyState": {
+    "title": "아직 지원할 채용이 없습니다",
+    "description": "먼저 LinkedIn에서 채용을 수집한 다음, 여기로 돌아와 자동으로 지원하세요.",
+    "action": "채용 수집하러 가기"
+  },
+  "controls": {
+    "title": "지원 제어",
+    "loginInfo": "<strong>로그인:</strong> 브라우저가 열리고 LinkedIn과 Gmail을 확인합니다. 로그인되어 있지 않으면 에이전트가 수동 로그인을 기다린 후 자동으로 진행합니다.",
+    "limitLabel": "제한 (선택사항)",
+    "limitPlaceholder": "제한 없음 — 전체 지원",
+    "limitHelp": "대기 중인 {{count}}개 모두에 지원하려면 비워두세요",
+    "stop": "중지",
+    "startApplying": "지원 시작"
+  },
+  "comingSoon": {
+    "badge": "곧 출시",
+    "title": "맞춤형 이력서",
+    "description": "채용 설명에서 기술을 추출하여 각 채용에 맞게 이력서를 자동 맞춤화합니다."
+  },
+  "log": {
+    "liveOutput": "실시간 출력",
+    "outputLog": "출력 로그",
+    "applicationLog": "지원 로그"
+  },
+  "dialog": {
+    "title": "지원 시작"
+  },
+  "starting": "시작 중..."
+}

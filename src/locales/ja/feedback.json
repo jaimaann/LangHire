@@ -1,0 +1,34 @@
+{
+  "title": "フィードバック",
+  "subtitle": "あなたのご意見でLangHireの改善にご協力ください",
+  "viewDiscussions": "ディスカッションを見る",
+  "categories": {
+    "featureRequest": "機能リクエスト",
+    "bugReport": "バグ報告",
+    "generalFeedback": "一般的なフィードバック"
+  },
+  "form": {
+    "categoryLabel": "カテゴリー",
+    "titleLabel": "タイトル",
+    "titlePlaceholder": "フィードバックの簡単な要約",
+    "descriptionLabel": "説明",
+    "descriptionPlaceholder": "機能リクエスト、バグ、またはフィードバックの詳細を記述してください...",
+    "emailLabel": "メールアドレス",
+    "emailOptional": "（任意）",
+    "emailPlaceholder": "your@email.com",
+    "emailHelp": "フォローアップを希望される場合はメールアドレスを含めてください。",
+    "submit": "フィードバックを送信",
+    "submitting": "送信中..."
+  },
+  "success": {
+    "title": "フィードバックが送信されました！",
+    "description": "あなたのフィードバックがGitHub Discussionsに投稿されました。",
+    "viewDiscussion": "ディスカッションを見る",
+    "submitAnother": "もう一件送信"
+  },
+  "error": {
+    "fillRequired": "タイトルと説明の両方を入力してください。",
+    "notConfigured": "フィードバックが設定されていません。VITE_GITHUB_TOKEN環境変数が見つかりません。",
+    "submitFailed": "フィードバックの送信に失敗しました"
+  }
+}

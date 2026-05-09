@@ -1,0 +1,46 @@
+{
+  "title": "Q&A-Datenbank",
+  "subtitle": "{{total}} Frage · {{answered}} beantwortet · {{unanswered}} unbeantwortet",
+  "subtitle_plural": "{{total}} Fragen · {{answered}} beantwortet · {{unanswered}} unbeantwortet",
+  "actions": {
+    "autoSquash": "Auto-Zusammenführen",
+    "squashing": "Zusammenführen...",
+    "smartSquash": "Smart-Zusammenführen",
+    "analyzing": "Analysiere...",
+    "autoSquashTitle": "Fragen mit ähnlichem Text zusammenführen",
+    "smartSquashTitle": "LLM verwenden, um semantisch identische Fragen zu finden"
+  },
+  "filter": {
+    "all": "Alle ({{count}})",
+    "unanswered": "Unbeantwortet ({{count}})"
+  },
+  "searchPlaceholder": "Fragen oder Antworten suchen...",
+  "mergeMode": {
+    "banner": "Klicke unten auf eine Frage, um \"{{question}}\" damit zusammenzuführen.",
+    "label": "Zusammenführungsmodus:"
+  },
+  "emptyState": {
+    "noMatching": "Keine passenden Fragen gefunden.",
+    "noQuestions": "Noch keine Fragen. Fragen erscheinen hier, wenn der Agent sich auf Jobs bewirbt."
+  },
+  "card": {
+    "answerPlaceholder": "Tippe deine Antwort hier...",
+    "saving": "Speichern...",
+    "unsaved": "Nicht gespeichert",
+    "mergeTitle": "Mit einer anderen Frage zusammenführen",
+    "deleteTitle": "Frage löschen"
+  },
+  "toast": {
+    "deleted": "Frage gelöscht",
+    "merged": "Fragen zusammengeführt",
+    "squashResult": "{{count}} Duplikat(e) zusammengeführt",
+    "noDuplicates": "Keine Duplikate gefunden",
+    "smartSquashResult": "{{count}} Duplikat(e) smart-zusammengeführt",
+    "noSemanticDuplicates": "Keine semantischen Duplikate gefunden",
+    "autoSquashFailed": "Auto-Zusammenführung fehlgeschlagen",
+    "smartSquashFailed": "Smart-Zusammenführung fehlgeschlagen"
+  },
+  "error": {
+    "loadFailed": "Q&A konnte nicht geladen werden"
+  }
+}

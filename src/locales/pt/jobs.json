@@ -1,0 +1,76 @@
+{
+  "title": "Vagas",
+  "subtitle": "{{total}} vagas coletadas · {{applied}} candidatadas · {{pending}} pendentes",
+  "hideCollector": "Ocultar coletor",
+  "collectJobs": "Coletar vagas",
+  "status": {
+    "pending": "Pendente",
+    "applied": "Candidatado",
+    "failed": "Falhou",
+    "blocked": "Bloqueado",
+    "inProgress": "Em andamento"
+  },
+  "filter": {
+    "all": "Todas"
+  },
+  "search": "Buscar",
+  "searchPlaceholder": "Buscar por cargo ou empresa...",
+  "collector": {
+    "title": "Coletor de vagas",
+    "description": "Busque vagas que correspondam ao seu perfil. Selecione uma plataforma fonte, insira um cargo e inicie a coleta. A coleta geralmente leva 3-10 minutos por cargo enquanto o agente rola pelos resultados.",
+    "loginInfo": "<strong>Login:</strong> Um navegador será aberto e verificará se você está logado na plataforma selecionada. Caso contrário, o agente aguardará seu login manual — e depois prosseguirá automaticamente.",
+    "sourcePlatform": "Plataforma fonte",
+    "jobTitlePlaceholder": "Cargo (ex.: 'Analista de Dados') ou deixe vazio para todos",
+    "maxJobsPlaceholder": "Máx. vagas",
+    "maxJobsTitle": "Máx. vagas a coletar (por cargo)",
+    "stop": "Parar",
+    "start": "Iniciar",
+    "startingCollection": "Iniciando coleta...",
+    "collectedProgress": "{{collected}} de {{max}} vagas coletadas",
+    "collectionLog": "Log de coleta"
+  },
+  "emptyState": {
+    "noMatching": "Nenhuma vaga correspondente",
+    "noJobsYet": "Nenhuma vaga coletada ainda",
+    "tryChanging": "Tente alterar sua busca ou filtro.",
+    "clickCollect": "Clique em 'Coletar vagas' acima para buscar vagas correspondentes.",
+    "startCollecting": "Começar a coletar"
+  },
+  "jobItem": {
+    "untitled": "Sem título",
+    "easyApply": "Easy Apply",
+    "unknown": "Desconhecido",
+    "error": "Erro: {{error}}",
+    "collected": "Coletado em {{date}}",
+    "applied": " · Candidatado em {{date}}",
+    "coverLetter": "Carta de apresentação",
+    "coverLetterTitle": "Gerar uma carta de apresentação personalizada para esta vaga",
+    "applyRunningTitle": "Uma candidatura já está em andamento",
+    "retryTitle": "Tentar novamente esta vaga",
+    "applyTitle": "Candidatar-se a esta vaga",
+    "applying": "Candidatando...",
+    "retry": "Tentar novamente",
+    "apply": "Candidatar",
+    "openOnLinkedIn": "Abrir no LinkedIn"
+  },
+  "showingJobs": "Mostrando {{count}} vaga",
+  "showingJobs_plural": "Mostrando {{count}} vagas",
+  "dialog": {
+    "startApplying": "Começar a candidatar",
+    "startCollecting": "Começar a coletar"
+  },
+  "coverLetterModal": {
+    "title": "Gerar carta de apresentação",
+    "jobAt": "{{title}} na {{company}}",
+    "noDescription": "Nenhuma descrição de vaga disponível. Cole a descrição abaixo para gerar uma carta de apresentação.",
+    "pastePlaceholder": "Cole a descrição da vaga aqui...",
+    "generate": "Gerar",
+    "generating": "Gerando carta de apresentação...",
+    "generatedLabel": "Carta de apresentação gerada",
+    "copy": "Copiar",
+    "saved": "Salvo!",
+    "saveToProfile": "Salvar no perfil",
+    "failedGenerate": "Falha ao gerar carta de apresentação",
+    "failedSave": "Falha ao salvar no perfil"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "title": "Kerja",
+  "subtitle": "{{total}} kerja dikumpul · {{applied}} dimohon · {{pending}} menunggu",
+  "hideCollector": "Sembunyikan Pengumpul",
+  "collectJobs": "Kumpul Kerja",
+  "status": {
+    "pending": "Menunggu",
+    "applied": "Dimohon",
+    "failed": "Gagal",
+    "blocked": "Disekat",
+    "inProgress": "Sedang Berjalan"
+  },
+  "filter": {
+    "all": "Semua"
+  },
+  "search": "Cari",
+  "searchPlaceholder": "Cari mengikut jawatan atau syarikat...",
+  "collector": {
+    "title": "Pengumpul Kerja",
+    "description": "Cari senarai kerja yang sepadan dengan profil anda. Pilih platform sumber, masukkan jawatan, dan mulakan pengumpulan. Pengumpulan biasanya mengambil masa 3-10 minit setiap jawatan kerana ejen menatal hasil.",
+    "loginInfo": "<strong>Log masuk:</strong> Pelayar akan dibuka dan menyemak sama ada anda telah log masuk ke platform yang dipilih. Jika tidak, ejen akan menunggu anda log masuk secara manual — kemudian meneruskan secara automatik.",
+    "sourcePlatform": "Platform Sumber",
+    "jobTitlePlaceholder": "Jawatan (cth. 'Penganalisis Data') atau kosongkan untuk semua",
+    "maxJobsPlaceholder": "Maks kerja",
+    "maxJobsTitle": "Maks kerja untuk dikumpul (setiap jawatan)",
+    "stop": "Berhenti",
+    "start": "Mula",
+    "startingCollection": "Memulakan pengumpulan...",
+    "collectedProgress": "{{collected}} daripada {{max}} kerja dikumpul",
+    "collectionLog": "Log Pengumpulan"
+  },
+  "emptyState": {
+    "noMatching": "Tiada kerja yang sepadan",
+    "noJobsYet": "Belum ada kerja dikumpul",
+    "tryChanging": "Cuba tukar carian atau penapis anda.",
+    "clickCollect": "Klik 'Kumpul Kerja' di atas untuk mencari senarai yang sepadan.",
+    "startCollecting": "Mula Mengumpul"
+  },
+  "jobItem": {
+    "untitled": "Tanpa Tajuk",
+    "easyApply": "Easy Apply",
+    "unknown": "Tidak Diketahui",
+    "error": "Ralat: {{error}}",
+    "collected": "Dikumpul {{date}}",
+    "applied": " · Dimohon {{date}}",
+    "coverLetter": "Surat Iringan",
+    "coverLetterTitle": "Jana surat iringan yang disesuaikan untuk kerja ini",
+    "applyRunningTitle": "Permohonan sedang berjalan",
+    "retryTitle": "Cuba semula kerja ini",
+    "applyTitle": "Mohon kerja ini",
+    "applying": "Sedang memohon...",
+    "retry": "Cuba Semula",
+    "apply": "Mohon",
+    "openOnLinkedIn": "Buka di LinkedIn"
+  },
+  "showingJobs": "Menunjukkan {{count}} kerja",
+  "showingJobs_plural": "Menunjukkan {{count}} kerja",
+  "dialog": {
+    "startApplying": "Mula Memohon",
+    "startCollecting": "Mula Mengumpul"
+  },
+  "coverLetterModal": {
+    "title": "Jana Surat Iringan",
+    "jobAt": "{{title}} di {{company}}",
+    "noDescription": "Tiada penerangan kerja tersedia. Tampal penerangan di bawah untuk menjana surat iringan.",
+    "pastePlaceholder": "Tampal penerangan kerja di sini...",
+    "generate": "Jana",
+    "generating": "Menjana surat iringan...",
+    "generatedLabel": "Surat Iringan yang Dijana",
+    "copy": "Salin",
+    "saved": "Disimpan!",
+    "saveToProfile": "Simpan ke Profil",
+    "failedGenerate": "Gagal menjana surat iringan",
+    "failedSave": "Gagal menyimpan ke profil"
+  }
+}

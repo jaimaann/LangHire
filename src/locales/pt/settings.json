@@ -1,0 +1,41 @@
+{
+  "title": "Configurações",
+  "subtitle": "Configurações gerais do aplicativo",
+  "resume": {
+    "title": "Currículo",
+    "description": "Arquivo PDF do currículo usado para candidaturas"
+  },
+  "credentials": {
+    "title": "Credenciais da conta",
+    "description": "Usadas para criar contas em plataformas ATS externas durante candidaturas. Armazenadas localmente em texto simples. Prefira usar SSO (Entrar com LinkedIn/Google) quando possível.",
+    "email": "E-mail",
+    "password": "Senha"
+  },
+  "agent": {
+    "title": "Configurações do agente",
+    "maxFailures": "Máx. de falhas por vaga",
+    "maxFailuresDesc": "O agente para de tentar após esse número de falhas consecutivas em uma única vaga."
+  },
+  "telemetry": {
+    "title": "Privacidade e telemetria",
+    "usageAnalytics": "Análise de uso",
+    "description": "Ajude a melhorar o LangHire enviando dados de uso anônimos (uso de recursos, relatórios de falhas). Nenhuma informação pessoal ou dados de vagas são transmitidos."
+  },
+  "blockedDomains": {
+    "title": "Domínios bloqueados",
+    "description": "Vagas nesses domínios serão automaticamente ignoradas.",
+    "empty": "Nenhum domínio bloqueado"
+  },
+  "plugins": {
+    "title": "Plugins de fontes de vagas",
+    "description": "Gerencie plugins de fontes de vagas. Os plugins integrados oferecem LinkedIn, Indeed, SEEK, Naukri, Reed e StepStone. Importe plugins da comunidade (arquivos .yaml) para sites de vagas adicionais.",
+    "builtin": "Integrado",
+    "importPlugin": "Importar plugin"
+  },
+  "language": {
+    "title": "Idioma",
+    "label": "Idioma da interface",
+    "auto": "Automático (por país)",
+    "description": "Escolha o idioma da interface do aplicativo. Defina como 'Automático' para corresponder ao seu país selecionado."
+  }
+}

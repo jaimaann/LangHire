@@ -1,0 +1,46 @@
+{
+  "title": "Q&Aリポジトリ",
+  "subtitle": "{{total}}件の質問 · {{answered}}件回答済み · {{unanswered}}件未回答",
+  "subtitle_plural": "{{total}}件の質問 · {{answered}}件回答済み · {{unanswered}}件未回答",
+  "actions": {
+    "autoSquash": "自動マージ",
+    "squashing": "マージ中...",
+    "smartSquash": "スマートマージ",
+    "analyzing": "分析中...",
+    "autoSquashTitle": "類似テキストの質問をマージ",
+    "smartSquashTitle": "LLMを使用して意味的に同一の質問を検出"
+  },
+  "filter": {
+    "all": "すべて ({{count}})",
+    "unanswered": "未回答 ({{count}})"
+  },
+  "searchPlaceholder": "質問または回答を検索...",
+  "mergeMode": {
+    "banner": "下の質問をクリックして「{{question}}」をマージします。",
+    "label": "マージモード:"
+  },
+  "emptyState": {
+    "noMatching": "一致する質問が見つかりません。",
+    "noQuestions": "まだ質問がありません。エージェントが求人に応募すると、ここに質問が表示されます。"
+  },
+  "card": {
+    "answerPlaceholder": "ここに回答を入力...",
+    "saving": "保存中...",
+    "unsaved": "未保存",
+    "mergeTitle": "別の質問にマージ",
+    "deleteTitle": "質問を削除"
+  },
+  "toast": {
+    "deleted": "質問を削除しました",
+    "merged": "質問をマージしました",
+    "squashResult": "{{count}}件の重複をマージしました",
+    "noDuplicates": "重複は見つかりませんでした",
+    "smartSquashResult": "{{count}}件の重複をスマートマージしました",
+    "noSemanticDuplicates": "意味的な重複は見つかりませんでした",
+    "autoSquashFailed": "自動マージに失敗しました",
+    "smartSquashFailed": "スマートマージに失敗しました"
+  },
+  "error": {
+    "loadFailed": "Q&Aの読み込みに失敗しました"
+  }
+}

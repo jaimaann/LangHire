@@ -1,0 +1,17 @@
+{
+  "title": "Journaux",
+  "subtitle": "Journaux d'exécution historiques pour le débogage et la surveillance",
+  "refresh": "Actualiser",
+  "runs": {
+    "title": "Exécutions récentes ({{count}})",
+    "empty": "Aucune exécution enregistrée. Collectez ou postulez à des emplois pour voir les journaux ici.",
+    "unknown": "Inconnu",
+    "lines": "{{count}} lignes"
+  },
+  "detail": {
+    "runTitle": "Exécution {{id}}",
+    "selectPrompt": "Sélectionnez une exécution pour voir les journaux",
+    "selectFromPanel": "Sélectionnez une exécution dans le panneau gauche pour voir ses journaux",
+    "noLogs": "Aucun journal enregistré pour cette exécution (exécution pré-mise à niveau de journalisation)"
+  }
+}

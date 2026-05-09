@@ -1,0 +1,17 @@
+{
+  "title": "Registros",
+  "subtitle": "Registros históricos de ejecución para depuración y monitoreo",
+  "refresh": "Actualizar",
+  "runs": {
+    "title": "Ejecuciones recientes ({{count}})",
+    "empty": "Aún no hay ejecuciones registradas. Recopila o aplica a empleos para ver registros aquí.",
+    "unknown": "Desconocido",
+    "lines": "{{count}} líneas"
+  },
+  "detail": {
+    "runTitle": "Ejecución {{id}}",
+    "selectPrompt": "Selecciona una ejecución para ver los registros",
+    "selectFromPanel": "Selecciona una ejecución del panel izquierdo para ver sus registros",
+    "noLogs": "No hay registros para esta ejecución (ejecución anterior a la actualización de registros)"
+  }
+}

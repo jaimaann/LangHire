@@ -1,0 +1,41 @@
+{
+  "title": "Einstellungen",
+  "subtitle": "Allgemeine Anwendungseinstellungen",
+  "resume": {
+    "title": "Lebenslauf",
+    "description": "PDF-Lebenslauf für Bewerbungen"
+  },
+  "credentials": {
+    "title": "Kontodaten",
+    "description": "Werden zum Erstellen von Konten auf externen ATS-Plattformen während der Bewerbung verwendet. Lokal im Klartext gespeichert. Verwenden Sie vorzugsweise SSO (Anmelden mit LinkedIn/Google), wenn möglich.",
+    "email": "E-Mail",
+    "password": "Passwort"
+  },
+  "agent": {
+    "title": "Agent-Einstellungen",
+    "maxFailures": "Max. Fehlversuche pro Job",
+    "maxFailuresDesc": "Der Agent stoppt nach dieser Anzahl aufeinanderfolgender Fehlversuche bei einem einzelnen Job."
+  },
+  "telemetry": {
+    "title": "Datenschutz & Telemetrie",
+    "usageAnalytics": "Nutzungsanalyse",
+    "description": "Helfen Sie LangHire zu verbessern, indem Sie anonyme Nutzungsdaten senden (Feature-Nutzung, Absturzberichte). Es werden keine persönlichen Daten oder Jobdaten übertragen."
+  },
+  "blockedDomains": {
+    "title": "Blockierte Domains",
+    "description": "Jobs auf diesen Domains werden automatisch übersprungen.",
+    "empty": "Keine blockierten Domains"
+  },
+  "plugins": {
+    "title": "Job-Quellen-Plugins",
+    "description": "Job-Quellen-Plugins verwalten. Integrierte Plugins bieten LinkedIn, Indeed, SEEK, Naukri, Reed und StepStone. Importieren Sie Community-Plugins (.yaml-Dateien) für zusätzliche Jobseiten.",
+    "builtin": "Integriert",
+    "importPlugin": "Plugin importieren"
+  },
+  "language": {
+    "title": "Sprache",
+    "label": "Oberflächensprache",
+    "auto": "Automatisch (nach Land)",
+    "description": "Wählen Sie die Sprache der Benutzeroberfläche. Setzen Sie auf 'Automatisch', um Ihr ausgewähltes Land abzugleichen."
+  }
+}

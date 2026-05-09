@@ -1,0 +1,41 @@
+{
+  "title": "Tetapan",
+  "subtitle": "Tetapan aplikasi umum",
+  "resume": {
+    "title": "Resume",
+    "description": "Fail PDF resume yang digunakan untuk permohonan kerja"
+  },
+  "credentials": {
+    "title": "Kelayakan Akaun",
+    "description": "Digunakan untuk membuat akaun di platform ATS luaran semasa permohonan. Disimpan secara tempatan dalam teks biasa. Gunakan SSO (Log masuk dengan LinkedIn/Google) jika boleh.",
+    "email": "E-mel",
+    "password": "Kata laluan"
+  },
+  "agent": {
+    "title": "Tetapan Ejen",
+    "maxFailures": "Kegagalan Maksimum Setiap Kerja",
+    "maxFailuresDesc": "Ejen berhenti mencuba selepas jumlah kegagalan berturut-turut ini pada satu kerja."
+  },
+  "telemetry": {
+    "title": "Privasi & Telemetri",
+    "usageAnalytics": "Analisis Penggunaan",
+    "description": "Bantu meningkatkan LangHire dengan menghantar data penggunaan tanpa nama (penggunaan ciri, laporan ranap). Tiada maklumat peribadi atau data kerja dihantar."
+  },
+  "blockedDomains": {
+    "title": "Domain Disekat",
+    "description": "Kerja di domain ini akan dilangkau secara automatik.",
+    "empty": "Tiada domain disekat"
+  },
+  "plugins": {
+    "title": "Plugin Sumber Kerja",
+    "description": "Urus plugin sumber kerja. Plugin terbina dalam menyediakan LinkedIn, Indeed, SEEK, Naukri, Reed, dan StepStone. Import plugin komuniti (fail .yaml) untuk laman kerja tambahan.",
+    "builtin": "Terbina dalam",
+    "importPlugin": "Import Plugin"
+  },
+  "language": {
+    "title": "Bahasa",
+    "label": "Bahasa Antaramuka",
+    "auto": "Automatik (mengikut negara)",
+    "description": "Pilih bahasa untuk antaramuka aplikasi. Tetapkan kepada 'Automatik' untuk memadankan negara yang dipilih."
+  }
+}

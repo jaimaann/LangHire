@@ -1,0 +1,87 @@
+{
+  "title": "Perfil do candidato",
+  "subtitle": "Suas informações pessoais usadas em candidaturas",
+  "save": "Salvar perfil",
+  "saved": "Salvo",
+  "saveError": "Falha ao salvar o perfil. Por favor, tente novamente.",
+  "country": {
+    "title": "País",
+    "label": "Seu país",
+    "selectPlaceholder": "Selecionar país...",
+    "dateFormat": "Formato de data: {{format}}",
+    "currency": "Moeda: {{currency}}"
+  },
+  "personal": {
+    "title": "Informações pessoais",
+    "fullName": "Nome completo",
+    "email": "E-mail",
+    "phone": "Telefone",
+    "phonePrefix": "+55",
+    "phonePlaceholder": "Número de telefone",
+    "currentRole": "Cargo atual",
+    "nationality": "Nacionalidade",
+    "dateOfBirth": "Data de nascimento"
+  },
+  "address": {
+    "title": "Endereço",
+    "street": "Rua",
+    "city": "Cidade",
+    "state": "Estado",
+    "zip": "CEP",
+    "country": "País"
+  },
+  "work": {
+    "title": "Preferências de trabalho",
+    "workAuth": "Autorização de trabalho",
+    "workAuthPlaceholder": "Selecionar...",
+    "workMode": "Modo de trabalho",
+    "remote": "Remoto",
+    "hybrid": "Híbrido",
+    "onsite": "Presencial",
+    "visaSponsorship": "Necessita patrocínio de visto",
+    "willingToRelocate": "Disposto a mudar de cidade",
+    "yearsOfExperience": "Anos de experiência",
+    "noticePeriod": "Período de aviso prévio",
+    "noticePeriodPlaceholder": "Selecionar..."
+  },
+  "education": {
+    "title": "Formação",
+    "degree": "Grau",
+    "school": "Instituição",
+    "graduation": "Formatura"
+  },
+  "salary": {
+    "title": "Expectativa salarial",
+    "minimum": "Mínimo",
+    "maximum": "Máximo",
+    "currency": "Moeda",
+    "period": "Período",
+    "annual": "Anual",
+    "monthly": "Mensal"
+  },
+  "coverLetter": {
+    "title": "Carta de apresentação",
+    "description": "Modelo padrão de carta de apresentação usado quando candidaturas solicitam uma.",
+    "placeholder": "Escreva sua carta de apresentação padrão aqui..."
+  },
+  "targetJobTitles": {
+    "title": "Cargos desejados",
+    "placeholder": "Adicionar um cargo..."
+  },
+  "targetLocations": {
+    "title": "Locais desejados",
+    "placeholder": "Adicionar um local..."
+  },
+  "skills": {
+    "title": "Habilidades",
+    "placeholder": "Adicionar uma habilidade..."
+  },
+  "languages": {
+    "title": "Idiomas",
+    "placeholder": "Adicionar um idioma..."
+  },
+  "notes": {
+    "title": "Notas",
+    "placeholder": "Instruções especiais para o agente AI..."
+  }
+}

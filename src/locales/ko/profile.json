@@ -1,0 +1,87 @@
+{
+  "title": "후보자 프로필",
+  "subtitle": "구직 지원에 사용되는 개인 정보",
+  "save": "프로필 저장",
+  "saved": "저장됨",
+  "saveError": "프로필 저장에 실패했습니다. 다시 시도해 주세요.",
+  "country": {
+    "title": "국가",
+    "label": "당신의 국가",
+    "selectPlaceholder": "국가 선택...",
+    "dateFormat": "날짜 형식: {{format}}",
+    "currency": "통화: {{currency}}"
+  },
+  "personal": {
+    "title": "개인 정보",
+    "fullName": "성명",
+    "email": "이메일",
+    "phone": "전화번호",
+    "phonePrefix": "+82",
+    "phonePlaceholder": "전화번호",
+    "currentRole": "현재 직책",
+    "nationality": "국적",
+    "dateOfBirth": "생년월일"
+  },
+  "address": {
+    "title": "주소",
+    "street": "도로명",
+    "city": "시/군/구",
+    "state": "시/도",
+    "zip": "우편번호",
+    "country": "국가"
+  },
+  "work": {
+    "title": "근무 조건",
+    "workAuth": "취업 자격",
+    "workAuthPlaceholder": "선택...",
+    "workMode": "근무 형태",
+    "remote": "원격",
+    "hybrid": "하이브리드",
+    "onsite": "현장 근무",
+    "visaSponsorship": "비자 스폰서십 필요",
+    "willingToRelocate": "이전 가능",
+    "yearsOfExperience": "경력 연수",
+    "noticePeriod": "퇴직 예정",
+    "noticePeriodPlaceholder": "선택..."
+  },
+  "education": {
+    "title": "학력",
+    "degree": "학위",
+    "school": "학교",
+    "graduation": "졸업"
+  },
+  "salary": {
+    "title": "희망 연봉",
+    "minimum": "최소",
+    "maximum": "최대",
+    "currency": "통화",
+    "period": "기간",
+    "annual": "연간",
+    "monthly": "월간"
+  },
+  "coverLetter": {
+    "title": "자기소개서",
+    "description": "지원 시 요청될 때 사용되는 기본 자기소개서 템플릿.",
+    "placeholder": "기본 자기소개서를 여기에 작성하세요..."
+  },
+  "targetJobTitles": {
+    "title": "희망 직종",
+    "placeholder": "직종 추가..."
+  },
+  "targetLocations": {
+    "title": "희망 근무지",
+    "placeholder": "근무지 추가..."
+  },
+  "skills": {
+    "title": "기술",
+    "placeholder": "기술 추가..."
+  },
+  "languages": {
+    "title": "언어",
+    "placeholder": "언어 추가..."
+  },
+  "notes": {
+    "title": "메모",
+    "placeholder": "AI 에이전트를 위한 특별 지시사항..."
+  }
+}

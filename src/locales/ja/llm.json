@@ -1,0 +1,97 @@
+{
+  "title": "LLM設定",
+  "subtitle": "求人応募用のAIモデルプロバイダーを設定",
+  "selectProvider": "プロバイダーを選択",
+  "configuration": "{{provider}}の設定",
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter（推奨）",
+      "description": "1つのAPIキーで100以上のビジョンモデル（GPT, Claude, Gemini, Qwen, Llama）"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "GPT-4o、GPT-4o-mini、その他のOpenAIモデル"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "Claude Sonnet、Haiku、Opusモデル（ダイレクトAPI）"
+    },
+    "bedrock": {
+      "name": "AWS Bedrock",
+      "description": "AWS Bedrock経由のClaudeおよびその他のモデル"
+    },
+    "ollama": {
+      "name": "Ollama",
+      "description": "オープンソースモデルをローカルで実行 — APIキー不要"
+    }
+  },
+  "labels": {
+    "apiKey": "APIキー",
+    "model": "モデル",
+    "modelVision": "モデル（ビジョン）",
+    "region": "リージョン",
+    "accessKey": "アクセスキー",
+    "secretKey": "シークレットキー",
+    "profileName": "プロファイル名",
+    "serverUrl": "サーバーURL",
+    "authentication": "認証",
+    "awsCliProfile": "AWS CLIプロファイル",
+    "accessKeySecretKey": "アクセスキー / シークレットキー",
+    "selectModel": "モデルを選択"
+  },
+  "guide": {
+    "howToGetKey": "{{provider}} APIキーの取得方法",
+    "openai": {
+      "step1": "OpenAIプラットフォームにアクセスし、無料アカウントを作成（またはサインイン）してください。",
+      "step1Link": "platform.openai.com/signup",
+      "step2": "Settings > Billingで支払い方法を追加してください。ChatGPT Plusをお持ちでも、APIアクセスには課金設定が必要です。",
+      "step2Link": "課金設定を追加",
+      "step3": "APIキーページに移動してください。",
+      "step3Link": "platform.openai.com/api-keys",
+      "step4": "\"Create new secret key\"をクリックし、名前を付けてCreateをクリックしてください。",
+      "step5": "キーをコピーして下に貼り付けてください。sk-で始まり、一度しか表示されません。",
+      "note": "これはChatGPTサブスクリプションとは別です。APIには独自の従量課金があります。GPT-4oは1回の応募あたり約$0.01〜0.03です。"
+    },
+    "anthropic": {
+      "step1": "Anthropicコンソールにアクセスし、無料アカウントを作成（またはサインイン）してください。",
+      "step1Link": "console.anthropic.com/signup",
+      "step2": "Settings > Billingで支払い方法を追加してください。少額の無料トライアルクレジットが利用可能な場合があります。",
+      "step2Link": "課金設定を追加",
+      "step3": "APIキーページに移動してください。",
+      "step3Link": "console.anthropic.com/settings/keys",
+      "step4": "\"Create Key\"をクリックし、名前を付けてCreateをクリックしてください。",
+      "step5": "キーをコピーして下に貼り付けてください。sk-ant-で始まり、一度しか表示されません。",
+      "note": "Claude Sonnetは1回の応募あたり約$0.01〜0.03です。APIは従量課金制です。"
+    },
+    "openrouter": {
+      "step1": "OpenRouterにアクセスし、無料アカウントを作成（またはサインイン）してください。",
+      "step1Link": "openrouter.ai",
+      "step2": "APIキーページに移動してください。",
+      "step2Link": "openrouter.ai/keys",
+      "step3": "\"Create Key\"をクリックし、名前を付けてCreateをクリックしてください。",
+      "step4": "キーをコピーして下に貼り付けてください。sk-or-v1-で始まります。",
+      "note": "OpenRouterは1つのキーで100以上のモデルにアクセスできます。openrouter.ai/creditsでクレジットを追加してください。料金はモデルによって異なります。"
+    },
+    "note": "注意:"
+  },
+  "ollama": {
+    "serverUrlHint": "Ollamaサーバーが実行されているURL。",
+    "modelsFound": "サーバーに{{count}}個のモデルが見つかりました。",
+    "modelsFound_other": "サーバーに{{count}}個のモデルが見つかりました。",
+    "noModelsHint": "モデル名を入力するか、Ollamaサーバーを起動して利用可能なモデルを表示してください。"
+  },
+  "openrouter": {
+    "keyHint": "キーの取得先",
+    "modelsAvailable": "{{count}}個のビジョンモデルが利用可能。100万トークンあたりの価格。",
+    "curatedList": "厳選リストを表示中。接続してすべてのビジョンモデルを読み込んでください。",
+    "browseAt": "ブラウズ先"
+  },
+  "status": {
+    "saving": "保存中...",
+    "saved": "保存済み",
+    "testing": "テスト中...",
+    "testConnection": "接続テスト",
+    "connectionSuccessful": "接続成功！",
+    "connectionFailed": "接続失敗。"
+  }
+}

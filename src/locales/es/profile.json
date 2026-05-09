@@ -1,0 +1,87 @@
+{
+  "title": "Perfil del candidato",
+  "subtitle": "Tu información personal utilizada para solicitudes de empleo",
+  "save": "Guardar perfil",
+  "saved": "Guardado",
+  "saveError": "Error al guardar el perfil. Por favor, inténtalo de nuevo.",
+  "country": {
+    "title": "País",
+    "label": "Tu país",
+    "selectPlaceholder": "Seleccionar país...",
+    "dateFormat": "Formato de fecha: {{format}}",
+    "currency": "Moneda: {{currency}}"
+  },
+  "personal": {
+    "title": "Información personal",
+    "fullName": "Nombre completo",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "phonePrefix": "+34",
+    "phonePlaceholder": "Número de teléfono",
+    "currentRole": "Puesto actual",
+    "nationality": "Nacionalidad",
+    "dateOfBirth": "Fecha de nacimiento"
+  },
+  "address": {
+    "title": "Dirección",
+    "street": "Calle",
+    "city": "Ciudad",
+    "state": "Provincia",
+    "zip": "Código postal",
+    "country": "País"
+  },
+  "work": {
+    "title": "Preferencias laborales",
+    "workAuth": "Autorización de trabajo",
+    "workAuthPlaceholder": "Seleccionar...",
+    "workMode": "Modalidad de trabajo",
+    "remote": "Remoto",
+    "hybrid": "Híbrido",
+    "onsite": "Presencial",
+    "visaSponsorship": "Patrocinio de visa necesario",
+    "willingToRelocate": "Dispuesto a reubicarse",
+    "yearsOfExperience": "Años de experiencia",
+    "noticePeriod": "Periodo de preaviso",
+    "noticePeriodPlaceholder": "Seleccionar..."
+  },
+  "education": {
+    "title": "Educación",
+    "degree": "Título",
+    "school": "Institución",
+    "graduation": "Graduación"
+  },
+  "salary": {
+    "title": "Expectativa salarial",
+    "minimum": "Mínimo",
+    "maximum": "Máximo",
+    "currency": "Moneda",
+    "period": "Período",
+    "annual": "Anual",
+    "monthly": "Mensual"
+  },
+  "coverLetter": {
+    "title": "Carta de presentación",
+    "description": "Plantilla de carta de presentación predeterminada utilizada cuando las solicitudes la requieren.",
+    "placeholder": "Escribe tu carta de presentación predeterminada aquí..."
+  },
+  "targetJobTitles": {
+    "title": "Puestos buscados",
+    "placeholder": "Añadir un puesto..."
+  },
+  "targetLocations": {
+    "title": "Ubicaciones deseadas",
+    "placeholder": "Añadir una ubicación..."
+  },
+  "skills": {
+    "title": "Habilidades",
+    "placeholder": "Añadir una habilidad..."
+  },
+  "languages": {
+    "title": "Idiomas",
+    "placeholder": "Añadir un idioma..."
+  },
+  "notes": {
+    "title": "Notas",
+    "placeholder": "Instrucciones especiales para el agente AI..."
+  }
+}

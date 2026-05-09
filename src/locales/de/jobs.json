@@ -1,0 +1,76 @@
+{
+  "title": "Jobs",
+  "subtitle": "{{total}} Jobs gesammelt · {{applied}} beworben · {{pending}} ausstehend",
+  "hideCollector": "Sammler ausblenden",
+  "collectJobs": "Jobs sammeln",
+  "status": {
+    "pending": "Ausstehend",
+    "applied": "Beworben",
+    "failed": "Fehlgeschlagen",
+    "blocked": "Blockiert",
+    "inProgress": "In Bearbeitung"
+  },
+  "filter": {
+    "all": "Alle"
+  },
+  "search": "Suchen",
+  "searchPlaceholder": "Nach Jobtitel oder Unternehmen suchen...",
+  "collector": {
+    "title": "Job-Sammler",
+    "description": "Suche nach Stellenangeboten, die zu deinem Profil passen. Wähle eine Quellplattform, gib einen Jobtitel ein und starte die Sammlung. Die Sammlung dauert typischerweise 3-10 Minuten pro Jobtitel, da der Agent durch die Ergebnisse scrollt.",
+    "loginInfo": "<strong>Anmeldung:</strong> Ein Browser öffnet sich und prüft, ob du bei der ausgewählten Plattform angemeldet bist. Falls nicht, wartet der Agent, bis du dich manuell anmeldest — dann geht es automatisch weiter.",
+    "sourcePlatform": "Quellplattform",
+    "jobTitlePlaceholder": "Jobtitel (z.B. 'Data Analyst') oder leer lassen für alle",
+    "maxJobsPlaceholder": "Max. Jobs",
+    "maxJobsTitle": "Max. zu sammelnde Jobs (pro Titel)",
+    "stop": "Stopp",
+    "start": "Start",
+    "startingCollection": "Sammlung wird gestartet...",
+    "collectedProgress": "{{collected}} von {{max}} Jobs gesammelt",
+    "collectionLog": "Sammlungsprotokoll"
+  },
+  "emptyState": {
+    "noMatching": "Keine passenden Jobs",
+    "noJobsYet": "Noch keine Jobs gesammelt",
+    "tryChanging": "Versuche deine Suche oder Filter zu ändern.",
+    "clickCollect": "Klicke oben auf 'Jobs sammeln', um nach passenden Stellenangeboten zu suchen.",
+    "startCollecting": "Sammlung starten"
+  },
+  "jobItem": {
+    "untitled": "Ohne Titel",
+    "easyApply": "Easy Apply",
+    "unknown": "Unbekannt",
+    "error": "Fehler: {{error}}",
+    "collected": "Gesammelt am {{date}}",
+    "applied": " · Beworben am {{date}}",
+    "coverLetter": "Anschreiben",
+    "coverLetterTitle": "Ein maßgeschneidertes Anschreiben für diesen Job erstellen",
+    "applyRunningTitle": "Eine Bewerbung läuft bereits",
+    "retryTitle": "Diesen Job erneut versuchen",
+    "applyTitle": "Auf diesen Job bewerben",
+    "applying": "Bewerbe mich...",
+    "retry": "Erneut versuchen",
+    "apply": "Bewerben",
+    "openOnLinkedIn": "Auf LinkedIn öffnen"
+  },
+  "showingJobs": "{{count}} Job angezeigt",
+  "showingJobs_plural": "{{count}} Jobs angezeigt",
+  "dialog": {
+    "startApplying": "Bewerben starten",
+    "startCollecting": "Sammlung starten"
+  },
+  "coverLetterModal": {
+    "title": "Anschreiben erstellen",
+    "jobAt": "{{title}} bei {{company}}",
+    "noDescription": "Keine Jobbeschreibung verfügbar. Füge die Beschreibung unten ein, um ein Anschreiben zu erstellen.",
+    "pastePlaceholder": "Jobbeschreibung hier einfügen...",
+    "generate": "Erstellen",
+    "generating": "Anschreiben wird erstellt...",
+    "generatedLabel": "Erstelltes Anschreiben",
+    "copy": "Kopieren",
+    "saved": "Gespeichert!",
+    "saveToProfile": "Im Profil speichern",
+    "failedGenerate": "Anschreiben konnte nicht erstellt werden",
+    "failedSave": "Speichern im Profil fehlgeschlagen"
+  }
+}

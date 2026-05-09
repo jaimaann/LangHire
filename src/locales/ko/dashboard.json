@@ -1,0 +1,37 @@
+{
+  "title": "대시보드",
+  "subtitle": "구직 지원 진행 상황 개요",
+  "cards": {
+    "totalJobs": "전체 채용",
+    "applied": "지원 완료",
+    "failed": "실패",
+    "pending": "대기 중",
+    "successRate": "성공률",
+    "memories": "메모리"
+  },
+  "quickActions": {
+    "title": "빠른 작업",
+    "collectJobs": "채용 수집",
+    "startApplying": "지원 시작",
+    "viewMemories": "메모리 보기"
+  },
+  "setup": {
+    "complete": "설정 완료",
+    "gettingStarted": "시작하기",
+    "viewGuide": "전체 가이드 보기",
+    "allDone": "모든 필수 설정이 완료되었습니다! 채용 정보를 수집하고 지원할 준비가 되었습니다.",
+    "needHelp": "도움이 필요하신가요? 단계별 안내는 <guide>가이드</guide>를 참조하세요.",
+    "stepsComplete": "{{total}}단계 중 {{completed}}단계 완료",
+    "setUp": "설정",
+    "configureAI": "AI 공급자 설정",
+    "setResume": "이력서 경로 설정",
+    "setupProfile": "프로필 설정"
+  },
+  "chromium": {
+    "installing": "Chromium 브라우저 설치 중",
+    "installFailed": "Chromium 설치 실패: {{message}}. <code>python3 -m playwright install chromium</code>을 수동으로 실행하세요."
+  },
+  "backend": {
+    "notConnected": "Backend에 연결되지 않았습니다. 다음 명령으로 시작하세요: <code>uv run python backend/main.py</code>"
+  }
+}

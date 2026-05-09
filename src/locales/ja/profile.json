@@ -1,0 +1,87 @@
+{
+  "title": "候補者プロフィール",
+  "subtitle": "求人応募に使用される個人情報",
+  "save": "プロフィールを保存",
+  "saved": "保存済み",
+  "saveError": "プロフィールの保存に失敗しました。もう一度お試しください。",
+  "country": {
+    "title": "国",
+    "label": "あなたの国",
+    "selectPlaceholder": "国を選択...",
+    "dateFormat": "日付形式: {{format}}",
+    "currency": "通貨: {{currency}}"
+  },
+  "personal": {
+    "title": "個人情報",
+    "fullName": "氏名",
+    "email": "メールアドレス",
+    "phone": "電話番号",
+    "phonePrefix": "+81",
+    "phonePlaceholder": "電話番号",
+    "currentRole": "現在の役職",
+    "nationality": "国籍",
+    "dateOfBirth": "生年月日"
+  },
+  "address": {
+    "title": "住所",
+    "street": "番地",
+    "city": "市区町村",
+    "state": "都道府県",
+    "zip": "郵便番号",
+    "country": "国"
+  },
+  "work": {
+    "title": "勤務条件",
+    "workAuth": "就労資格",
+    "workAuthPlaceholder": "選択...",
+    "workMode": "勤務形態",
+    "remote": "リモート",
+    "hybrid": "ハイブリッド",
+    "onsite": "オンサイト",
+    "visaSponsorship": "ビザスポンサーシップが必要",
+    "willingToRelocate": "転居可能",
+    "yearsOfExperience": "経験年数",
+    "noticePeriod": "退職予定",
+    "noticePeriodPlaceholder": "選択..."
+  },
+  "education": {
+    "title": "学歴",
+    "degree": "学位",
+    "school": "学校",
+    "graduation": "卒業年"
+  },
+  "salary": {
+    "title": "希望年収",
+    "minimum": "最低",
+    "maximum": "最高",
+    "currency": "通貨",
+    "period": "期間",
+    "annual": "年収",
+    "monthly": "月収"
+  },
+  "coverLetter": {
+    "title": "カバーレター",
+    "description": "応募にカバーレターが求められた際に使用されるデフォルトテンプレート。",
+    "placeholder": "デフォルトのカバーレターをここに入力..."
+  },
+  "targetJobTitles": {
+    "title": "希望職種",
+    "placeholder": "職種を追加..."
+  },
+  "targetLocations": {
+    "title": "希望勤務地",
+    "placeholder": "勤務地を追加..."
+  },
+  "skills": {
+    "title": "スキル",
+    "placeholder": "スキルを追加..."
+  },
+  "languages": {
+    "title": "言語",
+    "placeholder": "言語を追加..."
+  },
+  "notes": {
+    "title": "メモ",
+    "placeholder": "AIエージェントへの特別な指示..."
+  }
+}

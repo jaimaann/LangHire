@@ -1,0 +1,46 @@
+{
+  "title": "Repositori S&J",
+  "subtitle": "{{total}} soalan · {{answered}} dijawab · {{unanswered}} belum dijawab",
+  "subtitle_plural": "{{total}} soalan · {{answered}} dijawab · {{unanswered}} belum dijawab",
+  "actions": {
+    "autoSquash": "Gabung Auto",
+    "squashing": "Menggabung...",
+    "smartSquash": "Gabung Pintar",
+    "analyzing": "Menganalisis...",
+    "autoSquashTitle": "Gabungkan soalan dengan teks yang serupa",
+    "smartSquashTitle": "Gunakan LLM untuk mencari soalan yang serupa secara semantik"
+  },
+  "filter": {
+    "all": "Semua ({{count}})",
+    "unanswered": "Belum Dijawab ({{count}})"
+  },
+  "searchPlaceholder": "Cari soalan atau jawapan...",
+  "mergeMode": {
+    "banner": "Klik soalan di bawah untuk menggabungkan \"{{question}}\" ke dalamnya.",
+    "label": "Mod gabungan:"
+  },
+  "emptyState": {
+    "noMatching": "Tiada soalan yang sepadan ditemui.",
+    "noQuestions": "Belum ada soalan. Soalan akan muncul di sini apabila ejen memohon kerja."
+  },
+  "card": {
+    "answerPlaceholder": "Taip jawapan anda di sini...",
+    "saving": "Menyimpan...",
+    "unsaved": "Tidak disimpan",
+    "mergeTitle": "Gabung ke soalan lain",
+    "deleteTitle": "Padam soalan"
+  },
+  "toast": {
+    "deleted": "Soalan dipadam",
+    "merged": "Soalan digabungkan",
+    "squashResult": "{{count}} pendua digabungkan",
+    "noDuplicates": "Tiada pendua ditemui",
+    "smartSquashResult": "{{count}} pendua digabungkan secara pintar",
+    "noSemanticDuplicates": "Tiada pendua semantik ditemui",
+    "autoSquashFailed": "Gabung auto gagal",
+    "smartSquashFailed": "Gabung pintar gagal"
+  },
+  "error": {
+    "loadFailed": "Gagal memuatkan S&J"
+  }
+}

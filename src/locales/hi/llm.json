@@ -1,0 +1,97 @@
+{
+  "title": "LLM सेटिंग्स",
+  "subtitle": "नौकरी आवेदनों के लिए अपना AI मॉडल प्रदाता कॉन्फ़िगर करें",
+  "selectProvider": "प्रदाता चुनें",
+  "configuration": "{{provider}} कॉन्फ़िगरेशन",
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (अनुशंसित)",
+      "description": "एक ही API कुंजी से 100+ विज़न मॉडल (GPT, Claude, Gemini, Qwen, Llama)"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "GPT-4o, GPT-4o-mini, और अन्य OpenAI मॉडल"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "Claude Sonnet, Haiku, और Opus मॉडल (सीधा API)"
+    },
+    "bedrock": {
+      "name": "AWS Bedrock",
+      "description": "AWS Bedrock के माध्यम से Claude और अन्य मॉडल"
+    },
+    "ollama": {
+      "name": "Ollama",
+      "description": "ओपन-सोर्स मॉडल स्थानीय रूप से चलाएँ — कोई API कुंजी आवश्यक नहीं"
+    }
+  },
+  "labels": {
+    "apiKey": "API कुंजी",
+    "model": "मॉडल",
+    "modelVision": "मॉडल (विज़न)",
+    "region": "क्षेत्र",
+    "accessKey": "एक्सेस कुंजी",
+    "secretKey": "सीक्रेट कुंजी",
+    "profileName": "प्रोफ़ाइल नाम",
+    "serverUrl": "सर्वर URL",
+    "authentication": "प्रमाणीकरण",
+    "awsCliProfile": "AWS CLI प्रोफ़ाइल",
+    "accessKeySecretKey": "एक्सेस कुंजी / सीक्रेट कुंजी",
+    "selectModel": "मॉडल चुनें"
+  },
+  "guide": {
+    "howToGetKey": "अपनी {{provider}} API कुंजी कैसे प्राप्त करें",
+    "openai": {
+      "step1": "OpenAI प्लेटफ़ॉर्म पर जाएँ और एक मुफ्त खाता बनाएँ (या साइन इन करें)।",
+      "step1Link": "platform.openai.com/signup",
+      "step2": "Settings > Billing में भुगतान विधि जोड़ें। API एक्सेस के लिए बिलिंग आवश्यक है, भले ही आपके पास ChatGPT Plus हो।",
+      "step2Link": "बिलिंग जोड़ें",
+      "step3": "API keys पेज पर जाएँ।",
+      "step3Link": "platform.openai.com/api-keys",
+      "step4": "\"Create new secret key\" पर क्लिक करें, एक नाम दें, फिर Create पर क्लिक करें।",
+      "step5": "कुंजी कॉपी करें और नीचे पेस्ट करें। यह sk- से शुरू होती है और केवल एक बार दिखाई जाती है।",
+      "note": "यह आपकी ChatGPT सदस्यता से अलग है। API की अपनी पे-एज़-यू-गो बिलिंग है। GPT-4o की लागत प्रति नौकरी आवेदन लगभग $0.01-0.03 है।"
+    },
+    "anthropic": {
+      "step1": "Anthropic कंसोल पर जाएँ और एक मुफ्त खाता बनाएँ (या साइन इन करें)।",
+      "step1Link": "console.anthropic.com/signup",
+      "step2": "Settings > Billing में भुगतान विधि जोड़ें। एक छोटा मुफ्त ट्रायल क्रेडिट उपलब्ध हो सकता है।",
+      "step2Link": "बिलिंग जोड़ें",
+      "step3": "API keys पेज पर जाएँ।",
+      "step3Link": "console.anthropic.com/settings/keys",
+      "step4": "\"Create Key\" पर क्लिक करें, एक नाम दें, फिर Create पर क्लिक करें।",
+      "step5": "कुंजी कॉपी करें और नीचे पेस्ट करें। यह sk-ant- से शुरू होती है और केवल एक बार दिखाई जाती है।",
+      "note": "Claude Sonnet की लागत प्रति नौकरी आवेदन लगभग $0.01-0.03 है। API पे-एज़-यू-गो है।"
+    },
+    "openrouter": {
+      "step1": "OpenRouter पर जाएँ और एक मुफ्त खाता बनाएँ (या साइन इन करें)।",
+      "step1Link": "openrouter.ai",
+      "step2": "API keys पेज पर जाएँ।",
+      "step2Link": "openrouter.ai/keys",
+      "step3": "\"Create Key\" पर क्लिक करें, एक नाम दें, फिर Create पर क्लिक करें।",
+      "step4": "कुंजी कॉपी करें और नीचे पेस्ट करें। यह sk-or-v1- से शुरू होती है।",
+      "note": "OpenRouter एक ही कुंजी से 100+ मॉडल तक पहुँच देता है। openrouter.ai/credits पर क्रेडिट जोड़ें। मूल्य निर्धारण मॉडल के अनुसार भिन्न होता है।"
+    },
+    "note": "नोट:"
+  },
+  "ollama": {
+    "serverUrlHint": "URL जहाँ आपका Ollama सर्वर चल रहा है।",
+    "modelsFound": "आपके सर्वर पर {{count}} मॉडल मिला।",
+    "modelsFound_other": "आपके सर्वर पर {{count}} मॉडल मिले।",
+    "noModelsHint": "एक मॉडल नाम दर्ज करें, या उपलब्ध मॉडल देखने के लिए अपना Ollama सर्वर शुरू करें।"
+  },
+  "openrouter": {
+    "keyHint": "अपनी कुंजी यहाँ से प्राप्त करें",
+    "modelsAvailable": "{{count}} विज़न मॉडल उपलब्ध। प्रति मिलियन टोकन कीमतें।",
+    "curatedList": "क्यूरेटेड सूची दिखा रहे हैं। सभी विज़न मॉडल लोड करने के लिए कनेक्ट करें।",
+    "browseAt": "यहाँ ब्राउज़ करें"
+  },
+  "status": {
+    "saving": "सहेजा जा रहा है...",
+    "saved": "सहेजा गया",
+    "testing": "परीक्षण हो रहा है...",
+    "testConnection": "कनेक्शन परीक्षण",
+    "connectionSuccessful": "कनेक्शन सफल!",
+    "connectionFailed": "कनेक्शन विफल।"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "title": "Q&A भंडार",
+  "subtitle": "{{total}} प्रश्न · {{answered}} उत्तरित · {{unanswered}} अनुत्तरित",
+  "subtitle_plural": "{{total}} प्रश्न · {{answered}} उत्तरित · {{unanswered}} अनुत्तरित",
+  "actions": {
+    "autoSquash": "ऑटो-स्क्वैश",
+    "squashing": "स्क्वैश हो रहा है...",
+    "smartSquash": "स्मार्ट स्क्वैश",
+    "analyzing": "विश्लेषण हो रहा है...",
+    "autoSquashTitle": "समान पाठ वाले प्रश्नों को मिलाएँ",
+    "smartSquashTitle": "अर्थ के आधार पर समान प्रश्न खोजने के लिए LLM का उपयोग करें"
+  },
+  "filter": {
+    "all": "सभी ({{count}})",
+    "unanswered": "अनुत्तरित ({{count}})"
+  },
+  "searchPlaceholder": "प्रश्न या उत्तर खोजें...",
+  "mergeMode": {
+    "banner": "\"{{question}}\" को मिलाने के लिए नीचे एक प्रश्न पर क्लिक करें।",
+    "label": "मर्ज मोड:"
+  },
+  "emptyState": {
+    "noMatching": "कोई मिलते-जुलते प्रश्न नहीं मिले।",
+    "noQuestions": "अभी तक कोई प्रश्न नहीं। एजेंट नौकरियों पर आवेदन करते समय प्रश्न यहाँ दिखाई देंगे।"
+  },
+  "card": {
+    "answerPlaceholder": "अपना उत्तर यहाँ टाइप करें...",
+    "saving": "सहेजा जा रहा है...",
+    "unsaved": "सहेजा नहीं गया",
+    "mergeTitle": "किसी अन्य प्रश्न में मिलाएँ",
+    "deleteTitle": "प्रश्न हटाएँ"
+  },
+  "toast": {
+    "deleted": "प्रश्न हटाया गया",
+    "merged": "प्रश्न मिलाए गए",
+    "squashResult": "{{count}} डुप्लिकेट मिलाए गए",
+    "noDuplicates": "कोई डुप्लिकेट नहीं मिले",
+    "smartSquashResult": "{{count}} डुप्लिकेट स्मार्ट-मर्ज किए गए",
+    "noSemanticDuplicates": "कोई अर्थगत डुप्लिकेट नहीं मिले",
+    "autoSquashFailed": "ऑटो-स्क्वैश विफल",
+    "smartSquashFailed": "स्मार्ट स्क्वैश विफल"
+  },
+  "error": {
+    "loadFailed": "Q&A लोड करने में विफल"
+  }
+}

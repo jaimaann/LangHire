@@ -1,0 +1,37 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Überblick über Ihren Bewerbungsfortschritt",
+  "cards": {
+    "totalJobs": "Alle Jobs",
+    "applied": "Beworben",
+    "failed": "Fehlgeschlagen",
+    "pending": "Ausstehend",
+    "successRate": "Erfolgsquote",
+    "memories": "Erinnerungen"
+  },
+  "quickActions": {
+    "title": "Schnellaktionen",
+    "collectJobs": "Jobs sammeln",
+    "startApplying": "Bewerben starten",
+    "viewMemories": "Erinnerungen ansehen"
+  },
+  "setup": {
+    "complete": "Einrichtung abgeschlossen",
+    "gettingStarted": "Erste Schritte",
+    "viewGuide": "Vollständige Anleitung",
+    "allDone": "Alle erforderlichen Einrichtungsschritte sind erledigt! Sie können jetzt Jobs sammeln und sich bewerben.",
+    "needHelp": "Hilfe nötig? Besuchen Sie die <guide>Anleitung</guide> für Schritt-für-Schritt-Anweisungen.",
+    "stepsComplete": "{{completed}} von {{total}} Schritten abgeschlossen",
+    "setUp": "Einrichten",
+    "configureAI": "AI-Anbieter konfigurieren",
+    "setResume": "Lebenslauf-Pfad festlegen",
+    "setupProfile": "Profil einrichten"
+  },
+  "chromium": {
+    "installing": "Chromium-Browser wird installiert",
+    "installFailed": "Chromium-Installation fehlgeschlagen: {{message}}. Führen Sie <code>python3 -m playwright install chromium</code> manuell aus."
+  },
+  "backend": {
+    "notConnected": "Backend nicht verbunden. Starten Sie es mit: <code>uv run python backend/main.py</code>"
+  }
+}

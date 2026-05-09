@@ -1,0 +1,87 @@
+{
+  "title": "Profil du candidat",
+  "subtitle": "Vos informations personnelles utilisées pour les candidatures",
+  "save": "Enregistrer le profil",
+  "saved": "Enregistré",
+  "saveError": "Échec de l'enregistrement du profil. Veuillez réessayer.",
+  "country": {
+    "title": "Pays",
+    "label": "Votre pays",
+    "selectPlaceholder": "Sélectionner un pays...",
+    "dateFormat": "Format de date : {{format}}",
+    "currency": "Devise : {{currency}}"
+  },
+  "personal": {
+    "title": "Informations personnelles",
+    "fullName": "Nom complet",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "phonePrefix": "+33",
+    "phonePlaceholder": "Numéro de téléphone",
+    "currentRole": "Poste actuel",
+    "nationality": "Nationalité",
+    "dateOfBirth": "Date de naissance"
+  },
+  "address": {
+    "title": "Adresse",
+    "street": "Rue",
+    "city": "Ville",
+    "state": "Région",
+    "zip": "Code postal",
+    "country": "Pays"
+  },
+  "work": {
+    "title": "Préférences de travail",
+    "workAuth": "Autorisation de travail",
+    "workAuthPlaceholder": "Sélectionner...",
+    "workMode": "Mode de travail",
+    "remote": "Télétravail",
+    "hybrid": "Hybride",
+    "onsite": "Sur site",
+    "visaSponsorship": "Parrainage de visa nécessaire",
+    "willingToRelocate": "Prêt à déménager",
+    "yearsOfExperience": "Années d'expérience",
+    "noticePeriod": "Préavis",
+    "noticePeriodPlaceholder": "Sélectionner..."
+  },
+  "education": {
+    "title": "Formation",
+    "degree": "Diplôme",
+    "school": "Établissement",
+    "graduation": "Diplôme obtenu"
+  },
+  "salary": {
+    "title": "Prétentions salariales",
+    "minimum": "Minimum",
+    "maximum": "Maximum",
+    "currency": "Devise",
+    "period": "Période",
+    "annual": "Annuel",
+    "monthly": "Mensuel"
+  },
+  "coverLetter": {
+    "title": "Lettre de motivation",
+    "description": "Modèle de lettre de motivation par défaut utilisé lorsque les candidatures en demandent une.",
+    "placeholder": "Écrivez votre lettre de motivation par défaut ici..."
+  },
+  "targetJobTitles": {
+    "title": "Postes recherchés",
+    "placeholder": "Ajouter un poste..."
+  },
+  "targetLocations": {
+    "title": "Lieux recherchés",
+    "placeholder": "Ajouter un lieu..."
+  },
+  "skills": {
+    "title": "Compétences",
+    "placeholder": "Ajouter une compétence..."
+  },
+  "languages": {
+    "title": "Langues",
+    "placeholder": "Ajouter une langue..."
+  },
+  "notes": {
+    "title": "Notes",
+    "placeholder": "Instructions spéciales pour l'agent AI..."
+  }
+}

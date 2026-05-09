@@ -1,0 +1,73 @@
+{
+  "title": "セットアップウィザード",
+  "steps": {
+    "welcome": "ようこそ",
+    "llm": "AIプロバイダー",
+    "resume": "履歴書とプロフィール",
+    "profile": "プロフィール確認",
+    "ready": "準備完了！"
+  },
+  "welcome": {
+    "heading": "LangHireへようこそ！",
+    "description": "数分でセットアップを完了しましょう。このウィザードが必要な設定をご案内します。",
+    "howItWorks": "仕組み：",
+    "items": {
+      "configureAi": "AIプロバイダーを設定",
+      "configureAiDesc": "フォームを埋めるための頭脳",
+      "uploadResume": "履歴書をアップロード",
+      "uploadResumeDesc": "AIが読み取りプロフィールを自動入力",
+      "reviewProfile": "プロフィールを確認",
+      "reviewProfileDesc": "AIが抽出した情報を検証",
+      "loginLinkedIn": "LinkedInにログイン",
+      "loginLinkedInDesc": "求人を探して応募する場所"
+    }
+  },
+  "llmStep": {
+    "heading": "AIプロバイダーを設定",
+    "description": "すべてを動かすAIモデルを設定します — 履歴書の解析、フォーム入力、求人応募。"
+  },
+  "resumeStep": {
+    "heading": "履歴書とプロフィール自動入力",
+    "description": "履歴書のパスを設定し、AIに読み取らせて候補者プロフィールを自動入力させましょう。",
+    "autoFill": {
+      "title": "AI自動入力プロフィール",
+      "description": "履歴書から名前、メール、電話、スキル、学歴、経験、言語、推奨職種を抽出します。",
+      "button": "履歴書からプロフィールを自動入力",
+      "parsing": "履歴書を解析中...",
+      "nextHint": "「次へ」をクリックして自動入力されたプロフィールを確認してください。",
+      "tryAgain": "もう一度試す"
+    },
+    "prerequisite": "まず上でAIプロバイダー（ステップ1）と履歴書のパスを保存してください。",
+    "prerequisiteLabel": "自動入力するには："
+  },
+  "profileStep": {
+    "heading": "プロフィールを確認",
+    "descriptionParsed": "プロフィールが履歴書から自動入力されました！プロフィールページを開いて確認・微調整してください。",
+    "descriptionManual": "プロフィールページで候補者情報を入力してください。エージェントがこれを応募に使用します。",
+    "profileConfigured": "プロフィールは設定済みです",
+    "profileNeeded": "プロフィールには最低限名前が必要です",
+    "keyFields": "主要フィールド：氏名、メール、電話、スキル、希望職種、希望勤務地、学歴。",
+    "reviewEdit": "確認・編集",
+    "goToProfile": "プロフィールへ",
+    "autoFilledHint": "希望職種と希望勤務地を確認してください — これらが求人収集の検索条件になります。",
+    "autoFilledLabel": "自動入力完了！"
+  },
+  "readyStep": {
+    "heading": "準備完了！",
+    "descriptionDone": "すべて設定完了。収集と応募を始めましょう！",
+    "descriptionIncomplete": "後でセットアップを完了できます。ガイドページはいつでも確認できます。",
+    "setupStatus": "セットアップ状況：",
+    "aiProvider": "AIプロバイダー",
+    "resume": "履歴書",
+    "profile": "プロフィール",
+    "collectJobs": "求人を収集",
+    "viewGuide": "ガイドを見る"
+  },
+  "nav": {
+    "back": "戻る",
+    "skipForNow": "今はスキップ",
+    "letsGo": "始めましょう",
+    "next": "次へ",
+    "finishSetup": "セットアップ完了"
+  }
+}

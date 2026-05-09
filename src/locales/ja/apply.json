@@ -1,0 +1,32 @@
+{
+  "title": "応募",
+  "subtitle": "自動求人応募 · {{count}}件の保留中の求人",
+  "emptyState": {
+    "title": "応募する求人がまだありません",
+    "description": "まずLinkedInから求人を収集してから、ここに戻って自動応募してください。",
+    "action": "求人を収集しに行く"
+  },
+  "controls": {
+    "title": "応募コントロール",
+    "loginInfo": "<strong>ログイン:</strong> ブラウザが開き、LinkedInとGmailを確認します。ログインしていない場合、エージェントは手動ログインを待ち、その後自動的に続行します。",
+    "limitLabel": "上限（任意）",
+    "limitPlaceholder": "上限なし — すべてに応募",
+    "limitHelp": "保留中の{{count}}件すべてに応募するには空欄のままにしてください",
+    "stop": "停止",
+    "startApplying": "応募を開始"
+  },
+  "comingSoon": {
+    "badge": "近日公開",
+    "title": "カスタマイズ履歴書",
+    "description": "求人説明からスキルを抽出し、各求人に合わせて履歴書を自動カスタマイズします。"
+  },
+  "log": {
+    "liveOutput": "ライブ出力",
+    "outputLog": "出力ログ",
+    "applicationLog": "応募ログ"
+  },
+  "dialog": {
+    "title": "応募を開始"
+  },
+  "starting": "開始中..."
+}

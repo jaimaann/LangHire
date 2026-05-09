@@ -1,0 +1,97 @@
+{
+  "title": "LLM-Einstellungen",
+  "subtitle": "Konfigurieren Sie Ihren AI-Modellanbieter für Bewerbungen",
+  "selectProvider": "Anbieter auswählen",
+  "configuration": "{{provider}}-Konfiguration",
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (Empfohlen)",
+      "description": "100+ Vision-Modelle (GPT, Claude, Gemini, Qwen, Llama) über einen einzelnen API-Schlüssel"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "GPT-4o, GPT-4o-mini und andere OpenAI-Modelle"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "Claude Sonnet, Haiku und Opus Modelle (direkte API)"
+    },
+    "bedrock": {
+      "name": "AWS Bedrock",
+      "description": "Claude und andere Modelle über AWS Bedrock"
+    },
+    "ollama": {
+      "name": "Ollama",
+      "description": "Open-Source-Modelle lokal ausführen — kein API-Schlüssel nötig"
+    }
+  },
+  "labels": {
+    "apiKey": "API-Schlüssel",
+    "model": "Modell",
+    "modelVision": "Modell (Vision)",
+    "region": "Region",
+    "accessKey": "Access Key",
+    "secretKey": "Secret Key",
+    "profileName": "Profilname",
+    "serverUrl": "Server-URL",
+    "authentication": "Authentifizierung",
+    "awsCliProfile": "AWS CLI-Profil",
+    "accessKeySecretKey": "Access Key / Secret Key",
+    "selectModel": "Modell auswählen"
+  },
+  "guide": {
+    "howToGetKey": "So erhalten Sie Ihren {{provider}} API-Schlüssel",
+    "openai": {
+      "step1": "Gehen Sie zur OpenAI-Plattform und erstellen Sie ein kostenloses Konto (oder melden Sie sich an).",
+      "step1Link": "platform.openai.com/signup",
+      "step2": "Fügen Sie unter Settings > Billing eine Zahlungsmethode hinzu. API-Zugang erfordert Billing, auch mit ChatGPT Plus.",
+      "step2Link": "Billing hinzufügen",
+      "step3": "Gehen Sie zur API-Keys-Seite.",
+      "step3Link": "platform.openai.com/api-keys",
+      "step4": "Klicken Sie auf \"Create new secret key\", vergeben Sie einen Namen, dann klicken Sie auf Create.",
+      "step5": "Kopieren Sie den Schlüssel und fügen Sie ihn unten ein. Er beginnt mit sk- und wird nur einmal angezeigt.",
+      "note": "Dies ist getrennt von Ihrem ChatGPT-Abonnement. Die API hat eigene Pay-as-you-go-Abrechnung. GPT-4o kostet ca. $0,01-0,03 pro Bewerbung."
+    },
+    "anthropic": {
+      "step1": "Gehen Sie zur Anthropic-Konsole und erstellen Sie ein kostenloses Konto (oder melden Sie sich an).",
+      "step1Link": "console.anthropic.com/signup",
+      "step2": "Fügen Sie unter Settings > Billing eine Zahlungsmethode hinzu. Ein kleines kostenloses Testguthaben kann verfügbar sein.",
+      "step2Link": "Billing hinzufügen",
+      "step3": "Gehen Sie zur API-Keys-Seite.",
+      "step3Link": "console.anthropic.com/settings/keys",
+      "step4": "Klicken Sie auf \"Create Key\", vergeben Sie einen Namen, dann klicken Sie auf Create.",
+      "step5": "Kopieren Sie den Schlüssel und fügen Sie ihn unten ein. Er beginnt mit sk-ant- und wird nur einmal angezeigt.",
+      "note": "Claude Sonnet kostet ca. $0,01-0,03 pro Bewerbung. Die API ist Pay-as-you-go."
+    },
+    "openrouter": {
+      "step1": "Gehen Sie zu OpenRouter und erstellen Sie ein kostenloses Konto (oder melden Sie sich an).",
+      "step1Link": "openrouter.ai",
+      "step2": "Gehen Sie zur API-Keys-Seite.",
+      "step2Link": "openrouter.ai/keys",
+      "step3": "Klicken Sie auf \"Create Key\", vergeben Sie einen Namen, dann klicken Sie auf Create.",
+      "step4": "Kopieren Sie den Schlüssel und fügen Sie ihn unten ein. Er beginnt mit sk-or-v1-.",
+      "note": "OpenRouter bietet Zugang zu 100+ Modellen mit einem einzigen Schlüssel. Credits unter openrouter.ai/credits hinzufügen. Preise variieren je nach Modell."
+    },
+    "note": "Hinweis:"
+  },
+  "ollama": {
+    "serverUrlHint": "Die URL, unter der Ihr Ollama-Server läuft.",
+    "modelsFound": "{{count}} Modell auf Ihrem Server gefunden.",
+    "modelsFound_other": "{{count}} Modelle auf Ihrem Server gefunden.",
+    "noModelsHint": "Geben Sie einen Modellnamen ein oder starten Sie Ihren Ollama-Server, um verfügbare Modelle zu sehen."
+  },
+  "openrouter": {
+    "keyHint": "Holen Sie sich Ihren Schlüssel bei",
+    "modelsAvailable": "{{count}} Vision-Modelle verfügbar. Preise pro Million Token.",
+    "curatedList": "Kuratierte Liste wird angezeigt. Verbinden Sie sich, um alle Vision-Modelle zu laden.",
+    "browseAt": "Durchsuchen bei"
+  },
+  "status": {
+    "saving": "Speichern...",
+    "saved": "Gespeichert",
+    "testing": "Testen...",
+    "testConnection": "Verbindung testen",
+    "connectionSuccessful": "Verbindung erfolgreich!",
+    "connectionFailed": "Verbindung fehlgeschlagen."
+  }
+}

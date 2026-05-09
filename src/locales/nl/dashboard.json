@@ -1,0 +1,37 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Overzicht van je sollicitatievoortgang",
+  "cards": {
+    "totalJobs": "Totaal banen",
+    "applied": "Gesolliciteerd",
+    "failed": "Mislukt",
+    "pending": "In afwachting",
+    "successRate": "Slagingspercentage",
+    "memories": "Herinneringen"
+  },
+  "quickActions": {
+    "title": "Snelle acties",
+    "collectJobs": "Banen verzamelen",
+    "startApplying": "Begin met solliciteren",
+    "viewMemories": "Herinneringen bekijken"
+  },
+  "setup": {
+    "complete": "Installatie voltooid",
+    "gettingStarted": "Aan de slag",
+    "viewGuide": "Volledige handleiding bekijken",
+    "allDone": "Alle vereiste instellingen zijn klaar! Je bent klaar om banen te verzamelen en te solliciteren.",
+    "needHelp": "Hulp nodig? Bezoek de <guide>Handleiding</guide> voor stapsgewijze instructies.",
+    "stepsComplete": "{{completed}} van {{total}} stappen voltooid",
+    "setUp": "Instellen",
+    "configureAI": "AI-provider configureren",
+    "setResume": "CV-pad instellen",
+    "setupProfile": "Profiel instellen"
+  },
+  "chromium": {
+    "installing": "Chromium-browser wordt geïnstalleerd",
+    "installFailed": "Chromium-installatie mislukt: {{message}}. Voer <code>python3 -m playwright install chromium</code> handmatig uit."
+  },
+  "backend": {
+    "notConnected": "Backend niet verbonden. Start het met: <code>uv run python backend/main.py</code>"
+  }
+}

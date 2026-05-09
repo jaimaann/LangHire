@@ -1,0 +1,46 @@
+{
+  "title": "Q&A-opslagruimte",
+  "subtitle": "{{total}} vraag · {{answered}} beantwoord · {{unanswered}} onbeantwoord",
+  "subtitle_plural": "{{total}} vragen · {{answered}} beantwoord · {{unanswered}} onbeantwoord",
+  "actions": {
+    "autoSquash": "Auto-samenvoegen",
+    "squashing": "Samenvoegen...",
+    "smartSquash": "Slim samenvoegen",
+    "analyzing": "Analyseren...",
+    "autoSquashTitle": "Vragen met vergelijkbare tekst samenvoegen",
+    "smartSquashTitle": "LLM gebruiken om semantisch identieke vragen te vinden"
+  },
+  "filter": {
+    "all": "Alle ({{count}})",
+    "unanswered": "Onbeantwoord ({{count}})"
+  },
+  "searchPlaceholder": "Zoek vragen of antwoorden...",
+  "mergeMode": {
+    "banner": "Klik hieronder op een vraag om \"{{question}}\" ermee samen te voegen.",
+    "label": "Samenvoegmodus:"
+  },
+  "emptyState": {
+    "noMatching": "Geen overeenkomende vragen gevonden.",
+    "noQuestions": "Nog geen vragen. Vragen verschijnen hier wanneer de agent op banen solliciteert."
+  },
+  "card": {
+    "answerPlaceholder": "Typ je antwoord hier...",
+    "saving": "Opslaan...",
+    "unsaved": "Niet opgeslagen",
+    "mergeTitle": "Samenvoegen met een andere vraag",
+    "deleteTitle": "Vraag verwijderen"
+  },
+  "toast": {
+    "deleted": "Vraag verwijderd",
+    "merged": "Vragen samengevoegd",
+    "squashResult": "{{count}} duplica(a)t(en) samengevoegd",
+    "noDuplicates": "Geen duplicaten gevonden",
+    "smartSquashResult": "{{count}} duplica(a)t(en) slim samengevoegd",
+    "noSemanticDuplicates": "Geen semantische duplicaten gevonden",
+    "autoSquashFailed": "Auto-samenvoegen mislukt",
+    "smartSquashFailed": "Slim samenvoegen mislukt"
+  },
+  "error": {
+    "loadFailed": "Q&A laden mislukt"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "title": "채용",
+  "subtitle": "{{total}}개 수집 · {{applied}}개 지원 완료 · {{pending}}개 대기 중",
+  "hideCollector": "수집기 숨기기",
+  "collectJobs": "채용 수집",
+  "status": {
+    "pending": "대기 중",
+    "applied": "지원 완료",
+    "failed": "실패",
+    "blocked": "차단됨",
+    "inProgress": "진행 중"
+  },
+  "filter": {
+    "all": "전체"
+  },
+  "search": "검색",
+  "searchPlaceholder": "직종 또는 회사명으로 검색...",
+  "collector": {
+    "title": "채용 수집기",
+    "description": "프로필에 맞는 채용 공고를 검색합니다. 소스 플랫폼을 선택하고, 직종명을 입력하고, 수집을 시작하세요. 에이전트가 결과를 스크롤하며 직종명당 보통 3~10분이 소요됩니다.",
+    "loginInfo": "<strong>로그인:</strong> 브라우저가 열리고 선택한 플랫폼에 로그인되어 있는지 확인합니다. 로그인되어 있지 않으면 에이전트가 수동 로그인을 기다린 후 자동으로 진행합니다.",
+    "sourcePlatform": "소스 플랫폼",
+    "jobTitlePlaceholder": "직종명 (예: '데이터 분석가') 또는 전체는 비워두세요",
+    "maxJobsPlaceholder": "최대 채용 수",
+    "maxJobsTitle": "수집할 최대 채용 수 (직종당)",
+    "stop": "중지",
+    "start": "시작",
+    "startingCollection": "수집 시작 중...",
+    "collectedProgress": "{{max}}개 중 {{collected}}개 수집됨",
+    "collectionLog": "수집 로그"
+  },
+  "emptyState": {
+    "noMatching": "일치하는 채용 없음",
+    "noJobsYet": "아직 수집된 채용이 없습니다",
+    "tryChanging": "검색어나 필터를 변경해 보세요.",
+    "clickCollect": "위의 '채용 수집'을 클릭하여 일치하는 공고를 검색하세요.",
+    "startCollecting": "수집 시작"
+  },
+  "jobItem": {
+    "untitled": "제목 없음",
+    "easyApply": "Easy Apply",
+    "unknown": "알 수 없음",
+    "error": "오류: {{error}}",
+    "collected": "{{date}} 수집됨",
+    "applied": " · {{date}} 지원됨",
+    "coverLetter": "자기소개서",
+    "coverLetterTitle": "이 채용에 맞춤 자기소개서 생성",
+    "applyRunningTitle": "이미 지원이 진행 중입니다",
+    "retryTitle": "이 채용 재시도",
+    "applyTitle": "이 채용에 지원",
+    "applying": "지원 중...",
+    "retry": "재시도",
+    "apply": "지원",
+    "openOnLinkedIn": "LinkedIn에서 열기"
+  },
+  "showingJobs": "{{count}}개 채용 표시 중",
+  "showingJobs_plural": "{{count}}개 채용 표시 중",
+  "dialog": {
+    "startApplying": "지원 시작",
+    "startCollecting": "수집 시작"
+  },
+  "coverLetterModal": {
+    "title": "자기소개서 생성",
+    "jobAt": "{{company}}의 {{title}}",
+    "noDescription": "채용 설명이 없습니다. 자기소개서를 생성하려면 아래에 설명을 붙여넣으세요.",
+    "pastePlaceholder": "채용 설명을 여기에 붙여넣으세요...",
+    "generate": "생성",
+    "generating": "자기소개서 생성 중...",
+    "generatedLabel": "생성된 자기소개서",
+    "copy": "복사",
+    "saved": "저장됨!",
+    "saveToProfile": "프로필에 저장",
+    "failedGenerate": "자기소개서 생성 실패",
+    "failedSave": "프로필에 저장 실패"
+  }
+}

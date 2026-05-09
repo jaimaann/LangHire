@@ -1,0 +1,73 @@
+{
+  "title": "Asistente de configuración",
+  "steps": {
+    "welcome": "Bienvenida",
+    "llm": "Proveedor AI",
+    "resume": "Currículum y perfil",
+    "profile": "Revisar perfil",
+    "ready": "¡Listo!"
+  },
+  "welcome": {
+    "heading": "¡Bienvenido a LangHire!",
+    "description": "Vamos a configurarte en solo unos minutos. Este asistente te guiará a través de la configuración esencial.",
+    "howItWorks": "Cómo funciona:",
+    "items": {
+      "configureAi": "Configurar proveedor AI",
+      "configureAiDesc": "El cerebro que llena los formularios",
+      "uploadResume": "Subir tu currículum",
+      "uploadResumeDesc": "La AI lo lee y completa tu perfil automáticamente",
+      "reviewProfile": "Revisar tu perfil",
+      "reviewProfileDesc": "Verifica la información extraída por la AI",
+      "loginLinkedIn": "Iniciar sesión en LinkedIn",
+      "loginLinkedInDesc": "Donde buscamos y aplicamos a empleos"
+    }
+  },
+  "llmStep": {
+    "heading": "Configura tu proveedor AI",
+    "description": "Configura el modelo AI que impulsa todo — análisis del currículum, llenado de formularios y solicitudes de empleo."
+  },
+  "resumeStep": {
+    "heading": "Currículum y autocompletado de perfil",
+    "description": "Establece la ruta de tu currículum, luego deja que la AI lo lea y autocomplete tu perfil de candidato.",
+    "autoFill": {
+      "title": "Autocompletado AI del perfil",
+      "description": "Extraer nombre, correo, teléfono, habilidades, educación, experiencia, idiomas y puestos sugeridos de tu currículum.",
+      "button": "Autocompletar perfil desde el currículum",
+      "parsing": "Analizando tu currículum...",
+      "nextHint": "Haz clic en \"Siguiente\" para revisar tu perfil autocompletado.",
+      "tryAgain": "Intentar de nuevo"
+    },
+    "prerequisite": "Guarda primero tu proveedor AI (Paso 1) y la ruta del currículum arriba.",
+    "prerequisiteLabel": "Para autocompletar:"
+  },
+  "profileStep": {
+    "heading": "Revisa tu perfil",
+    "descriptionParsed": "¡Tu perfil fue autocompletado desde tu currículum! Abre la página de Perfil para revisar y ajustar.",
+    "descriptionManual": "Completa tu información de candidato en la página de Perfil. El agente la usa para las solicitudes.",
+    "profileConfigured": "El perfil está configurado",
+    "profileNeeded": "El perfil necesita al menos tu nombre",
+    "keyFields": "Campos clave: Nombre, Correo, Teléfono, Habilidades, Puestos buscados, Ubicaciones deseadas, Educación.",
+    "reviewEdit": "Revisar y editar",
+    "goToProfile": "Ir al perfil",
+    "autoFilledHint": "Revisa Puestos buscados y Ubicaciones deseadas — estos dirigen la búsqueda de empleos.",
+    "autoFilledLabel": "¡Autocompletado!"
+  },
+  "readyStep": {
+    "heading": "¡Todo listo!",
+    "descriptionDone": "Todo está configurado. ¡Comienza a recopilar y aplicar!",
+    "descriptionIncomplete": "Puedes terminar la configuración más tarde. Consulta la página de Guía en cualquier momento.",
+    "setupStatus": "Estado de configuración:",
+    "aiProvider": "Proveedor AI",
+    "resume": "Currículum",
+    "profile": "Perfil",
+    "collectJobs": "Recopilar empleos",
+    "viewGuide": "Ver guía"
+  },
+  "nav": {
+    "back": "Atrás",
+    "skipForNow": "Omitir por ahora",
+    "letsGo": "Empecemos",
+    "next": "Siguiente",
+    "finishSetup": "Finalizar configuración"
+  }
+}

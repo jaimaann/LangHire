@@ -1,0 +1,87 @@
+{
+  "title": "Kandidaatprofiel",
+  "subtitle": "Je persoonlijke informatie die wordt gebruikt voor sollicitaties",
+  "save": "Profiel opslaan",
+  "saved": "Opgeslagen",
+  "saveError": "Profiel opslaan mislukt. Probeer het opnieuw.",
+  "country": {
+    "title": "Land",
+    "label": "Jouw land",
+    "selectPlaceholder": "Land selecteren...",
+    "dateFormat": "Datumformaat: {{format}}",
+    "currency": "Valuta: {{currency}}"
+  },
+  "personal": {
+    "title": "Persoonlijke informatie",
+    "fullName": "Volledige naam",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "phonePrefix": "+31",
+    "phonePlaceholder": "Telefoonnummer",
+    "currentRole": "Huidige functie",
+    "nationality": "Nationaliteit",
+    "dateOfBirth": "Geboortedatum"
+  },
+  "address": {
+    "title": "Adres",
+    "street": "Straat",
+    "city": "Stad",
+    "state": "Provincie",
+    "zip": "Postcode",
+    "country": "Land"
+  },
+  "work": {
+    "title": "Werkvoorkeuren",
+    "workAuth": "Werkvergunning",
+    "workAuthPlaceholder": "Selecteren...",
+    "workMode": "Werkmodus",
+    "remote": "Remote",
+    "hybrid": "Hybride",
+    "onsite": "Op locatie",
+    "visaSponsorship": "Visumsponsor nodig",
+    "willingToRelocate": "Bereid te verhuizen",
+    "yearsOfExperience": "Jaren ervaring",
+    "noticePeriod": "Opzegtermijn",
+    "noticePeriodPlaceholder": "Selecteren..."
+  },
+  "education": {
+    "title": "Opleiding",
+    "degree": "Diploma",
+    "school": "Onderwijsinstelling",
+    "graduation": "Afstuderen"
+  },
+  "salary": {
+    "title": "Salarisverwachting",
+    "minimum": "Minimum",
+    "maximum": "Maximum",
+    "currency": "Valuta",
+    "period": "Periode",
+    "annual": "Jaarlijks",
+    "monthly": "Maandelijks"
+  },
+  "coverLetter": {
+    "title": "Motivatiebrief",
+    "description": "Standaard motivatiebrief-sjabloon dat wordt gebruikt wanneer sollicitaties er een vereisen.",
+    "placeholder": "Schrijf hier je standaard motivatiebrief..."
+  },
+  "targetJobTitles": {
+    "title": "Gewenste functies",
+    "placeholder": "Functie toevoegen..."
+  },
+  "targetLocations": {
+    "title": "Gewenste locaties",
+    "placeholder": "Locatie toevoegen..."
+  },
+  "skills": {
+    "title": "Vaardigheden",
+    "placeholder": "Vaardigheid toevoegen..."
+  },
+  "languages": {
+    "title": "Talen",
+    "placeholder": "Taal toevoegen..."
+  },
+  "notes": {
+    "title": "Opmerkingen",
+    "placeholder": "Eventuele speciale instructies voor de AI-agent..."
+  }
+}

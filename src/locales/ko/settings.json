@@ -1,0 +1,41 @@
+{
+  "title": "설정",
+  "subtitle": "일반 애플리케이션 설정",
+  "resume": {
+    "title": "이력서",
+    "description": "구직 지원에 사용되는 PDF 이력서 파일"
+  },
+  "credentials": {
+    "title": "계정 자격 증명",
+    "description": "지원 중 외부 ATS 플랫폼에서 계정을 생성하는 데 사용됩니다. 로컬에 일반 텍스트로 저장됩니다. 가능하면 SSO(LinkedIn/Google로 로그인)를 사용하는 것이 좋습니다.",
+    "email": "이메일",
+    "password": "비밀번호"
+  },
+  "agent": {
+    "title": "에이전트 설정",
+    "maxFailures": "채용당 최대 실패 횟수",
+    "maxFailuresDesc": "에이전트는 하나의 채용에서 이 횟수만큼 연속 실패하면 시도를 중단합니다."
+  },
+  "telemetry": {
+    "title": "개인정보 보호 및 텔레메트리",
+    "usageAnalytics": "사용 분석",
+    "description": "익명 사용 데이터(기능 사용, 충돌 보고서)를 전송하여 LangHire 개선에 도움을 주세요. 개인 정보나 채용 데이터는 전송되지 않습니다."
+  },
+  "blockedDomains": {
+    "title": "차단된 도메인",
+    "description": "이 도메인의 채용 공고는 자동으로 건너뜁니다.",
+    "empty": "차단된 도메인 없음"
+  },
+  "plugins": {
+    "title": "채용 소스 플러그인",
+    "description": "채용 소스 플러그인을 관리합니다. 기본 플러그인은 LinkedIn, Indeed, SEEK, Naukri, Reed, StepStone을 제공합니다. 추가 채용 사이트를 위해 커뮤니티 플러그인(.yaml 파일)을 가져올 수 있습니다.",
+    "builtin": "기본 제공",
+    "importPlugin": "플러그인 가져오기"
+  },
+  "language": {
+    "title": "언어",
+    "label": "인터페이스 언어",
+    "auto": "자동 (국가 기준)",
+    "description": "애플리케이션 인터페이스의 언어를 선택하세요. 선택한 국가에 맞추려면 '자동'으로 설정하세요."
+  }
+}

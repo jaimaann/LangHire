@@ -1,0 +1,97 @@
+{
+  "title": "Configurações LLM",
+  "subtitle": "Configure seu provedor de modelo AI para candidaturas",
+  "selectProvider": "Selecionar provedor",
+  "configuration": "Configuração {{provider}}",
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (Recomendado)",
+      "description": "100+ modelos de visão (GPT, Claude, Gemini, Qwen, Llama) com uma única chave API"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "GPT-4o, GPT-4o-mini e outros modelos OpenAI"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "Modelos Claude Sonnet, Haiku e Opus (API direta)"
+    },
+    "bedrock": {
+      "name": "AWS Bedrock",
+      "description": "Claude e outros modelos via AWS Bedrock"
+    },
+    "ollama": {
+      "name": "Ollama",
+      "description": "Execute modelos open-source localmente — sem necessidade de chave API"
+    }
+  },
+  "labels": {
+    "apiKey": "Chave API",
+    "model": "Modelo",
+    "modelVision": "Modelo (Visão)",
+    "region": "Região",
+    "accessKey": "Chave de acesso",
+    "secretKey": "Chave secreta",
+    "profileName": "Nome do perfil",
+    "serverUrl": "URL do servidor",
+    "authentication": "Autenticação",
+    "awsCliProfile": "Perfil AWS CLI",
+    "accessKeySecretKey": "Chave de acesso / Chave secreta",
+    "selectModel": "Selecionar modelo"
+  },
+  "guide": {
+    "howToGetKey": "Como obter sua chave API {{provider}}",
+    "openai": {
+      "step1": "Acesse a plataforma OpenAI e crie uma conta gratuita (ou faça login).",
+      "step1Link": "platform.openai.com/signup",
+      "step2": "Adicione um método de pagamento em Settings > Billing. O acesso à API requer faturamento mesmo com ChatGPT Plus.",
+      "step2Link": "Adicionar faturamento",
+      "step3": "Acesse a página de chaves API.",
+      "step3Link": "platform.openai.com/api-keys",
+      "step4": "Clique em \"Create new secret key\", dê um nome e clique em Create.",
+      "step5": "Copie a chave e cole abaixo. Ela começa com sk- e é mostrada apenas uma vez.",
+      "note": "Isso é separado da sua assinatura ChatGPT. A API tem seu próprio faturamento por uso. GPT-4o custa aproximadamente $0,01-0,03 por candidatura."
+    },
+    "anthropic": {
+      "step1": "Acesse o console Anthropic e crie uma conta gratuita (ou faça login).",
+      "step1Link": "console.anthropic.com/signup",
+      "step2": "Adicione um método de pagamento em Settings > Billing. Um pequeno crédito de teste gratuito pode estar disponível.",
+      "step2Link": "Adicionar faturamento",
+      "step3": "Acesse a página de chaves API.",
+      "step3Link": "console.anthropic.com/settings/keys",
+      "step4": "Clique em \"Create Key\", dê um nome e clique em Create.",
+      "step5": "Copie a chave e cole abaixo. Ela começa com sk-ant- e é mostrada apenas uma vez.",
+      "note": "Claude Sonnet custa aproximadamente $0,01-0,03 por candidatura. A API é de pagamento por uso."
+    },
+    "openrouter": {
+      "step1": "Acesse o OpenRouter e crie uma conta gratuita (ou faça login).",
+      "step1Link": "openrouter.ai",
+      "step2": "Acesse a página de chaves API.",
+      "step2Link": "openrouter.ai/keys",
+      "step3": "Clique em \"Create Key\", dê um nome e clique em Create.",
+      "step4": "Copie a chave e cole abaixo. Ela começa com sk-or-v1-.",
+      "note": "OpenRouter dá acesso a 100+ modelos com uma única chave. Adicione créditos em openrouter.ai/credits. Os preços variam por modelo."
+    },
+    "note": "Nota:"
+  },
+  "ollama": {
+    "serverUrlHint": "A URL onde seu servidor Ollama está rodando.",
+    "modelsFound": "{{count}} modelo encontrado no seu servidor.",
+    "modelsFound_other": "{{count}} modelos encontrados no seu servidor.",
+    "noModelsHint": "Digite um nome de modelo ou inicie seu servidor Ollama para ver os modelos disponíveis."
+  },
+  "openrouter": {
+    "keyHint": "Obtenha sua chave em",
+    "modelsAvailable": "{{count}} modelos de visão disponíveis. Preços por milhão de tokens.",
+    "curatedList": "Mostrando lista selecionada. Conecte para carregar todos os modelos de visão.",
+    "browseAt": "Navegar em"
+  },
+  "status": {
+    "saving": "Salvando...",
+    "saved": "Salvo",
+    "testing": "Testando...",
+    "testConnection": "Testar conexão",
+    "connectionSuccessful": "Conexão bem-sucedida!",
+    "connectionFailed": "Conexão falhou."
+  }
+}

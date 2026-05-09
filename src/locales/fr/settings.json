@@ -1,0 +1,41 @@
+{
+  "title": "Paramètres",
+  "subtitle": "Paramètres généraux de l'application",
+  "resume": {
+    "title": "CV",
+    "description": "Fichier PDF du CV utilisé pour les candidatures"
+  },
+  "credentials": {
+    "title": "Identifiants du compte",
+    "description": "Utilisés pour créer des comptes sur les plateformes ATS externes lors des candidatures. Stockés localement en texte brut. Préférez utiliser le SSO (Connexion avec LinkedIn/Google) lorsque possible.",
+    "email": "E-mail",
+    "password": "Mot de passe"
+  },
+  "agent": {
+    "title": "Paramètres de l'agent",
+    "maxFailures": "Échecs max par emploi",
+    "maxFailuresDesc": "L'agent arrête d'essayer après ce nombre d'échecs consécutifs sur un même emploi."
+  },
+  "telemetry": {
+    "title": "Confidentialité et télémétrie",
+    "usageAnalytics": "Analyse d'utilisation",
+    "description": "Aidez à améliorer LangHire en envoyant des données d'utilisation anonymes (utilisation des fonctionnalités, rapports de crash). Aucune information personnelle ni donnée d'emploi n'est transmise."
+  },
+  "blockedDomains": {
+    "title": "Domaines bloqués",
+    "description": "Les emplois sur ces domaines seront automatiquement ignorés.",
+    "empty": "Aucun domaine bloqué"
+  },
+  "plugins": {
+    "title": "Plugins de sources d'emplois",
+    "description": "Gérer les plugins de sources d'emplois. Les plugins intégrés fournissent LinkedIn, Indeed, SEEK, Naukri, Reed et StepStone. Importez des plugins communautaires (fichiers .yaml) pour des sites d'emploi supplémentaires.",
+    "builtin": "Intégré",
+    "importPlugin": "Importer un plugin"
+  },
+  "language": {
+    "title": "Langue",
+    "label": "Langue de l'interface",
+    "auto": "Automatique (selon le pays)",
+    "description": "Choisissez la langue de l'interface de l'application. Réglez sur 'Automatique' pour correspondre à votre pays sélectionné."
+  }
+}

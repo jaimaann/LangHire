@@ -1,0 +1,97 @@
+{
+  "title": "Paramètres LLM",
+  "subtitle": "Configurez votre fournisseur de modèle AI pour les candidatures",
+  "selectProvider": "Sélectionner le fournisseur",
+  "configuration": "Configuration {{provider}}",
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (Recommandé)",
+      "description": "100+ modèles vision (GPT, Claude, Gemini, Qwen, Llama) via une seule clé API"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "GPT-4o, GPT-4o-mini et autres modèles OpenAI"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "Modèles Claude Sonnet, Haiku et Opus (API directe)"
+    },
+    "bedrock": {
+      "name": "AWS Bedrock",
+      "description": "Claude et autres modèles via AWS Bedrock"
+    },
+    "ollama": {
+      "name": "Ollama",
+      "description": "Exécutez des modèles open-source localement — aucune clé API nécessaire"
+    }
+  },
+  "labels": {
+    "apiKey": "Clé API",
+    "model": "Modèle",
+    "modelVision": "Modèle (Vision)",
+    "region": "Région",
+    "accessKey": "Clé d'accès",
+    "secretKey": "Clé secrète",
+    "profileName": "Nom du profil",
+    "serverUrl": "URL du serveur",
+    "authentication": "Authentification",
+    "awsCliProfile": "Profil AWS CLI",
+    "accessKeySecretKey": "Clé d'accès / Clé secrète",
+    "selectModel": "Sélectionner un modèle"
+  },
+  "guide": {
+    "howToGetKey": "Comment obtenir votre clé API {{provider}}",
+    "openai": {
+      "step1": "Allez sur la plateforme OpenAI et créez un compte gratuit (ou connectez-vous).",
+      "step1Link": "platform.openai.com/signup",
+      "step2": "Ajoutez un moyen de paiement sous Settings > Billing. L'accès API nécessite la facturation même avec ChatGPT Plus.",
+      "step2Link": "Ajouter la facturation",
+      "step3": "Allez à la page des clés API.",
+      "step3Link": "platform.openai.com/api-keys",
+      "step4": "Cliquez sur \"Create new secret key\", donnez-lui un nom, puis cliquez sur Create.",
+      "step5": "Copiez la clé et collez-la ci-dessous. Elle commence par sk- et n'est affichée qu'une seule fois.",
+      "note": "Ceci est distinct de votre abonnement ChatGPT. L'API a sa propre facturation à l'utilisation. GPT-4o coûte environ $0,01-0,03 par candidature."
+    },
+    "anthropic": {
+      "step1": "Allez sur la console Anthropic et créez un compte gratuit (ou connectez-vous).",
+      "step1Link": "console.anthropic.com/signup",
+      "step2": "Ajoutez un moyen de paiement sous Settings > Billing. Un petit crédit d'essai gratuit peut être disponible.",
+      "step2Link": "Ajouter la facturation",
+      "step3": "Allez à la page des clés API.",
+      "step3Link": "console.anthropic.com/settings/keys",
+      "step4": "Cliquez sur \"Create Key\", donnez-lui un nom, puis cliquez sur Create.",
+      "step5": "Copiez la clé et collez-la ci-dessous. Elle commence par sk-ant- et n'est affichée qu'une seule fois.",
+      "note": "Claude Sonnet coûte environ $0,01-0,03 par candidature. L'API est à l'utilisation."
+    },
+    "openrouter": {
+      "step1": "Allez sur OpenRouter et créez un compte gratuit (ou connectez-vous).",
+      "step1Link": "openrouter.ai",
+      "step2": "Allez à la page des clés API.",
+      "step2Link": "openrouter.ai/keys",
+      "step3": "Cliquez sur \"Create Key\", donnez-lui un nom, puis cliquez sur Create.",
+      "step4": "Copiez la clé et collez-la ci-dessous. Elle commence par sk-or-v1-.",
+      "note": "OpenRouter donne accès à 100+ modèles avec une seule clé. Ajoutez des crédits sur openrouter.ai/credits. Les prix varient par modèle."
+    },
+    "note": "Note :"
+  },
+  "ollama": {
+    "serverUrlHint": "L'URL où votre serveur Ollama est en cours d'exécution.",
+    "modelsFound": "{{count}} modèle trouvé sur votre serveur.",
+    "modelsFound_other": "{{count}} modèles trouvés sur votre serveur.",
+    "noModelsHint": "Entrez un nom de modèle, ou démarrez votre serveur Ollama pour voir les modèles disponibles."
+  },
+  "openrouter": {
+    "keyHint": "Obtenez votre clé sur",
+    "modelsAvailable": "{{count}} modèles vision disponibles. Prix par million de tokens.",
+    "curatedList": "Liste sélectionnée affichée. Connectez-vous pour charger tous les modèles vision.",
+    "browseAt": "Parcourir sur"
+  },
+  "status": {
+    "saving": "Enregistrement...",
+    "saved": "Enregistré",
+    "testing": "Test en cours...",
+    "testConnection": "Tester la connexion",
+    "connectionSuccessful": "Connexion réussie !",
+    "connectionFailed": "Connexion échouée."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "title": "لوحة التحكم",
+  "subtitle": "نظرة عامة على تقدم طلبات التوظيف",
+  "cards": {
+    "totalJobs": "إجمالي الوظائف",
+    "applied": "تم التقديم",
+    "failed": "فشل",
+    "pending": "قيد الانتظار",
+    "successRate": "معدل النجاح",
+    "memories": "الذكريات"
+  },
+  "quickActions": {
+    "title": "إجراءات سريعة",
+    "collectJobs": "جمع الوظائف",
+    "startApplying": "بدء التقديم",
+    "viewMemories": "عرض الذكريات"
+  },
+  "setup": {
+    "complete": "اكتمل الإعداد",
+    "gettingStarted": "البدء",
+    "viewGuide": "عرض الدليل الكامل",
+    "allDone": "تم إكمال جميع الإعدادات المطلوبة! أنت جاهز لجمع الوظائف والتقديم عليها.",
+    "needHelp": "تحتاج مساعدة؟ قم بزيارة <guide>الدليل</guide> للحصول على تعليمات خطوة بخطوة.",
+    "stepsComplete": "{{completed}} من {{total}} خطوات مكتملة",
+    "setUp": "إعداد",
+    "configureAI": "تكوين مزود AI",
+    "setResume": "تعيين مسار السيرة الذاتية",
+    "setupProfile": "إعداد ملفك الشخصي"
+  },
+  "chromium": {
+    "installing": "جارٍ تثبيت متصفح Chromium",
+    "installFailed": "فشل تثبيت Chromium: {{message}}. قم بتشغيل <code>python3 -m playwright install chromium</code> يدوياً."
+  },
+  "backend": {
+    "notConnected": "Backend غير متصل. قم بتشغيله بـ: <code>uv run python backend/main.py</code>"
+  }
+}

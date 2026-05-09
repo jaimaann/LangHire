@@ -1,0 +1,38 @@
+{
+  "title": "Geheugen",
+  "subtitle": "{{total}} herinneringen in {{domains}} domeinen",
+  "actions": {
+    "export": "Exporteren",
+    "decay": "Verval",
+    "cleanup": "Opruimen"
+  },
+  "search": {
+    "placeholder": "Herinneringen zoeken...",
+    "button": "Zoeken"
+  },
+  "domains": {
+    "title": "Domeinen",
+    "empty": "Nog geen domeinen",
+    "memoryCount": "{{count}} herinneringen",
+    "confidence": "{{percent}}% conf."
+  },
+  "memories": {
+    "searchResults": "Zoekresultaten ({{count}})",
+    "domainTitle": "{{domain}} ({{count}})",
+    "selectDomain": "Selecteer een domein",
+    "noMemoriesFound": "Geen herinneringen gevonden",
+    "selectDomainPrompt": "Selecteer een domein om de herinneringen te bekijken",
+    "success": "✓ succes",
+    "failure": "✗ mislukt",
+    "confidence": "{{percent}}% betrouwbaarheid",
+    "accesses": "{{count}} keer gebruikt"
+  },
+  "confirm": {
+    "decay": "Betrouwbaarheid verminderen van herinneringen die 30+ dagen niet zijn bijgewerkt?",
+    "cleanup": "Alle herinneringen met betrouwbaarheid onder 0,3 verwijderen?"
+  },
+  "toast": {
+    "decayed": "{{count}} herinneringen vervallen",
+    "deleted": "{{count}} herinneringen verwijderd"
+  }
+}

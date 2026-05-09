@@ -1,0 +1,46 @@
+{
+  "title": "Repositorio Q&A",
+  "subtitle": "{{total}} pregunta · {{answered}} respondida · {{unanswered}} sin responder",
+  "subtitle_plural": "{{total}} preguntas · {{answered}} respondidas · {{unanswered}} sin responder",
+  "actions": {
+    "autoSquash": "Auto-fusionar",
+    "squashing": "Fusionando...",
+    "smartSquash": "Fusión inteligente",
+    "analyzing": "Analizando...",
+    "autoSquashTitle": "Fusionar preguntas con texto similar",
+    "smartSquashTitle": "Usar LLM para encontrar preguntas semánticamente idénticas"
+  },
+  "filter": {
+    "all": "Todas ({{count}})",
+    "unanswered": "Sin responder ({{count}})"
+  },
+  "searchPlaceholder": "Buscar preguntas o respuestas...",
+  "mergeMode": {
+    "banner": "Haz clic en una pregunta abajo para fusionar \"{{question}}\" con ella.",
+    "label": "Modo fusión:"
+  },
+  "emptyState": {
+    "noMatching": "No se encontraron preguntas coincidentes.",
+    "noQuestions": "Aún no hay preguntas. Las preguntas aparecerán aquí cuando el agente aplique a empleos."
+  },
+  "card": {
+    "answerPlaceholder": "Escribe tu respuesta aquí...",
+    "saving": "Guardando...",
+    "unsaved": "Sin guardar",
+    "mergeTitle": "Fusionar con otra pregunta",
+    "deleteTitle": "Eliminar pregunta"
+  },
+  "toast": {
+    "deleted": "Pregunta eliminada",
+    "merged": "Preguntas fusionadas",
+    "squashResult": "{{count}} duplicado(s) fusionado(s)",
+    "noDuplicates": "No se encontraron duplicados",
+    "smartSquashResult": "{{count}} duplicado(s) fusionado(s) inteligentemente",
+    "noSemanticDuplicates": "No se encontraron duplicados semánticos",
+    "autoSquashFailed": "Fusión automática fallida",
+    "smartSquashFailed": "Fusión inteligente fallida"
+  },
+  "error": {
+    "loadFailed": "Error al cargar Q&A"
+  }
+}

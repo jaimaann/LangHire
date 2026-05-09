@@ -1,0 +1,73 @@
+{
+  "title": "Installatieassistent",
+  "steps": {
+    "welcome": "Welkom",
+    "llm": "AI-aanbieder",
+    "resume": "CV & Profiel",
+    "profile": "Profiel bekijken",
+    "ready": "Klaar!"
+  },
+  "welcome": {
+    "heading": "Welkom bij LangHire!",
+    "description": "We helpen je in slechts een paar minuten met de installatie. Deze assistent leidt je door de essentiële configuratie.",
+    "howItWorks": "Hoe het werkt:",
+    "items": {
+      "configureAi": "AI-aanbieder configureren",
+      "configureAiDesc": "Het brein dat formulieren invult",
+      "uploadResume": "Je CV uploaden",
+      "uploadResumeDesc": "AI leest het en vult je profiel automatisch in",
+      "reviewProfile": "Je profiel bekijken",
+      "reviewProfileDesc": "Verifieer de door AI geëxtraheerde info",
+      "loginLinkedIn": "Inloggen bij LinkedIn",
+      "loginLinkedInDesc": "Waar we banen vinden en solliciteren"
+    }
+  },
+  "llmStep": {
+    "heading": "Configureer je AI-aanbieder",
+    "description": "Stel het AI-model in dat alles aandrijft — CV-analyse, formulieren invullen en sollicitaties."
+  },
+  "resumeStep": {
+    "heading": "CV & Profiel automatisch invullen",
+    "description": "Stel je CV-pad in en laat AI het lezen en je kandidaatprofiel automatisch invullen.",
+    "autoFill": {
+      "title": "AI Auto-Fill Profiel",
+      "description": "Naam, e-mail, telefoon, vaardigheden, opleiding, ervaring, talen en voorgestelde functietitels uit je CV extraheren.",
+      "button": "Profiel automatisch invullen vanuit CV",
+      "parsing": "Je CV wordt geanalyseerd...",
+      "nextHint": "Klik op \"Volgende\" om je automatisch ingevulde profiel te bekijken.",
+      "tryAgain": "Opnieuw proberen"
+    },
+    "prerequisite": "Sla eerst je AI-aanbieder (Stap 1) en CV-pad hierboven op.",
+    "prerequisiteLabel": "Voor auto-fill:"
+  },
+  "profileStep": {
+    "heading": "Bekijk je profiel",
+    "descriptionParsed": "Je profiel is automatisch ingevuld vanuit je CV! Open de Profielpagina om te bekijken en bij te werken.",
+    "descriptionManual": "Vul je kandidaatgegevens in op de Profielpagina. De agent gebruikt deze voor sollicitaties.",
+    "profileConfigured": "Profiel is geconfigureerd",
+    "profileNeeded": "Profiel heeft minimaal je naam nodig",
+    "keyFields": "Belangrijke velden: Naam, E-mail, Telefoon, Vaardigheden, Gewenste functies, Gewenste locaties, Opleiding.",
+    "reviewEdit": "Bekijken & bewerken",
+    "goToProfile": "Ga naar profiel",
+    "autoFilledHint": "Controleer Gewenste functies en Gewenste locaties — deze sturen de zoekresultaten.",
+    "autoFilledLabel": "Automatisch ingevuld!"
+  },
+  "readyStep": {
+    "heading": "Alles is gereed!",
+    "descriptionDone": "Alles is geconfigureerd. Begin met verzamelen en solliciteren!",
+    "descriptionIncomplete": "Je kunt de installatie later afronden. Bekijk de Handleiding-pagina op elk moment.",
+    "setupStatus": "Installatiestatus:",
+    "aiProvider": "AI-aanbieder",
+    "resume": "CV",
+    "profile": "Profiel",
+    "collectJobs": "Banen verzamelen",
+    "viewGuide": "Handleiding bekijken"
+  },
+  "nav": {
+    "back": "Terug",
+    "skipForNow": "Voorlopig overslaan",
+    "letsGo": "Aan de slag",
+    "next": "Volgende",
+    "finishSetup": "Installatie afronden"
+  }
+}

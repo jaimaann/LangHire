@@ -1,0 +1,97 @@
+{
+  "title": "LLM-instellingen",
+  "subtitle": "Configureer je AI-modelaanbieder voor sollicitaties",
+  "selectProvider": "Aanbieder selecteren",
+  "configuration": "{{provider}}-configuratie",
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (Aanbevolen)",
+      "description": "100+ vision-modellen (GPT, Claude, Gemini, Qwen, Llama) via één API-sleutel"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "GPT-4o, GPT-4o-mini en andere OpenAI-modellen"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "Claude Sonnet, Haiku en Opus modellen (directe API)"
+    },
+    "bedrock": {
+      "name": "AWS Bedrock",
+      "description": "Claude en andere modellen via AWS Bedrock"
+    },
+    "ollama": {
+      "name": "Ollama",
+      "description": "Voer open-source modellen lokaal uit — geen API-sleutel nodig"
+    }
+  },
+  "labels": {
+    "apiKey": "API-sleutel",
+    "model": "Model",
+    "modelVision": "Model (Vision)",
+    "region": "Regio",
+    "accessKey": "Access Key",
+    "secretKey": "Secret Key",
+    "profileName": "Profielnaam",
+    "serverUrl": "Server-URL",
+    "authentication": "Authenticatie",
+    "awsCliProfile": "AWS CLI-profiel",
+    "accessKeySecretKey": "Access Key / Secret Key",
+    "selectModel": "Model selecteren"
+  },
+  "guide": {
+    "howToGetKey": "Hoe krijg je je {{provider}} API-sleutel",
+    "openai": {
+      "step1": "Ga naar het OpenAI-platform en maak een gratis account aan (of log in).",
+      "step1Link": "platform.openai.com/signup",
+      "step2": "Voeg een betaalmethode toe onder Settings > Billing. API-toegang vereist billing, zelfs met ChatGPT Plus.",
+      "step2Link": "Billing toevoegen",
+      "step3": "Ga naar de API-keys pagina.",
+      "step3Link": "platform.openai.com/api-keys",
+      "step4": "Klik op \"Create new secret key\", geef een naam en klik op Create.",
+      "step5": "Kopieer de sleutel en plak hem hieronder. Hij begint met sk- en wordt slechts één keer getoond.",
+      "note": "Dit is los van je ChatGPT-abonnement. De API heeft eigen pay-as-you-go billing. GPT-4o kost ca. $0,01-0,03 per sollicitatie."
+    },
+    "anthropic": {
+      "step1": "Ga naar de Anthropic-console en maak een gratis account aan (of log in).",
+      "step1Link": "console.anthropic.com/signup",
+      "step2": "Voeg een betaalmethode toe onder Settings > Billing. Een klein gratis proeftegoed kan beschikbaar zijn.",
+      "step2Link": "Billing toevoegen",
+      "step3": "Ga naar de API-keys pagina.",
+      "step3Link": "console.anthropic.com/settings/keys",
+      "step4": "Klik op \"Create Key\", geef een naam en klik op Create.",
+      "step5": "Kopieer de sleutel en plak hem hieronder. Hij begint met sk-ant- en wordt slechts één keer getoond.",
+      "note": "Claude Sonnet kost ca. $0,01-0,03 per sollicitatie. De API is pay-as-you-go."
+    },
+    "openrouter": {
+      "step1": "Ga naar OpenRouter en maak een gratis account aan (of log in).",
+      "step1Link": "openrouter.ai",
+      "step2": "Ga naar de API-keys pagina.",
+      "step2Link": "openrouter.ai/keys",
+      "step3": "Klik op \"Create Key\", geef een naam en klik op Create.",
+      "step4": "Kopieer de sleutel en plak hem hieronder. Hij begint met sk-or-v1-.",
+      "note": "OpenRouter geeft toegang tot 100+ modellen met één sleutel. Voeg credits toe op openrouter.ai/credits. Prijzen variëren per model."
+    },
+    "note": "Opmerking:"
+  },
+  "ollama": {
+    "serverUrlHint": "De URL waar je Ollama-server draait.",
+    "modelsFound": "{{count}} model gevonden op je server.",
+    "modelsFound_other": "{{count}} modellen gevonden op je server.",
+    "noModelsHint": "Voer een modelnaam in, of start je Ollama-server om beschikbare modellen te zien."
+  },
+  "openrouter": {
+    "keyHint": "Haal je sleutel op bij",
+    "modelsAvailable": "{{count}} vision-modellen beschikbaar. Prijzen per miljoen tokens.",
+    "curatedList": "Geselecteerde lijst wordt getoond. Verbind om alle vision-modellen te laden.",
+    "browseAt": "Bladeren op"
+  },
+  "status": {
+    "saving": "Opslaan...",
+    "saved": "Opgeslagen",
+    "testing": "Testen...",
+    "testConnection": "Verbinding testen",
+    "connectionSuccessful": "Verbinding geslaagd!",
+    "connectionFailed": "Verbinding mislukt."
+  }
+}

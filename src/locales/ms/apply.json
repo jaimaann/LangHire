@@ -1,0 +1,32 @@
+{
+  "title": "Mohon",
+  "subtitle": "Permohonan kerja automatik · {{count}} kerja menunggu",
+  "emptyState": {
+    "title": "Belum ada kerja untuk dimohon",
+    "description": "Kumpul kerja dari LinkedIn dahulu, kemudian kembali ke sini untuk memohon secara automatik.",
+    "action": "Pergi ke Kerja & Kumpul"
+  },
+  "controls": {
+    "title": "Kawalan Permohonan",
+    "loginInfo": "<strong>Log masuk:</strong> Pelayar akan dibuka dan menyemak LinkedIn & Gmail. Jika anda tidak log masuk, ejen akan menunggu anda log masuk secara manual — kemudian meneruskan secara automatik.",
+    "limitLabel": "Had (pilihan)",
+    "limitPlaceholder": "Tiada had — mohon semua",
+    "limitHelp": "Kosongkan untuk memohon semua {{count}} kerja yang menunggu",
+    "stop": "Berhenti",
+    "startApplying": "Mula Memohon"
+  },
+  "comingSoon": {
+    "badge": "Akan Datang",
+    "title": "Resume Disesuaikan",
+    "description": "Sesuaikan resume anda secara automatik untuk setiap kerja dengan mengekstrak kemahiran daripada penerangan kerja."
+  },
+  "log": {
+    "liveOutput": "Output Langsung",
+    "outputLog": "Log Output",
+    "applicationLog": "Log Permohonan"
+  },
+  "dialog": {
+    "title": "Mula Memohon"
+  },
+  "starting": "Memulakan..."
+}

@@ -1,0 +1,37 @@
+{
+  "title": "Panel",
+  "subtitle": "Resumen del progreso de tus solicitudes de empleo",
+  "cards": {
+    "totalJobs": "Total de empleos",
+    "applied": "Aplicados",
+    "failed": "Fallidos",
+    "pending": "Pendientes",
+    "successRate": "Tasa de éxito",
+    "memories": "Memorias"
+  },
+  "quickActions": {
+    "title": "Acciones rápidas",
+    "collectJobs": "Recopilar empleos",
+    "startApplying": "Comenzar a aplicar",
+    "viewMemories": "Ver memorias"
+  },
+  "setup": {
+    "complete": "Configuración completa",
+    "gettingStarted": "Primeros pasos",
+    "viewGuide": "Ver guía completa",
+    "allDone": "¡Toda la configuración necesaria está lista! Estás listo para recopilar empleos y aplicar.",
+    "needHelp": "¿Necesitas ayuda? Visita la <guide>Guía</guide> para instrucciones paso a paso.",
+    "stepsComplete": "{{completed}} de {{total}} pasos completados",
+    "setUp": "Configurar",
+    "configureAI": "Configurar proveedor de AI",
+    "setResume": "Establecer ruta del currículum",
+    "setupProfile": "Configurar tu perfil"
+  },
+  "chromium": {
+    "installing": "Instalando navegador Chromium",
+    "installFailed": "Instalación de Chromium fallida: {{message}}. Ejecuta <code>python3 -m playwright install chromium</code> manualmente."
+  },
+  "backend": {
+    "notConnected": "Backend no conectado. Inícialo con: <code>uv run python backend/main.py</code>"
+  }
+}

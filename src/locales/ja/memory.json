@@ -1,0 +1,38 @@
+{
+  "title": "メモリー",
+  "subtitle": "{{domains}}ドメインにわたる{{total}}件のメモリー",
+  "actions": {
+    "export": "エクスポート",
+    "decay": "減衰",
+    "cleanup": "クリーンアップ"
+  },
+  "search": {
+    "placeholder": "メモリーを検索...",
+    "button": "検索"
+  },
+  "domains": {
+    "title": "ドメイン",
+    "empty": "まだドメインがありません",
+    "memoryCount": "{{count}}件のメモリー",
+    "confidence": "{{percent}}%信頼度"
+  },
+  "memories": {
+    "searchResults": "検索結果 ({{count}})",
+    "domainTitle": "{{domain}} ({{count}})",
+    "selectDomain": "ドメインを選択",
+    "noMemoriesFound": "メモリーが見つかりません",
+    "selectDomainPrompt": "ドメインを選択してメモリーを表示",
+    "success": "✓ 成功",
+    "failure": "✗ 失敗",
+    "confidence": "{{percent}}%信頼度",
+    "accesses": "{{count}}回アクセス"
+  },
+  "confirm": {
+    "decay": "30日以上更新されていないメモリーの信頼度を下げますか？",
+    "cleanup": "信頼度が0.3未満のすべてのメモリーを削除しますか？"
+  },
+  "toast": {
+    "decayed": "{{count}}件のメモリーを減衰しました",
+    "deleted": "{{count}}件のメモリーを削除しました"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "title": "Base Q&R",
+  "subtitle": "{{total}} question · {{answered}} répondue · {{unanswered}} sans réponse",
+  "subtitle_plural": "{{total}} questions · {{answered}} répondues · {{unanswered}} sans réponse",
+  "actions": {
+    "autoSquash": "Fusion auto",
+    "squashing": "Fusion en cours...",
+    "smartSquash": "Fusion intelligente",
+    "analyzing": "Analyse en cours...",
+    "autoSquashTitle": "Fusionner les questions avec un texte similaire",
+    "smartSquashTitle": "Utiliser le LLM pour trouver les questions sémantiquement identiques"
+  },
+  "filter": {
+    "all": "Toutes ({{count}})",
+    "unanswered": "Sans réponse ({{count}})"
+  },
+  "searchPlaceholder": "Rechercher des questions ou réponses...",
+  "mergeMode": {
+    "banner": "Cliquez sur une question ci-dessous pour y fusionner \"{{question}}\".",
+    "label": "Mode fusion :"
+  },
+  "emptyState": {
+    "noMatching": "Aucune question correspondante trouvée.",
+    "noQuestions": "Pas encore de questions. Les questions apparaîtront ici lorsque l'agent postulera à des emplois."
+  },
+  "card": {
+    "answerPlaceholder": "Tapez votre réponse ici...",
+    "saving": "Enregistrement...",
+    "unsaved": "Non enregistré",
+    "mergeTitle": "Fusionner avec une autre question",
+    "deleteTitle": "Supprimer la question"
+  },
+  "toast": {
+    "deleted": "Question supprimée",
+    "merged": "Questions fusionnées",
+    "squashResult": "{{count}} doublon(s) fusionné(s)",
+    "noDuplicates": "Aucun doublon trouvé",
+    "smartSquashResult": "{{count}} doublon(s) fusionné(s) intelligemment",
+    "noSemanticDuplicates": "Aucun doublon sémantique trouvé",
+    "autoSquashFailed": "Échec de la fusion automatique",
+    "smartSquashFailed": "Échec de la fusion intelligente"
+  },
+  "error": {
+    "loadFailed": "Échec du chargement des Q&R"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "title": "Aplicar",
+  "subtitle": "Solicitudes automáticas · {{count}} empleos pendientes",
+  "emptyState": {
+    "title": "No hay empleos para aplicar todavía",
+    "description": "Primero recopila empleos de LinkedIn, luego vuelve aquí para aplicar automáticamente.",
+    "action": "Ir a Empleos y Recopilar"
+  },
+  "controls": {
+    "title": "Controles de solicitud",
+    "loginInfo": "<strong>Inicio de sesión:</strong> Se abrirá un navegador y verificará LinkedIn y Gmail. Si no estás conectado, el agente esperará a que inicies sesión manualmente — luego continuará automáticamente.",
+    "limitLabel": "Límite (opcional)",
+    "limitPlaceholder": "Sin límite — aplicar a todos",
+    "limitHelp": "Dejar vacío para aplicar a los {{count}} empleos pendientes",
+    "stop": "Detener",
+    "startApplying": "Comenzar a aplicar"
+  },
+  "comingSoon": {
+    "badge": "Próximamente",
+    "title": "Currículums personalizados",
+    "description": "Personaliza automáticamente tu currículum para cada empleo extrayendo habilidades de la descripción del puesto."
+  },
+  "log": {
+    "liveOutput": "Salida en vivo",
+    "outputLog": "Registro de salida",
+    "applicationLog": "Registro de solicitudes"
+  },
+  "dialog": {
+    "title": "Comenzar a aplicar"
+  },
+  "starting": "Iniciando..."
+}

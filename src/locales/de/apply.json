@@ -1,0 +1,32 @@
+{
+  "title": "Bewerben",
+  "subtitle": "Automatisierte Bewerbungen · {{count}} ausstehende Jobs",
+  "emptyState": {
+    "title": "Noch keine Jobs zum Bewerben",
+    "description": "Sammle zuerst Jobs von LinkedIn, dann komm hierher zurück, um dich automatisch zu bewerben.",
+    "action": "Jobs sammeln"
+  },
+  "controls": {
+    "title": "Bewerbungssteuerung",
+    "loginInfo": "<strong>Anmeldung:</strong> Ein Browser öffnet sich und prüft LinkedIn & Gmail. Wenn du nicht eingeloggt bist, wartet der Agent auf deine manuelle Anmeldung — dann geht es automatisch weiter.",
+    "limitLabel": "Limit (optional)",
+    "limitPlaceholder": "Kein Limit — auf alle bewerben",
+    "limitHelp": "Leer lassen, um sich auf alle {{count}} ausstehenden Jobs zu bewerben",
+    "stop": "Stopp",
+    "startApplying": "Bewerben starten"
+  },
+  "comingSoon": {
+    "badge": "Demnächst",
+    "title": "Maßgeschneiderte Lebensläufe",
+    "description": "Lebenslauf automatisch für jeden Job anpassen, indem Fähigkeiten aus der Stellenbeschreibung extrahiert werden."
+  },
+  "log": {
+    "liveOutput": "Live-Ausgabe",
+    "outputLog": "Ausgabeprotokoll",
+    "applicationLog": "Bewerbungsprotokoll"
+  },
+  "dialog": {
+    "title": "Bewerben starten"
+  },
+  "starting": "Wird gestartet..."
+}

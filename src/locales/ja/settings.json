@@ -1,0 +1,41 @@
+{
+  "title": "設定",
+  "subtitle": "アプリケーションの全般設定",
+  "resume": {
+    "title": "履歴書",
+    "description": "求人応募に使用するPDF履歴書ファイル"
+  },
+  "credentials": {
+    "title": "アカウント情報",
+    "description": "応募中に外部ATSプラットフォームでアカウントを作成するために使用されます。ローカルにプレーンテキストで保存されます。可能な場合はSSO（LinkedIn/Googleでサインイン）の使用を推奨します。",
+    "email": "メールアドレス",
+    "password": "パスワード"
+  },
+  "agent": {
+    "title": "エージェント設定",
+    "maxFailures": "1求人あたりの最大失敗回数",
+    "maxFailuresDesc": "1つの求人でこの回数連続して失敗した後、エージェントは試行を停止します。"
+  },
+  "telemetry": {
+    "title": "プライバシーとテレメトリー",
+    "usageAnalytics": "使用状況分析",
+    "description": "匿名の使用データ（機能使用状況、クラッシュレポート）を送信してLangHireの改善にご協力ください。個人情報や求人データは送信されません。"
+  },
+  "blockedDomains": {
+    "title": "ブロックされたドメイン",
+    "description": "これらのドメイン上の求人は自動的にスキップされます。",
+    "empty": "ブロックされたドメインはありません"
+  },
+  "plugins": {
+    "title": "求人ソースプラグイン",
+    "description": "求人ソースプラグインを管理します。ビルトインプラグインはLinkedIn、Indeed、SEEK、Naukri、Reed、StepStoneを提供します。追加の求人サイト用にコミュニティプラグイン（.yamlファイル）をインポートできます。",
+    "builtin": "ビルトイン",
+    "importPlugin": "プラグインをインポート"
+  },
+  "language": {
+    "title": "言語",
+    "label": "インターフェース言語",
+    "auto": "自動（国に基づく）",
+    "description": "アプリケーションインターフェースの言語を選択してください。選択した国に合わせるには「自動」に設定してください。"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "title": "설정 마법사",
+  "steps": {
+    "welcome": "환영합니다",
+    "llm": "AI 공급자",
+    "resume": "이력서 및 프로필",
+    "profile": "프로필 검토",
+    "ready": "준비 완료!"
+  },
+  "welcome": {
+    "heading": "LangHire에 오신 것을 환영합니다!",
+    "description": "몇 분 안에 설정을 완료하겠습니다. 이 마법사가 필수 구성을 안내합니다.",
+    "howItWorks": "작동 방식:",
+    "items": {
+      "configureAi": "AI 공급자 설정",
+      "configureAiDesc": "양식을 작성하는 두뇌",
+      "uploadResume": "이력서 업로드",
+      "uploadResumeDesc": "AI가 읽고 프로필을 자동 입력",
+      "reviewProfile": "프로필 검토",
+      "reviewProfileDesc": "AI가 추출한 정보 확인",
+      "loginLinkedIn": "LinkedIn 로그인",
+      "loginLinkedInDesc": "채용을 찾고 지원하는 곳"
+    }
+  },
+  "llmStep": {
+    "heading": "AI 공급자 설정",
+    "description": "모든 것을 구동하는 AI 모델을 설정합니다 — 이력서 분석, 양식 작성, 구직 지원."
+  },
+  "resumeStep": {
+    "heading": "이력서 및 프로필 자동 입력",
+    "description": "이력서 경로를 설정하고 AI가 읽어서 후보자 프로필을 자동 입력하게 하세요.",
+    "autoFill": {
+      "title": "AI 자동 입력 프로필",
+      "description": "이력서에서 이름, 이메일, 전화번호, 기술, 학력, 경력, 언어, 추천 직종을 추출합니다.",
+      "button": "이력서에서 프로필 자동 입력",
+      "parsing": "이력서 분석 중...",
+      "nextHint": "\"다음\"을 클릭하여 자동 입력된 프로필을 검토하세요.",
+      "tryAgain": "다시 시도"
+    },
+    "prerequisite": "먼저 위에서 AI 공급자(1단계)와 이력서 경로를 저장하세요.",
+    "prerequisiteLabel": "자동 입력을 위해:"
+  },
+  "profileStep": {
+    "heading": "프로필 검토",
+    "descriptionParsed": "이력서에서 프로필이 자동 입력되었습니다! 프로필 페이지를 열어 검토하고 세부 조정하세요.",
+    "descriptionManual": "프로필 페이지에서 후보자 정보를 입력하세요. 에이전트가 지원에 이것을 사용합니다.",
+    "profileConfigured": "프로필이 구성되었습니다",
+    "profileNeeded": "프로필에 최소한 이름이 필요합니다",
+    "keyFields": "주요 필드: 이름, 이메일, 전화번호, 기술, 희망 직종, 희망 근무지, 학력.",
+    "reviewEdit": "검토 및 수정",
+    "goToProfile": "프로필로 이동",
+    "autoFilledHint": "희망 직종과 희망 근무지를 확인하세요 — 채용 수집 검색을 결정합니다.",
+    "autoFilledLabel": "자동 입력 완료!"
+  },
+  "readyStep": {
+    "heading": "모든 준비가 완료되었습니다!",
+    "descriptionDone": "모든 설정이 완료되었습니다. 수집과 지원을 시작하세요!",
+    "descriptionIncomplete": "나중에 설정을 완료할 수 있습니다. 가이드 페이지를 언제든지 확인하세요.",
+    "setupStatus": "설정 상태:",
+    "aiProvider": "AI 공급자",
+    "resume": "이력서",
+    "profile": "프로필",
+    "collectJobs": "채용 수집",
+    "viewGuide": "가이드 보기"
+  },
+  "nav": {
+    "back": "뒤로",
+    "skipForNow": "지금은 건너뛰기",
+    "letsGo": "시작합시다",
+    "next": "다음",
+    "finishSetup": "설정 완료"
+  }
+}

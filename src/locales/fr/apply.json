@@ -1,0 +1,32 @@
+{
+  "title": "Postuler",
+  "subtitle": "Candidatures automatisées · {{count}} emplois en attente",
+  "emptyState": {
+    "title": "Aucun emploi pour postuler",
+    "description": "Collectez d'abord des emplois depuis LinkedIn, puis revenez ici pour postuler automatiquement.",
+    "action": "Collecter des emplois"
+  },
+  "controls": {
+    "title": "Contrôles de candidature",
+    "loginInfo": "<strong>Connexion :</strong> Un navigateur s'ouvrira et vérifiera LinkedIn et Gmail. Si vous n'êtes pas connecté, l'agent attendra votre connexion manuelle — puis continuera automatiquement.",
+    "limitLabel": "Limite (optionnel)",
+    "limitPlaceholder": "Pas de limite — postuler à tous",
+    "limitHelp": "Laisser vide pour postuler aux {{count}} emplois en attente",
+    "stop": "Arrêter",
+    "startApplying": "Commencer à postuler"
+  },
+  "comingSoon": {
+    "badge": "Bientôt disponible",
+    "title": "CV personnalisés",
+    "description": "Personnaliser automatiquement votre CV pour chaque emploi en extrayant les compétences de la description du poste."
+  },
+  "log": {
+    "liveOutput": "Sortie en direct",
+    "outputLog": "Journal de sortie",
+    "applicationLog": "Journal de candidature"
+  },
+  "dialog": {
+    "title": "Commencer à postuler"
+  },
+  "starting": "Démarrage..."
+}

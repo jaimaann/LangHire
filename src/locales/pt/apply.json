@@ -1,0 +1,32 @@
+{
+  "title": "Candidatar",
+  "subtitle": "Candidaturas automáticas · {{count}} vagas pendentes",
+  "emptyState": {
+    "title": "Nenhuma vaga para se candidatar ainda",
+    "description": "Colete vagas do LinkedIn primeiro, depois volte aqui para se candidatar automaticamente.",
+    "action": "Ir para Vagas e Coletar"
+  },
+  "controls": {
+    "title": "Controles de candidatura",
+    "loginInfo": "<strong>Login:</strong> Um navegador será aberto e verificará LinkedIn e Gmail. Se você não estiver logado, o agente aguardará seu login manual — e depois prosseguirá automaticamente.",
+    "limitLabel": "Limite (opcional)",
+    "limitPlaceholder": "Sem limite — candidatar a todas",
+    "limitHelp": "Deixe vazio para se candidatar a todas as {{count}} vagas pendentes",
+    "stop": "Parar",
+    "startApplying": "Começar a candidatar"
+  },
+  "comingSoon": {
+    "badge": "Em breve",
+    "title": "Currículos personalizados",
+    "description": "Personalize automaticamente seu currículo para cada vaga extraindo habilidades da descrição do cargo."
+  },
+  "log": {
+    "liveOutput": "Saída ao vivo",
+    "outputLog": "Log de saída",
+    "applicationLog": "Log de candidatura"
+  },
+  "dialog": {
+    "title": "Começar a candidatar"
+  },
+  "starting": "Iniciando..."
+}

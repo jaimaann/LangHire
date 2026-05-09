@@ -1,0 +1,34 @@
+{
+  "title": "Retours",
+  "subtitle": "Aidez-nous à améliorer LangHire avec vos idées",
+  "viewDiscussions": "Voir les discussions",
+  "categories": {
+    "featureRequest": "Demande de fonctionnalité",
+    "bugReport": "Rapport de bug",
+    "generalFeedback": "Retour général"
+  },
+  "form": {
+    "categoryLabel": "Catégorie",
+    "titleLabel": "Titre",
+    "titlePlaceholder": "Résumé bref de votre retour",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Décrivez votre demande de fonctionnalité, bug ou retour en détail...",
+    "emailLabel": "E-mail",
+    "emailOptional": "(optionnel)",
+    "emailPlaceholder": "votre@email.com",
+    "emailHelp": "Incluez votre e-mail si vous souhaitez que nous vous recontactions.",
+    "submit": "Envoyer le retour",
+    "submitting": "Envoi en cours..."
+  },
+  "success": {
+    "title": "Retour envoyé !",
+    "description": "Votre retour a été publié sur GitHub Discussions.",
+    "viewDiscussion": "Voir la discussion",
+    "submitAnother": "Envoyer un autre"
+  },
+  "error": {
+    "fillRequired": "Veuillez remplir le titre et la description.",
+    "notConfigured": "Les retours ne sont pas configurés. La variable d'environnement VITE_GITHUB_TOKEN est manquante.",
+    "submitFailed": "Échec de l'envoi du retour"
+  }
+}

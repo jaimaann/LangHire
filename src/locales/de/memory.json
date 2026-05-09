@@ -1,0 +1,38 @@
+{
+  "title": "Erinnerungen",
+  "subtitle": "{{total}} Erinnerungen in {{domains}} Domains",
+  "actions": {
+    "export": "Exportieren",
+    "decay": "Verfall",
+    "cleanup": "Aufräumen"
+  },
+  "search": {
+    "placeholder": "Erinnerungen suchen...",
+    "button": "Suchen"
+  },
+  "domains": {
+    "title": "Domains",
+    "empty": "Noch keine Domains",
+    "memoryCount": "{{count}} Erinnerungen",
+    "confidence": "{{percent}}% Konf."
+  },
+  "memories": {
+    "searchResults": "Suchergebnisse ({{count}})",
+    "domainTitle": "{{domain}} ({{count}})",
+    "selectDomain": "Domain auswählen",
+    "noMemoriesFound": "Keine Erinnerungen gefunden",
+    "selectDomainPrompt": "Wähle eine Domain, um ihre Erinnerungen anzuzeigen",
+    "success": "✓ Erfolg",
+    "failure": "✗ Fehlschlag",
+    "confidence": "{{percent}}% Konfidenz",
+    "accesses": "{{count}} Zugriffe"
+  },
+  "confirm": {
+    "decay": "Konfidenz von Erinnerungen verringern, die seit 30+ Tagen nicht aktualisiert wurden?",
+    "cleanup": "Alle Erinnerungen mit Konfidenz unter 0,3 löschen?"
+  },
+  "toast": {
+    "decayed": "{{count}} Erinnerungen verfallen",
+    "deleted": "{{count}} Erinnerungen gelöscht"
+  }
+}

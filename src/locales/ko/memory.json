@@ -1,0 +1,38 @@
+{
+  "title": "메모리",
+  "subtitle": "{{domains}}개 도메인에 걸쳐 {{total}}개 메모리",
+  "actions": {
+    "export": "내보내기",
+    "decay": "감쇠",
+    "cleanup": "정리"
+  },
+  "search": {
+    "placeholder": "메모리 검색...",
+    "button": "검색"
+  },
+  "domains": {
+    "title": "도메인",
+    "empty": "아직 도메인이 없습니다",
+    "memoryCount": "{{count}}개 메모리",
+    "confidence": "{{percent}}% 신뢰도"
+  },
+  "memories": {
+    "searchResults": "검색 결과 ({{count}})",
+    "domainTitle": "{{domain}} ({{count}})",
+    "selectDomain": "도메인 선택",
+    "noMemoriesFound": "메모리를 찾을 수 없습니다",
+    "selectDomainPrompt": "메모리를 보려면 도메인을 선택하세요",
+    "success": "✓ 성공",
+    "failure": "✗ 실패",
+    "confidence": "{{percent}}% 신뢰도",
+    "accesses": "{{count}}회 접근"
+  },
+  "confirm": {
+    "decay": "30일 이상 업데이트되지 않은 메모리의 신뢰도를 낮추시겠습니까?",
+    "cleanup": "신뢰도가 0.3 미만인 모든 메모리를 삭제하시겠습니까?"
+  },
+  "toast": {
+    "decayed": "{{count}}개 메모리 감쇠됨",
+    "deleted": "{{count}}개 메모리 삭제됨"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "title": "उम्मीदवार प्रोफ़ाइल",
+  "subtitle": "नौकरी आवेदनों के लिए उपयोग की जाने वाली आपकी व्यक्तिगत जानकारी",
+  "save": "प्रोफ़ाइल सहेजें",
+  "saved": "सहेजा गया",
+  "saveError": "प्रोफ़ाइल सहेजने में विफल। कृपया पुनः प्रयास करें।",
+  "country": {
+    "title": "देश",
+    "label": "आपका देश",
+    "selectPlaceholder": "देश चुनें...",
+    "dateFormat": "दिनांक प्रारूप: {{format}}",
+    "currency": "मुद्रा: {{currency}}"
+  },
+  "personal": {
+    "title": "व्यक्तिगत जानकारी",
+    "fullName": "पूरा नाम",
+    "email": "ईमेल",
+    "phone": "फ़ोन",
+    "phonePrefix": "+91",
+    "phonePlaceholder": "फ़ोन नंबर",
+    "currentRole": "वर्तमान भूमिका",
+    "nationality": "राष्ट्रीयता",
+    "dateOfBirth": "जन्म तिथि"
+  },
+  "address": {
+    "title": "पता",
+    "street": "गली",
+    "city": "शहर",
+    "state": "राज्य",
+    "zip": "पिन कोड",
+    "country": "देश"
+  },
+  "work": {
+    "title": "कार्य प्राथमिकताएँ",
+    "workAuth": "कार्य प्राधिकरण",
+    "workAuthPlaceholder": "चुनें...",
+    "workMode": "कार्य मोड",
+    "remote": "रिमोट",
+    "hybrid": "हाइब्रिड",
+    "onsite": "ऑन-साइट",
+    "visaSponsorship": "वीज़ा प्रायोजन आवश्यक",
+    "willingToRelocate": "स्थानांतरण के लिए तैयार",
+    "yearsOfExperience": "अनुभव के वर्ष",
+    "noticePeriod": "नोटिस अवधि",
+    "noticePeriodPlaceholder": "चुनें..."
+  },
+  "education": {
+    "title": "शिक्षा",
+    "degree": "डिग्री",
+    "school": "विद्यालय",
+    "graduation": "स्नातक"
+  },
+  "salary": {
+    "title": "वेतन अपेक्षा",
+    "minimum": "न्यूनतम",
+    "maximum": "अधिकतम",
+    "currency": "मुद्रा",
+    "period": "अवधि",
+    "annual": "वार्षिक",
+    "monthly": "मासिक"
+  },
+  "coverLetter": {
+    "title": "कवर लेटर",
+    "description": "जब आवेदन में अनुरोध किया जाए तो उपयोग किया जाने वाला डिफ़ॉल्ट कवर लेटर टेम्प्लेट।",
+    "placeholder": "अपना डिफ़ॉल्ट कवर लेटर यहाँ लिखें..."
+  },
+  "targetJobTitles": {
+    "title": "लक्षित नौकरी शीर्षक",
+    "placeholder": "नौकरी शीर्षक जोड़ें..."
+  },
+  "targetLocations": {
+    "title": "लक्षित स्थान",
+    "placeholder": "स्थान जोड़ें..."
+  },
+  "skills": {
+    "title": "कौशल",
+    "placeholder": "कौशल जोड़ें..."
+  },
+  "languages": {
+    "title": "भाषाएँ",
+    "placeholder": "भाषा जोड़ें..."
+  },
+  "notes": {
+    "title": "नोट्स",
+    "placeholder": "AI एजेंट के लिए कोई विशेष निर्देश..."
+  }
+}

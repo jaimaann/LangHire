@@ -1,0 +1,87 @@
+{
+  "title": "Kandidatenprofil",
+  "subtitle": "Ihre persönlichen Informationen für Bewerbungen",
+  "save": "Profil speichern",
+  "saved": "Gespeichert",
+  "saveError": "Profil konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+  "country": {
+    "title": "Land",
+    "label": "Ihr Land",
+    "selectPlaceholder": "Land auswählen...",
+    "dateFormat": "Datumsformat: {{format}}",
+    "currency": "Währung: {{currency}}"
+  },
+  "personal": {
+    "title": "Persönliche Informationen",
+    "fullName": "Vollständiger Name",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "phonePrefix": "+49",
+    "phonePlaceholder": "Telefonnummer",
+    "currentRole": "Aktuelle Position",
+    "nationality": "Staatsangehörigkeit",
+    "dateOfBirth": "Geburtsdatum"
+  },
+  "address": {
+    "title": "Adresse",
+    "street": "Straße",
+    "city": "Stadt",
+    "state": "Bundesland",
+    "zip": "Postleitzahl",
+    "country": "Land"
+  },
+  "work": {
+    "title": "Arbeitspräferenzen",
+    "workAuth": "Arbeitserlaubnis",
+    "workAuthPlaceholder": "Auswählen...",
+    "workMode": "Arbeitsmodell",
+    "remote": "Remote",
+    "hybrid": "Hybrid",
+    "onsite": "Vor Ort",
+    "visaSponsorship": "Visum-Sponsoring benötigt",
+    "willingToRelocate": "Umzugsbereit",
+    "yearsOfExperience": "Jahre Berufserfahrung",
+    "noticePeriod": "Kündigungsfrist",
+    "noticePeriodPlaceholder": "Auswählen..."
+  },
+  "education": {
+    "title": "Bildung",
+    "degree": "Abschluss",
+    "school": "Hochschule",
+    "graduation": "Abschluss"
+  },
+  "salary": {
+    "title": "Gehaltsvorstellung",
+    "minimum": "Minimum",
+    "maximum": "Maximum",
+    "currency": "Währung",
+    "period": "Zeitraum",
+    "annual": "Jährlich",
+    "monthly": "Monatlich"
+  },
+  "coverLetter": {
+    "title": "Anschreiben",
+    "description": "Standard-Anschreiben-Vorlage, die verwendet wird, wenn Bewerbungen eines erfordern.",
+    "placeholder": "Schreiben Sie hier Ihr Standard-Anschreiben..."
+  },
+  "targetJobTitles": {
+    "title": "Gesuchte Positionen",
+    "placeholder": "Position hinzufügen..."
+  },
+  "targetLocations": {
+    "title": "Gewünschte Standorte",
+    "placeholder": "Standort hinzufügen..."
+  },
+  "skills": {
+    "title": "Fähigkeiten",
+    "placeholder": "Fähigkeit hinzufügen..."
+  },
+  "languages": {
+    "title": "Sprachen",
+    "placeholder": "Sprache hinzufügen..."
+  },
+  "notes": {
+    "title": "Notizen",
+    "placeholder": "Besondere Anweisungen für den AI-Agenten..."
+  }
+}

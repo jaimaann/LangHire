@@ -1,0 +1,17 @@
+{
+  "title": "Log",
+  "subtitle": "Log pelaksanaan sejarah untuk penyahpepijatan dan pemantauan",
+  "refresh": "Muat semula",
+  "runs": {
+    "title": "Pelaksanaan Terkini ({{count}})",
+    "empty": "Belum ada pelaksanaan direkodkan. Kumpul atau mohon kerja untuk melihat log di sini.",
+    "unknown": "Tidak Diketahui",
+    "lines": "{{count}} baris"
+  },
+  "detail": {
+    "runTitle": "Pelaksanaan {{id}}",
+    "selectPrompt": "Pilih pelaksanaan untuk melihat log",
+    "selectFromPanel": "Pilih pelaksanaan dari panel kiri untuk melihat lognya",
+    "noLogs": "Tiada log direkodkan untuk pelaksanaan ini (pelaksanaan sebelum naik taraf pengelogan)"
+  }
+}

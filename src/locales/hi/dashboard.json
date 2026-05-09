@@ -1,0 +1,37 @@
+{
+  "title": "डैशबोर्ड",
+  "subtitle": "आपकी नौकरी आवेदन प्रगति का अवलोकन",
+  "cards": {
+    "totalJobs": "कुल नौकरियाँ",
+    "applied": "आवेदित",
+    "failed": "विफल",
+    "pending": "लंबित",
+    "successRate": "सफलता दर",
+    "memories": "स्मृतियाँ"
+  },
+  "quickActions": {
+    "title": "त्वरित कार्य",
+    "collectJobs": "नौकरियाँ संकलित करें",
+    "startApplying": "आवेदन शुरू करें",
+    "viewMemories": "स्मृतियाँ देखें"
+  },
+  "setup": {
+    "complete": "सेटअप पूर्ण",
+    "gettingStarted": "शुरू करना",
+    "viewGuide": "पूरी गाइड देखें",
+    "allDone": "सभी आवश्यक सेटअप पूर्ण! आप नौकरियाँ संकलित और आवेदन करने के लिए तैयार हैं।",
+    "needHelp": "सहायता चाहिए? चरण-दर-चरण निर्देशों के लिए <guide>गाइड</guide> देखें।",
+    "stepsComplete": "{{completed}} में से {{total}} चरण पूर्ण",
+    "setUp": "सेट करें",
+    "configureAI": "AI प्रदाता कॉन्फ़िगर करें",
+    "setResume": "रिज़्यूमे पथ सेट करें",
+    "setupProfile": "अपनी प्रोफ़ाइल सेट करें"
+  },
+  "chromium": {
+    "installing": "Chromium ब्राउज़र इंस्टॉल हो रहा है",
+    "installFailed": "Chromium इंस्टॉल विफल: {{message}}। <code>python3 -m playwright install chromium</code> मैन्युअली चलाएँ।"
+  },
+  "backend": {
+    "notConnected": "Backend कनेक्ट नहीं है। इसे शुरू करें: <code>uv run python backend/main.py</code>"
+  }
+}

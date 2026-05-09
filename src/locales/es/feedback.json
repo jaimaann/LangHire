@@ -1,0 +1,34 @@
+{
+  "title": "Comentarios",
+  "subtitle": "Ayúdanos a mejorar LangHire con tus ideas",
+  "viewDiscussions": "Ver discusiones",
+  "categories": {
+    "featureRequest": "Solicitud de función",
+    "bugReport": "Reporte de error",
+    "generalFeedback": "Comentario general"
+  },
+  "form": {
+    "categoryLabel": "Categoría",
+    "titleLabel": "Título",
+    "titlePlaceholder": "Resumen breve de tu comentario",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Describe tu solicitud de función, error o comentario en detalle...",
+    "emailLabel": "Correo electrónico",
+    "emailOptional": "(opcional)",
+    "emailPlaceholder": "tu@email.com",
+    "emailHelp": "Incluye tu correo si deseas que te contactemos.",
+    "submit": "Enviar comentario",
+    "submitting": "Enviando..."
+  },
+  "success": {
+    "title": "¡Comentario enviado!",
+    "description": "Tu comentario ha sido publicado en GitHub Discussions.",
+    "viewDiscussion": "Ver discusión",
+    "submitAnother": "Enviar otro"
+  },
+  "error": {
+    "fillRequired": "Por favor, completa tanto el título como la descripción.",
+    "notConfigured": "Los comentarios no están configurados. La variable de entorno VITE_GITHUB_TOKEN no está presente.",
+    "submitFailed": "Error al enviar comentario"
+  }
+}

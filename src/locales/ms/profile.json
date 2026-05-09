@@ -1,0 +1,87 @@
+{
+  "title": "Profil Calon",
+  "subtitle": "Maklumat peribadi anda yang digunakan untuk permohonan kerja",
+  "save": "Simpan Profil",
+  "saved": "Disimpan",
+  "saveError": "Gagal menyimpan profil. Sila cuba lagi.",
+  "country": {
+    "title": "Negara",
+    "label": "Negara Anda",
+    "selectPlaceholder": "Pilih negara...",
+    "dateFormat": "Format tarikh: {{format}}",
+    "currency": "Mata wang: {{currency}}"
+  },
+  "personal": {
+    "title": "Maklumat Peribadi",
+    "fullName": "Nama Penuh",
+    "email": "E-mel",
+    "phone": "Telefon",
+    "phonePrefix": "+60",
+    "phonePlaceholder": "Nombor telefon",
+    "currentRole": "Jawatan Semasa",
+    "nationality": "Kewarganegaraan",
+    "dateOfBirth": "Tarikh Lahir"
+  },
+  "address": {
+    "title": "Alamat",
+    "street": "Jalan",
+    "city": "Bandar",
+    "state": "Negeri",
+    "zip": "Poskod",
+    "country": "Negara"
+  },
+  "work": {
+    "title": "Keutamaan Kerja",
+    "workAuth": "Kebenaran Kerja",
+    "workAuthPlaceholder": "Pilih...",
+    "workMode": "Mod Kerja",
+    "remote": "Jauh",
+    "hybrid": "Hibrid",
+    "onsite": "Di lokasi",
+    "visaSponsorship": "Penajaan Visa Diperlukan",
+    "willingToRelocate": "Sanggup Berpindah",
+    "yearsOfExperience": "Tahun Pengalaman",
+    "noticePeriod": "Tempoh Notis",
+    "noticePeriodPlaceholder": "Pilih..."
+  },
+  "education": {
+    "title": "Pendidikan",
+    "degree": "Ijazah",
+    "school": "Institusi",
+    "graduation": "Graduasi"
+  },
+  "salary": {
+    "title": "Jangkaan Gaji",
+    "minimum": "Minimum",
+    "maximum": "Maksimum",
+    "currency": "Mata Wang",
+    "period": "Tempoh",
+    "annual": "Tahunan",
+    "monthly": "Bulanan"
+  },
+  "coverLetter": {
+    "title": "Surat Iringan",
+    "description": "Templat surat iringan lalai yang digunakan apabila permohonan memerlukannya.",
+    "placeholder": "Tulis surat iringan lalai anda di sini..."
+  },
+  "targetJobTitles": {
+    "title": "Jawatan Sasaran",
+    "placeholder": "Tambah jawatan..."
+  },
+  "targetLocations": {
+    "title": "Lokasi Sasaran",
+    "placeholder": "Tambah lokasi..."
+  },
+  "skills": {
+    "title": "Kemahiran",
+    "placeholder": "Tambah kemahiran..."
+  },
+  "languages": {
+    "title": "Bahasa",
+    "placeholder": "Tambah bahasa..."
+  },
+  "notes": {
+    "title": "Nota",
+    "placeholder": "Sebarang arahan khas untuk ejen AI..."
+  }
+}

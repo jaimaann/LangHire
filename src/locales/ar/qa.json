@@ -1,0 +1,46 @@
+{
+  "title": "مستودع الأسئلة والأجوبة",
+  "subtitle": "{{total}} سؤال · {{answered}} مُجاب · {{unanswered}} غير مُجاب",
+  "subtitle_plural": "{{total}} أسئلة · {{answered}} مُجابة · {{unanswered}} غير مُجابة",
+  "actions": {
+    "autoSquash": "دمج تلقائي",
+    "squashing": "جارٍ الدمج...",
+    "smartSquash": "دمج ذكي",
+    "analyzing": "جارٍ التحليل...",
+    "autoSquashTitle": "دمج الأسئلة ذات النص المتشابه",
+    "smartSquashTitle": "استخدام LLM للعثور على أسئلة متطابقة دلالياً"
+  },
+  "filter": {
+    "all": "الكل ({{count}})",
+    "unanswered": "غير مُجاب ({{count}})"
+  },
+  "searchPlaceholder": "البحث في الأسئلة أو الإجابات...",
+  "mergeMode": {
+    "banner": "انقر على سؤال أدناه لدمج \"{{question}}\" فيه.",
+    "label": "وضع الدمج:"
+  },
+  "emptyState": {
+    "noMatching": "لم يتم العثور على أسئلة مطابقة.",
+    "noQuestions": "لا توجد أسئلة بعد. ستظهر الأسئلة هنا عندما يقدم الوكيل على الوظائف."
+  },
+  "card": {
+    "answerPlaceholder": "اكتب إجابتك هنا...",
+    "saving": "جارٍ الحفظ...",
+    "unsaved": "غير محفوظ",
+    "mergeTitle": "دمج في سؤال آخر",
+    "deleteTitle": "حذف السؤال"
+  },
+  "toast": {
+    "deleted": "تم حذف السؤال",
+    "merged": "تم دمج الأسئلة",
+    "squashResult": "تم دمج {{count}} مكرر(ات)",
+    "noDuplicates": "لم يتم العثور على مكررات",
+    "smartSquashResult": "تم الدمج الذكي لـ {{count}} مكرر(ات)",
+    "noSemanticDuplicates": "لم يتم العثور على مكررات دلالية",
+    "autoSquashFailed": "فشل الدمج التلقائي",
+    "smartSquashFailed": "فشل الدمج الذكي"
+  },
+  "error": {
+    "loadFailed": "فشل في تحميل الأسئلة والأجوبة"
+  }
+}

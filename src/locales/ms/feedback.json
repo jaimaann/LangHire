@@ -1,0 +1,34 @@
+{
+  "title": "Maklum Balas",
+  "subtitle": "Bantu kami meningkatkan LangHire dengan pandangan anda",
+  "viewDiscussions": "Lihat Perbincangan",
+  "categories": {
+    "featureRequest": "Permintaan Ciri",
+    "bugReport": "Laporan Pepijat",
+    "generalFeedback": "Maklum Balas Umum"
+  },
+  "form": {
+    "categoryLabel": "Kategori",
+    "titleLabel": "Tajuk",
+    "titlePlaceholder": "Ringkasan ringkas maklum balas anda",
+    "descriptionLabel": "Penerangan",
+    "descriptionPlaceholder": "Huraikan permintaan ciri, pepijat, atau maklum balas anda secara terperinci...",
+    "emailLabel": "E-mel",
+    "emailOptional": "(pilihan)",
+    "emailPlaceholder": "anda@email.com",
+    "emailHelp": "Sertakan e-mel anda jika anda mahu kami membuat susulan.",
+    "submit": "Hantar Maklum Balas",
+    "submitting": "Menghantar..."
+  },
+  "success": {
+    "title": "Maklum Balas Dihantar!",
+    "description": "Maklum balas anda telah disiarkan di GitHub Discussions.",
+    "viewDiscussion": "Lihat Perbincangan",
+    "submitAnother": "Hantar Lagi"
+  },
+  "error": {
+    "fillRequired": "Sila isi kedua-dua tajuk dan penerangan.",
+    "notConfigured": "Maklum balas tidak dikonfigurasi. Pembolehubah persekitaran VITE_GITHUB_TOKEN tiada.",
+    "submitFailed": "Gagal menghantar maklum balas"
+  }
+}

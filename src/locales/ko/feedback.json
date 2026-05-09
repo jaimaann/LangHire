@@ -1,0 +1,34 @@
+{
+  "title": "피드백",
+  "subtitle": "여러분의 의견으로 LangHire 개선에 도움을 주세요",
+  "viewDiscussions": "토론 보기",
+  "categories": {
+    "featureRequest": "기능 요청",
+    "bugReport": "버그 신고",
+    "generalFeedback": "일반 피드백"
+  },
+  "form": {
+    "categoryLabel": "카테고리",
+    "titleLabel": "제목",
+    "titlePlaceholder": "피드백의 간략한 요약",
+    "descriptionLabel": "설명",
+    "descriptionPlaceholder": "기능 요청, 버그 또는 피드백을 상세히 설명해 주세요...",
+    "emailLabel": "이메일",
+    "emailOptional": "(선택사항)",
+    "emailPlaceholder": "your@email.com",
+    "emailHelp": "후속 조치를 원하시면 이메일을 포함해 주세요.",
+    "submit": "피드백 제출",
+    "submitting": "제출 중..."
+  },
+  "success": {
+    "title": "피드백이 제출되었습니다!",
+    "description": "피드백이 GitHub Discussions에 게시되었습니다.",
+    "viewDiscussion": "토론 보기",
+    "submitAnother": "추가 제출"
+  },
+  "error": {
+    "fillRequired": "제목과 설명을 모두 입력해 주세요.",
+    "notConfigured": "피드백이 구성되지 않았습니다. VITE_GITHUB_TOKEN 환경 변수가 없습니다.",
+    "submitFailed": "피드백 제출 실패"
+  }
+}

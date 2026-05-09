@@ -1,0 +1,34 @@
+{
+  "title": "الملاحظات",
+  "subtitle": "ساعدنا في تحسين LangHire بأفكارك",
+  "viewDiscussions": "عرض النقاشات",
+  "categories": {
+    "featureRequest": "طلب ميزة",
+    "bugReport": "تقرير خطأ",
+    "generalFeedback": "ملاحظات عامة"
+  },
+  "form": {
+    "categoryLabel": "الفئة",
+    "titleLabel": "العنوان",
+    "titlePlaceholder": "ملخص موجز لملاحظاتك",
+    "descriptionLabel": "الوصف",
+    "descriptionPlaceholder": "صف طلب الميزة أو الخطأ أو ملاحظاتك بالتفصيل...",
+    "emailLabel": "البريد الإلكتروني",
+    "emailOptional": "(اختياري)",
+    "emailPlaceholder": "your@email.com",
+    "emailHelp": "أدرج بريدك الإلكتروني إذا كنت ترغب أن نتواصل معك.",
+    "submit": "إرسال الملاحظات",
+    "submitting": "جارٍ الإرسال..."
+  },
+  "success": {
+    "title": "تم إرسال الملاحظات!",
+    "description": "تم نشر ملاحظاتك في GitHub Discussions.",
+    "viewDiscussion": "عرض النقاش",
+    "submitAnother": "إرسال أخرى"
+  },
+  "error": {
+    "fillRequired": "يرجى ملء العنوان والوصف.",
+    "notConfigured": "الملاحظات غير مُعدة. متغير البيئة VITE_GITHUB_TOKEN مفقود.",
+    "submitFailed": "فشل في إرسال الملاحظات"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "title": "Wizard Persediaan",
+  "steps": {
+    "welcome": "Selamat Datang",
+    "llm": "Pembekal AI",
+    "resume": "Resume & Profil",
+    "profile": "Semak Profil",
+    "ready": "Sedia!"
+  },
+  "welcome": {
+    "heading": "Selamat datang ke LangHire!",
+    "description": "Mari sediakan anda dalam beberapa minit sahaja. Wizard ini akan membimbing anda melalui konfigurasi penting.",
+    "howItWorks": "Cara ia berfungsi:",
+    "items": {
+      "configureAi": "Konfigurasi pembekal AI",
+      "configureAiDesc": "Otak yang mengisi borang",
+      "uploadResume": "Muat naik resume anda",
+      "uploadResumeDesc": "AI membacanya dan mengisi profil anda secara automatik",
+      "reviewProfile": "Semak profil anda",
+      "reviewProfileDesc": "Sahkan maklumat yang diekstrak oleh AI",
+      "loginLinkedIn": "Log masuk ke LinkedIn",
+      "loginLinkedInDesc": "Di mana kami mencari dan memohon kerja"
+    }
+  },
+  "llmStep": {
+    "heading": "Konfigurasi pembekal AI anda",
+    "description": "Sediakan model AI yang menggerakkan segalanya — penghuraian resume, pengisian borang, dan permohonan kerja."
+  },
+  "resumeStep": {
+    "heading": "Resume & Isi Auto Profil",
+    "description": "Tetapkan laluan resume anda, kemudian biarkan AI membacanya dan mengisi profil calon secara automatik.",
+    "autoFill": {
+      "title": "Isi Auto Profil AI",
+      "description": "Ekstrak nama, e-mel, telefon, kemahiran, pendidikan, pengalaman, bahasa, dan jawatan yang dicadangkan dari resume anda.",
+      "button": "Isi Auto Profil dari Resume",
+      "parsing": "Menghurai resume anda...",
+      "nextHint": "Klik \"Seterusnya\" untuk menyemak profil yang diisi secara automatik.",
+      "tryAgain": "Cuba lagi"
+    },
+    "prerequisite": "Simpan pembekal AI (Langkah 1) dan laluan resume di atas dahulu.",
+    "prerequisiteLabel": "Untuk isi auto:"
+  },
+  "profileStep": {
+    "heading": "Semak profil anda",
+    "descriptionParsed": "Profil anda telah diisi secara automatik dari resume! Buka halaman Profil untuk menyemak dan memperhalusi.",
+    "descriptionManual": "Isi maklumat calon anda di halaman Profil. Ejen menggunakan ini untuk permohonan.",
+    "profileConfigured": "Profil dikonfigurasi",
+    "profileNeeded": "Profil memerlukan sekurang-kurangnya nama anda",
+    "keyFields": "Medan utama: Nama, E-mel, Telefon, Kemahiran, Jawatan Sasaran, Lokasi Sasaran, Pendidikan.",
+    "reviewEdit": "Semak & Edit",
+    "goToProfile": "Pergi ke Profil",
+    "autoFilledHint": "Semak Jawatan Sasaran dan Lokasi Sasaran — ini memacu carian pengumpulan kerja.",
+    "autoFilledLabel": "Diisi secara automatik!"
+  },
+  "readyStep": {
+    "heading": "Anda sudah sedia!",
+    "descriptionDone": "Semuanya dikonfigurasi. Mula mengumpul dan memohon!",
+    "descriptionIncomplete": "Anda boleh selesaikan persediaan kemudian. Semak halaman Panduan bila-bila masa.",
+    "setupStatus": "Status Persediaan:",
+    "aiProvider": "Pembekal AI",
+    "resume": "Resume",
+    "profile": "Profil",
+    "collectJobs": "Kumpul Kerja",
+    "viewGuide": "Lihat Panduan"
+  },
+  "nav": {
+    "back": "Kembali",
+    "skipForNow": "Langkau buat masa ini",
+    "letsGo": "Jom mulakan",
+    "next": "Seterusnya",
+    "finishSetup": "Selesaikan Persediaan"
+  }
+}

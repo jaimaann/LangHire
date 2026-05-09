@@ -1,0 +1,17 @@
+{
+  "title": "Logboeken",
+  "subtitle": "Historische uitvoeringslogboeken voor foutopsporing en monitoring",
+  "refresh": "Vernieuwen",
+  "runs": {
+    "title": "Recente uitvoeringen ({{count}})",
+    "empty": "Nog geen uitvoeringen vastgelegd. Verzamel of solliciteer op banen om hier logboeken te zien.",
+    "unknown": "Onbekend",
+    "lines": "{{count}} regels"
+  },
+  "detail": {
+    "runTitle": "Uitvoering {{id}}",
+    "selectPrompt": "Selecteer een uitvoering om logboeken te bekijken",
+    "selectFromPanel": "Selecteer een uitvoering uit het linkerpaneel om de logboeken te bekijken",
+    "noLogs": "Geen logboeken vastgelegd voor deze uitvoering (uitvoering van voor de logging-upgrade)"
+  }
+}

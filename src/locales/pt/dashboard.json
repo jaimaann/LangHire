@@ -1,0 +1,37 @@
+{
+  "title": "Painel",
+  "subtitle": "Visão geral do progresso das suas candidaturas",
+  "cards": {
+    "totalJobs": "Total de vagas",
+    "applied": "Candidatado",
+    "failed": "Falhou",
+    "pending": "Pendente",
+    "successRate": "Taxa de sucesso",
+    "memories": "Memórias"
+  },
+  "quickActions": {
+    "title": "Ações rápidas",
+    "collectJobs": "Coletar vagas",
+    "startApplying": "Começar a candidatar",
+    "viewMemories": "Ver memórias"
+  },
+  "setup": {
+    "complete": "Configuração concluída",
+    "gettingStarted": "Primeiros passos",
+    "viewGuide": "Ver guia completo",
+    "allDone": "Toda a configuração necessária está pronta! Você está pronto para coletar vagas e se candidatar.",
+    "needHelp": "Precisa de ajuda? Visite o <guide>Guia</guide> para instruções passo a passo.",
+    "stepsComplete": "{{completed}} de {{total}} etapas concluídas",
+    "setUp": "Configurar",
+    "configureAI": "Configurar provedor de AI",
+    "setResume": "Definir caminho do currículo",
+    "setupProfile": "Configurar seu perfil"
+  },
+  "chromium": {
+    "installing": "Instalando navegador Chromium",
+    "installFailed": "Falha na instalação do Chromium: {{message}}. Execute <code>python3 -m playwright install chromium</code> manualmente."
+  },
+  "backend": {
+    "notConnected": "Backend não conectado. Inicie-o com: <code>uv run python backend/main.py</code>"
+  }
+}

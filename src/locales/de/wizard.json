@@ -1,0 +1,73 @@
+{
+  "title": "Einrichtungsassistent",
+  "steps": {
+    "welcome": "Willkommen",
+    "llm": "AI-Anbieter",
+    "resume": "Lebenslauf & Profil",
+    "profile": "Profil prüfen",
+    "ready": "Fertig!"
+  },
+  "welcome": {
+    "heading": "Willkommen bei LangHire!",
+    "description": "Wir richten Sie in wenigen Minuten ein. Dieser Assistent führt Sie durch die wesentliche Konfiguration.",
+    "howItWorks": "So funktioniert es:",
+    "items": {
+      "configureAi": "AI-Anbieter konfigurieren",
+      "configureAiDesc": "Das Gehirn, das Formulare ausfüllt",
+      "uploadResume": "Lebenslauf hochladen",
+      "uploadResumeDesc": "AI liest ihn und füllt Ihr Profil automatisch aus",
+      "reviewProfile": "Profil überprüfen",
+      "reviewProfileDesc": "Die AI-extrahierten Infos verifizieren",
+      "loginLinkedIn": "Bei LinkedIn anmelden",
+      "loginLinkedInDesc": "Wo wir Jobs finden und uns bewerben"
+    }
+  },
+  "llmStep": {
+    "heading": "Ihren AI-Anbieter konfigurieren",
+    "description": "Richten Sie das AI-Modell ein, das alles antreibt — Lebenslauf-Parsing, Formularausfüllung und Bewerbungen."
+  },
+  "resumeStep": {
+    "heading": "Lebenslauf & Profil automatisch ausfüllen",
+    "description": "Legen Sie Ihren Lebenslauf-Pfad fest, dann lassen Sie AI ihn lesen und Ihr Kandidatenprofil automatisch ausfüllen.",
+    "autoFill": {
+      "title": "AI Auto-Fill Profil",
+      "description": "Name, E-Mail, Telefon, Fähigkeiten, Bildung, Erfahrung, Sprachen und vorgeschlagene Jobtitel aus Ihrem Lebenslauf extrahieren.",
+      "button": "Profil aus Lebenslauf automatisch ausfüllen",
+      "parsing": "Lebenslauf wird gelesen...",
+      "nextHint": "Klicken Sie auf \"Weiter\", um Ihr automatisch ausgefülltes Profil zu überprüfen.",
+      "tryAgain": "Erneut versuchen"
+    },
+    "prerequisite": "Speichern Sie zuerst Ihren AI-Anbieter (Schritt 1) und den Lebenslauf-Pfad oben.",
+    "prerequisiteLabel": "Zum Auto-Fill:"
+  },
+  "profileStep": {
+    "heading": "Ihr Profil überprüfen",
+    "descriptionParsed": "Ihr Profil wurde aus Ihrem Lebenslauf automatisch ausgefüllt! Öffnen Sie die Profilseite zum Überprüfen und Feintunen.",
+    "descriptionManual": "Füllen Sie Ihre Kandidateninformationen auf der Profilseite aus. Der Agent verwendet diese für Bewerbungen.",
+    "profileConfigured": "Profil ist konfiguriert",
+    "profileNeeded": "Profil benötigt mindestens Ihren Namen",
+    "keyFields": "Wichtige Felder: Name, E-Mail, Telefon, Fähigkeiten, Gesuchte Positionen, Gewünschte Standorte, Bildung.",
+    "reviewEdit": "Überprüfen & Bearbeiten",
+    "goToProfile": "Zum Profil",
+    "autoFilledHint": "Prüfen Sie Gesuchte Positionen und Gewünschte Standorte — diese steuern die Jobsuche.",
+    "autoFilledLabel": "Automatisch ausgefüllt!"
+  },
+  "readyStep": {
+    "heading": "Alles bereit!",
+    "descriptionDone": "Alles ist konfiguriert. Starten Sie mit dem Sammeln und Bewerben!",
+    "descriptionIncomplete": "Sie können das Setup später abschließen. Schauen Sie jederzeit auf der Anleitung-Seite nach.",
+    "setupStatus": "Setup-Status:",
+    "aiProvider": "AI-Anbieter",
+    "resume": "Lebenslauf",
+    "profile": "Profil",
+    "collectJobs": "Jobs sammeln",
+    "viewGuide": "Anleitung ansehen"
+  },
+  "nav": {
+    "back": "Zurück",
+    "skipForNow": "Vorerst überspringen",
+    "letsGo": "Los geht's",
+    "next": "Weiter",
+    "finishSetup": "Einrichtung abschließen"
+  }
+}
