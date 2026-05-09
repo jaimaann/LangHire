@@ -164,7 +164,7 @@ def test_llm_connection():
     save_resp = api_request("PUT", "/settings/llm", llm_settings)
     assert save_resp.get("success") is True, f"LLM settings save failed: {save_resp}"
 
-    test_resp = api_request("POST", "/llm/test")
+    test_resp = api_request("POST", "/llm/test", llm_settings)
     assert test_resp.get("success") is True, f"LLM connection test failed: {test_resp}"
 
 
@@ -178,6 +178,12 @@ def test_cover_letter_generation():
     api_key = os.environ.get("TEST_OPENROUTER_API_KEY", "")
     if not api_key:
         raise SkipTest("TEST_OPENROUTER_API_KEY not set")
+
+    llm_settings = {
+        "provider": "openrouter",
+        "openrouter": {"api_key": api_key, "model": "meta-llama/llama-3.1-8b-instruct:free"},
+    }
+    api_request("PUT", "/settings/llm", llm_settings)
 
     body = {
         "job_description": "We are looking for a Senior Software Engineer with 5+ years of experience in Python and React. You will build scalable web applications.",
