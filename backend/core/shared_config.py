@@ -182,22 +182,53 @@ def build_memory_context(
 ) -> str:
     """Build the system message context with candidate profile, Q&A bank, and per-website learnings."""
     parts = []
-    parts.append(
-        "CANDIDATE PROFILE:\n"
-        f"Name: {profile['name']}\n"
-        f"Email: {profile['email']}, Phone: {profile['phone']}\n"
-        f"Location: {profile['address']['city']}, {profile['address']['state']} {profile['address']['zip']}\n"
-        f"Work Authorization: {profile['work_authorization']}, Visa Sponsorship Needed: {profile['visa_sponsorship_needed']}\n"
-        f"Willing to Relocate: {profile['willing_to_relocate']}, Preferred Work Mode: {profile['preferred_work_mode']}\n"
-        f"Years of Experience: {profile['years_of_experience']}\n"
-        f"Education: {profile['education']['degree']} from {profile['education']['school']} ({profile['education']['graduation']})\n"
-        f"Current Role: {profile['current_role']}\n"
-        f"Target Locations: {', '.join(profile['target_locations'])}\n"
-        f"Languages: {', '.join(profile['languages'])}\n"
-        f"Skills: {', '.join(profile['skills'])}\n"
-        f"Salary: ${profile['salary_expectation']['min']:,}-${profile['salary_expectation']['max']:,}\n"
-        f"Notes: {profile['notes']}"
-    )
+
+    # Salary formatting (country-aware)
+    sal = profile.get('salary_expectation', {})
+    sal_currency = sal.get('currency', 'USD') or 'USD'
+    sal_min = sal.get('min', 0) or 0
+    sal_max = sal.get('max', 0) or 0
+    sal_period = sal.get('period', 'annual')
+    salary_str = f"{sal_currency} {sal_min:,}-{sal_max:,} ({sal_period})" if sal_min else "Not specified"
+
+    # Country-aware date format
+    date_format = profile.get('date_format', '') or 'MM/DD/YYYY'
+
+    profile_lines = [
+        "CANDIDATE PROFILE:",
+        f"Name: {profile['name']}",
+        f"Email: {profile['email']}, Phone: {profile.get('phone_country_code', '')}{profile['phone']}",
+        f"Location: {profile['address']['city']}, {profile['address']['state']} {profile['address']['zip']} {profile['address'].get('country', '')}".strip(),
+        f"Work Authorization: {profile['work_authorization']}, Visa Sponsorship Needed: {profile['visa_sponsorship_needed']}",
+        f"Willing to Relocate: {profile['willing_to_relocate']}, Preferred Work Mode: {profile['preferred_work_mode']}",
+        f"Years of Experience: {profile['years_of_experience']}",
+        f"Education: {profile['education']['degree']} from {profile['education']['school']} ({profile['education']['graduation']})",
+        f"Current Role: {profile['current_role']}",
+        f"Target Locations: {', '.join(profile['target_locations'])}",
+        f"Languages: {', '.join(profile['languages'])}",
+        f"Skills: {', '.join(profile['skills'])}",
+        f"Salary: {salary_str}",
+    ]
+    if profile.get('notice_period'):
+        profile_lines.append(f"Notice Period: {profile['notice_period']}")
+    if profile.get('nationality'):
+        profile_lines.append(f"Nationality: {profile['nationality']}")
+    if profile.get('notes'):
+        profile_lines.append(f"Notes: {profile['notes']}")
+
+    parts.append("\n".join(profile_lines))
+
+    # Country-specific instructions for the agent
+    country_instructions = []
+    country_instructions.append(f"DATE FORMAT: When filling date fields, use {date_format} format.")
+    if profile.get('notice_period'):
+        country_instructions.append(f"NOTICE PERIOD: If asked about notice period or availability, answer: {profile['notice_period']}")
+    if profile.get('nationality'):
+        country_instructions.append(f"NATIONALITY: If asked about nationality, answer: {profile['nationality']}")
+    if profile.get('cover_letter'):
+        country_instructions.append(f"COVER LETTER: If a cover letter is requested, use:\n{profile['cover_letter']}")
+    if country_instructions:
+        parts.append("COUNTRY-SPECIFIC INSTRUCTIONS:\n" + "\n".join(country_instructions))
 
     if applied_labels:
         parts.append("Already applied — SKIP:\n" + "\n".join(f"- {j}" for j in applied_labels))

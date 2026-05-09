@@ -1,0 +1,84 @@
+name: reed
+display_name: Reed
+version: "1.0.0"
+author: langhire
+description: "Reed.co.uk job search for the United Kingdom"
+countries: [GB]
+website: https://www.reed.co.uk
+requires_login: true
+login_url: https://www.reed.co.uk/account/signin
+
+auth_cookies:
+  - name: .ASPXAUTH
+    domain: .reed.co.uk
+  - name: reeduk.session
+    domain: .reed.co.uk
+
+search_url: "https://www.reed.co.uk/jobs/{title}-jobs-in-{location}?datecreatedoffset=LastWeek"
+
+collection_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.reed.co.uk/account to check if you're logged into Reed.
+     - If you see your account/profile page → logged in ✓
+     - If you see a sign-in page → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
+
+  THEN: Navigate to the Reed search page:
+  {search_url}
+
+  If that URL doesn't load results, use the search form:
+  - Go to https://www.reed.co.uk
+  - Enter "{title}" in the job title/keywords field
+  - Enter "{location}" in the location field
+  - Click Search
+
+  HOW TO COLLECT JOBS:
+  1. You will see a list of job cards in the search results.
+  2. For each job card, extract:
+     - Job title
+     - Company name (employer)
+     - Location
+     - Salary range (if shown)
+     - Full job URL (from the title link)
+     - Reed jobs generally have their own apply form (easy_apply: true)
+  3. Click on each job title to get the full URL.
+  4. Output a @@JOB_FOUND marker for each job.
+  5. Navigate to the next page of results.
+  6. Repeat until you have {max_jobs} jobs or run out of results.
+
+  IMPORTANT RULES:
+  - Output ONE @@JOB_FOUND marker per job in your MEMORY field.
+  - Do NOT apply to any jobs — only collect listings.
+  - Stop after collecting {max_jobs} NEW jobs and call done.
+
+  @@JOB_FOUND format:
+  @@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", "url": "<full Reed job URL>", "easy_apply": true}}
+
+apply_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.reed.co.uk/account to check if you're logged into Reed.
+     - If you see your account page → logged in ✓
+     - If redirected to sign-in → WAIT for user to log in. Check every 15 seconds. Wait up to 5 minutes.
+
+  THEN: Go to {job_url}
+
+  Reed application flow:
+  1. On the job details page, click "Apply for this job" or "Apply now" button.
+  2. Reed will show its own application form with fields like:
+     - CV/Resume upload (upload from {resume_path})
+     - Cover letter (optional - if requested: {cover_letter})
+     - Personal details (name, email, phone)
+     - Screening questions from the employer
+  3. Fill all fields from the candidate profile.
+  4. Answer screening questions using the Q&A bank.
+  5. Review and submit the application.
+
+  IMPORTANT:
+  - Use DD/MM/YYYY date format for all date fields.
+  - If asked about notice period, use the value from the candidate profile.
+  - If asked about salary expectations, answer in GBP.
+  - If asked about right to work in the UK, use work authorization from profile.
+  - If the form is broken after 3 attempts, report failure and stop.
+
+domain_patterns:
+  - pattern: "*.reed.co.uk"
+    normalize_to: "reed.co.uk"

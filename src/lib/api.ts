@@ -156,10 +156,11 @@ export async function getJobStats() {
   return request<JobStats>("/jobs/stats");
 }
 
-export async function startJobCollection(title?: string, maxJobs?: number) {
+export async function startJobCollection(title?: string, maxJobs?: number, source?: string) {
   const body: Record<string, unknown> = {};
   if (title) body.title = title;
   if (maxJobs) body.max_jobs = maxJobs;
+  if (source) body.source = source;
   return request<{ success: boolean; message: string }>("/jobs/collect", {
     method: "POST",
     body: JSON.stringify(body),
@@ -327,5 +328,50 @@ export async function autoSquashQA() {
 
 export async function smartSquashQA() {
   return request<{ success: boolean; merged: number }>("/qa/smart-squash", { method: "POST" });
+}
+
+// ── Cover Letter ─────────────────────────────────────────────────────────
+export async function generateCoverLetter(jobDescription: string, jobTitle: string, company: string) {
+  return request<{ success: boolean; cover_letter: string }>("/cover-letter/generate", {
+    method: "POST",
+    body: JSON.stringify({ job_description: jobDescription, job_title: jobTitle, company: company }),
+  });
+}
+
+// ── Countries ────────────────────────────────────────────────────────────
+export async function getCountries() {
+  return request<{ success: boolean; countries: Record<string, import("./types").CountryConfig>; notice_period_options: string[] }>("/countries");
+}
+
+export async function getCountryConfig(code: string) {
+  return request<{ success: boolean; config: import("./types").CountryConfig }>(`/countries/${code}`);
+}
+
+// ── Plugins ──────────────────────────────────────────────────────────────
+export async function getPlugins(country?: string) {
+  const params = country ? `?country=${country}` : "";
+  return request<{ success: boolean; plugins: import("./types").PluginConfig[] }>(`/plugins${params}`);
+}
+
+export async function importPlugin(filePath: string) {
+  return request<{ success: boolean; plugin: { name: string; display_name: string } }>("/plugins/import", {
+    method: "POST",
+    body: JSON.stringify({ file_path: filePath }),
+  });
+}
+
+export async function togglePlugin(name: string, enabled: boolean) {
+  return request<{ success: boolean }>(`/plugins/${name}/toggle`, {
+    method: "PUT",
+    body: JSON.stringify({ enabled }),
+  });
+}
+
+export async function removePlugin(name: string) {
+  return request<{ success: boolean }>(`/plugins/${name}`, { method: "DELETE" });
+}
+
+export async function reloadPlugins() {
+  return request<{ success: boolean; count: number }>("/plugins/reload", { method: "POST" });
 }
 

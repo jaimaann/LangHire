@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { Briefcase, Search, ExternalLink, Loader2, CheckCircle, XCircle, Clock, Ban, Play, Square, Terminal } from "lucide-react";
-import { getJobs, getJobStats, startJobCollection, stopJobCollection, getCollectionStatus, startApplying, getApplyStatus } from "../lib/api";
+import { Briefcase, Search, ExternalLink, Loader2, CheckCircle, XCircle, Clock, Ban, Play, Square, Terminal, FileText, X, Copy, Save } from "lucide-react";
+import { getJobs, getJobStats, startJobCollection, stopJobCollection, getCollectionStatus, startApplying, getApplyStatus, getPlugins, getProfile, generateCoverLetter, saveProfile } from "../lib/api";
 import { trackEvent } from "../lib/analytics";
 import { markStart, measureAndTrack } from "../lib/perf";
-import type { Job, JobStatus, JobStats } from "../lib/types";
+import type { Job, JobStatus, JobStats, PluginConfig } from "../lib/types";
 import LogLine from "../components/LogLine";
 import AutomationDialog from "../components/AutomationDialog";
 import { PageHeader, ProgressBar } from "../components/ui";
@@ -26,13 +26,34 @@ export default function Jobs() {
   const [collecting, setCollecting] = useState(false);
   const [collectTitle, setCollectTitle] = useState("");
   const [collectMaxJobs, setCollectMaxJobs] = useState<number | "">(20);
+  const [collectSource, setCollectSource] = useState("linkedin");
+  const [availableSources, setAvailableSources] = useState<PluginConfig[]>([]);
   const [collectLog, setCollectLog] = useState<string[]>([]);
   const [collected, setCollected] = useState(0);
   const [showCollector, setShowCollector] = useState(true);
   const [applyingUrl, setApplyingUrl] = useState<string | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingApplyUrl, setPendingApplyUrl] = useState<string | null>(null);
+  const [coverLetterJob, setCoverLetterJob] = useState<Job | null>(null);
+  const [generatedLetter, setGeneratedLetter] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
+  const [manualDescription, setManualDescription] = useState("");
+  const [letterSaved, setLetterSaved] = useState(false);
   const logRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    getProfile().then((p) => {
+      const country = p.country || "US";
+      getPlugins(country).then((res) => {
+        if (res.plugins) setAvailableSources(res.plugins);
+      }).catch(() => {});
+    }).catch(() => {
+      getPlugins().then((res) => {
+        if (res.plugins) setAvailableSources(res.plugins);
+      }).catch(() => {});
+    });
+  }, []);
 
   const fetchJobs = (isBackgroundRefresh = false) => {
     if (!isBackgroundRefresh) {
@@ -108,12 +129,12 @@ export default function Jobs() {
   const confirmStartCollect = async () => {
     setShowConfirmDialog(false);
     try {
-      const res = await startJobCollection(collectTitle || undefined, collectMaxJobs ? Number(collectMaxJobs) : undefined);
+      const res = await startJobCollection(collectTitle || undefined, collectMaxJobs ? Number(collectMaxJobs) : undefined, collectSource);
       if (res.success) {
         setCollecting(true);
         setCollectLog(["Starting collection..."]);
         setShowCollector(true);
-        trackEvent("collection_started", { title: collectTitle || "all", max_jobs: collectMaxJobs || "unlimited" });
+        trackEvent("collection_started", { title: collectTitle || "all", max_jobs: collectMaxJobs || "unlimited", source: collectSource });
       } else {
         alert(res.message);
       }
@@ -161,6 +182,60 @@ export default function Jobs() {
     return () => { active = false; clearInterval(poll); };
   }, [applyingUrl]);
 
+  const handleGenerateCoverLetter = async (job: Job) => {
+    setCoverLetterJob(job);
+    setGeneratedLetter("");
+    setGenerateError(null);
+    setLetterSaved(false);
+    setManualDescription("");
+
+    const description = job.description;
+    if (!description) return;
+
+    setGenerating(true);
+    try {
+      const res = await generateCoverLetter(description, job.title, job.company);
+      if (res.success) {
+        setGeneratedLetter(res.cover_letter);
+      } else {
+        setGenerateError("Failed to generate cover letter");
+      }
+    } catch (e) {
+      setGenerateError(e instanceof Error ? e.message : "Generation failed");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleGenerateFromManual = async () => {
+    if (!manualDescription.trim() || !coverLetterJob) return;
+    setGenerating(true);
+    setGenerateError(null);
+    try {
+      const res = await generateCoverLetter(manualDescription, coverLetterJob.title, coverLetterJob.company);
+      if (res.success) {
+        setGeneratedLetter(res.cover_letter);
+      } else {
+        setGenerateError("Failed to generate cover letter");
+      }
+    } catch (e) {
+      setGenerateError(e instanceof Error ? e.message : "Generation failed");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleSaveCoverLetter = async () => {
+    try {
+      const profile = await getProfile();
+      await saveProfile({ ...profile, cover_letter: generatedLetter });
+      setLetterSaved(true);
+      setTimeout(() => setLetterSaved(false), 3000);
+    } catch {
+      setGenerateError("Failed to save to profile");
+    }
+  };
+
   const handleSearch = (e: React.FormEvent) => { e.preventDefault(); fetchJobs(); };
 
   return (
@@ -180,12 +255,34 @@ export default function Jobs() {
         <div className="card mb-5">
           <h3 className="section-title mb-3">Job Collector</h3>
           <p className="text-[13px] text-muted-foreground mb-4">
-            Search LinkedIn for job listings matching your profile. Leave title blank to search all titles from your profile.
+            Search for job listings matching your profile. Select a source platform, enter a job title, and start collecting.
             Collection typically takes 3-10 minutes per job title as the agent scrolls through results.
           </p>
           <div className="info-box mb-4">
-            <strong>Login:</strong> A browser will open and check LinkedIn & Gmail. If you're not logged in, the agent will wait for you to log in manually — then proceed automatically.
+            <strong>Login:</strong> A browser will open and check if you're logged into the selected platform. If not, the agent will wait for you to log in manually — then proceed automatically.
           </div>
+          {/* Source selector */}
+          {availableSources.length > 1 && (
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-foreground mb-1.5">Source Platform</label>
+              <div className="flex gap-2 flex-wrap">
+                {availableSources.map((source) => (
+                  <button
+                    key={source.name}
+                    onClick={() => setCollectSource(source.name)}
+                    disabled={collecting}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                      collectSource === source.name
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-white text-foreground hover:border-primary/50"
+                    }`}
+                  >
+                    {source.display_name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="flex gap-3 mb-4">
             <input value={collectTitle} onChange={(e) => setCollectTitle(e.target.value)}
               placeholder="Job title (e.g. 'Data Analyst') or leave blank for all"
@@ -314,19 +411,28 @@ export default function Jobs() {
                       <StatusIcon className="w-3 h-3" /> {cfg.label}
                     </span>
                     {(job.status === "pending" || job.status === "failed") && (
-                      <button
-                        onClick={() => handleApplySingle(job.url)}
-                        disabled={applyingUrl !== null}
-                        title={applyingUrl ? "An application is already running" : job.status === "failed" ? "Retry this job" : "Apply to this job"}
-                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-foreground text-white hover:bg-foreground/90 disabled:opacity-40 transition-all"
-                      >
-                        {applyingUrl === job.url ? (
-                          <Loader2 className="w-3 h-3 animate-spin" />
-                        ) : (
-                          <Play className="w-3 h-3" />
-                        )}
-                        {applyingUrl === job.url ? "Applying..." : job.status === "failed" ? "Retry" : "Apply"}
-                      </button>
+                      <>
+                        <button
+                          onClick={() => handleGenerateCoverLetter(job)}
+                          title="Generate a tailored cover letter for this job"
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border border-border text-foreground hover:bg-secondary transition-all"
+                        >
+                          <FileText className="w-3 h-3" /> Cover Letter
+                        </button>
+                        <button
+                          onClick={() => handleApplySingle(job.url)}
+                          disabled={applyingUrl !== null}
+                          title={applyingUrl ? "An application is already running" : job.status === "failed" ? "Retry this job" : "Apply to this job"}
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-foreground text-white hover:bg-foreground/90 disabled:opacity-40 transition-all"
+                        >
+                          {applyingUrl === job.url ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <Play className="w-3 h-3" />
+                          )}
+                          {applyingUrl === job.url ? "Applying..." : job.status === "failed" ? "Retry" : "Apply"}
+                        </button>
+                      </>
                     )}
                     <a href={job.url} target="_blank" rel="noopener noreferrer"
                       className="p-1.5 text-muted-foreground hover:text-primary transition-colors" title="Open on LinkedIn">
@@ -352,6 +458,88 @@ export default function Jobs() {
         onConfirm={pendingApplyUrl ? confirmApplySingle : confirmStartCollect}
         onCancel={() => { setShowConfirmDialog(false); setPendingApplyUrl(null); }}
       />
+
+      {/* Cover Letter Modal */}
+      {coverLetterJob && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setCoverLetterJob(null)}>
+          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <div>
+                <h3 className="text-base font-semibold text-foreground">Generate Cover Letter</h3>
+                <p className="text-[13px] text-muted-foreground mt-0.5">{coverLetterJob.title} at {coverLetterJob.company}</p>
+              </div>
+              <button onClick={() => setCoverLetterJob(null)} className="p-1.5 text-muted-foreground hover:text-foreground">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-5">
+              {!coverLetterJob.description && !generatedLetter && (
+                <div className="mb-4">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    No job description available. Paste the description below to generate a cover letter.
+                  </p>
+                  <textarea
+                    value={manualDescription}
+                    onChange={(e) => setManualDescription(e.target.value)}
+                    rows={6}
+                    className="input-base mb-3"
+                    placeholder="Paste the job description here..."
+                  />
+                  <button
+                    onClick={handleGenerateFromManual}
+                    disabled={!manualDescription.trim() || generating}
+                    className="btn-primary"
+                  >
+                    {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+                    Generate
+                  </button>
+                </div>
+              )}
+
+              {generating && (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="w-6 h-6 animate-spin text-primary mr-3" />
+                  <span className="text-sm text-muted-foreground">Generating cover letter...</span>
+                </div>
+              )}
+
+              {generateError && (
+                <div className="error-banner mb-4">{generateError}</div>
+              )}
+
+              {generatedLetter && (
+                <div>
+                  <label className="block text-sm font-semibold text-foreground mb-1.5">Generated Cover Letter</label>
+                  <textarea
+                    value={generatedLetter}
+                    onChange={(e) => setGeneratedLetter(e.target.value)}
+                    rows={12}
+                    className="input-base font-[inherit] text-sm leading-relaxed"
+                  />
+                </div>
+              )}
+            </div>
+
+            {generatedLetter && (
+              <div className="flex items-center justify-between p-5 border-t border-border bg-secondary/30">
+                <button
+                  onClick={() => { navigator.clipboard.writeText(generatedLetter); }}
+                  className="btn-secondary"
+                >
+                  <Copy className="w-4 h-4" /> Copy
+                </button>
+                <button
+                  onClick={handleSaveCoverLetter}
+                  className="btn-primary"
+                >
+                  <Save className="w-4 h-4" /> {letterSaved ? "Saved!" : "Save to Profile"}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

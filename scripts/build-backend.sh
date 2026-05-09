@@ -39,6 +39,8 @@ uv run python -m PyInstaller \
   --paths "${PROJECT_DIR}/backend" \
   --add-data "${PROJECT_DIR}/backend/core:core" \
   --add-data "${PROJECT_DIR}/backend/memory:memory" \
+  --add-data "${PROJECT_DIR}/backend/sources:sources" \
+  --add-data "${PROJECT_DIR}/backend/sources/plugins:sources/plugins" \
   --add-data "${PROJECT_DIR}/cli:cli" \
   --hidden-import uvicorn.logging \
   --hidden-import uvicorn.lifespan.on \
@@ -58,6 +60,7 @@ uv run python -m PyInstaller \
   --hidden-import filelock \
   --hidden-import pydantic_settings \
   --hidden-import psutil \
+  --hidden-import yaml \
   --collect-all browser_use \
   --collect-all playwright \
   --clean \

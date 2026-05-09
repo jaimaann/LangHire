@@ -1,0 +1,90 @@
+name: linkedin
+display_name: LinkedIn
+version: "1.0.0"
+author: langhire
+description: "LinkedIn job search with Easy Apply and external application support"
+countries: [ALL]
+website: https://www.linkedin.com
+requires_login: true
+login_url: https://www.linkedin.com/login
+
+auth_cookies:
+  - name: li_at
+    domain: .linkedin.com
+
+search_url: "https://www.linkedin.com/jobs/search/?keywords={title}&location={location}&f_TPR=r604800"
+
+collection_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.linkedin.com/feed/ to check if you're logged into LinkedIn.
+     - If you see the feed/home page → logged in ✓
+     - If you see a login page → WAIT for user to log in manually. Check every 15 seconds (refresh). Wait up to 5 minutes.
+  2. Open a new tab and go to https://mail.google.com/mail/u/0/#inbox to check Gmail.
+     - If you see the Gmail inbox → logged in ✓
+     - If you see a Google sign-in page → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
+  3. Close the Gmail tab and switch back to LinkedIn.
+
+  THEN: Navigate directly to this pre-filtered search URL:
+  {search_url}
+  Do NOT re-search or modify the filters. Results are ready.
+
+  HOW TO COLLECT JOBS — follow this exact process:
+  1. You will see a list of jobs on the left side of the page.
+  2. Click on a job in the list. The job details appear on the right.
+  3. After clicking, look at the browser URL bar — it will contain 'currentJobId=XXXXXXX'.
+     The job URL is: https://www.linkedin.com/jobs/view/XXXXXXX/
+  4. Read the job title, company, and location from the details panel on the right.
+  5. Check if the job has an 'Easy Apply' button (easy_apply: true) or just 'Apply' (easy_apply: false).
+  6. Output a @@JOB_FOUND marker in your MEMORY field for this job.
+  7. Click the NEXT job in the list and repeat.
+  8. When you reach the bottom of the visible list, scroll down in the left panel to load more jobs.
+
+  IMPORTANT RULES:
+  - Output ONE @@JOB_FOUND marker per step in your MEMORY field. Do NOT batch them.
+  - Do NOT use extract, find_elements, or evaluate to get URLs. Just click and read the URL bar.
+  - Do NOT apply to any jobs — only collect listings.
+  - Include BOTH Easy Apply and non-Easy Apply jobs.
+  - Stop after collecting {max_jobs} NEW jobs and call done.
+  - After scrolling through all results, call done.
+
+  @@JOB_FOUND format (in your memory field):
+  @@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", "url": "https://www.linkedin.com/jobs/view/<currentJobId>/", "easy_apply": true/false}}
+
+apply_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.linkedin.com/feed/ to check if you're logged into LinkedIn.
+     - If you see the feed/home page → logged in ✓
+     - If you see a login page → WAIT for user to log in manually. Check every 15 seconds (refresh). Wait up to 5 minutes.
+  2. Open a new tab and go to https://mail.google.com/mail/u/0/#inbox to check Gmail.
+     - If you see the Gmail inbox → logged in ✓
+     - If you see a Google sign-in page → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
+  3. Close the Gmail tab and switch back to LinkedIn.
+
+  THEN: Go to {job_url} on LinkedIn.
+
+  If this is an Easy Apply job:
+  - Click "Easy Apply" and complete the application modal.
+  - Use resume at {resume_path}. Auto-fill all fields from candidate profile.
+  - Fill screening questions using the Q&A bank provided.
+
+  If this is an external application:
+  - Click "Apply" and follow through to the external application page.
+  - Navigate the external site: look for 'Apply Now', 'Submit Application', or similar buttons.
+  - Scroll down — the apply button is often below the job description.
+  - Some sites require clicking through 2-3 pages before reaching the actual form.
+  - If the page looks blank or is loading, wait 3-5 seconds and try scrolling.
+  - NEVER give up because the form isn't immediately visible — explore the page.
+  - Auto-fill all fields from candidate profile. Upload resume at {resume_path}.
+
+  OTP/VERIFICATION CODES: If ANY site asks for a verification code:
+  1. Choose the EMAIL option if given a choice
+  2. Open a new tab and go to https://mail.google.com
+  3. Find the most recent email with the verification/OTP code
+  4. Copy the code, switch back, and enter it
+
+  If it's a video funnel or recruitment pitch, report failure and stop.
+  If the external form is broken after 3 attempts, report failure and stop.
+
+domain_patterns:
+  - pattern: "*.linkedin.com"
+    normalize_to: "linkedin.com"

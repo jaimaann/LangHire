@@ -1,0 +1,91 @@
+name: stepstone
+display_name: StepStone
+version: "1.0.0"
+author: langhire
+description: "StepStone job search for Germany and the DACH region"
+countries: [DE]
+website: https://www.stepstone.de
+requires_login: true
+login_url: https://www.stepstone.de/login
+
+auth_cookies:
+  - name: session
+    domain: .stepstone.de
+  - name: ssdc
+    domain: .stepstone.de
+
+search_url: "https://www.stepstone.de/jobs/{title}/in-{location}?age=7"
+
+collection_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.stepstone.de/meinkonto/ to check if you're logged into StepStone.
+     - If you see your account/profile page → logged in ✓
+     - If you see a login page → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
+
+  THEN: Navigate to the StepStone search page:
+  {search_url}
+
+  If that URL doesn't load results, use the search form:
+  - Go to https://www.stepstone.de
+  - Enter "{title}" in the "Was" (What) field
+  - Enter "{location}" in the "Wo" (Where) field
+  - Click "Jobs finden" (Find jobs)
+
+  NOTE: StepStone is a German job board. Page content will be in German.
+
+  HOW TO COLLECT JOBS:
+  1. You will see a list of job cards (Stellenangebote) in the search results.
+  2. For each job card, extract:
+     - Job title (Stellenbezeichnung)
+     - Company name (Unternehmen/Arbeitgeber)
+     - Location (Standort/Ort)
+     - Full job URL (from the title link)
+     - Most StepStone jobs have their own apply form (easy_apply: true)
+  3. Click on each job title to get the full URL.
+  4. Output a @@JOB_FOUND marker for each job.
+  5. Navigate to the next page of results (Nächste Seite / Next page).
+  6. Repeat until you have {max_jobs} jobs or run out of results.
+
+  IMPORTANT RULES:
+  - Output ONE @@JOB_FOUND marker per job in your MEMORY field.
+  - Do NOT apply to any jobs — only collect listings.
+  - Stop after collecting {max_jobs} NEW jobs and call done.
+  - Job titles may be in German — collect them as-is.
+
+  @@JOB_FOUND format:
+  @@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", "url": "<full StepStone job URL>", "easy_apply": true/false}}
+
+apply_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.stepstone.de/meinkonto/ to check if you're logged into StepStone.
+     - If you see your account page → logged in ✓
+     - If redirected to login → WAIT for user to log in. Check every 15 seconds. Wait up to 5 minutes.
+
+  THEN: Go to {job_url}
+
+  StepStone application flow:
+  1. On the job details page, click "Jetzt bewerben" (Apply now) or "Bewerben" (Apply).
+  2. The application form may be on StepStone or redirect to the company's ATS.
+  3. If on StepStone:
+     - Upload CV/Lebenslauf from {resume_path}
+     - Upload cover letter (Anschreiben) if requested: {cover_letter}
+     - Fill personal details (Persönliche Daten): name, email, phone
+     - Fill screening questions (may be in German — answer in German)
+     - Review and submit (Absenden/Bewerbung abschicken)
+  4. If redirected to company ATS:
+     - Navigate the external site to find and complete the application form.
+     - Fill all fields from the candidate profile.
+     - Upload resume/CV at {resume_path}.
+
+  IMPORTANT:
+  - Forms will likely be in German. Fill text fields in German where appropriate.
+  - Use DD.MM.YYYY date format (German standard with dots).
+  - If asked about salary expectations (Gehaltsvorstellung), answer in EUR.
+  - If asked about notice period (Kündigungsfrist), use the value from candidate profile.
+  - If asked about nationality (Staatsangehörigkeit), use nationality from profile.
+  - If a cover letter (Anschreiben) is required and none is provided, the form may still allow submission without it — try to proceed.
+  - If the form is broken after 3 attempts, report failure and stop.
+
+domain_patterns:
+  - pattern: "*.stepstone.de"
+    normalize_to: "stepstone.de"

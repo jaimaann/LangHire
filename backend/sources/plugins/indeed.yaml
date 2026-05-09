@@ -1,0 +1,85 @@
+name: indeed
+display_name: Indeed
+version: "1.0.0"
+author: langhire
+description: "Indeed job search across 60+ countries with Indeed Apply support"
+countries: [ALL]
+website: https://www.indeed.com
+requires_login: true
+login_url: https://secure.indeed.com/auth
+
+auth_cookies:
+  - name: CTK
+    domain: .indeed.com
+  - name: indeed_rcc
+    domain: .indeed.com
+
+search_url: "https://www.indeed.com/jobs?q={title}&l={location}&fromage=7"
+
+collection_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.indeed.com/account/view to check if you're logged into Indeed.
+     - If you see your account/profile page → logged in ✓
+     - If you see a sign-in page → WAIT for user to log in manually. Check every 15 seconds (refresh). Wait up to 5 minutes.
+
+  THEN: Navigate directly to this search URL:
+  {search_url}
+  Do NOT modify the search filters. Results are ready.
+
+  HOW TO COLLECT JOBS:
+  1. You will see a list of job cards on the page.
+  2. For each job card, extract:
+     - Job title (from the card heading link)
+     - Company name
+     - Location
+     - The job URL (from the card's link href, or click and read the URL)
+     - Whether it has "Easily apply" or "Indeed Apply" badge (easy_apply: true) or just redirects externally (easy_apply: false)
+  3. Click on each job card to see details and get the full URL.
+  4. Output a @@JOB_FOUND marker for each job.
+  5. Navigate to the next page of results using the pagination at the bottom.
+  6. Repeat until you have {max_jobs} jobs or run out of results.
+
+  IMPORTANT RULES:
+  - Output ONE @@JOB_FOUND marker per job in your MEMORY field.
+  - Do NOT apply to any jobs — only collect listings.
+  - Include both "Easily apply" and external jobs.
+  - Stop after collecting {max_jobs} NEW jobs and call done.
+
+  @@JOB_FOUND format (in your memory field):
+  @@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", "url": "<full job URL>", "easy_apply": true/false}}
+
+apply_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.indeed.com/account/view to check if you're logged into Indeed.
+     - If you see your account/profile page → logged in ✓
+     - If you see a sign-in page → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
+
+  THEN: Go to {job_url}
+
+  If this job has "Easily apply" or "Apply now" on Indeed:
+  - Click the apply button to open the Indeed Apply flow.
+  - Fill all form fields using the candidate profile.
+  - Upload resume at {resume_path} when prompted.
+  - Answer screening questions using the Q&A bank.
+  - Review and submit the application.
+
+  If this job redirects to an external company site:
+  - Click "Apply on company site" and follow to the external page.
+  - Navigate the external site to find the application form.
+  - Look for 'Apply Now', 'Submit Application', or similar buttons.
+  - Fill all fields from candidate profile. Upload resume at {resume_path}.
+  - If the site requires account creation, try 'Sign in with Google' first.
+
+  OTP/VERIFICATION CODES: If ANY site asks for a verification code:
+  1. Choose the EMAIL option if given a choice
+  2. Open a new tab and go to https://mail.google.com
+  3. Find the most recent email with the verification/OTP code
+  4. Copy the code, switch back, and enter it
+
+  If the form is broken after 3 attempts, report failure and stop.
+
+domain_patterns:
+  - pattern: "*.indeed.com"
+    normalize_to: "indeed.com"
+  - pattern: "indeed.co.*"
+    normalize_to: "indeed.com"

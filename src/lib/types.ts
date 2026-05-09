@@ -17,12 +17,15 @@ export interface SalaryExpectation {
   min: number;
   max: number;
   currency: string;
+  period: "annual" | "monthly";
 }
 
 export interface CandidateProfile {
   name: string;
   email: string;
   phone: string;
+  phone_country_code: string;
+  country: string;
   address: Address;
   work_authorization: string;
   visa_sponsorship_needed: boolean;
@@ -36,6 +39,11 @@ export interface CandidateProfile {
   languages: string[];
   skills: string[];
   salary_expectation: SalaryExpectation;
+  notice_period: string;
+  nationality: string;
+  date_of_birth: string;
+  cover_letter: string;
+  date_format: string;
   notes: string;
 }
 
@@ -92,12 +100,48 @@ export interface Job {
   location: string;
   easy_apply: boolean | null;
   status: "pending" | "in_progress" | "applied" | "failed" | "blocked";
+  source?: string;
   search_title?: string;
   collected_at?: string;
   applied_at?: string;
   error?: string;
   description?: string;
 }
+
+// ── Plugins ──────────────────────────────────────────────────────────────
+export interface PluginConfig {
+  name: string;
+  display_name: string;
+  version: string;
+  author: string;
+  description: string;
+  countries: string[];
+  website: string;
+  requires_login: boolean;
+  login_url: string;
+  is_builtin: boolean;
+  enabled: boolean;
+}
+
+// ── Country Config ───────────────────────────────────────────────────────
+export interface CountryConfig {
+  name: string;
+  flag: string;
+  date_format: string;
+  currency: string;
+  salary_period: "annual" | "monthly";
+  address_labels: { state: string; zip: string };
+  work_auth_options: string[];
+  show_notice_period: boolean;
+  show_nationality: boolean;
+  show_cover_letter: boolean;
+  show_photo: boolean;
+  show_date_of_birth: boolean;
+  phone_prefix: string;
+  default_sources: string[];
+}
+
+export type CountryCode = string;
 
 // ── Memory ────────────────────────────────────────────────────────────────
 export interface Memory {

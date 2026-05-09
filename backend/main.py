@@ -1600,6 +1600,158 @@ async def smart_squash_qa():
         return _api_error("llm_error", f"Smart squash failed: {str(e)}", 500)
 
 
+# ── Cover Letter Generation ───────────────────────────────────────────────
+
+@app.post("/cover-letter/generate")
+async def generate_cover_letter(body: dict):
+    """Generate a tailored cover letter using LLM based on job description + profile."""
+    job_description = body.get("job_description", "").strip()
+    job_title = body.get("job_title", "")
+    company = body.get("company", "")
+
+    if not job_description:
+        return _api_error("missing_field", "Job description is required", 400)
+
+    llm_settings = load_llm_settings()
+    if not llm_settings.get("provider"):
+        return _api_error("no_llm", "No LLM configured. Set up an LLM provider in Settings first.")
+
+    profile = load_profile()
+
+    prompt = (
+        "Write a professional cover letter for the following job application.\n\n"
+        f"JOB TITLE: {job_title}\n"
+        f"COMPANY: {company}\n"
+        f"JOB DESCRIPTION:\n{job_description}\n\n"
+        f"CANDIDATE PROFILE:\n"
+        f"Name: {profile.get('name', '')}\n"
+        f"Current Role: {profile.get('current_role', '')}\n"
+        f"Years of Experience: {profile.get('years_of_experience', 0)}\n"
+        f"Skills: {', '.join(profile.get('skills', []))}\n"
+        f"Education: {profile.get('education', {}).get('degree', '')} from {profile.get('education', {}).get('school', '')}\n"
+        f"Languages: {', '.join(profile.get('languages', []))}\n\n"
+        "INSTRUCTIONS:\n"
+        "- Write 3-4 paragraphs\n"
+        "- Highlight relevant skills and experience that match the job requirements\n"
+        "- Be professional but not overly formal\n"
+        "- Do NOT make up experience or skills the candidate doesn't have\n"
+        "- Output ONLY the cover letter text — no subject line, headers, or metadata\n"
+    )
+
+    try:
+        from core.llm_factory import create_llm
+        from browser_use.llm.messages import UserMessage
+        llm = create_llm(llm_settings)
+        response = await llm.ainvoke([UserMessage(content=prompt)])
+        text = response.content if hasattr(response, "content") else str(response)
+        return {"success": True, "cover_letter": text.strip()}
+    except Exception as e:
+        return _api_error("llm_error", f"Cover letter generation failed: {str(e)}", 500)
+
+
+# ── Countries & Plugins ───────────────────────────────────────────────────
+
+from core.country_config import COUNTRY_CONFIGS, get_country_config, NOTICE_PERIOD_OPTIONS
+
+try:
+    from models import PluginImportRequest, PluginToggleRequest
+except ImportError:
+    from backend.models import PluginImportRequest, PluginToggleRequest
+
+from sources.registry import PluginRegistry
+
+_plugin_registry: PluginRegistry | None = None
+
+
+def _get_plugin_registry() -> PluginRegistry:
+    global _plugin_registry
+    if _plugin_registry is None:
+        _plugin_registry = PluginRegistry()
+    return _plugin_registry
+
+
+@app.get("/countries")
+async def get_countries():
+    """Return all supported country configurations."""
+    return {"success": True, "countries": COUNTRY_CONFIGS, "notice_period_options": NOTICE_PERIOD_OPTIONS}
+
+
+@app.get("/countries/{code}")
+async def get_country(code: str):
+    """Get config for a specific country."""
+    if code not in COUNTRY_CONFIGS:
+        return _api_error("not_found", f"Country code '{code}' not supported", 404)
+    return {"success": True, "config": COUNTRY_CONFIGS[code]}
+
+
+@app.get("/plugins")
+async def get_plugins(country: Optional[str] = Query(None)):
+    """List all plugins, optionally filtered by country."""
+    registry = _get_plugin_registry()
+    if country:
+        plugins = registry.get_for_country(country)
+    else:
+        plugins = registry.get_all()
+    return {
+        "success": True,
+        "plugins": [
+            {
+                "name": p.name,
+                "display_name": p.display_name,
+                "version": p.version,
+                "author": p.author,
+                "description": p.description,
+                "countries": p.countries,
+                "website": p.website,
+                "requires_login": p.requires_login,
+                "login_url": p.login_url,
+                "is_builtin": p.is_builtin,
+                "enabled": p.enabled,
+            }
+            for p in plugins
+        ],
+    }
+
+
+@app.post("/plugins/import")
+async def import_plugin(body: PluginImportRequest):
+    """Import a community plugin from a YAML file path."""
+    registry = _get_plugin_registry()
+    try:
+        plugin = registry.import_plugin(body.file_path)
+        return {"success": True, "plugin": {"name": plugin.name, "display_name": plugin.display_name}}
+    except (FileNotFoundError, ValueError) as e:
+        return _api_error("import_failed", str(e), 400)
+
+
+@app.put("/plugins/{name}/toggle")
+async def toggle_plugin(name: str, body: PluginToggleRequest):
+    """Enable or disable a plugin."""
+    registry = _get_plugin_registry()
+    if not registry.set_enabled(name, body.enabled):
+        return _api_error("not_found", f"Plugin '{name}' not found", 404)
+    return {"success": True, "name": name, "enabled": body.enabled}
+
+
+@app.delete("/plugins/{name}")
+async def remove_plugin(name: str):
+    """Remove a community plugin."""
+    registry = _get_plugin_registry()
+    try:
+        registry.remove_plugin(name)
+        return {"success": True}
+    except ValueError as e:
+        return _api_error("remove_failed", str(e), 400)
+
+
+@app.post("/plugins/reload")
+async def reload_plugins():
+    """Reload all plugins from disk."""
+    registry = _get_plugin_registry()
+    registry.reload()
+    return {"success": True, "count": len(registry.get_all())}
+
+
 # ── Main ──────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     def _handle_sigterm(signum, frame):

@@ -9,4 +9,5 @@ langchain-openai>=1.1.9
 playwright>=1.58.0
 pyinstaller>=6.19.0
 pymupdf>=1.27.2.2
+pyyaml>=6.0.1
 uvicorn>=0.44.0

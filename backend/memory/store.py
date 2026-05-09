@@ -55,6 +55,25 @@ ATS_DOMAINS: dict[str, str] = {
     "paycomonline.net":      "paycom",
     "indeed.com":            "indeed",
     "ziprecruiter.com":      "ziprecruiter",
+    # International job platforms
+    "seek.com.au":           "seek",
+    "seek.co.nz":            "seek",
+    "naukri.com":            "naukri",
+    "reed.co.uk":            "reed",
+    "stepstone.de":          "stepstone",
+    "indeed.co.in":          "indeed",
+    "indeed.co.uk":          "indeed",
+    "au.indeed.com":         "indeed",
+    "de.indeed.com":         "indeed",
+    "uk.indeed.com":         "indeed",
+    # Regional ATS platforms
+    "personio.de":           "personio",
+    "jobs.personio.de":      "personio",
+    "teamtailor.com":        "teamtailor",
+    "recruitee.com":         "recruitee",
+    "darwinbox.com":         "darwinbox",
+    "freshteam.com":         "freshteam",
+    "jobadder.com":          "jobadder",
 }
 
 # ── Domain normalization rules ────────────────────────────────────────────────
@@ -91,6 +110,21 @@ DOMAIN_NORMALIZATION: list[tuple[str, str]] = [
     (r"[\w-]+\.paylocity\.com$", "paylocity.com"),
     # UltiPro: {company}.ultipro.com → ultipro.com
     (r"[\w-]+\.ultipro\.com$", "ultipro.com"),
+    # Indeed country subdomains: au.indeed.com, uk.indeed.com → indeed.com
+    (r"\w+\.indeed\.com$", "indeed.com"),
+    (r"indeed\.co\.\w+$", "indeed.com"),
+    # SEEK: {anything}.seek.com.au → seek.com.au
+    (r"[\w-]+\.seek\.com\.au$", "seek.com.au"),
+    (r"[\w-]+\.seek\.co\.nz$", "seek.co.nz"),
+    # Naukri subdomains
+    (r"[\w-]+\.naukri\.com$", "naukri.com"),
+    # StepStone country variants
+    (r"[\w-]+\.stepstone\.de$", "stepstone.de"),
+    # Personio: {company}.jobs.personio.de → personio.de
+    (r"[\w-]+\.jobs\.personio\.de$", "personio.de"),
+    (r"[\w-]+\.personio\.de$", "personio.de"),
+    # Teamtailor: {company}.teamtailor.com → teamtailor.com
+    (r"[\w-]+\.teamtailor\.com$", "teamtailor.com"),
 ]
 
 

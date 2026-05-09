@@ -1,0 +1,87 @@
+name: seek
+display_name: SEEK
+version: "1.0.0"
+author: langhire
+description: "SEEK job search for Australia and New Zealand with Quick Apply"
+countries: [AU, NZ]
+website: https://www.seek.com.au
+requires_login: true
+login_url: https://login.seek.com/login
+
+auth_cookies:
+  - name: JobseekerSessionId
+    domain: .seek.com.au
+  - name: sol
+    domain: .seek.com.au
+
+search_url: "https://www.seek.com.au/{title}-jobs/in-{location}?daterange=7"
+
+collection_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.seek.com.au/my-activity to check if you're logged into SEEK.
+     - If you see your activity/profile page → logged in ✓
+     - If you see a sign-in page → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
+
+  THEN: Navigate to the SEEK job search page:
+  {search_url}
+
+  If that URL doesn't load results, try the search form:
+  - Go to https://www.seek.com.au
+  - Enter "{title}" in the "What" field
+  - Enter "{location}" in the "Where" field
+  - Click Search
+
+  HOW TO COLLECT JOBS:
+  1. You will see a list of job cards on the results page.
+  2. For each job card, extract:
+     - Job title
+     - Company name (advertiser)
+     - Location
+     - Full job URL (click the job title to get it)
+     - Whether it shows "Quick apply" badge (easy_apply: true) or not (easy_apply: false)
+  3. Click on each job to see details and confirm the URL.
+  4. Output a @@JOB_FOUND marker for each job.
+  5. Navigate to the next page using pagination.
+  6. Repeat until you have {max_jobs} jobs or run out of results.
+
+  IMPORTANT RULES:
+  - Output ONE @@JOB_FOUND marker per job in your MEMORY field.
+  - Do NOT apply to any jobs — only collect listings.
+  - Stop after collecting {max_jobs} NEW jobs and call done.
+
+  @@JOB_FOUND format:
+  @@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", "url": "<full SEEK job URL>", "easy_apply": true/false}}
+
+apply_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.seek.com.au/my-activity to check if you're logged into SEEK.
+     - If you see your activity page → logged in ✓
+     - If redirected to sign-in → WAIT for user to log in. Check every 15 seconds. Wait up to 5 minutes.
+
+  THEN: Go to {job_url}
+
+  If this job has "Quick apply":
+  - Click "Quick apply" button.
+  - The form will ask for resume upload, cover letter (optional), and screening questions.
+  - Upload resume at {resume_path}.
+  - Fill screening questions using the Q&A bank and candidate profile.
+  - If a cover letter is requested: {cover_letter}
+  - Review and submit.
+
+  If this job has a standard "Apply" button:
+  - Click "Apply for this job" or "Apply" button.
+  - You may be redirected to the company's external ATS.
+  - Navigate the external site to find and complete the application form.
+  - Fill all fields from the candidate profile.
+  - Upload resume at {resume_path}.
+
+  IMPORTANT:
+  - Use DD/MM/YYYY date format for all date fields.
+  - If asked about salary expectations, answer in AUD.
+  - If the form is broken after 3 attempts, report failure and stop.
+
+domain_patterns:
+  - pattern: "*.seek.com.au"
+    normalize_to: "seek.com.au"
+  - pattern: "*.seek.co.nz"
+    normalize_to: "seek.co.nz"

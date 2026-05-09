@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Save } from "lucide-react";
-import { getProfile, saveProfile } from "../lib/api";
-import type { CandidateProfile } from "../lib/types";
+import { getProfile, saveProfile, getCountries } from "../lib/api";
+import type { CandidateProfile, CountryConfig } from "../lib/types";
 import { PageHeader, LoadingSpinner, Section } from "../components/ui";
 import TagInputShared from "../components/ui/TagInput";
 
@@ -9,8 +9,10 @@ const defaultProfile: CandidateProfile = {
   name: "",
   email: "",
   phone: "",
+  phone_country_code: "+1",
+  country: "US",
   address: { street: "", city: "", state: "", zip: "", country: "USA" },
-  work_authorization: "Authorized to work in the US",
+  work_authorization: "",
   visa_sponsorship_needed: false,
   willing_to_relocate: false,
   preferred_work_mode: "hybrid",
@@ -21,12 +23,19 @@ const defaultProfile: CandidateProfile = {
   target_locations: [],
   languages: ["English"],
   skills: [],
-  salary_expectation: { min: 50000, max: 100000, currency: "USD" },
+  salary_expectation: { min: 50000, max: 100000, currency: "USD", period: "annual" },
+  notice_period: "",
+  nationality: "",
+  date_of_birth: "",
+  cover_letter: "",
+  date_format: "MM/DD/YYYY",
   notes: "",
 };
 
 export default function Profile() {
   const [profile, setProfile] = useState<CandidateProfile>(defaultProfile);
+  const [countries, setCountries] = useState<Record<string, CountryConfig>>({});
+  const [noticePeriodOptions, setNoticePeriodOptions] = useState<string[]>([]);
   const [newTitle, setNewTitle] = useState("");
   const [newSkill, setNewSkill] = useState("");
   const [newLocation, setNewLocation] = useState("");
@@ -35,12 +44,36 @@ export default function Profile() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const countryConfig = profile.country ? countries[profile.country] : null;
+
   useEffect(() => {
-    getProfile()
-      .then((data) => setProfile({ ...defaultProfile, ...data }))
+    Promise.all([
+      getProfile().then((data) => setProfile({ ...defaultProfile, ...data })),
+      getCountries().then((data) => {
+        setCountries(data.countries);
+        setNoticePeriodOptions(data.notice_period_options || []);
+      }),
+    ])
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  const handleCountryChange = (code: string) => {
+    const config = countries[code];
+    if (!config) return;
+    setProfile((p) => ({
+      ...p,
+      country: code,
+      phone_country_code: config.phone_prefix,
+      date_format: config.date_format,
+      salary_expectation: {
+        ...p.salary_expectation,
+        currency: p.salary_expectation.currency || config.currency,
+        period: config.salary_period as "annual" | "monthly",
+      },
+    }));
+    setSaved(false);
+  };
 
   const update = (field: string, value: unknown) => {
     setProfile((p) => ({ ...p, [field]: value }));
@@ -101,13 +134,63 @@ export default function Profile() {
         <div className="error-banner mb-5">{saveError}</div>
       )}
 
+      {/* Country Selection */}
+      <Section title="Country">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">Your Country</label>
+            <select
+              value={profile.country}
+              onChange={(e) => handleCountryChange(e.target.value)}
+              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
+            >
+              <option value="">Select country...</option>
+              {Object.entries(countries).map(([code, config]) => (
+                <option key={code} value={code}>{config.flag} {config.name}</option>
+              ))}
+            </select>
+          </div>
+          {countryConfig && (
+            <div className="flex items-end">
+              <p className="text-sm text-muted-foreground">
+                Date format: {countryConfig.date_format} &middot; Currency: {countryConfig.currency}
+              </p>
+            </div>
+          )}
+        </div>
+      </Section>
+
       {/* Personal Info */}
       <Section title="Personal Information">
         <div className="grid grid-cols-2 gap-4">
           <Input label="Full Name" value={profile.name} onChange={(v) => update("name", v)} />
           <Input label="Email" type="email" value={profile.email} onChange={(v) => update("email", v)} />
-          <Input label="Phone" value={profile.phone} onChange={(v) => update("phone", v)} />
+          <div>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">Phone</label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={profile.phone_country_code}
+                onChange={(e) => update("phone_country_code", e.target.value)}
+                className="input-base w-20"
+                placeholder="+1"
+              />
+              <input
+                type="text"
+                value={profile.phone}
+                onChange={(e) => update("phone", e.target.value)}
+                className="input-base flex-1"
+                placeholder="Phone number"
+              />
+            </div>
+          </div>
           <Input label="Current Role" value={profile.current_role} onChange={(v) => update("current_role", v)} />
+          {countryConfig?.show_nationality && (
+            <Input label="Nationality" value={profile.nationality} onChange={(v) => update("nationality", v)} />
+          )}
+          {countryConfig?.show_date_of_birth && (
+            <Input label="Date of Birth" value={profile.date_of_birth} onChange={(v) => update("date_of_birth", v)} placeholder={countryConfig.date_format} />
+          )}
         </div>
       </Section>
 
@@ -116,8 +199,8 @@ export default function Profile() {
         <div className="grid grid-cols-2 gap-4">
           <Input label="Street" value={profile.address.street} onChange={(v) => updateNested("address", "street", v)} className="col-span-2" />
           <Input label="City" value={profile.address.city} onChange={(v) => updateNested("address", "city", v)} />
-          <Input label="State" value={profile.address.state} onChange={(v) => updateNested("address", "state", v)} />
-          <Input label="ZIP" value={profile.address.zip} onChange={(v) => updateNested("address", "zip", v)} />
+          <Input label={countryConfig?.address_labels?.state || "State"} value={profile.address.state} onChange={(v) => updateNested("address", "state", v)} />
+          <Input label={countryConfig?.address_labels?.zip || "ZIP/Postal Code"} value={profile.address.zip} onChange={(v) => updateNested("address", "zip", v)} />
           <Input label="Country" value={profile.address.country} onChange={(v) => updateNested("address", "country", v)} />
         </div>
       </Section>
@@ -125,9 +208,30 @@ export default function Profile() {
       {/* Work Preferences */}
       <Section title="Work Preferences">
         <div className="grid grid-cols-2 gap-4">
-          <Input label="Work Authorization" value={profile.work_authorization} onChange={(v) => update("work_authorization", v)} />
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1">Work Mode</label>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">Work Authorization</label>
+            {countryConfig?.work_auth_options ? (
+              <select
+                value={profile.work_authorization}
+                onChange={(e) => update("work_authorization", e.target.value)}
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
+              >
+                <option value="">Select...</option>
+                {countryConfig.work_auth_options.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type="text"
+                value={profile.work_authorization}
+                onChange={(e) => update("work_authorization", e.target.value)}
+                className="input-base"
+              />
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">Work Mode</label>
             <select
               value={profile.preferred_work_mode}
               onChange={(e) => update("preferred_work_mode", e.target.value)}
@@ -141,6 +245,21 @@ export default function Profile() {
           <Checkbox label="Visa Sponsorship Needed" checked={profile.visa_sponsorship_needed} onChange={(v) => update("visa_sponsorship_needed", v)} />
           <Checkbox label="Willing to Relocate" checked={profile.willing_to_relocate} onChange={(v) => update("willing_to_relocate", v)} />
           <Input label="Years of Experience" type="number" value={String(profile.years_of_experience)} onChange={(v) => update("years_of_experience", Number(v))} />
+          {countryConfig?.show_notice_period && (
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">Notice Period</label>
+              <select
+                value={profile.notice_period}
+                onChange={(e) => update("notice_period", e.target.value)}
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
+              >
+                <option value="">Select...</option>
+                {noticePeriodOptions.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
       </Section>
 
@@ -155,12 +274,35 @@ export default function Profile() {
 
       {/* Salary */}
       <Section title="Salary Expectation">
-        <div className="grid grid-cols-3 gap-4">
-          <Input label="Minimum ($)" type="number" value={String(profile.salary_expectation.min)} onChange={(v) => updateNested("salary_expectation", "min", Number(v))} />
-          <Input label="Maximum ($)" type="number" value={String(profile.salary_expectation.max)} onChange={(v) => updateNested("salary_expectation", "max", Number(v))} />
+        <div className="grid grid-cols-2 gap-4">
+          <Input label="Minimum" type="number" value={String(profile.salary_expectation.min)} onChange={(v) => updateNested("salary_expectation", "min", Number(v))} />
+          <Input label="Maximum" type="number" value={String(profile.salary_expectation.max)} onChange={(v) => updateNested("salary_expectation", "max", Number(v))} />
           <Input label="Currency" value={profile.salary_expectation.currency} onChange={(v) => updateNested("salary_expectation", "currency", v)} />
+          <div>
+            <label className="block text-sm font-semibold text-foreground mb-1.5">Period</label>
+            <select
+              value={profile.salary_expectation.period}
+              onChange={(e) => updateNested("salary_expectation", "period", e.target.value)}
+              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
+            >
+              <option value="annual">Annual</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
         </div>
       </Section>
+
+      {/* Cover Letter (conditional) */}
+      {countryConfig?.show_cover_letter && (
+        <Section title="Cover Letter">
+          <p className="text-sm text-muted-foreground mb-2">
+            Default cover letter template used when applications request one.
+          </p>
+          <textarea value={profile.cover_letter} onChange={(e) => update("cover_letter", e.target.value)}
+            rows={6} className="input-base"
+            placeholder="Write your default cover letter here..." />
+        </Section>
+      )}
 
       {/* Tag Lists */}
       <Section title="Target Job Titles">
@@ -197,14 +339,14 @@ export default function Profile() {
   );
 }
 
-function Input({ label, value, onChange, type = "text", className = "" }: {
-  label: string; value: string; onChange: (v: string) => void; type?: string; className?: string;
+function Input({ label, value, onChange, type = "text", className = "", placeholder = "" }: {
+  label: string; value: string; onChange: (v: string) => void; type?: string; className?: string; placeholder?: string;
 }) {
   return (
     <div className={className}>
       <label className="block text-sm font-semibold text-foreground mb-1.5">{label}</label>
       <input type={type} value={value} onChange={(e) => onChange(e.target.value)}
-        className="input-base" />
+        placeholder={placeholder} className="input-base" />
     </div>
   );
 }

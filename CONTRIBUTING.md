@@ -276,9 +276,146 @@ refactor: extract tag input into reusable component
 
 ### Adding a New ATS Platform
 
-1. Add domain pattern to `ATS_DOMAINS` in `memory/store.py`
-2. Add normalization rule to `DOMAIN_NORMALIZATION` in `memory/store.py`
+1. Add domain pattern to `ATS_DOMAINS` in `backend/memory/store.py`
+2. Add normalization rule to `DOMAIN_NORMALIZATION` in `backend/memory/store.py`
 3. Test with `uv run python -c "from memory.store import MemoryStore; print(MemoryStore.extract_domain('https://example.yourplatform.com/job/123'))"`
+
+### Creating a Job Source Plugin
+
+LangHire uses a YAML-based plugin system for job sources. Each plugin tells the AI browser agent how to search for jobs and how to apply on a specific website. No code execution — plugins are pure data files, safe to share with anyone.
+
+#### Plugin File Structure
+
+Create a `.yaml` file with this format:
+
+```yaml
+# my-job-site.yaml
+name: my-job-site                    # Unique slug (lowercase, hyphens)
+display_name: My Job Site            # Display name in the UI
+version: "1.0.0"                     # Semver
+author: your-github-username         # Your name or handle
+description: "Short description of what this job site is"
+countries: [US, GB]                  # ISO country codes where this site is relevant (or [ALL] for global)
+website: https://www.myjobsite.com   # Platform homepage
+requires_login: true                 # Whether the user needs to log in first
+login_url: https://www.myjobsite.com/login  # URL to open for manual login
+
+# Cookies that prove the user is logged in
+auth_cookies:
+  - name: session_id
+    domain: .myjobsite.com
+
+# URL template for searching jobs (uses {title} and {location} placeholders)
+search_url: "https://www.myjobsite.com/jobs?q={title}&location={location}"
+
+# Prompt that tells the AI agent how to COLLECT jobs from this site
+collection_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.myjobsite.com/account to check if you're logged in.
+     - If you see your account page → logged in
+     - If you see a login page → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
+
+  THEN: Navigate to:
+  {search_url}
+
+  HOW TO COLLECT JOBS:
+  1. You will see a list of job cards on the page.
+  2. For each job card, extract: title, company, location, URL.
+  3. Check if the job has a "Quick Apply" button (easy_apply: true) or redirects externally (easy_apply: false).
+  4. Output a @@JOB_FOUND marker for each job in your MEMORY field.
+  5. Navigate to the next page of results.
+  6. Stop after collecting {max_jobs} jobs.
+
+  IMPORTANT RULES:
+  - Output ONE @@JOB_FOUND marker per job.
+  - Do NOT apply to any jobs — only collect listings.
+  - Stop after {max_jobs} jobs and call done.
+
+  @@JOB_FOUND format:
+  @@JOB_FOUND: {{"title": "<title>", "company": "<company>", "location": "<location>", "url": "<url>", "easy_apply": true/false}}
+
+# Prompt that tells the AI agent how to APPLY to a job on this site
+apply_prompt: |
+  Go to {job_url}
+
+  Click the Apply button and complete the application form.
+  Fill all fields using the candidate profile data.
+  Upload resume at {resume_path} when prompted.
+  Answer screening questions using the Q&A bank.
+  If a cover letter is requested: {cover_letter}
+  Submit the application.
+
+  If the form is broken after 3 attempts, report failure and stop.
+
+# Optional: domain normalization patterns for the memory system
+domain_patterns:
+  - pattern: "*.myjobsite.com"
+    normalize_to: "myjobsite.com"
+```
+
+#### Template Variables
+
+Your prompts can use these placeholders that get filled at runtime:
+
+**Collection prompt:**
+| Variable | Description |
+|----------|-------------|
+| `{search_url}` | Built from your `search_url` template with title/location filled in |
+| `{title}` | The job title being searched |
+| `{titles}` | All target titles (comma-separated) |
+| `{location}` | Target location |
+| `{locations}` | All target locations (comma-separated) |
+| `{max_jobs}` | Maximum jobs to collect |
+
+**Apply prompt:**
+| Variable | Description |
+|----------|-------------|
+| `{job_url}` | URL of the job to apply to |
+| `{job_title}` | Job title |
+| `{company}` | Company name |
+| `{profile}` | Formatted candidate profile text |
+| `{resume_path}` | Path to the user's resume PDF |
+| `{qa_bank}` | Relevant Q&A pairs for screening questions |
+| `{cover_letter}` | User's cover letter (if they have one) |
+| `{memories}` | Previously learned memories for this domain |
+
+#### Writing Good Prompts
+
+The AI agent (powered by an LLM + Playwright browser) will follow your prompts to navigate the website. Tips:
+
+1. **Be specific about UI elements** — "Click the blue 'Apply Now' button in the top-right" is better than "Apply"
+2. **Describe the page layout** — "Job cards are listed on the left, details on the right"
+3. **Handle edge cases** — "If a CAPTCHA appears, wait 10 seconds and retry"
+4. **Include login checks** — Always verify the user is logged in before proceeding
+5. **Use the @@JOB_FOUND format exactly** — The backend parses these markers to save jobs
+6. **Test your prompts** — Try the collection flow manually and note each step
+
+#### Installing Your Plugin
+
+**For personal use:**
+1. Open LangHire → Settings → Plugins section
+2. Click "Import Plugin"
+3. Select your `.yaml` file
+4. The plugin appears in the job source dropdown for matching countries
+
+**Or manually:** Copy your `.yaml` file to `~/.langhire/plugins/` (macOS: `~/Library/Application Support/langhire/plugins/`)
+
+#### Sharing with the Community
+
+1. Test your plugin works end-to-end (collect + apply)
+2. Submit a PR adding your `.yaml` file to `backend/sources/plugins/`
+3. Add the site's domain to `backend/memory/store.py` (`ATS_DOMAINS` and `DOMAIN_NORMALIZATION`)
+4. Add the platform to the relevant country's `default_sources` in `backend/core/country_config.py`
+
+#### Reference: Built-in Plugins
+
+See these files for real-world examples:
+- `backend/sources/plugins/linkedin.yaml` — Global, Easy Apply + external
+- `backend/sources/plugins/indeed.yaml` — Global, Indeed Apply
+- `backend/sources/plugins/seek.yaml` — Australia/NZ, Quick Apply
+- `backend/sources/plugins/naukri.yaml` — India, handles CAPTCHAs
+- `backend/sources/plugins/reed.yaml` — UK, direct application forms
+- `backend/sources/plugins/stepstone.yaml` — Germany, German-language forms
 
 ---
 
