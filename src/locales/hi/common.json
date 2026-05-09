@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "dashboard": "डैशबोर्ड",
+    "guide": "गाइड",
+    "profile": "प्रोफ़ाइल",
+    "llmSettings": "LLM सेटिंग्स",
+    "jobs": "नौकरियाँ",
+    "apply": "आवेदन करें",
+    "memory": "मेमोरी",
+    "qa": "प्रश्नोत्तर",
+    "logs": "लॉग",
+    "settings": "सेटिंग्स",
+    "feedback": "फ़ीडबैक"
+  },
+  "app": {
+    "title": "LangHire",
+    "tagline": "AI-संचालित आवेदन"
+  },
+  "status": {
+    "connected": "कनेक्टेड",
+    "startingBackend": "बैकएंड शुरू हो रहा है...",
+    "connecting": "कनेक्ट हो रहा है..."
+  },
+  "btn": {
+    "save": "सहेजें",
+    "saved": "सहेजा गया",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "search": "खोजें",
+    "export": "निर्यात",
+    "start": "शुरू करें",
+    "stop": "रोकें",
+    "back": "वापस",
+    "next": "आगे",
+    "finish": "पूरा करें",
+    "browse": "ब्राउज़ करें",
+    "import": "आयात करें",
+    "copy": "कॉपी करें",
+    "retry": "पुनः प्रयास",
+    "close": "बंद करें"
+  },
+  "jobStatus": {
+    "pending": "लंबित",
+    "applied": "आवेदित",
+    "failed": "विफल",
+    "blocked": "अवरुद्ध",
+    "inProgress": "प्रगति पर"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "dashboard": "Panel",
+    "guide": "Guía",
+    "profile": "Perfil",
+    "llmSettings": "Configuración LLM",
+    "jobs": "Empleos",
+    "apply": "Aplicar",
+    "memory": "Memoria",
+    "qa": "Preguntas y Respuestas",
+    "logs": "Registros",
+    "settings": "Configuración",
+    "feedback": "Comentarios"
+  },
+  "app": {
+    "title": "LangHire",
+    "tagline": "Solicitudes impulsadas por IA"
+  },
+  "status": {
+    "connected": "Conectado",
+    "startingBackend": "Iniciando backend...",
+    "connecting": "Conectando..."
+  },
+  "btn": {
+    "save": "Guardar",
+    "saved": "Guardado",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "search": "Buscar",
+    "export": "Exportar",
+    "start": "Iniciar",
+    "stop": "Detener",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "finish": "Finalizar",
+    "browse": "Explorar",
+    "import": "Importar",
+    "copy": "Copiar",
+    "retry": "Reintentar",
+    "close": "Cerrar"
+  },
+  "jobStatus": {
+    "pending": "Pendiente",
+    "applied": "Aplicado",
+    "failed": "Fallido",
+    "blocked": "Bloqueado",
+    "inProgress": "En progreso"
+  }
+}

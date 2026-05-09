@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "guide": "الدليل",
+    "profile": "الملف الشخصي",
+    "llmSettings": "إعدادات LLM",
+    "jobs": "الوظائف",
+    "apply": "تقديم",
+    "memory": "الذاكرة",
+    "qa": "أسئلة وأجوبة",
+    "logs": "السجلات",
+    "settings": "الإعدادات",
+    "feedback": "التعليقات"
+  },
+  "app": {
+    "title": "LangHire",
+    "tagline": "طلبات التوظيف بالذكاء الاصطناعي"
+  },
+  "status": {
+    "connected": "متصل",
+    "startingBackend": "جارٍ بدء الخادم...",
+    "connecting": "جارٍ الاتصال..."
+  },
+  "btn": {
+    "save": "حفظ",
+    "saved": "تم الحفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "search": "بحث",
+    "export": "تصدير",
+    "start": "بدء",
+    "stop": "إيقاف",
+    "back": "رجوع",
+    "next": "التالي",
+    "finish": "إنهاء",
+    "browse": "تصفح",
+    "import": "استيراد",
+    "copy": "نسخ",
+    "retry": "إعادة المحاولة",
+    "close": "إغلاق"
+  },
+  "jobStatus": {
+    "pending": "قيد الانتظار",
+    "applied": "تم التقديم",
+    "failed": "فشل",
+    "blocked": "محظور",
+    "inProgress": "قيد التنفيذ"
+  }
+}

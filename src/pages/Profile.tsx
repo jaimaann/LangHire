@@ -4,6 +4,8 @@ import { getProfile, saveProfile, getCountries } from "../lib/api";
 import type { CandidateProfile, CountryConfig } from "../lib/types";
 import { PageHeader, LoadingSpinner, Section } from "../components/ui";
 import TagInputShared from "../components/ui/TagInput";
+import { getLanguageFromCountry, getSavedLanguage } from "../i18n/languageDetection";
+import { loadLanguage } from "../i18n";
 
 const defaultProfile: CandidateProfile = {
   name: "",
@@ -73,6 +75,10 @@ export default function Profile() {
       },
     }));
     setSaved(false);
+    if (!getSavedLanguage()) {
+      const lang = getLanguageFromCountry(code);
+      loadLanguage(lang);
+    }
   };
 
   const update = (field: string, value: unknown) => {

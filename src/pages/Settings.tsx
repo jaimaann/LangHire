@@ -3,11 +3,15 @@ import { Save, FolderOpen, X, Upload, Trash2 } from "lucide-react";
 import { getSettings, saveSettings, getPlugins, togglePlugin, removePlugin, importPlugin } from "../lib/api";
 import { setTelemetryEnabled as setAnalyticsTelemetry } from "../lib/analytics";
 import { open } from "@tauri-apps/plugin-dialog";
+import { useTranslation } from "react-i18next";
 import { PageHeader, LoadingSpinner, Section } from "../components/ui";
 import TagInput from "../components/ui/TagInput";
 import type { PluginConfig } from "../lib/types";
+import { LANGUAGE_NAMES, getSavedLanguage, saveLanguagePreference } from "../i18n/languageDetection";
+import { loadLanguage } from "../i18n";
 
 export default function SettingsPage() {
+  const { t } = useTranslation("settings");
   const [resumePath, setResumePath] = useState("");
   const [blockedDomains, setBlockedDomains] = useState<string[]>([]);
   const [newDomain, setNewDomain] = useState("");
@@ -15,10 +19,17 @@ export default function SettingsPage() {
   const [password, setPassword] = useState("");
   const [maxFailures, setMaxFailures] = useState(8);
   const [telemetryEnabled, setTelemetryEnabled] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<string>(getSavedLanguage() || "");
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [plugins, setPlugins] = useState<PluginConfig[]>([]);
+
+  const handleLanguageChange = async (lang: string) => {
+    setCurrentLanguage(lang);
+    saveLanguagePreference(lang);
+    await loadLanguage(lang || "en");
+  };
 
   useEffect(() => {
     Promise.all([
@@ -187,9 +198,27 @@ export default function SettingsPage() {
         </div>
       </Section>
 
+      {/* Language */}
+      <Section title={t("language.title")}>
+        <div>
+          <label className="block text-sm font-semibold text-foreground mb-1.5">{t("language.label")}</label>
+          <select
+            value={currentLanguage}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white max-w-xs"
+          >
+            <option value="">{t("language.auto")}</option>
+            {Object.entries(LANGUAGE_NAMES).map(([code, name]) => (
+              <option key={code} value={code}>{name}</option>
+            ))}
+          </select>
+          <p className="text-[13px] text-muted-foreground mt-1.5">{t("language.description")}</p>
+        </div>
+      </Section>
+
       {/* Blocked Domains */}
-      <Section title="Blocked Domains" className="">
-        <p className="text-[13px] text-muted-foreground mb-4">Jobs on these domains will be automatically skipped.</p>
+      <Section title={t("blockedDomains.title")} className="">
+        <p className="text-[13px] text-muted-foreground mb-4">{t("blockedDomains.description")}</p>
         <TagInput
           tags={blockedDomains}
           value={newDomain}

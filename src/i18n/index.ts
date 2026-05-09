@@ -3,10 +3,14 @@ import { initReactI18next } from 'react-i18next';
 import { getSavedLanguage } from './languageDetection';
 
 import commonEn from '../locales/en/common.json';
+import dashboardEn from '../locales/en/dashboard.json';
+import settingsEn from '../locales/en/settings.json';
 
 const resources = {
   en: {
     common: commonEn,
+    dashboard: dashboardEn,
+    settings: settingsEn,
   },
 };
 
@@ -17,7 +21,7 @@ i18n
     lng: getSavedLanguage() || 'en',
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common'],
+    ns: ['common', 'dashboard', 'settings'],
     interpolation: {
       escapeValue: false,
     },

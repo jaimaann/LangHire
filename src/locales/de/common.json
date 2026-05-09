@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "guide": "Anleitung",
+    "profile": "Profil",
+    "llmSettings": "LLM-Einstellungen",
+    "jobs": "Stellen",
+    "apply": "Bewerben",
+    "memory": "Gedächtnis",
+    "qa": "Fragen & Antworten",
+    "logs": "Protokolle",
+    "settings": "Einstellungen",
+    "feedback": "Feedback"
+  },
+  "app": {
+    "title": "LangHire",
+    "tagline": "KI-gestützte Bewerbungen"
+  },
+  "status": {
+    "connected": "Verbunden",
+    "startingBackend": "Backend wird gestartet...",
+    "connecting": "Verbindung wird hergestellt..."
+  },
+  "btn": {
+    "save": "Speichern",
+    "saved": "Gespeichert",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "search": "Suchen",
+    "export": "Exportieren",
+    "start": "Starten",
+    "stop": "Stoppen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "finish": "Fertig",
+    "browse": "Durchsuchen",
+    "import": "Importieren",
+    "copy": "Kopieren",
+    "retry": "Erneut versuchen",
+    "close": "Schließen"
+  },
+  "jobStatus": {
+    "pending": "Ausstehend",
+    "applied": "Beworben",
+    "failed": "Fehlgeschlagen",
+    "blocked": "Blockiert",
+    "inProgress": "In Bearbeitung"
+  }
+}

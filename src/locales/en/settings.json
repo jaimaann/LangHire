@@ -1,0 +1,41 @@
+{
+  "title": "Settings",
+  "subtitle": "General application settings",
+  "resume": {
+    "title": "Resume",
+    "description": "PDF resume file used for job applications"
+  },
+  "credentials": {
+    "title": "Account Credentials",
+    "description": "Used for creating accounts on external ATS platforms during applications. Stored locally in plaintext. Prefer using SSO (Sign in with LinkedIn/Google) when possible.",
+    "email": "Email",
+    "password": "Password"
+  },
+  "agent": {
+    "title": "Agent Settings",
+    "maxFailures": "Max Failures Per Job",
+    "maxFailuresDesc": "Agent stops trying after this many consecutive failures on a single job."
+  },
+  "telemetry": {
+    "title": "Privacy & Telemetry",
+    "usageAnalytics": "Usage Analytics",
+    "description": "Help improve LangHire by sending anonymous usage data (feature usage, crash reports). No personal information or job data is transmitted."
+  },
+  "blockedDomains": {
+    "title": "Blocked Domains",
+    "description": "Jobs on these domains will be automatically skipped.",
+    "empty": "No blocked domains"
+  },
+  "plugins": {
+    "title": "Job Source Plugins",
+    "description": "Manage job source plugins. Built-in plugins provide LinkedIn, Indeed, SEEK, Naukri, Reed, and StepStone. Import community plugins (.yaml files) for additional job sites.",
+    "builtin": "Built-in",
+    "importPlugin": "Import Plugin"
+  },
+  "language": {
+    "title": "Language",
+    "label": "Interface Language",
+    "auto": "Auto (from country)",
+    "description": "Choose the language for the application interface. Set to 'Auto' to match your selected country."
+  }
+}

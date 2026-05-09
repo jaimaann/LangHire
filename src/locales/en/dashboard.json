@@ -1,0 +1,37 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Overview of your job application progress",
+  "cards": {
+    "totalJobs": "Total Jobs",
+    "applied": "Applied",
+    "failed": "Failed",
+    "pending": "Pending",
+    "successRate": "Success Rate",
+    "memories": "Memories"
+  },
+  "quickActions": {
+    "title": "Quick Actions",
+    "collectJobs": "Collect Jobs",
+    "startApplying": "Start Applying",
+    "viewMemories": "View Memories"
+  },
+  "setup": {
+    "complete": "Setup Complete",
+    "gettingStarted": "Getting Started",
+    "viewGuide": "View full guide",
+    "allDone": "All required setup is done! You're ready to collect and apply to jobs.",
+    "needHelp": "Need help? Visit the <guide>Guide</guide> for step-by-step instructions.",
+    "stepsComplete": "{{completed}} of {{total}} steps complete",
+    "setUp": "Set up",
+    "configureAI": "Configure AI provider",
+    "setResume": "Set resume path",
+    "setupProfile": "Set up your profile"
+  },
+  "chromium": {
+    "installing": "Installing Chromium Browser",
+    "installFailed": "Chromium install failed: {{message}}. Run <code>python3 -m playwright install chromium</code> manually."
+  },
+  "backend": {
+    "notConnected": "Backend not connected. Start it with: <code>uv run python backend/main.py</code>"
+  }
+}
