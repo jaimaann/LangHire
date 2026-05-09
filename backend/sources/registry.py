@@ -163,6 +163,11 @@ class PluginRegistry:
         self._load_all()
 
     def _get_builtin_dir(self) -> Path:
+        import sys
+        if getattr(sys, 'frozen', False):
+            # PyInstaller bundles data into sys._MEIPASS
+            base = Path(sys._MEIPASS)  # type: ignore[attr-defined]
+            return base / "sources" / "plugins"
         return Path(__file__).parent / "plugins"
 
     def _get_community_dir(self) -> Path:
