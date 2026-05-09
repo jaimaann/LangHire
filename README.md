@@ -11,10 +11,15 @@
 <p align="center">
   <a href="https://langhire.org"><img src="https://img.shields.io/badge/Website-langhire.org-FF385C?style=flat&logo=globe&logoColor=white" alt="Website" /></a>
   <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform" />
+  <img src="https://img.shields.io/badge/Languages-11%20supported-teal" alt="Languages" />
   <img src="https://img.shields.io/badge/Tauri%20v2-React%20%2B%20TypeScript-purple" alt="UI" />
   <img src="https://img.shields.io/badge/Backend-Python%20%2B%20FastAPI-green" alt="Backend" />
   <img src="https://img.shields.io/badge/AI-OpenAI%20%7C%20Claude%20%7C%20Bedrock-orange" alt="AI" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="License" /></a>
+</p>
+
+<p align="center">
+  <sub>English &middot; हिन्दी &middot; Deutsch &middot; Français &middot; Español &middot; العربية &middot; Nederlands &middot; 日本語 &middot; 한국어 &middot; Português &middot; Bahasa Melayu</sub>
 </p>
 
 ---
