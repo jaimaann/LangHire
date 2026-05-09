@@ -159,7 +159,7 @@ def test_llm_connection():
 
     llm_settings = {
         "provider": "openrouter",
-        "openrouter": {"api_key": api_key, "model": "meta-llama/llama-3.1-8b-instruct:free"},
+        "openrouter": {"api_key": api_key, "model": "meta-llama/llama-3.1-8b-instruct"},
     }
     save_resp = api_request("PUT", "/settings/llm", llm_settings)
     assert save_resp.get("success") is True, f"LLM settings save failed: {save_resp}"
@@ -181,7 +181,7 @@ def test_cover_letter_generation():
 
     llm_settings = {
         "provider": "openrouter",
-        "openrouter": {"api_key": api_key, "model": "meta-llama/llama-3.1-8b-instruct:free"},
+        "openrouter": {"api_key": api_key, "model": "meta-llama/llama-3.1-8b-instruct"},
     }
     api_request("PUT", "/settings/llm", llm_settings)
 
