@@ -280,6 +280,85 @@ refactor: extract tag input into reusable component
 2. Add normalization rule to `DOMAIN_NORMALIZATION` in `backend/memory/store.py`
 3. Test with `uv run python -c "from memory.store import MemoryStore; print(MemoryStore.extract_domain('https://example.yourplatform.com/job/123'))"`
 
+### Working with i18n (Translations)
+
+The app uses `react-i18next` for multi-language support. All user-facing strings are stored in JSON translation files, not hardcoded in components.
+
+#### Key Rules
+
+1. **Never hardcode user-facing strings in .tsx files.** Always use `t("key")` from `useTranslation()`.
+2. **English is the source of truth.** Edit `src/locales/en/{namespace}.json` first, then add translations for other languages.
+3. **Use the correct namespace.** Each page has its own namespace (e.g., `dashboard`, `profile`, `jobs`). Shared strings (nav, buttons, statuses) go in `common`.
+
+#### Adding a New String
+
+```tsx
+// 1. Add the key to the English JSON file
+// src/locales/en/dashboard.json
+{ "myNewFeature": "Some new text" }
+
+// 2. Use it in the component
+import { useTranslation } from "react-i18next";
+
+export default function Dashboard() {
+  const { t } = useTranslation("dashboard");
+  return <p>{t("myNewFeature")}</p>;
+}
+
+// 3. Add translations for other languages
+// src/locales/de/dashboard.json
+{ "myNewFeature": "Ein neuer Text" }
+```
+
+#### Interpolation (Dynamic Values)
+
+```json
+{ "jobCount": "{{count}} jobs found" }
+```
+```tsx
+t("jobCount", { count: 42 })
+```
+
+#### Adding a New Language
+
+1. Create a directory: `src/locales/{lang_code}/`
+2. Copy all 13 JSON files from `src/locales/en/` and translate the values (keep keys in English)
+3. Add the language code to `LANGUAGE_NAMES` in `src/i18n/languageDetection.ts`
+4. Add the country-to-language mapping in `COUNTRY_TO_LANGUAGE` if applicable
+
+#### File Structure
+
+```
+src/locales/
+  en/            ← Source (English)
+    common.json  ← Nav, buttons, shared status labels
+    dashboard.json
+    profile.json
+    settings.json
+    jobs.json
+    apply.json
+    guide.json
+    memory.json
+    logs.json
+    qa.json
+    feedback.json
+    llm.json
+    wizard.json
+  hi/ de/ fr/ es/ ar/ nl/ ja/ ko/ pt/ ms/
+    (same 13 files, translated)
+```
+
+#### Supported Languages
+
+English, Hindi, German, French, Spanish, Arabic, Dutch, Japanese, Korean, Portuguese, Malay
+
+#### Tips
+
+- Keep translation keys flat and descriptive: `"cards.totalJobs"` not `"c.tj"`
+- Preserve `{{placeholder}}` tokens exactly — don't translate them
+- Keep technical terms (LLM, API, LinkedIn, Chromium) as-is in all languages
+- Test RTL layout if editing CSS — Arabic uses right-to-left
+
 ### Creating a Job Source Plugin
 
 LangHire uses a YAML-based plugin system for job sources. Each plugin tells the AI browser agent how to search for jobs and how to apply on a specific website. No code execution — plugins are pure data files, safe to share with anyone.
