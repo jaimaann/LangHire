@@ -121,6 +121,24 @@ export default function SettingsPage() {
         </div>
       )}
 
+      {/* Language */}
+      <Section title={t("language.title")}>
+        <div>
+          <label className="block text-sm font-semibold text-foreground mb-1.5">{t("language.label")}</label>
+          <select
+            value={currentLanguage}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white max-w-xs"
+          >
+            <option value="">{t("language.auto")}</option>
+            {Object.entries(LANGUAGE_NAMES).map(([code, name]) => (
+              <option key={code} value={code}>{name}</option>
+            ))}
+          </select>
+          <p className="text-[13px] text-muted-foreground mt-1.5">{t("language.description")}</p>
+        </div>
+      </Section>
+
       {/* Resume */}
       <Section title="Resume">
         <div className="flex gap-2">
@@ -195,24 +213,6 @@ export default function SettingsPage() {
             />
             <div className="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
           </label>
-        </div>
-      </Section>
-
-      {/* Language */}
-      <Section title={t("language.title")}>
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-1.5">{t("language.label")}</label>
-          <select
-            value={currentLanguage}
-            onChange={(e) => handleLanguageChange(e.target.value)}
-            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white max-w-xs"
-          >
-            <option value="">{t("language.auto")}</option>
-            {Object.entries(LANGUAGE_NAMES).map(([code, name]) => (
-              <option key={code} value={code}>{name}</option>
-            ))}
-          </select>
-          <p className="text-[13px] text-muted-foreground mt-1.5">{t("language.description")}</p>
         </div>
       </Section>
 
