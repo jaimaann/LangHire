@@ -6,6 +6,7 @@ import SetupWizard from "./components/SetupWizard";
 import { getSetupStatus, getSettings } from "./lib/api";
 import { initAnalytics, trackPageView } from "./lib/analytics";
 import { trackStartupComplete, markStart, measureAndTrack } from "./lib/perf";
+import { useDirection } from "./i18n/useDirection";
 import { Wand2, Loader2 } from "lucide-react";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -29,6 +30,7 @@ function PageLoader() {
 }
 
 export default function App() {
+  useDirection();
   const [showWizard, setShowWizard] = useState(false);
   const [wizardChecked, setWizardChecked] = useState(false);
   const [wizardPaused, setWizardPaused] = useState(false);

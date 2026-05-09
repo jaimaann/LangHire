@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard,
   User,
@@ -16,20 +17,21 @@ import {
 import { checkHealth } from "../../lib/api";
 
 const navItems = [
-  { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/guide", icon: BookOpen, label: "Guide" },
-  { to: "/profile", icon: User, label: "Profile" },
-  { to: "/llm", icon: Cpu, label: "LLM Settings" },
-  { to: "/jobs", icon: Briefcase, label: "Jobs" },
-  { to: "/apply", icon: Play, label: "Apply" },
-  { to: "/memory", icon: Brain, label: "Memory" },
-  { to: "/qa", icon: HelpCircle, label: "Q&A" },
-  { to: "/logs", icon: ScrollText, label: "Logs" },
-  { to: "/settings", icon: Settings, label: "Settings" },
-  { to: "/feedback", icon: MessageSquare, label: "Feedback" },
+  { to: "/", icon: LayoutDashboard, labelKey: "nav.dashboard" },
+  { to: "/guide", icon: BookOpen, labelKey: "nav.guide" },
+  { to: "/profile", icon: User, labelKey: "nav.profile" },
+  { to: "/llm", icon: Cpu, labelKey: "nav.llmSettings" },
+  { to: "/jobs", icon: Briefcase, labelKey: "nav.jobs" },
+  { to: "/apply", icon: Play, labelKey: "nav.apply" },
+  { to: "/memory", icon: Brain, labelKey: "nav.memory" },
+  { to: "/qa", icon: HelpCircle, labelKey: "nav.qa" },
+  { to: "/logs", icon: ScrollText, labelKey: "nav.logs" },
+  { to: "/settings", icon: Settings, labelKey: "nav.settings" },
+  { to: "/feedback", icon: MessageSquare, labelKey: "nav.feedback" },
 ];
 
 export default function Sidebar() {
+  const { t } = useTranslation("common");
   const [backendOk, setBackendOk] = useState<boolean | null>(null);
   const [buildId, setBuildId] = useState("");
 
@@ -66,15 +68,15 @@ export default function Sidebar() {
             <Briefcase className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-foreground tracking-tight">LangHire</h1>
-            <p className="text-[11px] text-muted-foreground leading-none">AI-Powered Applications</p>
+            <h1 className="text-base font-bold text-foreground tracking-tight">{t("app.title")}</h1>
+            <p className="text-[11px] text-muted-foreground leading-none">{t("app.tagline")}</p>
           </div>
         </div>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-3 space-y-0.5">
-        {navItems.map(({ to, icon: Icon, label }) => (
+        {navItems.map(({ to, icon: Icon, labelKey }) => (
           <NavLink
             key={to}
             to={to}
@@ -88,7 +90,7 @@ export default function Sidebar() {
             }
           >
             <Icon className="w-[18px] h-[18px]" />
-            {label}
+            {t(labelKey)}
           </NavLink>
         ))}
       </nav>
@@ -102,9 +104,9 @@ export default function Sidebar() {
             "bg-border"
           }`} />
           <span className="text-[11px] text-muted-foreground">
-            {backendOk === true ? `Connected${buildId ? ` · ${buildId}` : ""}` :
-             backendOk === false ? "Starting backend..." :
-             "Connecting..."}
+            {backendOk === true ? `${t("status.connected")}${buildId ? ` · ${buildId}` : ""}` :
+             backendOk === false ? t("status.startingBackend") :
+             t("status.connecting")}
           </span>
         </div>
       </div>

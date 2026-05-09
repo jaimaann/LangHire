@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "guide": "Guide",
+    "profile": "Profile",
+    "llmSettings": "LLM Settings",
+    "jobs": "Jobs",
+    "apply": "Apply",
+    "memory": "Memory",
+    "qa": "Q&A",
+    "logs": "Logs",
+    "settings": "Settings",
+    "feedback": "Feedback"
+  },
+  "app": {
+    "title": "LangHire",
+    "tagline": "AI-Powered Applications"
+  },
+  "status": {
+    "connected": "Connected",
+    "startingBackend": "Starting backend...",
+    "connecting": "Connecting..."
+  },
+  "btn": {
+    "save": "Save",
+    "saved": "Saved",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "search": "Search",
+    "export": "Export",
+    "start": "Start",
+    "stop": "Stop",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "browse": "Browse",
+    "import": "Import",
+    "copy": "Copy",
+    "retry": "Retry",
+    "close": "Close"
+  },
+  "jobStatus": {
+    "pending": "Pending",
+    "applied": "Applied",
+    "failed": "Failed",
+    "blocked": "Blocked",
+    "inProgress": "In Progress"
+  }
+}

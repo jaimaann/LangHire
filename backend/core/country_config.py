@@ -25,6 +25,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": False,
         "phone_prefix": "+1",
         "default_sources": ["linkedin", "indeed"],
+        "default_language": "en",
     },
     "GB": {
         "name": "United Kingdom",
@@ -49,6 +50,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": False,
         "phone_prefix": "+44",
         "default_sources": ["linkedin", "indeed", "reed"],
+        "default_language": "en",
     },
     "DE": {
         "name": "Germany",
@@ -72,6 +74,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": True,
         "phone_prefix": "+49",
         "default_sources": ["linkedin", "indeed", "stepstone"],
+        "default_language": "de",
     },
     "IN": {
         "name": "India",
@@ -92,6 +95,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": True,
         "phone_prefix": "+91",
         "default_sources": ["linkedin", "indeed", "naukri"],
+        "default_language": "hi",
     },
     "AU": {
         "name": "Australia",
@@ -115,6 +119,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": False,
         "phone_prefix": "+61",
         "default_sources": ["linkedin", "indeed", "seek"],
+        "default_language": "en",
     },
     "CA": {
         "name": "Canada",
@@ -138,6 +143,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": False,
         "phone_prefix": "+1",
         "default_sources": ["linkedin", "indeed"],
+        "default_language": "en",
     },
     "AE": {
         "name": "United Arab Emirates",
@@ -161,6 +167,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": True,
         "phone_prefix": "+971",
         "default_sources": ["linkedin", "indeed"],
+        "default_language": "ar",
     },
     "NZ": {
         "name": "New Zealand",
@@ -184,6 +191,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": False,
         "phone_prefix": "+64",
         "default_sources": ["linkedin", "indeed", "seek"],
+        "default_language": "en",
     },
     "SG": {
         "name": "Singapore",
@@ -207,6 +215,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": False,
         "phone_prefix": "+65",
         "default_sources": ["linkedin", "indeed"],
+        "default_language": "en",
     },
     "FR": {
         "name": "France",
@@ -230,6 +239,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": True,
         "phone_prefix": "+33",
         "default_sources": ["linkedin", "indeed"],
+        "default_language": "fr",
     },
     "NL": {
         "name": "Netherlands",
@@ -253,6 +263,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": False,
         "phone_prefix": "+31",
         "default_sources": ["linkedin", "indeed"],
+        "default_language": "nl",
     },
     "IE": {
         "name": "Ireland",
@@ -276,6 +287,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_date_of_birth": False,
         "phone_prefix": "+353",
         "default_sources": ["linkedin", "indeed"],
+        "default_language": "en",
     },
 }
 
