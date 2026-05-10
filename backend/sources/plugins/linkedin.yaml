@@ -12,7 +12,50 @@ auth_cookies:
   - name: li_at
     domain: .linkedin.com
 
-search_url: "https://www.linkedin.com/jobs/search/?keywords={title}&location={location}&f_TPR=r604800"
+search_url: "https://www.linkedin.com/jobs/search/?keywords={title}&location={location}"
+
+filters:
+  - key: date_posted
+    label: "Posted within"
+    type: select
+    options:
+      - { value: "r86400", label: "Past 24 hours" }
+      - { value: "r604800", label: "Past week" }
+      - { value: "r2592000", label: "Past month" }
+    url_param: "f_TPR"
+    default: "r604800"
+
+  - key: experience_level
+    label: "Experience level"
+    type: select
+    options:
+      - { value: "1", label: "Internship" }
+      - { value: "2", label: "Entry level" }
+      - { value: "3", label: "Associate" }
+      - { value: "4", label: "Mid-Senior level" }
+      - { value: "5", label: "Director" }
+      - { value: "6", label: "Executive" }
+    url_param: "f_E"
+
+  - key: work_type
+    label: "Work type"
+    type: select
+    options:
+      - { value: "1", label: "On-site" }
+      - { value: "2", label: "Remote" }
+      - { value: "3", label: "Hybrid" }
+    url_param: "f_WT"
+
+  - key: job_type
+    label: "Job type"
+    type: select
+    options:
+      - { value: "F", label: "Full-time" }
+      - { value: "P", label: "Part-time" }
+      - { value: "C", label: "Contract" }
+      - { value: "T", label: "Temporary" }
+      - { value: "I", label: "Internship" }
+    url_param: "f_JT"
 
 collection_prompt: |
   FIRST — LOGIN CHECK:

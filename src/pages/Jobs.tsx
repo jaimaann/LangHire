@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Briefcase, Search, ExternalLink, Loader2, CheckCircle, XCircle, Clock, Ban, Play, Square, Terminal, FileText, X, Copy, Save } from "lucide-react";
-import { getJobs, getJobStats, startJobCollection, stopJobCollection, getCollectionStatus, startApplying, getApplyStatus, getPlugins, getProfile, generateCoverLetter, saveProfile } from "../lib/api";
+import { Briefcase, Search, ExternalLink, Loader2, CheckCircle, XCircle, Clock, Ban, Play, Square, Terminal, FileText, X, Copy, Save, MoreVertical, Plus, Trash2, CheckSquare } from "lucide-react";
+import { getJobs, getJobStats, startJobCollection, stopJobCollection, getCollectionStatus, startApplying, getApplyStatus, getPlugins, getProfile, generateCoverLetter, saveProfile, updateJobStatus, addJob, deleteJobs } from "../lib/api";
 import { trackEvent } from "../lib/analytics";
 import { markStart, measureAndTrack } from "../lib/perf";
 import type { Job, JobStatus, JobStats, PluginConfig } from "../lib/types";
@@ -50,6 +50,18 @@ export default function Jobs() {
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [manualDescription, setManualDescription] = useState("");
   const [letterSaved, setLetterSaved] = useState(false);
+  // Multi-select state
+  const [selectedJobs, setSelectedJobs] = useState<Set<string>>(new Set());
+  // Status dropdown state
+  const [statusMenuJob, setStatusMenuJob] = useState<string | null>(null);
+  // Add job form state
+  const [showAddJobForm, setShowAddJobForm] = useState(false);
+  const [addJobUrl, setAddJobUrl] = useState("");
+  const [addJobTitle, setAddJobTitle] = useState("");
+  const [addJobCompany, setAddJobCompany] = useState("");
+  const [addingJob, setAddingJob] = useState(false);
+  // Batch apply state
+  const [batchApplying, setBatchApplying] = useState(false);
   const logRef = useRef<HTMLDivElement>(null);
 
   const STATUS_LABELS: Record<JobStatus, string> = {
@@ -254,7 +266,99 @@ export default function Jobs() {
     }
   };
 
+  // Close status menu on outside click
+  useEffect(() => {
+    if (!statusMenuJob) return;
+    const handleClick = () => setStatusMenuJob(null);
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, [statusMenuJob]);
+
   const handleSearch = (e: React.FormEvent) => { e.preventDefault(); fetchJobs(); };
+
+  // Multi-select helpers
+  const selectableJobs = jobs.filter((j) => j.status === "pending" || j.status === "failed");
+  const allSelectableSelected = selectableJobs.length > 0 && selectableJobs.every((j) => selectedJobs.has(j.url));
+
+  const toggleSelectJob = (url: string) => {
+    setSelectedJobs((prev) => {
+      const next = new Set(prev);
+      if (next.has(url)) next.delete(url);
+      else next.add(url);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (allSelectableSelected) {
+      setSelectedJobs(new Set());
+    } else {
+      setSelectedJobs(new Set(selectableJobs.map((j) => j.url)));
+    }
+  };
+
+  // Batch apply selected jobs
+  const handleBatchApply = async () => {
+    if (selectedJobs.size === 0) return;
+    setBatchApplying(true);
+    try {
+      const res = await startApplying({ job_urls: [...selectedJobs], workers: 1, mode: "all" });
+      if (!res.success) {
+        alert(res.message);
+      } else {
+        setSelectedJobs(new Set());
+      }
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Failed to start batch apply");
+    } finally {
+      setBatchApplying(false);
+    }
+  };
+
+  // Batch delete selected jobs
+  const handleBatchDelete = async () => {
+    if (selectedJobs.size === 0) return;
+    if (!confirm(`Delete ${selectedJobs.size} selected job(s)? This cannot be undone.`)) return;
+    try {
+      await deleteJobs([...selectedJobs]);
+      setSelectedJobs(new Set());
+      fetchJobs();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Failed to delete jobs");
+    }
+  };
+
+  // Status change handler
+  const handleStatusChange = async (jobUrl: string, newStatus: string) => {
+    setStatusMenuJob(null);
+    try {
+      await updateJobStatus(jobUrl, newStatus);
+      fetchJobs(true);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Failed to update status");
+    }
+  };
+
+  // Add job manually
+  const handleAddJob = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addJobUrl.trim()) return;
+    setAddingJob(true);
+    try {
+      const res = await addJob(addJobUrl.trim(), addJobTitle.trim() || undefined, addJobCompany.trim() || undefined);
+      if (res.success) {
+        setAddJobUrl("");
+        setAddJobTitle("");
+        setAddJobCompany("");
+        setShowAddJobForm(false);
+        fetchJobs();
+      }
+    } catch (e2) {
+      alert(e2 instanceof Error ? e2.message : "Failed to add job");
+    } finally {
+      setAddingJob(false);
+    }
+  };
 
   return (
     <div className="max-w-5xl">
@@ -262,11 +366,55 @@ export default function Jobs() {
         title={t("title")}
         subtitle={t("subtitle", { total: stats.total || 0, applied: stats.applied || 0, pending: stats.pending || 0 })}
         actions={
-          <button onClick={() => setShowCollector(!showCollector)} className="btn-primary">
-            <Search className="w-4 h-4" /> {showCollector ? t("hideCollector") : t("collectJobs")}
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowAddJobForm(!showAddJobForm)} className="btn-secondary">
+              <Plus className="w-4 h-4" /> Add Job
+            </button>
+            <button onClick={() => setShowCollector(!showCollector)} className="btn-primary">
+              <Search className="w-4 h-4" /> {showCollector ? t("hideCollector") : t("collectJobs")}
+            </button>
+          </div>
         }
       />
+
+      {/* Add Job Form */}
+      {showAddJobForm && (
+        <div className="card mb-5">
+          <h3 className="section-title mb-3">Add Job Manually</h3>
+          <form onSubmit={handleAddJob} className="flex flex-col gap-3">
+            <input
+              value={addJobUrl}
+              onChange={(e) => setAddJobUrl(e.target.value)}
+              placeholder="Job URL (required)"
+              className="input-base"
+              required
+            />
+            <div className="flex gap-3">
+              <input
+                value={addJobTitle}
+                onChange={(e) => setAddJobTitle(e.target.value)}
+                placeholder="Job title (optional)"
+                className="input-base flex-1"
+              />
+              <input
+                value={addJobCompany}
+                onChange={(e) => setAddJobCompany(e.target.value)}
+                placeholder="Company (optional)"
+                className="input-base flex-1"
+              />
+            </div>
+            <div className="flex gap-2">
+              <button type="submit" disabled={addingJob || !addJobUrl.trim()} className="btn-primary">
+                {addingJob ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                Add Job
+              </button>
+              <button type="button" onClick={() => setShowAddJobForm(false)} className="btn-secondary">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* Job Collector Panel */}
       {showCollector && (
@@ -374,6 +522,16 @@ export default function Jobs() {
         </div>
       </form>
 
+      {/* Select All Toggle */}
+      {!loading && jobs.length > 0 && selectableJobs.length > 0 && (
+        <div className="flex items-center gap-2 mb-3">
+          <button onClick={toggleSelectAll} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <CheckSquare className="w-4 h-4" />
+            {allSelectableSelected ? "Deselect All" : "Select All"} ({selectableJobs.length})
+          </button>
+        </div>
+      )}
+
       {/* Jobs List */}
       {loading ? (
         <div className="flex items-center justify-center h-48">
@@ -403,24 +561,36 @@ export default function Jobs() {
             const icon = STATUS_ICONS[job.status] || STATUS_ICONS.pending;
             const styles = STATUS_STYLES[job.status] || STATUS_STYLES.pending;
             const StatusIcon = icon;
+            const isSelectable = job.status === "pending" || job.status === "failed";
             return (
               <div key={job.url} className="p-5 hover:bg-secondary/50 transition-colors">
                 <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h4 className="text-sm font-semibold text-foreground truncate">{job.title || t("jobItem.untitled")}</h4>
-                      {job.easy_apply && (
-                        <span className="px-2 py-0.5 bg-[#FFF0F3] text-primary rounded-full text-[10px] font-semibold flex-shrink-0">{t("jobItem.easyApply")}</span>
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    {/* Checkbox for selectable jobs */}
+                    {isSelectable && (
+                      <input
+                        type="checkbox"
+                        checked={selectedJobs.has(job.url)}
+                        onChange={() => toggleSelectJob(job.url)}
+                        className="mt-1 w-4 h-4 rounded border-border text-primary focus:ring-primary cursor-pointer flex-shrink-0"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="text-sm font-semibold text-foreground truncate">{job.title || t("jobItem.untitled")}</h4>
+                        {job.easy_apply && (
+                          <span className="px-2 py-0.5 bg-[#FFF0F3] text-primary rounded-full text-[10px] font-semibold flex-shrink-0">{t("jobItem.easyApply")}</span>
+                        )}
+                      </div>
+                      <p className="text-[13px] text-muted-foreground">{job.company || t("jobItem.unknown")} · {job.location || "—"}</p>
+                      {job.error && <p className="text-[13px] text-destructive mt-1 truncate" title={job.error}>{t("jobItem.error", { error: job.error })}</p>}
+                      {job.collected_at && (
+                        <p className="text-[11px] text-muted-foreground mt-1">
+                          {t("jobItem.collected", { date: new Date(job.collected_at).toLocaleDateString() })}
+                          {job.applied_at && t("jobItem.applied", { date: new Date(job.applied_at).toLocaleDateString() })}
+                        </p>
                       )}
                     </div>
-                    <p className="text-[13px] text-muted-foreground">{job.company || t("jobItem.unknown")} · {job.location || "—"}</p>
-                    {job.error && <p className="text-[13px] text-destructive mt-1 truncate" title={job.error}>{t("jobItem.error", { error: job.error })}</p>}
-                    {job.collected_at && (
-                      <p className="text-[11px] text-muted-foreground mt-1">
-                        {t("jobItem.collected", { date: new Date(job.collected_at).toLocaleDateString() })}
-                        {job.applied_at && t("jobItem.applied", { date: new Date(job.applied_at).toLocaleDateString() })}
-                      </p>
-                    )}
                   </div>
                   <div className="flex items-center gap-2 ml-4 flex-shrink-0">
                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold ${styles.bg} ${styles.color}`}>
@@ -450,6 +620,30 @@ export default function Jobs() {
                         </button>
                       </>
                     )}
+                    {/* Three-dot status menu */}
+                    <div className="relative">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setStatusMenuJob(statusMenuJob === job.url ? null : job.url); }}
+                        className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+                        title="Change status"
+                      >
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+                      {statusMenuJob === job.url && (
+                        <div className="absolute right-0 top-8 z-50 bg-white border border-border rounded-lg shadow-lg py-1 min-w-[160px]" onClick={(e) => e.stopPropagation()}>
+                          {(["pending", "applied", "failed", "blocked"] as const).map((s) => (
+                            <button
+                              key={s}
+                              onClick={() => handleStatusChange(job.url, s)}
+                              disabled={job.status === s}
+                              className="w-full text-left px-3 py-1.5 text-sm hover:bg-secondary disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                            >
+                              Mark as {s.charAt(0).toUpperCase() + s.slice(1)}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                     <a href={job.url} target="_blank" rel="noopener noreferrer"
                       className="p-1.5 text-muted-foreground hover:text-primary transition-colors" title={t("jobItem.openOnLinkedIn")}>
                       <ExternalLink className="w-4 h-4" />
@@ -474,6 +668,34 @@ export default function Jobs() {
         onConfirm={pendingApplyUrl ? confirmApplySingle : confirmStartCollect}
         onCancel={() => { setShowConfirmDialog(false); setPendingApplyUrl(null); }}
       />
+
+      {/* Floating Action Bar for Multi-Select */}
+      {selectedJobs.size > 0 && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 bg-white/90 backdrop-blur border border-border rounded-xl shadow-lg px-5 py-3 flex items-center gap-4">
+          <span className="text-sm font-medium text-foreground">{selectedJobs.size} selected</span>
+          <button
+            onClick={handleBatchApply}
+            disabled={batchApplying}
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-foreground text-white hover:bg-foreground/90 disabled:opacity-40 transition-all"
+          >
+            {batchApplying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
+            Apply to {selectedJobs.size} job{selectedJobs.size > 1 ? "s" : ""}
+          </button>
+          <button
+            onClick={handleBatchDelete}
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-destructive text-white hover:bg-destructive/90 transition-all"
+          >
+            <Trash2 className="w-4 h-4" />
+            Delete {selectedJobs.size} job{selectedJobs.size > 1 ? "s" : ""}
+          </button>
+          <button
+            onClick={() => setSelectedJobs(new Set())}
+            className="text-sm text-muted-foreground hover:text-foreground underline transition-colors"
+          >
+            Deselect All
+          </button>
+        </div>
+      )}
 
       {/* Cover Letter Modal */}
       {coverLetterJob && (

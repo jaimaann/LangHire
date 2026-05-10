@@ -156,14 +156,36 @@ export async function getJobStats() {
   return request<JobStats>("/jobs/stats");
 }
 
-export async function startJobCollection(title?: string, maxJobs?: number, source?: string) {
+export async function startJobCollection(title?: string, maxJobs?: number, source?: string, filters?: Record<string, string>) {
   const body: Record<string, unknown> = {};
   if (title) body.title = title;
   if (maxJobs) body.max_jobs = maxJobs;
   if (source) body.source = source;
+  if (filters && Object.keys(filters).length > 0) body.filters = filters;
   return request<{ success: boolean; message: string }>("/jobs/collect", {
     method: "POST",
     body: JSON.stringify(body),
+  });
+}
+
+export async function updateJobStatus(url: string, status: string) {
+  return request<{ success: boolean }>("/jobs/status", {
+    method: "PUT",
+    body: JSON.stringify({ url, status }),
+  });
+}
+
+export async function addJob(url: string, title?: string, company?: string, source?: string) {
+  return request<{ success: boolean }>("/jobs/add", {
+    method: "POST",
+    body: JSON.stringify({ url, title, company, source }),
+  });
+}
+
+export async function deleteJobs(urls: string[]) {
+  return request<{ success: boolean; deleted: number }>("/jobs", {
+    method: "DELETE",
+    body: JSON.stringify({ urls }),
   });
 }
 
@@ -212,7 +234,7 @@ export async function exportMemories() {
 }
 
 // ── Apply ─────────────────────────────────────────────────────────────────
-export async function startApplying(params: { workers?: number; mode?: string; limit?: number; job_url?: string }) {
+export async function startApplying(params: { workers?: number; mode?: string; limit?: number; job_url?: string; job_urls?: string[] }) {
   return request<{ success: boolean; message: string }>("/apply/start", {
     method: "POST",
     body: JSON.stringify(params),

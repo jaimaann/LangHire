@@ -33,6 +33,16 @@ class DomainPattern:
 
 
 @dataclass
+class PluginFilter:
+    key: str
+    label: str
+    type: str
+    options: list[dict] = field(default_factory=list)
+    url_param: str = ""
+    default: str = ""
+
+
+@dataclass
 class PluginConfig:
     name: str
     display_name: str
@@ -48,11 +58,12 @@ class PluginConfig:
     apply_prompt: str
     auth_cookies: list[AuthCookie] = field(default_factory=list)
     domain_patterns: list[DomainPattern] = field(default_factory=list)
+    filters: list[PluginFilter] = field(default_factory=list)
     is_builtin: bool = False
     enabled: bool = True
     file_path: str = ""
 
-    def render_collection_prompt(self, titles: list[str], locations: list[str], max_jobs: int) -> str:
+    def render_collection_prompt(self, titles: list[str], locations: list[str], max_jobs: int, filters: dict | None = None) -> str:
         title = titles[0] if titles else ""
         location = locations[0] if locations else ""
         search_url = self.search_url.format(
@@ -60,6 +71,21 @@ class PluginConfig:
             location=location, locations=", ".join(locations),
             max_jobs=max_jobs,
         )
+        # Append filter URL params
+        filter_params = []
+        if filters:
+            for f in self.filters:
+                value = filters.get(f.key, "")
+                if value and f.url_param:
+                    filter_params.append(f"{f.url_param}={value}")
+        else:
+            for f in self.filters:
+                if f.default and f.url_param:
+                    filter_params.append(f"{f.url_param}={f.default}")
+        if filter_params:
+            sep = "&" if "?" in search_url else "?"
+            search_url += sep + "&".join(filter_params)
+
         return self.collection_prompt.format(
             search_url=search_url,
             title=title, titles=", ".join(titles),
@@ -136,6 +162,18 @@ def _parse_plugin_yaml(data: dict, file_path: str, is_builtin: bool) -> Optional
         if isinstance(p, dict) and "pattern" in p and "normalize_to" in p:
             domain_patterns.append(DomainPattern(pattern=p["pattern"], normalize_to=p["normalize_to"]))
 
+    filters = []
+    for f in data.get("filters", []):
+        if isinstance(f, dict) and "key" in f and "label" in f:
+            filters.append(PluginFilter(
+                key=f["key"],
+                label=f["label"],
+                type=f.get("type", "select"),
+                options=f.get("options", []),
+                url_param=f.get("url_param", ""),
+                default=f.get("default", ""),
+            ))
+
     return PluginConfig(
         name=data["name"],
         display_name=data["display_name"],
@@ -151,6 +189,7 @@ def _parse_plugin_yaml(data: dict, file_path: str, is_builtin: bool) -> Optional
         apply_prompt=data["apply_prompt"],
         auth_cookies=auth_cookies,
         domain_patterns=domain_patterns,
+        filters=filters,
         is_builtin=is_builtin,
         enabled=True,
         file_path=file_path,

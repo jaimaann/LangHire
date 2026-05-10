@@ -1018,6 +1018,79 @@ async def get_job_stats():
     return stats
 
 
+# ── Job Management ────────────────────────────────────────────────────────
+
+@app.put("/jobs/status")
+async def update_job_status(body: dict):
+    """Manually change a job's status."""
+    url = body.get("url", "").strip()
+    new_status = body.get("status", "").strip()
+    if not url:
+        return _api_error("missing_field", "Job URL is required", 400)
+    valid_statuses = ("pending", "applied", "failed", "blocked")
+    if new_status not in valid_statuses:
+        return _api_error("invalid_status", f"Status must be one of: {', '.join(valid_statuses)}", 400)
+
+    jobs = _load_jobs()
+    if url not in jobs:
+        return _api_error("not_found", "Job not found", 404)
+
+    from core.shared_config import update_job
+    update_job(url, status=new_status, error=None)
+    return {"success": True, "url": url, "status": new_status}
+
+
+@app.post("/jobs/add")
+async def add_job_manually(body: dict):
+    """Manually add a job URL to the collection queue."""
+    from datetime import datetime, timezone
+    from core.shared_config import read_jobs, write_jobs, validate_job_url
+
+    url = body.get("url", "").strip()
+    if not url:
+        return _api_error("missing_field", "Job URL is required", 400)
+    if not validate_job_url(url):
+        return _api_error("invalid_url", "Invalid or internal URL", 400)
+
+    jobs = read_jobs()
+    if url in jobs:
+        return _api_error("duplicate", "Job already exists in the queue", 409)
+
+    jobs[url] = {
+        "url": url,
+        "title": body.get("title", "").strip() or "Manually Added",
+        "company": body.get("company", "").strip() or "",
+        "location": body.get("location", "").strip() or "",
+        "easy_apply": None,
+        "status": "pending",
+        "source": body.get("source", "manual"),
+        "collected_at": datetime.now(timezone.utc).isoformat(),
+        "applied_at": None,
+        "error": None,
+    }
+    write_jobs(jobs)
+    return {"success": True, "url": url}
+
+
+@app.delete("/jobs")
+async def delete_jobs(body: dict):
+    """Delete one or more jobs by URL."""
+    from core.shared_config import read_jobs, write_jobs
+
+    urls = body.get("urls", [])
+    if not urls or not isinstance(urls, list):
+        return _api_error("missing_field", "urls array is required", 400)
+
+    jobs = read_jobs()
+    deleted = 0
+    for url in urls:
+        if url in jobs:
+            del jobs[url]
+            deleted += 1
+    write_jobs(jobs)
+    return {"success": True, "deleted": deleted}
+
+
 # ── Auth / Login Sessions ─────────────────────────────────────────────────
 _login_browser_process = None  # track the login browser subprocess
 
@@ -1707,6 +1780,17 @@ async def get_plugins(country: Optional[str] = Query(None)):
                 "login_url": p.login_url,
                 "is_builtin": p.is_builtin,
                 "enabled": p.enabled,
+                "filters": [
+                    {
+                        "key": f.key,
+                        "label": f.label,
+                        "type": f.type,
+                        "options": f.options,
+                        "url_param": f.url_param,
+                        "default": f.default,
+                    }
+                    for f in p.filters
+                ],
             }
             for p in plugins
         ],

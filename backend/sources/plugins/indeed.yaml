@@ -14,7 +14,46 @@ auth_cookies:
   - name: indeed_rcc
     domain: .indeed.com
 
-search_url: "https://www.indeed.com/jobs?q={title}&l={location}&fromage=7"
+search_url: "https://www.indeed.com/jobs?q={title}&l={location}"
+
+filters:
+  - key: date_posted
+    label: "Posted within"
+    type: select
+    options:
+      - { value: "1", label: "Last 24 hours" }
+      - { value: "3", label: "Last 3 days" }
+      - { value: "7", label: "Last 7 days" }
+      - { value: "14", label: "Last 14 days" }
+    url_param: "fromage"
+    default: "7"
+
+  - key: job_type
+    label: "Job type"
+    type: select
+    options:
+      - { value: "fulltime", label: "Full-time" }
+      - { value: "parttime", label: "Part-time" }
+      - { value: "contract", label: "Contract" }
+      - { value: "temporary", label: "Temporary" }
+      - { value: "internship", label: "Internship" }
+    url_param: "jt"
+
+  - key: work_type
+    label: "Work type"
+    type: select
+    options:
+      - { value: "remote", label: "Remote" }
+    url_param: "remotejob"
+
+  - key: experience_level
+    label: "Experience level"
+    type: select
+    options:
+      - { value: "entry_level", label: "Entry level" }
+      - { value: "mid_level", label: "Mid level" }
+      - { value: "senior_level", label: "Senior level" }
+    url_param: "explvl"
 
 collection_prompt: |
   FIRST — LOGIN CHECK:

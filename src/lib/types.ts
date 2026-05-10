@@ -109,6 +109,15 @@ export interface Job {
 }
 
 // ── Plugins ──────────────────────────────────────────────────────────────
+export interface PluginFilter {
+  key: string;
+  label: string;
+  type: "select" | "text";
+  options: { value: string; label: string }[];
+  url_param: string;
+  default: string;
+}
+
 export interface PluginConfig {
   name: string;
   display_name: string;
@@ -121,6 +130,7 @@ export interface PluginConfig {
   login_url: string;
   is_builtin: boolean;
   enabled: boolean;
+  filters: PluginFilter[];
 }
 
 // ── Country Config ───────────────────────────────────────────────────────

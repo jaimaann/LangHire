@@ -7,6 +7,7 @@ class CollectRequest(BaseModel):
     title: Optional[str] = None
     max_jobs: int = Field(default=0, ge=0, le=500)
     source: str = Field(default="linkedin", description="Plugin name to collect from")
+    filters: dict = Field(default_factory=dict, description="Plugin-specific filter key-value pairs")
 
 
 class ApplyRequest(BaseModel):
@@ -14,6 +15,11 @@ class ApplyRequest(BaseModel):
     limit: Optional[int] = Field(default=None, ge=1, le=500)
     workers: int = Field(default=1, ge=1, le=4)
     job_url: Optional[str] = None
+    job_urls: Optional[list[str]] = Field(default=None, description="Specific job URLs to apply to (batch apply)")
+
+
+class CollectFilters(BaseModel):
+    filters: dict = Field(default_factory=dict, description="Plugin-specific filter key-value pairs")
 
 
 class DecayRequest(BaseModel):
