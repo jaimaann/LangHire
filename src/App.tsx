@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Sidebar from "./components/layout/Sidebar";
 import ErrorBoundary from "./components/ErrorBoundary";
 import SetupWizard from "./components/SetupWizard";
@@ -13,7 +13,6 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Profile = lazy(() => import("./pages/Profile"));
 const LLMSettings = lazy(() => import("./pages/LLMSettings"));
 const Jobs = lazy(() => import("./pages/Jobs"));
-const Apply = lazy(() => import("./pages/Apply"));
 const Memory = lazy(() => import("./pages/Memory"));
 const SettingsPage = lazy(() => import("./pages/Settings"));
 const Logs = lazy(() => import("./pages/Logs"));
@@ -115,7 +114,7 @@ export default function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/llm" element={<LLMSettings />} />
               <Route path="/jobs" element={<Jobs />} />
-              <Route path="/apply" element={<Apply />} />
+              <Route path="/apply" element={<Navigate to="/jobs" replace />} />
               <Route path="/memory" element={<Memory />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/logs" element={<Logs />} />

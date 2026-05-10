@@ -23,22 +23,25 @@ import {
   getJobs,
   getMetricRuns,
   getSettings,
-} from "../lib/api";
-import { trackEvent } from "../lib/analytics";
-import { useNavigate } from "react-router-dom";
-import LogLine from "../components/LogLine";
-import AutomationDialog from "../components/AutomationDialog";
-import { PageHeader, LoadingSpinner, EmptyState } from "../components/ui";
+} from "../../lib/api";
+import { trackEvent } from "../../lib/analytics";
+import LogLine from "../../components/LogLine";
+import AutomationDialog from "../../components/AutomationDialog";
 import { useTranslation } from "react-i18next";
-import type { Job, RunMetric, AppSettings } from "../lib/types";
+import type { Job, RunMetric, AppSettings } from "../../lib/types";
 
 interface AppliedJobRow {
   job: Job;
   metric?: RunMetric;
 }
 
-export default function Apply() {
+interface HistoryTabProps {
+  onJobsChanged: () => void;
+}
+
+export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
   const { t } = useTranslation("apply");
+
   const [limit, setLimit] = useState<number | "">("");
   const [running, setRunning] = useState(false);
   const [log, setLog] = useState<string[]>([]);
@@ -46,7 +49,6 @@ export default function Apply() {
   const [loading, setLoading] = useState(true);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const logRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
 
   // Applied jobs state
   const [appliedJobs, setAppliedJobs] = useState<AppliedJobRow[]>([]);
@@ -81,7 +83,10 @@ export default function Apply() {
       for (const m of metrics) {
         // Keep the most recent metric per job_url
         const existing = metricsByUrl.get(m.job_url);
-        if (!existing || new Date(m.started_at) > new Date(existing.started_at)) {
+        if (
+          !existing ||
+          new Date(m.started_at) > new Date(existing.started_at)
+        ) {
           metricsByUrl.set(m.job_url, m);
         }
       }
@@ -100,7 +105,7 @@ export default function Apply() {
 
       setAppliedJobs(rows);
     } catch {
-      // Silently fail — page still shows controls
+      // Silently fail
     }
   }
 
@@ -113,8 +118,8 @@ export default function Apply() {
           if (active) {
             if (!s.running) {
               trackEvent("apply_completed", { error: s.error || null });
-              // Refresh applied jobs after run completes
               loadAppliedJobs();
+              onJobsChanged();
             }
             setRunning(s.running);
             setLog(s.log || []);
@@ -126,7 +131,7 @@ export default function Apply() {
       active = false;
       clearInterval(poll);
     };
-  }, [running]);
+  }, [running, onJobsChanged]);
 
   useEffect(() => {
     const el = logRef.current;
@@ -192,92 +197,72 @@ export default function Apply() {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="flex items-center justify-center h-48">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-5xl">
-      <PageHeader
-        title={t("title")}
-        subtitle={t("subtitle", { count: pendingCount })}
-      />
+    <div>
+      {/* Controls — Start/Stop automation */}
+      <div className="card mb-5">
+        <h3 className="section-title mb-5">{t("controls.title")}</h3>
 
-      {/* No pending jobs — prompt to collect */}
-      {pendingCount === 0 && !running && log.length === 0 && appliedJobs.length === 0 && (
-        <EmptyState
-          icon={Briefcase}
-          title={t("emptyState.title")}
-          description={t("emptyState.description")}
-          action={
-            <button
-              onClick={() => navigate("/jobs")}
-              className="btn-primary"
-            >
-              {t("emptyState.action")}
-            </button>
-          }
+        <div
+          className="info-box mb-5"
+          dangerouslySetInnerHTML={{ __html: t("controls.loginInfo") }}
         />
-      )}
 
-      {/* Controls */}
-      {(pendingCount > 0 || running || log.length > 0 || appliedJobs.length > 0) && (
-        <div className="card mb-5">
-          <h3 className="section-title mb-5">{t("controls.title")}</h3>
-
-          <div
-            className="info-box mb-5"
-            dangerouslySetInnerHTML={{ __html: t("controls.loginInfo") }}
-          />
-
-          <div className="flex items-end gap-5 mb-5">
-            <div className="flex-1 max-w-xs">
-              <label className="block text-sm font-semibold text-foreground mb-1.5">
-                {t("controls.limitLabel")}
-              </label>
-              <input
-                type="number"
-                value={limit}
-                onChange={(e) =>
-                  setLimit(e.target.value ? Number(e.target.value) : "")
-                }
-                disabled={running}
-                placeholder={t("controls.limitPlaceholder")}
-                min={1}
-                className="input-base"
-              />
-              <p className="text-[13px] text-muted-foreground mt-1.5">
-                {t("controls.limitHelp", { count: pendingCount })}
-              </p>
-            </div>
-            <div>
-              {running ? (
-                <button onClick={handleStop} className="btn-destructive">
-                  <Square className="w-4 h-4" /> {t("controls.stop")}
-                </button>
-              ) : (
-                <button onClick={handleStart} className="btn-dark">
-                  <Play className="w-4 h-4" /> {t("controls.startApplying")}
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Tailored Resumes — Coming Soon */}
-          <div className="border border-dashed border-border rounded-2xl p-4 bg-[#F7F7F7]">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 bg-amber-100 text-amber-700 rounded-full text-[10px] font-bold uppercase">
-                {t("comingSoon.badge")}
-              </span>
-              <span className="text-sm font-semibold text-foreground">
-                {t("comingSoon.title")}
-              </span>
-            </div>
-            <p className="text-[13px] text-muted-foreground mt-1">
-              {t("comingSoon.description")}
+        <div className="flex items-end gap-5 mb-5">
+          <div className="flex-1 max-w-xs">
+            <label className="block text-sm font-semibold text-foreground mb-1.5">
+              {t("controls.limitLabel")}
+            </label>
+            <input
+              type="number"
+              value={limit}
+              onChange={(e) =>
+                setLimit(e.target.value ? Number(e.target.value) : "")
+              }
+              disabled={running}
+              placeholder={t("controls.limitPlaceholder")}
+              min={1}
+              className="input-base"
+            />
+            <p className="text-[13px] text-muted-foreground mt-1.5">
+              {t("controls.limitHelp", { count: pendingCount })}
             </p>
           </div>
+          <div>
+            {running ? (
+              <button onClick={handleStop} className="btn-destructive">
+                <Square className="w-4 h-4" /> {t("controls.stop")}
+              </button>
+            ) : (
+              <button onClick={handleStart} className="btn-dark">
+                <Play className="w-4 h-4" /> {t("controls.startApplying")}
+              </button>
+            )}
+          </div>
         </div>
-      )}
+
+        {/* Tailored Resumes — Coming Soon */}
+        <div className="border border-dashed border-border rounded-2xl p-4 bg-[#F7F7F7]">
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 bg-amber-100 text-amber-700 rounded-full text-[10px] font-bold uppercase">
+              {t("comingSoon.badge")}
+            </span>
+            <span className="text-sm font-semibold text-foreground">
+              {t("comingSoon.title")}
+            </span>
+          </div>
+          <p className="text-[13px] text-muted-foreground mt-1">
+            {t("comingSoon.description")}
+          </p>
+        </div>
+      </div>
 
       {/* Live Log */}
       {(log.length > 0 || running) && (
@@ -406,7 +391,8 @@ export default function Apply() {
                               <p className="text-sm text-foreground">
                                 {isSuccess ? "Successfully applied" : "Failed"}
                               </p>
-                              {(row.job.error || row.metric?.error_message) && (
+                              {(row.job.error ||
+                                row.metric?.error_message) && (
                                 <p className="text-xs text-red-600 mt-0.5">
                                   {row.job.error || row.metric?.error_message}
                                 </p>
@@ -427,7 +413,11 @@ export default function Apply() {
                                 )}
                                 {row.metric && (
                                   <span className="text-muted-foreground ml-2">
-                                    ({formatDuration(row.metric.duration_seconds)})
+                                    (
+                                    {formatDuration(
+                                      row.metric.duration_seconds
+                                    )}
+                                    )
                                   </span>
                                 )}
                               </p>
@@ -489,19 +479,20 @@ export default function Apply() {
                               </div>
                             </div>
 
-                            {row.metric.cost_usd != null && row.metric.cost_usd > 0 && (
-                              <div className="flex items-start gap-2">
-                                <Zap className="w-3.5 h-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
-                                <div>
-                                  <p className="text-[11px] text-muted-foreground uppercase font-medium">
-                                    Cost
-                                  </p>
-                                  <p className="text-sm text-foreground">
-                                    ${row.metric.cost_usd.toFixed(4)}
-                                  </p>
+                            {row.metric.cost_usd != null &&
+                              row.metric.cost_usd > 0 && (
+                                <div className="flex items-start gap-2">
+                                  <Zap className="w-3.5 h-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                                  <div>
+                                    <p className="text-[11px] text-muted-foreground uppercase font-medium">
+                                      Cost
+                                    </p>
+                                    <p className="text-sm text-foreground">
+                                      ${row.metric.cost_usd.toFixed(4)}
+                                    </p>
+                                  </div>
                                 </div>
-                              </div>
-                            )}
+                              )}
                           </div>
                         )}
 
@@ -521,19 +512,18 @@ export default function Apply() {
         </div>
       )}
 
-      {/* Empty state for applied jobs — only show when controls are visible but no jobs */}
-      {appliedJobs.length === 0 &&
-        (pendingCount > 0 || running || log.length > 0) && (
-          <div className="card">
-            <h3 className="section-title mb-4">Applied Jobs</h3>
-            <div className="py-8 text-center">
-              <Briefcase className="w-10 h-10 text-muted-foreground mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">
-                No applications yet. Start applying to see results here.
-              </p>
-            </div>
+      {/* Empty state for applied jobs */}
+      {appliedJobs.length === 0 && (
+        <div className="card">
+          <h3 className="section-title mb-4">Applied Jobs</h3>
+          <div className="py-8 text-center">
+            <Briefcase className="w-10 h-10 text-muted-foreground mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground">
+              No applications yet. Start applying to see results here.
+            </p>
           </div>
-        )}
+        </div>
+      )}
 
       <AutomationDialog
         open={showConfirmDialog}
