@@ -868,9 +868,12 @@ async def start_applying(body: ApplyRequest):
     mode = body.mode
     limit = body.limit
     target_job_url = body.job_url
+    target_job_urls = body.job_urls
 
     if target_job_url:
         _apply_status = {"running": True, "mode": mode, "workers": 1, "log": [f"Applying to single job..."]}
+    elif target_job_urls:
+        _apply_status = {"running": True, "mode": mode, "workers": workers, "log": [f"Applying to {len(target_job_urls)} selected jobs..."]}
     else:
         _apply_status = {"running": True, "mode": mode, "workers": workers, "log": [f"Starting {mode} apply with {workers} worker(s)..."]}
 
@@ -908,6 +911,16 @@ async def start_applying(body: ApplyRequest):
             _update_job(target_job_url, status="pending", error=None)
             target["status"] = "pending"
             pending = [target]
+        elif target_job_urls:
+            # Batch apply: only apply to the specific selected jobs
+            from core.shared_config import update_job as _update_job
+            pending = []
+            for url in target_job_urls:
+                j = jobs.get(url)
+                if j and j.get("status") in ("pending", "failed"):
+                    _update_job(url, status="pending", error=None)
+                    j["status"] = "pending"
+                    pending.append(j)
         elif easy_apply_filter is None:
             pending = [j for j in jobs.values() if j.get("status") == "pending"]
         else:
@@ -916,7 +929,7 @@ async def start_applying(body: ApplyRequest):
                 if j.get("status") == "pending"
                 and (j.get("easy_apply") is True) == easy_apply_filter
             ]
-        if limit and not target_job_url:
+        if limit and not target_job_url and not target_job_urls:
             pending = pending[:limit]
 
         if not pending:

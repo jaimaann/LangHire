@@ -309,15 +309,32 @@ export default function Jobs() {
       const res = await startApplying({ job_urls: [...selectedJobs], workers: 1, mode: "all" });
       if (!res.success) {
         alert(res.message);
+        setBatchApplying(false);
       } else {
         setSelectedJobs(new Set());
       }
     } catch (e) {
       alert(e instanceof Error ? e.message : "Failed to start batch apply");
-    } finally {
       setBatchApplying(false);
     }
   };
+
+  // Poll apply status during batch apply to refresh job statuses
+  useEffect(() => {
+    if (!batchApplying) return;
+    let active = true;
+    const poll = setInterval(async () => {
+      if (!active) return;
+      try {
+        const s = await getApplyStatus();
+        fetchJobs(true);
+        if (!s.running) {
+          setBatchApplying(false);
+        }
+      } catch { /* ignore */ }
+    }, 2000);
+    return () => { active = false; clearInterval(poll); };
+  }, [batchApplying]);
 
   // Batch delete selected jobs
   const handleBatchDelete = async () => {
