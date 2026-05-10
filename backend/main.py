@@ -1394,28 +1394,27 @@ RESUME TEXT:
 
         parsed_profile = json.loads(match.group())
 
-        # Merge with existing profile (don't overwrite fields the user already set)
+        # Merge with existing profile — overwrite with parsed values when they're non-empty
         existing = load_profile()
         for key, value in parsed_profile.items():
-            if key in existing:
-                existing_val = existing[key]
-                # Only overwrite if existing is empty/default
-                if isinstance(existing_val, str) and not existing_val.strip():
+            if key not in existing:
+                existing[key] = value
+                continue
+            if isinstance(value, str) and value.strip():
+                existing[key] = value
+            elif isinstance(value, list) and value:
+                existing[key] = value
+            elif isinstance(value, dict):
+                if key not in existing or not isinstance(existing[key], dict):
                     existing[key] = value
-                elif isinstance(existing_val, list) and not existing_val:
-                    existing[key] = value
-                elif isinstance(existing_val, dict):
-                    # Merge nested dicts
+                else:
                     for sub_key, sub_val in value.items():
-                        if sub_key in existing_val:
-                            if isinstance(existing_val[sub_key], str) and not existing_val[sub_key].strip():
-                                existing_val[sub_key] = sub_val
-                            elif isinstance(existing_val[sub_key], (int, float)) and existing_val[sub_key] == 0:
-                                existing_val[sub_key] = sub_val
-                elif isinstance(existing_val, (int, float)) and existing_val == 0:
-                    existing[key] = value
-                elif isinstance(existing_val, bool) and not existing_val:
-                    existing[key] = value
+                        if isinstance(sub_val, str) and sub_val.strip():
+                            existing[key][sub_key] = sub_val
+                        elif isinstance(sub_val, (int, float)) and sub_val > 0:
+                            existing[key][sub_key] = sub_val
+            elif isinstance(value, (int, float)) and value > 0:
+                existing[key] = value
 
         # Save the merged profile
         save_profile(existing)

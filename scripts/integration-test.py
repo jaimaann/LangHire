@@ -117,6 +117,12 @@ def test_plugins():
 
 
 def test_profile_roundtrip():
+    # Save existing profile to restore after test
+    try:
+        existing_profile = api_request("GET", "/profile")
+    except Exception:
+        existing_profile = None
+
     test_profile = {
         "name": "Test User",
         "email": "test@example.com",
@@ -150,6 +156,10 @@ def test_profile_roundtrip():
     assert loaded.get("name") == "Test User", f"Profile name mismatch: {loaded.get('name')}"
     assert loaded.get("country") == "IN", f"Profile country mismatch: {loaded.get('country')}"
     assert loaded.get("notice_period") == "30 days", f"Notice period mismatch: {loaded.get('notice_period')}"
+
+    # Restore original profile
+    if existing_profile:
+        api_request("PUT", "/profile", existing_profile)
 
 
 def test_llm_connection():
