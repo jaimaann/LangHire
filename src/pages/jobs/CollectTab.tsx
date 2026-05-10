@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Play, Square, Terminal, Loader2, Plus, Search } from "lucide-react";
+import { Play, Square, Terminal, Loader2, Plus } from "lucide-react";
 import {
   startJobCollection,
   stopJobCollection,
