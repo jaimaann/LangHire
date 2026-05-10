@@ -748,7 +748,7 @@ export default function Jobs() {
             </div>
 
             <div className="flex-1 overflow-y-auto p-5">
-              {!coverLetterJob.description && !generatedLetter && (
+              {!coverLetterJob.description && !generatedLetter && !generating && (
                 <div className="mb-4">
                   <p className="text-sm text-muted-foreground mb-2">
                     {t("coverLetterModal.noDescription")}
@@ -765,7 +765,7 @@ export default function Jobs() {
                     disabled={!manualDescription.trim() || generating}
                     className="btn-primary"
                   >
-                    {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+                    <FileText className="w-4 h-4" />
                     {t("coverLetterModal.generate")}
                   </button>
                 </div>
@@ -778,8 +778,11 @@ export default function Jobs() {
                 </div>
               )}
 
-              {generateError && (
-                <div className="error-banner mb-4">{generateError}</div>
+              {generateError && !generating && (
+                <div className="error-banner mb-4">
+                  {generateError}
+                  <button onClick={() => { setGenerateError(null); }} className="ml-2 underline text-sm">Dismiss</button>
+                </div>
               )}
 
               {generatedLetter && (
