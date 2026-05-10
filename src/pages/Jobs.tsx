@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { getJobStats } from "../lib/api";
 import { PageHeader } from "../components/ui";
 import type { JobStats } from "../lib/types";
+import { Search, Play, CheckCircle } from "lucide-react";
 import CollectTab from "./jobs/CollectTab";
 import PendingTab from "./jobs/PendingTab";
 import HistoryTab from "./jobs/HistoryTab";
@@ -11,7 +12,7 @@ type TabId = "collect" | "pending" | "history";
 
 export default function Jobs() {
   const { t } = useTranslation("jobs");
-  const [activeTab, setActiveTab] = useState<TabId>("pending");
+  const [activeTab, setActiveTab] = useState<TabId>("collect");
   const [stats, setStats] = useState<JobStats>({
     total: 0,
     pending: 0,
@@ -35,10 +36,10 @@ export default function Jobs() {
     fetchStats();
   }, [fetchStats]);
 
-  const tabs: { id: TabId; label: string }[] = [
-    { id: "collect", label: t("tabs.collect", "Collect") },
-    { id: "pending", label: t("tabs.pending", "Pipeline") },
-    { id: "history", label: t("tabs.history", "History") },
+  const tabs: { id: TabId; label: string; icon: typeof Search; count?: number }[] = [
+    { id: "collect", label: "Collect", icon: Search, count: stats.total },
+    { id: "pending", label: "Review & Apply", icon: Play, count: stats.pending + stats.failed },
+    { id: "history", label: "History", icon: CheckCircle, count: stats.applied },
   ];
 
   return (
@@ -52,18 +53,37 @@ export default function Jobs() {
         })}
       />
 
-      {/* Tab Navigation */}
-      <div className="flex gap-2 mb-6">
-        {tabs.map(({ id, label }) => (
-          <button
-            key={id}
-            onClick={() => setActiveTab(id)}
-            className={`filter-tab ${
-              activeTab === id ? "filter-tab-active" : "filter-tab-inactive"
-            }`}
-          >
-            {label}
-          </button>
+      {/* Workflow Steps */}
+      <div className="flex items-center gap-0 mb-6">
+        {tabs.map(({ id, label, icon: Icon, count }, index) => (
+          <div key={id} className="flex items-center">
+            <button
+              onClick={() => setActiveTab(id)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                activeTab === id
+                  ? "bg-foreground text-white shadow-sm"
+                  : "bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground"
+              }`}
+            >
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                activeTab === id ? "bg-white/20 text-white" : "bg-border text-muted-foreground"
+              }`}>
+                {index + 1}
+              </span>
+              <Icon className="w-3.5 h-3.5" />
+              {label}
+              {count !== undefined && count > 0 && (
+                <span className={`text-[11px] px-1.5 py-0.5 rounded-full ${
+                  activeTab === id ? "bg-white/20" : "bg-border"
+                }`}>
+                  {count}
+                </span>
+              )}
+            </button>
+            {index < tabs.length - 1 && (
+              <div className="w-6 h-[2px] bg-border mx-1" />
+            )}
+          </div>
         ))}
       </div>
 
