@@ -62,7 +62,11 @@ export default function Jobs() {
   const [addingJob, setAddingJob] = useState(false);
   // Batch apply state
   const [batchApplying, setBatchApplying] = useState(false);
+  // Collection filters state
+  const [collectFilters, setCollectFilters] = useState<Record<string, string>>({});
   const logRef = useRef<HTMLDivElement>(null);
+
+  const selectedPlugin = availableSources.find((s) => s.name === collectSource);
 
   const STATUS_LABELS: Record<JobStatus, string> = {
     pending: t("status.pending"),
@@ -159,7 +163,7 @@ export default function Jobs() {
   const confirmStartCollect = async () => {
     setShowConfirmDialog(false);
     try {
-      const res = await startJobCollection(collectTitle || undefined, collectMaxJobs ? Number(collectMaxJobs) : undefined, collectSource);
+      const res = await startJobCollection(collectTitle || undefined, collectMaxJobs ? Number(collectMaxJobs) : undefined, collectSource, collectFilters);
       if (res.success) {
         setCollecting(true);
         setCollectLog([t("collector.startingCollection")]);
@@ -444,6 +448,38 @@ export default function Jobs() {
                   </button>
                 ))}
               </div>
+            </div>
+          )}
+          {/* Dynamic filters from selected plugin */}
+          {selectedPlugin?.filters && selectedPlugin.filters.length > 0 && (
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              {selectedPlugin.filters.map((filter) => (
+                <div key={filter.key}>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">{filter.label}</label>
+                  {filter.type === "select" ? (
+                    <select
+                      value={collectFilters[filter.key] || filter.default || ""}
+                      onChange={(e) => setCollectFilters((prev) => ({ ...prev, [filter.key]: e.target.value }))}
+                      disabled={collecting}
+                      className="w-full px-2.5 py-1.5 border border-border rounded-lg text-sm bg-white"
+                    >
+                      <option value="">Any</option>
+                      {filter.options.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      value={collectFilters[filter.key] || ""}
+                      onChange={(e) => setCollectFilters((prev) => ({ ...prev, [filter.key]: e.target.value }))}
+                      disabled={collecting}
+                      className="input-base !py-1.5 text-sm"
+                      placeholder={filter.label}
+                    />
+                  )}
+                </div>
+              ))}
             </div>
           )}
           <div className="flex gap-3 mb-4">
