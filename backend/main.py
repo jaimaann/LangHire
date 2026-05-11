@@ -1749,6 +1749,19 @@ async def refine_tailored_resume(body: dict):
         return _api_error("tailor_error", str(e), 500)
 
 
+@app.post("/resume/tailor/get-by-url")
+async def get_tailored_by_url(body: dict):
+    """Get tailored resume content by job URL."""
+    from resume.tailor import get_tailored_content
+    job_url = body.get("job_url", "")
+    if not job_url:
+        return _api_error("missing_field", "job_url is required", 400)
+    result = get_tailored_content(job_url)
+    if not result:
+        return _api_error("not_found", "No tailored resume for this job", 404)
+    return {"success": True, "content": result["content"], "path": result["path"]}
+
+
 @app.get("/resume/tailor/{url_hash}")
 async def get_tailored_resume(url_hash: str):
     """Get tailored resume content by URL hash."""

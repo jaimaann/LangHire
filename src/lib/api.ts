@@ -367,6 +367,13 @@ export async function refineTailoredResume(jobUrl: string, instruction: string) 
   });
 }
 
+export async function getTailoredResumeContent(jobUrl: string) {
+  return request<{ success: boolean; content: string; path: string | null }>("/resume/tailor/get-by-url", {
+    method: "POST",
+    body: JSON.stringify({ job_url: jobUrl }),
+  });
+}
+
 // ── Cover Letter ─────────────────────────────────────────────────────────
 export async function generateCoverLetter(jobDescription: string, jobTitle: string, company: string) {
   return request<{ success: boolean; cover_letter: string }>("/cover-letter/generate", {
