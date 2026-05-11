@@ -246,7 +246,7 @@ async def fetch_description_for_job(url: str, job: dict) -> str:
         browser_session=browser,
         max_failures=5,
         message_compaction=True,
-        max_history_items=5,
+        max_history_items=10,
         save_conversation_path=str(LOGS_DIR / f"desc_{company.replace(' ', '_')}_{title.replace(' ', '_')[:20]}"),
     )
 
