@@ -781,17 +781,51 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                         </div>
                       ) : tailoredContent[job.url] ? (
                         <div className="mb-4">
-                          <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-                            Tailored Resume Content
-                          </h5>
+                          <div className="flex items-center justify-between mb-2">
+                            <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                              Tailored Resume Content
+                            </h5>
+                            {job.tailored_resume_path && (
+                              <button
+                                onClick={() => {
+                                  import("@tauri-apps/plugin-shell").then(({ open }) => {
+                                    open(job.tailored_resume_path!);
+                                  }).catch(() => {
+                                    window.open(`file://${job.tailored_resume_path}`, "_blank");
+                                  });
+                                }}
+                                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold border border-border hover:bg-secondary transition-colors"
+                              >
+                                <FileText className="w-3 h-3" />
+                                Open PDF
+                              </button>
+                            )}
+                          </div>
                           <div className="bg-white rounded-lg border border-border p-4 text-sm text-foreground whitespace-pre-wrap max-h-64 overflow-y-auto leading-relaxed">
                             {tailoredContent[job.url]}
                           </div>
                         </div>
                       ) : (
-                        <p className="text-sm text-muted-foreground py-2 mb-3">
-                          Content available — open the PDF to view full resume.
-                        </p>
+                        <div className="flex items-center gap-3 py-2 mb-3">
+                          <p className="text-sm text-muted-foreground">
+                            Tailored resume generated.
+                          </p>
+                          {job.tailored_resume_path && (
+                            <button
+                              onClick={() => {
+                                import("@tauri-apps/plugin-shell").then(({ open }) => {
+                                  open(job.tailored_resume_path!);
+                                }).catch(() => {
+                                  window.open(`file://${job.tailored_resume_path}`, "_blank");
+                                });
+                              }}
+                              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold border border-primary text-primary hover:bg-primary/10 transition-colors"
+                            >
+                              <FileText className="w-3 h-3" />
+                              Open PDF
+                            </button>
+                          )}
+                        </div>
                       )}
                       {/* Refine input */}
                       <div className="flex items-center gap-2">
