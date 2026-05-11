@@ -36,7 +36,7 @@ def create_llm(settings: dict):
         from browser_use.llm import ChatAnthropic
         cfg = settings.get("anthropic", {})
         return ChatAnthropic(
-            model=cfg.get("model", "claude-sonnet-4-20250514"),
+            model=cfg.get("model", "claude-sonnet-4-5"),
             api_key=cfg.get("api_key", "").strip(),
         )
 

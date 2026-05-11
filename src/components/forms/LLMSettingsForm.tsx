@@ -14,7 +14,7 @@ const PROVIDERS: { id: LLMProvider; nameKey: string; descKey: string }[] = [
 ];
 
 const OPENAI_MODELS = ["gpt-5.4-nano", "gpt-5.4-mini", "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"];
-const ANTHROPIC_MODELS = ["claude-sonnet-4-20250514", "claude-haiku-4-20250414", "claude-opus-4-20250514"];
+const ANTHROPIC_MODELS = ["claude-sonnet-4-5", "claude-haiku-4-5", "claude-opus-4-5"];
 const OPENROUTER_FALLBACK_MODELS = [
   "qwen/qwen3.6-plus",
   "bytedance-seed/seed-2.0-lite",
@@ -42,7 +42,7 @@ const BEDROCK_MODELS = [
 const defaultSettings: LLMSettings = {
   provider: "openrouter",
   openai: { api_key: "", model: "gpt-4o" },
-  anthropic: { api_key: "", model: "claude-sonnet-4-20250514" },
+  anthropic: { api_key: "", model: "claude-sonnet-4-5" },
   bedrock: { access_key: "", secret_key: "", region: "us-west-2", model: "us.anthropic.claude-sonnet-4-6", auth_mode: "profile", profile_name: "default" },
   ollama: { base_url: "http://localhost:11434", model: "" },
   openrouter: { api_key: "", model: "qwen/qwen3.6-plus" },
@@ -375,7 +375,7 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
             </div>
             <div>
               <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.model")}</label>
-              <select value={settings.anthropic?.model || "claude-sonnet-4-20250514"} onChange={(e) => updateAnthropic("model", e.target.value)} className="input-base">
+<select value={settings.anthropic?.model || "claude-sonnet-4-5"} onChange={(e) => updateAnthropic("model", e.target.value)} className="input-base">
                 {ANTHROPIC_MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
               </select>
             </div>
