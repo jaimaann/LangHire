@@ -1709,8 +1709,14 @@ async def tailor_resumes(body: dict):
             continue
         description = job.get("description", "")
         if not description:
-            results.append({"url": url, "status": "error", "message": "No job description available"})
-            continue
+            # Fallback: use title + company + location as context for tailoring
+            title = job.get("title", "")
+            company = job.get("company", "")
+            location = job.get("location", "")
+            if not title:
+                results.append({"url": url, "status": "error", "message": "No job description or title available"})
+                continue
+            description = f"Job Title: {title}\nCompany: {company}\nLocation: {location}\n\nTailor the resume for this role based on the job title and company."
         try:
             result = await tailor_resume(url, description, options)
             update_job(url, tailored_resume_path=result["path"])
