@@ -812,13 +812,41 @@ async def start_collection(body: CollectRequest):
             except Exception as e:
                 print(f"  Error: {e}")
 
+        # Phase 2: Fetch descriptions for collected jobs
+        if not _collection_status.get("cancel_requested"):
+            jobs = read_jobs()
+            needs_desc = [
+                (url, j) for url, j in jobs.items()
+                if j.get("status") == "pending" and not j.get("description")
+            ]
+            if needs_desc:
+                print(f"\n📋 Fetching descriptions for {len(needs_desc)} jobs...")
+                for i, (url, job) in enumerate(needs_desc):
+                    if _collection_status.get("cancel_requested"):
+                        print("🛑 Stop requested — halting description fetch")
+                        break
+                    job_title = job.get("title", "Unknown")
+                    company = job.get("company", "Unknown")
+                    print(f"  [{i+1}/{len(needs_desc)}] {job_title} at {company}...")
+                    try:
+                        desc = await collect_jobs.fetch_description_for_job(url, job)
+                        if desc:
+                            from core.shared_config import update_job as _upd
+                            _upd(url, description=desc)
+                            print(f"    ✅ Got description ({len(desc)} chars)")
+                        else:
+                            print(f"    ⚠️  No description extracted")
+                    except Exception as e:
+                        print(f"    ❌ Error: {e}")
+
         cred_task.cancel()
 
         # Summary
         jobs = read_jobs()
         easy = sum(1 for j in jobs.values() if j.get("easy_apply"))
         pending = sum(1 for j in jobs.values() if j.get("status") == "pending")
-        print(f"\nCollection complete! Total: {len(jobs)} (Easy Apply: {easy}), Pending: {pending}")
+        descs = sum(1 for j in jobs.values() if j.get("description"))
+        print(f"\nCollection complete! Total: {len(jobs)} (Easy Apply: {easy}), Pending: {pending}, With descriptions: {descs}")
 
     def make_coro():
         return _do_collect()
