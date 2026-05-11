@@ -1685,6 +1685,98 @@ async def smart_squash_qa():
         return _api_error("llm_error", f"Smart squash failed: {str(e)}", 500)
 
 
+# ── Resume Tailoring ──────────────────────────────────────────────────────
+
+@app.post("/resume/tailor")
+async def tailor_resumes(body: dict):
+    """Generate tailored resumes for one or more jobs."""
+    from resume.tailor import tailor_resume
+    from core.shared_config import read_jobs, update_job
+
+    job_urls = body.get("job_urls", [])
+    options = body.get("options", {"skills": True, "overview": True, "experience": True, "title": False})
+
+    if not job_urls:
+        return _api_error("missing_field", "job_urls is required", 400)
+
+    jobs = read_jobs()
+    results = []
+
+    for url in job_urls:
+        job = jobs.get(url)
+        if not job:
+            results.append({"url": url, "status": "error", "message": "Job not found"})
+            continue
+        description = job.get("description", "")
+        if not description:
+            results.append({"url": url, "status": "error", "message": "No job description available"})
+            continue
+        try:
+            result = await tailor_resume(url, description, options)
+            update_job(url, tailored_resume_path=result["path"])
+            results.append({"url": url, "status": "done", "path": result["path"], "content": result["content"]})
+        except Exception as e:
+            results.append({"url": url, "status": "error", "message": str(e)})
+
+    return {"success": True, "results": results}
+
+
+@app.post("/resume/tailor/refine")
+async def refine_tailored_resume(body: dict):
+    """Refine an existing tailored resume with additional instructions."""
+    from resume.tailor import tailor_resume
+    from core.shared_config import read_jobs, update_job
+
+    job_url = body.get("job_url", "")
+    instruction = body.get("instruction", "")
+
+    if not job_url:
+        return _api_error("missing_field", "job_url is required", 400)
+
+    jobs = read_jobs()
+    job = jobs.get(job_url)
+    if not job:
+        return _api_error("not_found", "Job not found", 404)
+
+    description = job.get("description", "")
+    options = body.get("options", {"skills": True, "overview": True, "experience": True, "title": False})
+
+    try:
+        result = await tailor_resume(job_url, description + f"\n\nADDITIONAL INSTRUCTION: {instruction}", options)
+        update_job(job_url, tailored_resume_path=result["path"])
+        return {"success": True, "content": result["content"], "path": result["path"]}
+    except Exception as e:
+        return _api_error("tailor_error", str(e), 500)
+
+
+@app.get("/resume/tailor/{url_hash}")
+async def get_tailored_resume(url_hash: str):
+    """Get tailored resume content by URL hash."""
+    from resume.tailor import _get_tailored_dir
+    md_path = _get_tailored_dir() / f"{url_hash}.md"
+    pdf_path = _get_tailored_dir() / f"{url_hash}.pdf"
+    if not md_path.exists():
+        return _api_error("not_found", "No tailored resume found", 404)
+    return {
+        "success": True,
+        "content": md_path.read_text(encoding="utf-8"),
+        "path": str(pdf_path) if pdf_path.exists() else None,
+    }
+
+
+@app.delete("/resume/tailor/{url_hash}")
+async def delete_tailored(url_hash: str):
+    """Delete a tailored resume."""
+    from resume.tailor import _get_tailored_dir
+    md_path = _get_tailored_dir() / f"{url_hash}.md"
+    pdf_path = _get_tailored_dir() / f"{url_hash}.pdf"
+    if md_path.exists():
+        md_path.unlink()
+    if pdf_path.exists():
+        pdf_path.unlink()
+    return {"success": True}
+
+
 # ── Cover Letter Generation ───────────────────────────────────────────────
 
 @app.post("/cover-letter/generate")

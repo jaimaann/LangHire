@@ -106,6 +106,23 @@ export interface Job {
   applied_at?: string;
   error?: string;
   description?: string;
+  tailored_resume_path?: string;
+}
+
+// ── Resume Tailoring ─────────────────────────────────────────────────────
+export interface TailorOptions {
+  skills: boolean;
+  title: boolean;
+  overview: boolean;
+  experience: boolean;
+}
+
+export interface TailorResult {
+  url: string;
+  status: "done" | "error";
+  path?: string;
+  content?: string;
+  message?: string;
 }
 
 // ── Plugins ──────────────────────────────────────────────────────────────

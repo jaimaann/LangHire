@@ -16,6 +16,7 @@ import {
   MoreVertical,
   Trash2,
   CheckSquare,
+  Wand2,
 } from "lucide-react";
 import {
   getJobs,
@@ -26,6 +27,7 @@ import {
   getProfile,
   updateJobStatus,
   deleteJobs,
+  tailorResumes,
 } from "../../lib/api";
 import { markStart, measureAndTrack } from "../../lib/perf";
 import type { Job, JobStatus, JobStats } from "../../lib/types";
@@ -325,6 +327,27 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
     }
   };
 
+  // Batch tailor resumes
+  const [tailoring, setTailoring] = useState(false);
+  const handleBatchTailor = async () => {
+    if (selectedJobs.size === 0) return;
+    setTailoring(true);
+    try {
+      const res = await tailorResumes([...selectedJobs], { skills: true, overview: true, experience: true, title: false });
+      if (res.success) {
+        const done = res.results.filter(r => r.status === "done").length;
+        const failed = res.results.filter(r => r.status === "error").length;
+        alert(`Tailored ${done} resume(s)${failed ? `, ${failed} failed` : ""}`);
+        setSelectedJobs(new Set());
+        fetchJobs();
+      }
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Failed to tailor resumes");
+    } finally {
+      setTailoring(false);
+    }
+  };
+
   // Status change handler
   const handleStatusChange = async (jobUrl: string, newStatus: string) => {
     setStatusMenuJob(null);
@@ -587,11 +610,19 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
             Apply to {selectedJobs.size} job{selectedJobs.size > 1 ? "s" : ""}
           </button>
           <button
+            onClick={handleBatchTailor}
+            disabled={tailoring}
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-primary text-white hover:bg-primary/90 disabled:opacity-40 transition-all"
+          >
+            {tailoring ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
+            Tailor Resume{selectedJobs.size > 1 ? "s" : ""}
+          </button>
+          <button
             onClick={handleBatchDelete}
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-destructive text-white hover:bg-destructive/90 transition-all"
           >
             <Trash2 className="w-4 h-4" />
-            Delete {selectedJobs.size} job{selectedJobs.size > 1 ? "s" : ""}
+            Delete {selectedJobs.size}
           </button>
           <button
             onClick={() => setSelectedJobs(new Set())}

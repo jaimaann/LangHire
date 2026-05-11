@@ -352,6 +352,21 @@ export async function smartSquashQA() {
   return request<{ success: boolean; merged: number }>("/qa/smart-squash", { method: "POST" });
 }
 
+// ── Resume Tailoring ─────────────────────────────────────────────────────
+export async function tailorResumes(jobUrls: string[], options: import("./types").TailorOptions) {
+  return request<{ success: boolean; results: import("./types").TailorResult[] }>("/resume/tailor", {
+    method: "POST",
+    body: JSON.stringify({ job_urls: jobUrls, options }),
+  });
+}
+
+export async function refineTailoredResume(jobUrl: string, instruction: string) {
+  return request<{ success: boolean; content: string; path: string }>("/resume/tailor/refine", {
+    method: "POST",
+    body: JSON.stringify({ job_url: jobUrl, instruction }),
+  });
+}
+
 // ── Cover Letter ─────────────────────────────────────────────────────────
 export async function generateCoverLetter(jobDescription: string, jobTitle: string, company: string) {
   return request<{ success: boolean; cover_letter: string }>("/cover-letter/generate", {

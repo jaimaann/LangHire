@@ -140,6 +140,16 @@ async def apply_to_job(job: dict, profile: dict, qa: dict, applied_labels: list[
 
     resume_path = resume_path_override or RESUME_PATH
 
+    # Use tailored resume if available for this job
+    try:
+        from resume.tailor import get_tailored_resume_path
+        tailored_path = get_tailored_resume_path(url)
+        if tailored_path:
+            resume_path = tailored_path
+            print(f"  📄 [W{worker_id}] Using tailored resume: {tailored_path}")
+    except ImportError:
+        pass
+
     # Profile email is for application forms; credentials email/password are for ATS login
     agent_sensitive_data = {
         "email": profile.get("email", "").strip(),
