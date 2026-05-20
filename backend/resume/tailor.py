@@ -210,44 +210,92 @@ async def _generate_tailored_text(
     return tailored
 
 
-def _replace_text_in_pdf(doc: fitz.Document, sections: list[dict], tailored: dict[int, str]) -> fitz.Document:
-    """Replace text blocks in the PDF with tailored versions."""
+def _generate_fresh_pdf(
+    sections: list[dict],
+    tailored: dict[int, str],
+    profile_name: str,
+    contact_info: str,
+    output_path: Path,
+):
+    """Generate a clean professional PDF from tailored content."""
+    doc = fitz.open()
+    page = doc.new_page(width=612, height=792)  # US Letter
+
+    # Margins
+    left = 54
+    right = 558
+    top = 54
+    width = right - left
+    y = top
+
+    # Name header
+    if profile_name:
+        page.insert_text(fitz.Point(left, y + 20), profile_name, fontsize=22, fontname="helv")
+        y += 32
+        # Divider line
+        page.draw_line(fitz.Point(left, y), fitz.Point(right, y), color=(0.2, 0.2, 0.2), width=1)
+        y += 16
+
+    # Contact info
+    if contact_info:
+        for line in contact_info.split("\n"):
+            if line.strip():
+                page.insert_text(fitz.Point(left, y + 10), line.strip(), fontsize=9, fontname="helv")
+                y += 13
+        y += 10
+
+    # Sections
+    all_sections = []
     for i, s in enumerate(sections):
-        if i not in tailored:
-            continue
-        page = doc[s["page"]]
+        content = tailored.get(i, s["text"])
+        all_sections.append((s["section_type"].upper(), content))
 
-        # Redact each content block individually
-        for block in s.get("content_blocks", []):
-            rect = fitz.Rect(block["bbox"])
-            page.add_redact_annot(rect)
-        page.apply_redactions()
+    for section_title, content in all_sections:
+        # Check if we need a new page
+        if y > 720:
+            page = doc.new_page(width=612, height=792)
+            y = top
 
-        # Detect font size from the first content block
-        fontsize = 9.5
-        if s.get("content_blocks"):
-            first_block_rect = fitz.Rect(s["content_blocks"][0]["bbox"])
-            page_dict = page.get_text("dict")
-            for block in page_dict.get("blocks", []):
-                if block.get("type") == 0 and block.get("bbox"):
-                    if fitz.Rect(block["bbox"]).intersects(first_block_rect):
-                        for line in block.get("lines", []):
-                            for span in line.get("spans", []):
-                                fontsize = span.get("size", 9.5)
-                                break
-                            break
-                        break
+        # Section header
+        y += 6
+        page.insert_text(fitz.Point(left, y + 12), section_title, fontsize=11, fontname="helvetica-bold")
+        y += 18
+        # Underline
+        page.draw_line(fitz.Point(left, y), fitz.Point(right, y), color=(0.8, 0.8, 0.8), width=0.5)
+        y += 8
 
-        # Insert tailored text into the combined bounding box
-        rect = fitz.Rect(s["bbox"])
-        page.insert_textbox(
-            rect,
-            tailored[i],
-            fontsize=fontsize,
-            align=fitz.TEXT_ALIGN_LEFT,
-        )
+        # Content
+        lines = content.split("\n")
+        for line in lines:
+            if not line.strip():
+                y += 6
+                continue
+            # Word wrap long lines
+            words = line.split()
+            current_line = ""
+            for word in words:
+                test = current_line + " " + word if current_line else word
+                # Approximate character width at 9.5pt
+                if len(test) * 4.8 > width:
+                    if y > 750:
+                        page = doc.new_page(width=612, height=792)
+                        y = top
+                    page.insert_text(fitz.Point(left, y + 10), current_line, fontsize=9.5, fontname="helv")
+                    y += 13
+                    current_line = word
+                else:
+                    current_line = test
+            if current_line:
+                if y > 750:
+                    page = doc.new_page(width=612, height=792)
+                    y = top
+                page.insert_text(fitz.Point(left, y + 10), current_line, fontsize=9.5, fontname="helv")
+                y += 13
 
-    return doc
+        y += 8
+
+    doc.save(str(output_path))
+    doc.close()
 
 
 async def tailor_resume(
@@ -275,15 +323,29 @@ async def tailor_resume(
         doc.close()
         raise ValueError("LLM could not tailor any sections within character limits")
 
-    doc_copy = fitz.open(resume_path)
-    _replace_text_in_pdf(doc_copy, tailorable, tailored_text)
-
     url_hash = _url_hash(job_url)
     output_pdf = _get_tailored_dir() / f"{url_hash}.pdf"
     output_md = _get_tailored_dir() / f"{url_hash}.md"
 
-    doc_copy.save(str(output_pdf))
-    doc_copy.close()
+    # Extract name and contact from the original resume for the header
+    try:
+        from core.config import load_profile
+        profile = load_profile()
+        profile_name = profile.get("name", "")
+        contact_parts = []
+        if profile.get("email"):
+            contact_parts.append(profile["email"])
+        if profile.get("phone"):
+            contact_parts.append(f"{profile.get('phone_country_code', '')}{profile['phone']}")
+        addr = profile.get("address", {})
+        if addr.get("city"):
+            contact_parts.append(f"{addr['city']}, {addr.get('state', '')} {addr.get('country', '')}")
+        contact_info = "\n".join(contact_parts)
+    except Exception:
+        profile_name = ""
+        contact_info = ""
+
+    _generate_fresh_pdf(tailorable, tailored_text, profile_name, contact_info, output_pdf)
     doc.close()
 
     content_parts = []
