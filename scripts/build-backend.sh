@@ -69,3 +69,26 @@ uv run python -m PyInstaller \
 echo "✅ Backend binary built: src-tauri/binaries/langhire-backend-${TARGET}"
 ls -lh "src-tauri/binaries/langhire-backend-${TARGET}"
 
+# Sign the sidecar binary with entitlements (macOS only)
+# This allows the PyInstaller binary to load its extracted Python.framework
+# without macOS Sequoia blocking the unsigned dlopen()
+if [ "$(uname -s)" = "Darwin" ]; then
+  BINARY="src-tauri/binaries/langhire-backend-${TARGET}"
+  ENTITLEMENTS="src-tauri/Entitlements.plist"
+
+  if [ -f "$ENTITLEMENTS" ]; then
+    if security find-identity -v -p codesigning 2>/dev/null | grep -q "Developer ID\|Apple Development"; then
+      IDENTITY=$(security find-identity -v -p codesigning | grep -E "Developer ID|Apple Development" | head -1 | awk -F'"' '{print $2}')
+      echo "🔏 Signing sidecar with identity: $IDENTITY"
+      codesign --force --options runtime --entitlements "$ENTITLEMENTS" --sign "$IDENTITY" "$BINARY"
+      echo "✅ Sidecar signed with entitlements (disable-library-validation)"
+    else
+      echo "⚠️  No signing identity found — signing ad-hoc with entitlements (local dev)"
+      codesign --force --options runtime --entitlements "$ENTITLEMENTS" --sign - "$BINARY"
+      echo "✅ Sidecar ad-hoc signed with entitlements"
+    fi
+  else
+    echo "⚠️  Entitlements.plist not found — skipping sidecar signing"
+  fi
+fi
+

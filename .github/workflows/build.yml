@@ -91,6 +91,20 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -k "" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
+      - name: Sign sidecar binary with entitlements (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          BINARY="src-tauri/binaries/langhire-backend-${{ matrix.target }}"
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          IDENTITY=$(security find-identity -v -p codesigning $KEYCHAIN_PATH | grep -E "Developer ID|Apple Development" | head -1 | awk -F'"' '{print $2}')
+          if [ -n "$IDENTITY" ] && [ -f "$BINARY" ]; then
+            codesign --force --options runtime --entitlements src-tauri/Entitlements.plist --sign "$IDENTITY" "$BINARY"
+            echo "✅ Signed sidecar with: $IDENTITY"
+            codesign -d --entitlements - "$BINARY" 2>&1 | head -5
+          else
+            echo "⚠️ No identity found or binary missing — skipping sidecar sign"
+          fi
+
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0
         env:
