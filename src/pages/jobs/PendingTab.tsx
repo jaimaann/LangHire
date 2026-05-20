@@ -68,7 +68,7 @@ function loadTailorOptions(): TailorOptions {
   } catch {
     /* ignore */
   }
-  return { skills: true, title: false, overview: true, experience: true };
+  return { skills: true, title: false, overview: false, experience: false };
 }
 
 function saveTailorOptions(options: TailorOptions) {
