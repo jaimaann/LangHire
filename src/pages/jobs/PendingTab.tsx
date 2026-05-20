@@ -789,7 +789,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                               <button
                                 onClick={() => {
                                   import("@tauri-apps/plugin-shell").then(({ open }) => {
-                                    open(job.tailored_resume_path!);
+                                    open(`file://${job.tailored_resume_path!}`);
                                   }).catch(() => {
                                     window.open(`file://${job.tailored_resume_path}`, "_blank");
                                   });
