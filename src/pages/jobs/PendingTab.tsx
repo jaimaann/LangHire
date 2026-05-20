@@ -788,10 +788,8 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                             {job.tailored_resume_path && (
                               <button
                                 onClick={() => {
-                                  import("@tauri-apps/plugin-shell").then(({ open }) => {
-                                    open(`file://${job.tailored_resume_path!}`);
-                                  }).catch(() => {
-                                    window.open(`file://${job.tailored_resume_path}`, "_blank");
+                                  import("@tauri-apps/api/core").then(({ invoke }) => {
+                                    invoke("open_file", { path: job.tailored_resume_path! });
                                   });
                                 }}
                                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold border border-border hover:bg-secondary transition-colors"
