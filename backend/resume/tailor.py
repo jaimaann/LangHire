@@ -215,87 +215,141 @@ def _generate_fresh_pdf(
     tailored: dict[int, str],
     profile_name: str,
     contact_info: str,
+    education_text: str,
     output_path: Path,
 ):
-    """Generate a clean professional PDF from tailored content."""
+    """Generate a professional PDF matching the user's resume style."""
     doc = fitz.open()
     page = doc.new_page(width=612, height=792)  # US Letter
 
-    # Margins
-    left = 54
-    right = 558
-    top = 54
-    width = right - left
-    y = top
+    # Layout constants (matching typical professional resume)
+    margin_left = 36
+    margin_right = 576
+    col_split = 200
+    col_right = 214
+    page_width = margin_right - margin_left
 
-    # Name header
-    if profile_name:
-        page.insert_text(fitz.Point(left, y + 20), profile_name, fontsize=22, fontname="helv")
-        y += 32
-        # Divider line
-        page.draw_line(fitz.Point(left, y), fitz.Point(right, y), color=(0.2, 0.2, 0.2), width=1)
-        y += 16
+    # Colors
+    header_color = (0.09, 0.09, 0.40)  # dark blue for section headers
+    body_color = (0.19, 0.19, 0.19)    # dark gray for body
+    light_color = (0.40, 0.40, 0.40)   # lighter gray for dates/secondary
 
-    # Contact info
-    if contact_info:
-        for line in contact_info.split("\n"):
+    y = 50
+
+    # ─── Name ───
+    page.insert_text(fitz.Point(margin_left, y + 30), profile_name.upper() if profile_name else "", fontsize=28, fontname="helvetica-bold", color=(0, 0, 0))
+    y += 42
+    # Accent line under name
+    page.draw_line(fitz.Point(margin_left, y), fitz.Point(margin_right, y), color=(0.85, 0.20, 0.35), width=2)
+    y += 20
+
+    # ─── Contact info (below name) ───
+    for line in contact_info.split("\n"):
+        if line.strip():
+            page.insert_text(fitz.Point(margin_left, y + 10), line.strip(), fontsize=9, fontname="helv", color=body_color)
+            y += 14
+    y += 10
+
+    # ─── Skills Section ───
+    skills_section = None
+    for i, s in enumerate(sections):
+        if s["section_type"] == "skills":
+            skills_section = (i, s)
+            break
+
+    if skills_section:
+        idx, s = skills_section
+        page.insert_text(fitz.Point(margin_left, y + 12), "Skills", fontsize=12, fontname="helvetica-bold", color=header_color)
+        y += 18
+        page.draw_line(fitz.Point(margin_left, y), fitz.Point(margin_right, y), color=(0.8, 0.8, 0.8), width=0.5)
+        y += 10
+        content = tailored.get(idx, s["text"])
+        for line in content.split("\n"):
             if line.strip():
-                page.insert_text(fitz.Point(left, y + 10), line.strip(), fontsize=9, fontname="helv")
+                page.insert_text(fitz.Point(margin_left, y + 9), line.strip(), fontsize=9, fontname="helv", color=body_color)
                 y += 13
         y += 10
 
-    # Sections
-    all_sections = []
-    for i, s in enumerate(sections):
-        content = tailored.get(i, s["text"])
-        all_sections.append((s["section_type"].upper(), content))
+    # ─── Experience Section ───
+    experience_sections = [(i, s) for i, s in enumerate(sections) if s["section_type"] == "experience"]
 
-    for section_title, content in all_sections:
-        # Check if we need a new page
-        if y > 720:
-            page = doc.new_page(width=612, height=792)
-            y = top
-
-        # Section header
-        y += 6
-        page.insert_text(fitz.Point(left, y + 12), section_title, fontsize=11, fontname="helvetica-bold")
+    if experience_sections:
+        page.insert_text(fitz.Point(margin_left, y + 12), "Experience", fontsize=12, fontname="helvetica-bold", color=header_color)
         y += 18
-        # Underline
-        page.draw_line(fitz.Point(left, y), fitz.Point(right, y), color=(0.8, 0.8, 0.8), width=0.5)
-        y += 8
+        page.draw_line(fitz.Point(margin_left, y), fitz.Point(margin_right, y), color=(0.8, 0.8, 0.8), width=0.5)
+        y += 12
 
-        # Content
-        lines = content.split("\n")
-        for line in lines:
-            if not line.strip():
-                y += 6
-                continue
-            # Word wrap long lines
-            words = line.split()
-            current_line = ""
-            for word in words:
-                test = current_line + " " + word if current_line else word
-                # Approximate character width at 9.5pt
-                if len(test) * 4.8 > width:
-                    if y > 750:
-                        page = doc.new_page(width=612, height=792)
-                        y = top
-                    page.insert_text(fitz.Point(left, y + 10), current_line, fontsize=9.5, fontname="helv")
-                    y += 13
-                    current_line = word
-                else:
-                    current_line = test
-            if current_line:
+        for idx, s in experience_sections:
+            content = tailored.get(idx, s["text"])
+            lines = content.split("\n")
+
+            for line in lines:
+                line = line.strip()
+                if not line:
+                    y += 5
+                    continue
+
                 if y > 750:
                     page = doc.new_page(width=612, height=792)
-                    y = top
-                page.insert_text(fitz.Point(left, y + 10), current_line, fontsize=9.5, fontname="helv")
-                y += 13
+                    y = 50
 
-        y += 8
+                if line.startswith("·") or line.startswith("-"):
+                    wrapped_lines = _wrap_text(line, page_width - 20, 9)
+                    for wl in wrapped_lines:
+                        page.insert_text(fitz.Point(margin_left + 10, y + 9), wl, fontsize=9, fontname="helv", color=body_color)
+                        y += 12
+                else:
+                    is_title = not any(c in line for c in ["·", "–"]) and len(line) < 60 and not line.startswith("·")
+                    page.insert_text(fitz.Point(margin_left, y + 9), line, fontsize=9, fontname="helvetica-bold" if is_title else "helv", color=body_color)
+                    y += 13
+
+            y += 10
+
+    # ─── Education Section (at the bottom) ───
+    if education_text:
+        if y > 700:
+            page = doc.new_page(width=612, height=792)
+            y = 50
+        y += 5
+        page.insert_text(fitz.Point(margin_left, y + 12), "Education", fontsize=12, fontname="helvetica-bold", color=header_color)
+        y += 18
+        page.draw_line(fitz.Point(margin_left, y), fitz.Point(margin_right, y), color=(0.8, 0.8, 0.8), width=0.5)
+        y += 12
+        for line in education_text.split("\n"):
+            if line.strip():
+                page.insert_text(fitz.Point(margin_left, y + 9), line.strip(), fontsize=9, fontname="helv", color=body_color)
+                y += 13
 
     doc.save(str(output_path))
     doc.close()
+
+
+def _wrap_text(text: str, max_width: float, fontsize: float) -> list[str]:
+    """Simple word-wrap based on approximate character width."""
+    char_width = fontsize * 0.52
+    max_chars = int(max_width / char_width)
+    words = text.split()
+    lines = []
+    current = ""
+    for word in words:
+        test = current + " " + word if current else word
+        if len(test) > max_chars:
+            if current:
+                lines.append(current)
+            current = word
+        else:
+            current = test
+    if current:
+        lines.append(current)
+    return lines
+
+
+def _draw_wrapped(page, x: float, y: float, text: str, max_width: float, fontsize: float, fontname: str, color: tuple):
+    """Draw text with word wrap."""
+    lines = _wrap_text(text, max_width, fontsize)
+    for line in lines:
+        page.insert_text(fitz.Point(x, y + 8), line, fontsize=fontsize, fontname=fontname, color=color)
+        y += 11
 
 
 async def tailor_resume(
@@ -327,7 +381,7 @@ async def tailor_resume(
     output_pdf = _get_tailored_dir() / f"{url_hash}.pdf"
     output_md = _get_tailored_dir() / f"{url_hash}.md"
 
-    # Extract name and contact from the original resume for the header
+    # Extract name, contact, and education from the original resume/profile
     try:
         from core.config import load_profile
         profile = load_profile()
@@ -345,7 +399,21 @@ async def tailor_resume(
         profile_name = ""
         contact_info = ""
 
-    _generate_fresh_pdf(tailorable, tailored_text, profile_name, contact_info, output_pdf)
+    # Get education from the extracted sections (not tailored)
+    education_text = ""
+    for s in sections:
+        if s["section_type"] == "education":
+            education_text = s["text"]
+            break
+    if not education_text:
+        try:
+            edu = profile.get("education", {})
+            if edu.get("degree"):
+                education_text = f"{edu.get('school', '')} | {edu['degree']}\nGraduation: {edu.get('graduation', '')}"
+        except Exception:
+            pass
+
+    _generate_fresh_pdf(tailorable, tailored_text, profile_name, contact_info, education_text, output_pdf)
     doc.close()
 
     content_parts = []
