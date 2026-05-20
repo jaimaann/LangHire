@@ -33,6 +33,12 @@
   <a href="docs/README.ms.md">Bahasa Melayu</a>
 </p>
 
+<p align="center">
+  <a href="https://discord.gg/dhg69gTSQ">
+    <img src="https://img.shields.io/badge/%F0%9F%92%AC%20Join%20our%20Discord%20%E2%80%94%20get%20help%2C%20share%20plugins%2C%20discuss%20features-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Join Discord" />
+  </a>
+</p>
+
 ---
 
 Applying to jobs is tedious. You find a listing, click through to the application, fill in the same fields you filled in yesterday, answer the same screening questions, upload your resume again — repeat fifty times. LangHire automates the entire loop.
