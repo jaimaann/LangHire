@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@sentry/browser": "^10.51.0",
-    "@tauri-apps/api": "^2.0.0",
+    "@tauri-apps/api": "^2.11.0",
     "@tauri-apps/plugin-dialog": "^2.7.0",
     "@tauri-apps/plugin-shell": "^2.0.0",
     "i18next": "^26.0.10",
