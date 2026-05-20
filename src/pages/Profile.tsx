@@ -326,7 +326,7 @@ export default function Profile() {
       </Section>
 
       <Section title={t("skills.title")}>
-        <TagInputShared tags={profile.skills} value={newSkill} onChange={setNewSkill}
+        <TagInputShared tags={Array.isArray(profile.skills) ? profile.skills : []} value={newSkill} onChange={setNewSkill}
           onAdd={() => addToList("skills", newSkill, setNewSkill)}
           onRemove={(v) => removeFromList("skills", v)} placeholder={t("skills.placeholder")} />
       </Section>

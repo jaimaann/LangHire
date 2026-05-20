@@ -16,6 +16,12 @@ if (SENTRY_DSN) {
     beforeSend(event) {
       const settings = localStorage.getItem("langhire_telemetry");
       if (settings === "false") return null;
+      // Filter transient network errors during startup (backend not ready yet)
+      const msg = event.exception?.values?.[0]?.value || "";
+      if (msg.includes("Load failed") && msg.includes("127.0.0.1")) return null;
+      if (msg.includes("Failed to fetch") && msg.includes("127.0.0.1")) return null;
+      // Filter shell.open validation errors (fixed in v1.8.1+)
+      if (msg.includes("failed regex validation")) return null;
       return event;
     },
   });

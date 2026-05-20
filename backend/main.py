@@ -1435,6 +1435,17 @@ RESUME TEXT:
 
         parsed_profile = json.loads(match.group())
 
+        # Normalize skills: LLM sometimes returns {technical_skills: [...], soft_skills: [...]}
+        if isinstance(parsed_profile.get("skills"), dict):
+            skills_dict = parsed_profile["skills"]
+            flat_skills = []
+            for v in skills_dict.values():
+                if isinstance(v, list):
+                    flat_skills.extend(v)
+                elif isinstance(v, str) and v.strip():
+                    flat_skills.append(v)
+            parsed_profile["skills"] = flat_skills
+
         # Merge with existing profile — overwrite with parsed values when they're non-empty
         existing = load_profile()
         for key, value in parsed_profile.items():

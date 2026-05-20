@@ -10,7 +10,8 @@ fn get_api_token() -> Result<String, String> {
     let base = if cfg!(target_os = "macos") {
         dirs::home_dir().map(|h| h.join("Library/Application Support/langhire"))
     } else if cfg!(target_os = "windows") {
-        dirs::home_dir().map(|h| h.join("AppData/Roaming/langhire"))
+        dirs::data_dir().map(|d| d.join("langhire"))
+            .or_else(|| dirs::home_dir().map(|h| h.join("AppData").join("Roaming").join("langhire")))
     } else {
         dirs::home_dir().map(|h| h.join(".config/langhire"))
     }
@@ -19,8 +20,8 @@ fn get_api_token() -> Result<String, String> {
     let token_path = base.join(".api_token");
 
     // Backend sidecar may take a few seconds to start and write the token file.
-    // Retry up to 15 times (15 seconds total) with 1-second intervals.
-    for i in 0..15 {
+    // Retry up to 30 times (30 seconds total) with 1-second intervals.
+    for i in 0..30 {
         match std::fs::read_to_string(&token_path) {
             Ok(s) => {
                 let trimmed = s.trim().to_string();
@@ -30,12 +31,12 @@ fn get_api_token() -> Result<String, String> {
             }
             Err(_) => {}
         }
-        if i < 14 {
+        if i < 29 {
             std::thread::sleep(std::time::Duration::from_secs(1));
         }
     }
 
-    Err(format!("Token file not found after 15s: {}", token_path.display()))
+    Err(format!("Token file not found after 30s: {}", token_path.display()))
 }
 
 #[tauri::command]
