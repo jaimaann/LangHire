@@ -500,6 +500,7 @@ See these files for real-world examples:
 
 ## 🙋 Questions?
 
+- Join our [Discord](https://discord.gg/dhg69gTSQ) for real-time help and discussion
 - Open a [Discussion](../../discussions) for questions
 - Open an [Issue](../../issues) for bugs or feature requests
 - Tag `@maintainers` in your PR if you need help
