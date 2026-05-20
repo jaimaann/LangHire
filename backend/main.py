@@ -775,9 +775,7 @@ async def start_collection(body: CollectRequest):
     title = body.title
     max_jobs = body.max_jobs
     filters = body.filters or {}
-    titles_count = 1 if title else len(load_profile().get("target_job_titles", []) or [1])
-    total_max = max_jobs * max(titles_count, 1) if max_jobs else 0
-    _collection_status = {"running": True, "title": title or "all titles", "log": ["Starting collection... This may take several minutes per job title."], "collected": 0, "max_jobs": total_max or max_jobs}
+    _collection_status = {"running": True, "title": title or "all titles", "log": ["Starting collection... This may take several minutes per job title."], "collected": 0, "max_jobs": max_jobs}
 
     async def _do_collect():
         """Run collection logic directly, bypassing argparse."""
@@ -810,7 +808,8 @@ async def start_collection(body: CollectRequest):
             try:
                 found = await collect_jobs.collect_for_title(t, jobs, profile, max_jobs=max_jobs, filters=filters)
                 jobs = read_jobs()
-                _collection_status["collected"] = _collection_status.get("collected", 0) + len(found)
+                # Don't increment collected here — it's already updated by the stdout/log handler
+                # parsing "total this title: N" and "N jobs collected" from agent output
                 print(f"  Found {len(found)} new jobs (total: {len(jobs)})")
             except Exception as e:
                 print(f"  Error: {e}")
