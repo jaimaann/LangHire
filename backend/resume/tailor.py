@@ -30,13 +30,36 @@ def _url_hash(url: str) -> str:
 
 
 def _extract_sections(doc: fitz.Document) -> list[dict]:
-    """Extract text blocks from the PDF grouped into logical sections."""
-    sections = []
+    """Extract text blocks from the PDF grouped into logical sections.
+
+    Groups a section header block with all content blocks that follow it
+    until the next section header.
+    """
+    SECTION_HEADERS = {
+        "skills": "skills",
+        "technologies": "skills",
+        "tech stack": "skills",
+        "tools": "skills",
+        "summary": "overview",
+        "objective": "overview",
+        "overview": "overview",
+        "about me": "overview",
+        "profile": "overview",
+        "work experience": "experience",
+        "experience": "experience",
+        "employment": "experience",
+        "professional experience": "experience",
+        "volunteer experience": "experience",
+        "education": "education",
+        "contact": "contact",
+    }
+
+    all_blocks = []
     for page_num in range(len(doc)):
         page = doc[page_num]
         blocks = page.get_text("dict")["blocks"]
         for block in blocks:
-            if block["type"] != 0:  # text blocks only
+            if block["type"] != 0:
                 continue
             text = ""
             for line in block.get("lines", []):
@@ -44,44 +67,74 @@ def _extract_sections(doc: fitz.Document) -> list[dict]:
                     text += span.get("text", "")
                 text += "\n"
             text = text.strip()
-            if len(text) < 5:
+            if not text:
                 continue
-            sections.append({
+            all_blocks.append({
                 "page": page_num,
                 "bbox": block["bbox"],
                 "text": text,
-                "char_count": len(text),
             })
-    return sections
 
+    # Identify which blocks are section headers
+    sections = []
+    current_section = None
 
-def _classify_section(text: str) -> str:
-    """Heuristically classify a text block into a resume section type."""
-    lower = text.lower()
-    if any(kw in lower for kw in ["skill", "technologies", "tech stack", "proficien", "tools"]):
-        return "skills"
-    if any(kw in lower for kw in ["summary", "objective", "overview", "about me", "profile"]):
-        return "overview"
-    if any(kw in lower for kw in ["experience", "work history", "employment", "professional experience"]):
-        return "experience"
-    if any(kw in lower for kw in ["education", "degree", "university", "college"]):
-        return "education"
-    return "other"
+    for block in all_blocks:
+        lower = block["text"].lower().strip()
+        section_type = SECTION_HEADERS.get(lower)
+
+        if section_type:
+            # This block is a header — start a new section
+            if current_section and current_section["content_blocks"]:
+                sections.append(current_section)
+            current_section = {
+                "section_type": section_type,
+                "header_block": block,
+                "content_blocks": [],
+                "page": block["page"],
+            }
+        elif current_section:
+            # This block is content under the current header
+            current_section["content_blocks"].append(block)
+
+    if current_section and current_section["content_blocks"]:
+        sections.append(current_section)
+
+    # Build final section objects with combined text and bounding boxes
+    result = []
+    for section in sections:
+        content_text = "\n".join(b["text"] for b in section["content_blocks"])
+        if not content_text.strip():
+            continue
+        # Compute bounding box that covers all content blocks
+        all_bboxes = [b["bbox"] for b in section["content_blocks"]]
+        combined_bbox = (
+            min(b[0] for b in all_bboxes),
+            min(b[1] for b in all_bboxes),
+            max(b[2] for b in all_bboxes),
+            max(b[3] for b in all_bboxes),
+        )
+        result.append({
+            "page": section["page"],
+            "bbox": combined_bbox,
+            "text": content_text,
+            "char_count": len(content_text),
+            "section_type": section["section_type"],
+            "content_blocks": section["content_blocks"],
+        })
+    return result
 
 
 def _identify_tailorable_sections(sections: list[dict], options: dict) -> list[dict]:
     """Filter sections that match the user's selected tailoring options."""
     tailorable = []
     for s in sections:
-        section_type = _classify_section(s["text"])
-        if section_type == "skills" and options.get("skills"):
-            s["section_type"] = "skills"
+        st = s["section_type"]
+        if st == "skills" and options.get("skills"):
             tailorable.append(s)
-        elif section_type == "overview" and options.get("overview"):
-            s["section_type"] = "overview"
+        elif st == "overview" and options.get("overview"):
             tailorable.append(s)
-        elif section_type == "experience" and options.get("experience"):
-            s["section_type"] = "experience"
+        elif st == "experience" and options.get("experience"):
             tailorable.append(s)
     return tailorable
 
@@ -158,23 +211,30 @@ def _replace_text_in_pdf(doc: fitz.Document, sections: list[dict], tailored: dic
         if i not in tailored:
             continue
         page = doc[s["page"]]
-        rect = fitz.Rect(s["bbox"])
-        page.add_redact_annot(rect)
+
+        # Redact each content block individually
+        for block in s.get("content_blocks", []):
+            rect = fitz.Rect(block["bbox"])
+            page.add_redact_annot(rect)
         page.apply_redactions()
 
-        fontsize = 10
-        lines = s["text"].split("\n")
-        if lines:
+        # Detect font size from the first content block
+        fontsize = 9.5
+        if s.get("content_blocks"):
+            first_block_rect = fitz.Rect(s["content_blocks"][0]["bbox"])
             page_dict = page.get_text("dict")
             for block in page_dict.get("blocks", []):
-                if block.get("bbox") and fitz.Rect(block["bbox"]).intersects(rect):
-                    for line in block.get("lines", []):
-                        for span in line.get("spans", []):
-                            fontsize = span.get("size", 10)
+                if block.get("type") == 0 and block.get("bbox"):
+                    if fitz.Rect(block["bbox"]).intersects(first_block_rect):
+                        for line in block.get("lines", []):
+                            for span in line.get("spans", []):
+                                fontsize = span.get("size", 9.5)
+                                break
                             break
                         break
-                    break
 
+        # Insert tailored text into the combined bounding box
+        rect = fitz.Rect(s["bbox"])
         page.insert_textbox(
             rect,
             tailored[i],
