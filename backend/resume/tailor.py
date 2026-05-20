@@ -283,10 +283,14 @@ def _generate_fresh_pdf(
             content = tailored.get(idx, s["text"])
             lines = content.split("\n")
 
+            # Track position within each job entry
+            # Pattern: Title\nCompany\nDate\n· bullets...
+            line_in_entry = 0
             for line in lines:
                 line = line.strip()
                 if not line:
-                    y += 5
+                    y += 8
+                    line_in_entry = 0  # Reset for next job entry
                     continue
 
                 if y > 750:
@@ -294,14 +298,26 @@ def _generate_fresh_pdf(
                     y = 50
 
                 if line.startswith("·") or line.startswith("-"):
-                    wrapped_lines = _wrap_text(line, page_width - 20, 9)
+                    # Bullet point with indent
+                    wrapped_lines = _wrap_text(line, page_width - 30, 9)
                     for wl in wrapped_lines:
-                        page.insert_text(fitz.Point(margin_left + 10, y + 9), wl, fontsize=9, fontname="helv", color=body_color)
+                        page.insert_text(fitz.Point(margin_left + 15, y + 9), wl, fontsize=9, fontname="helv", color=body_color)
                         y += 12
-                else:
-                    is_title = not any(c in line for c in ["·", "–"]) and len(line) < 60 and not line.startswith("·")
-                    page.insert_text(fitz.Point(margin_left, y + 9), line, fontsize=9, fontname="helvetica-bold" if is_title else "helv", color=body_color)
+                elif line_in_entry == 0:
+                    # Job title (first line after blank) — bold
+                    page.insert_text(fitz.Point(margin_left, y + 9), line, fontsize=9, fontname="helvetica-bold", color=body_color)
                     y += 13
+                    line_in_entry += 1
+                elif line_in_entry == 1:
+                    # Company name — regular
+                    page.insert_text(fitz.Point(margin_left, y + 9), line, fontsize=9, fontname="helv", color=body_color)
+                    y += 12
+                    line_in_entry += 1
+                else:
+                    # Date or other info — lighter color
+                    page.insert_text(fitz.Point(margin_left, y + 9), line, fontsize=9, fontname="helv", color=light_color)
+                    y += 12
+                    line_in_entry += 1
 
             y += 10
 
@@ -413,7 +429,20 @@ async def tailor_resume(
         except Exception:
             pass
 
-    _generate_fresh_pdf(tailorable, tailored_text, profile_name, contact_info, education_text, output_pdf)
+    # Pass ALL sections to the PDF (not just tailored ones)
+    # Map tailored indices back to full section list
+    all_sections_for_pdf = [s for s in sections if s["section_type"] in ("skills", "experience", "overview")]
+    # Build a tailored_text map using full section indices
+    full_tailored = {}
+    for i, s in enumerate(all_sections_for_pdf):
+        # Find if this section was tailored
+        for ti, ts in enumerate(tailorable):
+            if ts["text"] == s["text"] and ts["section_type"] == s["section_type"]:
+                if ti in tailored_text:
+                    full_tailored[i] = tailored_text[ti]
+                break
+
+    _generate_fresh_pdf(all_sections_for_pdf, full_tailored, profile_name, contact_info, education_text, output_pdf)
     doc.close()
 
     content_parts = []
