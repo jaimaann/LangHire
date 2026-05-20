@@ -47,7 +47,7 @@ def save_jobs(jobs: dict):
     write_jobs(jobs)
 
 
-async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_jobs: int = 0) -> list[dict]:
+async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_jobs: int = 0, filters: dict | None = None) -> list[dict]:
     """Use an agent to collect job listings for a single title."""
     import json as _json, re as _re
     from datetime import datetime, timezone
@@ -140,7 +140,23 @@ async def collect_for_title(title: str, existing_jobs: dict, profile: dict, max_
     browser = BrowserSession(user_data_dir=str(BROWSER_PROFILE_DIR), chromium_sandbox=(sys.platform != "linux"))
 
     from urllib.parse import quote
-    search_url = f"https://www.linkedin.com/jobs/search/?keywords={quote(title)}&location={quote(locations)}&f_TPR=r604800"
+    search_url = f"https://www.linkedin.com/jobs/search/?keywords={quote(title)}&location={quote(locations)}"
+
+    # Append filter parameters from the UI
+    if filters:
+        # Map of known LinkedIn filter keys to URL params
+        LINKEDIN_FILTER_PARAMS = {
+            "date_posted": "f_TPR",
+            "experience_level": "f_E",
+            "work_type": "f_WT",
+            "job_type": "f_JT",
+        }
+        for key, value in filters.items():
+            if value and key in LINKEDIN_FILTER_PARAMS:
+                search_url += f"&{LINKEDIN_FILTER_PARAMS[key]}={quote(str(value))}"
+    else:
+        # Default: past week
+        search_url += "&f_TPR=r604800"
 
     agent = Agent(
         task=(

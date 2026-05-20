@@ -774,6 +774,7 @@ async def start_collection(body: CollectRequest):
 
     title = body.title
     max_jobs = body.max_jobs
+    filters = body.filters or {}
     _collection_status = {"running": True, "title": title or "all titles", "log": ["Starting collection... This may take several minutes per job title."], "collected": 0, "max_jobs": max_jobs}
 
     async def _do_collect():
@@ -805,7 +806,7 @@ async def start_collection(body: CollectRequest):
             print(f"[{i+1}/{len(titles)}] Collecting: {t}")
             print(f"{'='*60}")
             try:
-                found = await collect_jobs.collect_for_title(t, jobs, profile, max_jobs=max_jobs)
+                found = await collect_jobs.collect_for_title(t, jobs, profile, max_jobs=max_jobs, filters=filters)
                 jobs = read_jobs()
                 _collection_status["collected"] = _collection_status.get("collected", 0) + len(found)
                 print(f"  Found {len(found)} new jobs (total: {len(jobs)})")
