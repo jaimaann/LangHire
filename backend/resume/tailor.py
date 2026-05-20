@@ -184,7 +184,12 @@ async def _generate_tailored_text(
 
     from browser_use.llm.messages import UserMessage
     response = await llm.ainvoke([UserMessage(content=prompt)])
-    text = response.content if hasattr(response, "content") else str(response)
+    if hasattr(response, "completion"):
+        text = response.completion
+    elif hasattr(response, "content") and isinstance(response.content, str):
+        text = response.content
+    else:
+        text = str(response)
 
     match = re.search(r"\{.*\}", text, re.DOTALL)
     if not match:
