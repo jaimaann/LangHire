@@ -281,45 +281,71 @@ def _generate_fresh_pdf(
 
         for idx, s in experience_sections:
             content = tailored.get(idx, s["text"])
-            lines = content.split("\n")
 
-            # Track position within each job entry
-            # Pattern: Title\nCompany\nDate\n· bullets...
-            line_in_entry = 0
-            for line in lines:
-                line = line.strip()
-                if not line:
-                    y += 8
-                    line_in_entry = 0  # Reset for next job entry
-                    continue
+            # Pre-process: split into entries, then pre-wrap all lines
+            entries = []
+            current_entry: list[str] = []
+            for line in content.split("\n"):
+                stripped = line.strip()
+                if not stripped:
+                    if current_entry:
+                        entries.append(current_entry)
+                        current_entry = []
+                else:
+                    if (current_entry and
+                        not stripped.startswith("·") and not stripped.startswith("-") and
+                        any(l.startswith("·") or l.startswith("-") for l in current_entry)):
+                        entries.append(current_entry)
+                        current_entry = []
+                    current_entry.append(stripped)
+            if current_entry:
+                entries.append(current_entry)
 
-                if y > 750:
+            for entry in entries:
+                if y > 720:
                     page = doc.new_page(width=612, height=792)
                     y = 50
 
-                if line.startswith("·") or line.startswith("-"):
-                    # Bullet point with indent
-                    wrapped_lines = _wrap_text(line, page_width - 30, 9)
-                    for wl in wrapped_lines:
-                        page.insert_text(fitz.Point(margin_left + 15, y + 9), wl, fontsize=9, fontname="helv", color=body_color)
-                        y += 12
-                elif line_in_entry == 0:
-                    # Job title (first line after blank) — bold
-                    page.insert_text(fitz.Point(margin_left, y + 9), line, fontsize=9, fontname="helvetica-bold", color=body_color)
-                    y += 13
-                    line_in_entry += 1
-                elif line_in_entry == 1:
-                    # Company name — regular
-                    page.insert_text(fitz.Point(margin_left, y + 9), line, fontsize=9, fontname="helv", color=body_color)
-                    y += 12
-                    line_in_entry += 1
-                else:
-                    # Date or other info — lighter color
-                    page.insert_text(fitz.Point(margin_left, y + 9), line, fontsize=9, fontname="helv", color=light_color)
-                    y += 12
-                    line_in_entry += 1
+                for ei, eline in enumerate(entry):
+                    is_bullet = eline.startswith("·") or eline.startswith("-")
 
-            y += 10
+                    if is_bullet:
+                        # Pre-wrap bullet text, render each wrapped line at same indent
+                        wrapped = _wrap_text(eline, page_width - 30, 9)
+                        for wl in wrapped:
+                            if y > 760:
+                                page = doc.new_page(width=612, height=792)
+                                y = 50
+                            page.insert_text(fitz.Point(margin_left + 15, y + 10), wl, fontsize=9, fontname="helv", color=body_color)
+                            y += 12
+                    else:
+                        # Header line — find first bullet to determine position
+                        first_bullet_idx = len(entry)
+                        for fi, fl in enumerate(entry):
+                            if fl.startswith("·") or fl.startswith("-"):
+                                first_bullet_idx = fi
+                                break
+
+                        header_pos = ei if ei < first_bullet_idx else 0
+
+                        if y > 760:
+                            page = doc.new_page(width=612, height=792)
+                            y = 50
+
+                        if header_pos == 0:
+                            # Job title
+                            page.insert_text(fitz.Point(margin_left, y + 10), eline, fontsize=9.5, fontname="helvetica-bold", color=body_color)
+                            y += 14
+                        elif header_pos == 1:
+                            # Company
+                            page.insert_text(fitz.Point(margin_left, y + 10), eline, fontsize=9, fontname="helv", color=body_color)
+                            y += 12
+                        else:
+                            # Date
+                            page.insert_text(fitz.Point(margin_left, y + 10), eline, fontsize=9, fontname="helv", color=light_color)
+                            y += 12
+
+                y += 10
 
     # ─── Education Section (at the bottom) ───
     if education_text:
