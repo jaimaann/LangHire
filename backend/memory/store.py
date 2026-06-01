@@ -113,6 +113,9 @@ DOMAIN_NORMALIZATION: list[tuple[str, str]] = [
     # Indeed country subdomains: au.indeed.com, uk.indeed.com → indeed.com
     (r"\w+\.indeed\.com$", "indeed.com"),
     (r"indeed\.co\.\w+$", "indeed.com"),
+    # ZipRecruiter subdomains: www.ziprecruiter.com, app.ziprecruiter.com → ziprecruiter.com
+    (r"[\w-]+\.ziprecruiter\.com$", "ziprecruiter.com"),
+    (r"[\w-]+\.ziprecruiter\.co\.uk$", "ziprecruiter.com"),
     # SEEK: {anything}.seek.com.au → seek.com.au
     (r"[\w-]+\.seek\.com\.au$", "seek.com.au"),
     (r"[\w-]+\.seek\.co\.nz$", "seek.co.nz"),
