@@ -1,0 +1,82 @@
+name: ziprecruiter
+display_name: ZipRecruiter
+version: "1.0.0"
+author: langhire
+description: "ZipRecruiter job search for the US, UK, and Canada with 1-Click Apply support"
+countries: [US, GB, CA]
+website: https://www.ziprecruiter.com
+requires_login: true
+login_url: https://www.ziprecruiter.com/login
+
+auth_cookies:
+  - name: ziprecruiter_session
+    domain: .ziprecruiter.com
+
+search_url: "https://www.ziprecruiter.com/jobs-search?search={title}&location={location}"
+
+collection_prompt: |
+  FIRST - LOGIN CHECK:
+  1. Go to https://www.ziprecruiter.com/candidate/profile to check if you're logged into ZipRecruiter.
+     - If you see your profile, saved jobs, or account page -> logged in
+     - If you see a login page -> WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
+
+  THEN: Navigate directly to this ZipRecruiter search URL:
+  {search_url}
+  Do NOT modify the search filters. Results are ready.
+
+  HOW TO COLLECT JOBS:
+  1. You will see a list of job cards in the search results.
+  2. For each job card, extract:
+     - Job title
+     - Company name
+     - Location
+     - Full job URL from the job card link or by clicking the card and reading the URL
+     - Whether it shows "1-Click Apply" or "Quick Apply" (easy_apply: true) or redirects externally (easy_apply: false)
+  3. Open or click each job card to confirm the details and full URL.
+  4. Output a @@JOB_FOUND marker for each job.
+  5. Navigate to the next page of results using pagination or continue scrolling if more results load dynamically.
+  6. Repeat until you have {max_jobs} jobs or run out of results.
+
+  IMPORTANT RULES:
+  - Output ONE @@JOB_FOUND marker per job in your MEMORY field.
+  - Do NOT apply to any jobs - only collect listings.
+  - Include both 1-Click Apply and external jobs.
+  - Stop after collecting {max_jobs} NEW jobs and call done.
+
+  @@JOB_FOUND format:
+  @@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", "url": "<full ZipRecruiter job URL>", "easy_apply": true/false}}
+
+apply_prompt: |
+  FIRST - LOGIN CHECK:
+  1. Go to https://www.ziprecruiter.com/candidate/profile to check if you're logged into ZipRecruiter.
+     - If you see your profile, saved jobs, or account page -> logged in
+     - If redirected to login -> WAIT for user to log in. Check every 15 seconds. Wait up to 5 minutes.
+
+  THEN: Go to {job_url}
+
+  If this job has "1-Click Apply", "Quick Apply", or an apply button on ZipRecruiter:
+  - Click the apply button and complete the ZipRecruiter application flow.
+  - Upload resume at {resume_path} when prompted.
+  - Fill all fields using the candidate profile.
+  - Answer screening questions using the Q&A bank.
+  - If a cover letter is requested: {cover_letter}
+  - Review and submit the application.
+
+  If this job redirects to an external company site:
+  - Click the apply button and follow through to the external page.
+  - Look for "Apply Now", "Submit Application", "Apply on company site", or similar buttons.
+  - Navigate through any intermediate job-detail pages until the actual application form appears.
+  - Fill all fields from the candidate profile. Upload resume at {resume_path}.
+  - If the site requires account creation, try "Sign in with Google" first when available.
+
+  OTP/VERIFICATION CODES: If ANY site asks for a verification code:
+  1. Choose the EMAIL option if given a choice
+  2. Open a new tab and go to https://mail.google.com
+  3. Find the most recent email with the verification/OTP code
+  4. Copy the code, switch back, and enter it
+
+  If the form is broken after 3 attempts, report failure and stop.
+
+domain_patterns:
+  - pattern: "*.ziprecruiter.com"
+    normalize_to: "ziprecruiter.com"

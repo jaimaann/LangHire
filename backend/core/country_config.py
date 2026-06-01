@@ -24,7 +24,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_photo": False,
         "show_date_of_birth": False,
         "phone_prefix": "+1",
-        "default_sources": ["linkedin", "indeed"],
+        "default_sources": ["linkedin", "indeed", "ziprecruiter"],
         "default_language": "en",
     },
     "GB": {
@@ -49,7 +49,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_photo": False,
         "show_date_of_birth": False,
         "phone_prefix": "+44",
-        "default_sources": ["linkedin", "indeed", "reed"],
+        "default_sources": ["linkedin", "indeed", "ziprecruiter", "reed"],
         "default_language": "en",
     },
     "DE": {
@@ -142,7 +142,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_photo": False,
         "show_date_of_birth": False,
         "phone_prefix": "+1",
-        "default_sources": ["linkedin", "indeed"],
+        "default_sources": ["linkedin", "indeed", "ziprecruiter"],
         "default_language": "en",
     },
     "AE": {
