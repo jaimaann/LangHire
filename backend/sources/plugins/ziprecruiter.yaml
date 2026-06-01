@@ -12,7 +12,19 @@ auth_cookies:
   - name: ziprecruiter_session
     domain: .ziprecruiter.com
 
-search_url: "https://www.ziprecruiter.com/jobs-search?search={title}&location={location}"
+search_url: "https://www.ziprecruiter.com/jobs/search?search={title}&location={location}"
+
+filters:
+  - key: date_posted
+    label: "Posted within"
+    type: select
+    options:
+      - { value: "1", label: "Last 24 hours" }
+      - { value: "3", label: "Last 3 days" }
+      - { value: "7", label: "Last 7 days" }
+      - { value: "14", label: "Last 14 days" }
+    url_param: "days"
+    default: "7"
 
 collection_prompt: |
   FIRST - LOGIN CHECK:
@@ -79,4 +91,6 @@ apply_prompt: |
 
 domain_patterns:
   - pattern: "*.ziprecruiter.com"
+    normalize_to: "ziprecruiter.com"
+  - pattern: "*.ziprecruiter.co.uk"
     normalize_to: "ziprecruiter.com"

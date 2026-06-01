@@ -49,7 +49,7 @@ COUNTRY_CONFIGS: dict[str, dict] = {
         "show_photo": False,
         "show_date_of_birth": False,
         "phone_prefix": "+44",
-        "default_sources": ["linkedin", "indeed", "ziprecruiter", "reed"],
+        "default_sources": ["linkedin", "indeed", "reed", "ziprecruiter"],
         "default_language": "en",
     },
     "DE": {
