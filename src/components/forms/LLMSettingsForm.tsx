@@ -11,6 +11,7 @@ const PROVIDERS: { id: LLMProvider; nameKey: string; descKey: string }[] = [
   { id: "anthropic", nameKey: "providers.anthropic.name", descKey: "providers.anthropic.description" },
   { id: "bedrock", nameKey: "providers.bedrock.name", descKey: "providers.bedrock.description" },
   { id: "ollama", nameKey: "providers.ollama.name", descKey: "providers.ollama.description" },
+  { id: "openai_compatible", nameKey: "providers.openai_compatible.name", descKey: "providers.openai_compatible.description" },
 ];
 
 const OPENAI_MODELS = ["gpt-5.4-nano", "gpt-5.4-mini", "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"];
@@ -46,6 +47,7 @@ const defaultSettings: LLMSettings = {
   bedrock: { access_key: "", secret_key: "", region: "us-west-2", model: "us.anthropic.claude-sonnet-4-6", auth_mode: "profile", profile_name: "default" },
   ollama: { base_url: "http://localhost:11434", model: "" },
   openrouter: { api_key: "", model: "qwen/qwen3.6-plus" },
+  openai_compatible: { base_url: "", api_key: "", model: "" },
 };
 
 const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
@@ -54,6 +56,7 @@ const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
   bedrock: "AWS Bedrock",
   ollama: "Ollama",
   openrouter: "OpenRouter",
+  openai_compatible: "OpenAI-Compatible",
 };
 
 interface LLMSettingsFormProps {
@@ -206,6 +209,12 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
     const ns = { ...settings, openrouter: { ...settings.openrouter!, [field]: value } };
     setSettings(ns);
     if (field === "model") immediateSave(ns); else autoSave(ns);
+  };
+
+  const updateOpenAICompatible = (field: string, value: string) => {
+    const ns = { ...settings, openai_compatible: { ...settings.openai_compatible!, [field]: value } };
+    setSettings(ns);
+    autoSave(ns);
   };
 
   const handleTest = async () => {
@@ -492,6 +501,26 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                 {" "}{t("openrouter.browseAt")}{" "}
                 <a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">openrouter.ai/models</a>
               </p>
+            </div>
+          </div>
+        )}
+
+        {settings.provider === "openai_compatible" && (
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.baseUrl")}</label>
+              <input value={settings.openai_compatible?.base_url || ""} onChange={(e) => updateOpenAICompatible("base_url", e.target.value)} placeholder="https://api.together.xyz/v1" className="input-base font-mono" />
+              <p className="text-xs text-muted-foreground mt-1">{t("openaiCompatible.baseUrlHint")}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.apiKey")} <span className="text-muted-foreground font-normal">({t("openaiCompatible.optional")})</span></label>
+              <input type="password" value={settings.openai_compatible?.api_key || ""} onChange={(e) => updateOpenAICompatible("api_key", e.target.value)} placeholder="sk-..." className="input-base font-mono" />
+              <p className="text-xs text-muted-foreground mt-1">{t("openaiCompatible.apiKeyHint")}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.model")}</label>
+              <input value={settings.openai_compatible?.model || ""} onChange={(e) => updateOpenAICompatible("model", e.target.value)} placeholder="meta-llama/Llama-3-70b-chat-hf" className="input-base" />
+              <p className="text-xs text-muted-foreground mt-1">{t("openaiCompatible.modelHint")}</p>
             </div>
           </div>
         )}

@@ -48,7 +48,7 @@ export interface CandidateProfile {
 }
 
 // ── LLM Settings ──────────────────────────────────────────────────────────
-export type LLMProvider = "openai" | "anthropic" | "bedrock" | "ollama" | "openrouter";
+export type LLMProvider = "openai" | "anthropic" | "bedrock" | "ollama" | "openrouter" | "openai_compatible";
 
 export interface LLMSettings {
   provider: LLMProvider;
@@ -73,6 +73,11 @@ export interface LLMSettings {
     model: string;
   };
   openrouter?: {
+    api_key: string;
+    model: string;
+  };
+  openai_compatible?: {
+    base_url: string;
     api_key: string;
     model: string;
   };
