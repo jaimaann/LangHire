@@ -23,6 +23,10 @@
     "ollama": {
       "name": "Ollama",
       "description": "Run open-source models locally — no API key needed"
+    },
+    "openai_compatible": {
+      "name": "OpenAI-Compatible",
+      "description": "Any API that follows the OpenAI format — Together, Groq, LM Studio, vLLM, etc."
     }
   },
   "labels": {
@@ -34,6 +38,7 @@
     "secretKey": "Secret Key",
     "profileName": "Profile Name",
     "serverUrl": "Server URL",
+    "baseUrl": "Base URL",
     "authentication": "Authentication",
     "awsCliProfile": "AWS CLI Profile",
     "accessKeySecretKey": "Access Key / Secret Key",
@@ -85,6 +90,12 @@
     "modelsAvailable": "{{count}} vision models available. Prices per million tokens.",
     "curatedList": "Showing curated list. Connect to load all vision models.",
     "browseAt": "Browse at"
+  },
+  "openaiCompatible": {
+    "baseUrlHint": "The full URL to the OpenAI-compatible API endpoint (e.g. https://api.together.xyz/v1 or http://localhost:1234/v1)",
+    "apiKeyHint": "Leave empty if your server doesn't require authentication.",
+    "modelHint": "The model name as expected by your server.",
+    "optional": "optional"
   },
   "status": {
     "saving": "Saving...",

@@ -113,6 +113,15 @@ def create_llm(settings: dict):
             base_url="https://openrouter.ai/api/v1",
         )
 
+    elif provider == "openai_compatible":
+        from browser_use.llm import ChatOpenAI
+        cfg = settings.get("openai_compatible", {})
+        return ChatOpenAI(
+            model=cfg.get("model", "default"),
+            api_key=cfg.get("api_key") or "not-needed",
+            base_url=cfg.get("base_url"),
+        )
+
     else:
         raise ValueError(f"Unknown LLM provider: {provider}")
 
