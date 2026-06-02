@@ -1,0 +1,149 @@
+---
+title: "OpenAI-Compatible Providers: Connect LangHire to Together AI, Groq, DeepSeek, or Any Local Server"
+description: "LangHire now supports any OpenAI-compatible API endpoint. Here's how to connect to Together AI, Groq, DeepSeek, LM Studio, vLLM, and more — with cost comparisons per job application."
+date: 2026-06-02
+author: "LangHire Team"
+tags: ["guide", "providers", "self-hosting"]
+---
+
+LangHire has always let you choose your AI provider — OpenAI, Anthropic, AWS Bedrock, or Ollama for fully local inference. But many users wanted something in between: the ability to point LangHire at *any* API that speaks the OpenAI format.
+
+Today we're shipping exactly that.
+
+## What's an OpenAI-Compatible API?
+
+The OpenAI chat completions format (`/v1/chat/completions`) has become a de facto standard. Dozens of providers and local inference tools implement the same API shape, which means any client built for OpenAI can talk to them with just a URL change.
+
+This includes:
+
+- **Together AI** — affordable hosted inference for Llama, Mistral, Qwen, and more
+- **Groq** — ultra-fast inference on custom LPU hardware
+- **DeepSeek** — strong reasoning models at low cost
+- **Fireworks AI** — optimized inference with function calling support
+- **LM Studio** — desktop app for running models locally with a GUI
+- **vLLM** — high-throughput self-hosted inference server
+- **text-generation-webui** — popular local model runner with OpenAI-compatible extension
+- **Ollama** (via `/v1`) — if you want the OpenAI-compatible interface instead of Ollama's native one
+
+## How to Set It Up
+
+1. Go to **Settings → LLM** in LangHire
+2. Select **"OpenAI-Compatible"** as your provider
+3. Enter three things:
+   - **Base URL** — the API endpoint (e.g. `https://api.together.xyz/v1`)
+   - **API Key** — optional for local servers, required for cloud providers
+   - **Model name** — whatever your server expects (e.g. `meta-llama/Llama-3-70b-chat-hf`)
+4. Click **Test Connection** to verify
+
+That's it. LangHire will use this endpoint for all AI operations — job collection, form filling, screening questions, and resume tailoring.
+
+## Provider-by-Provider Setup
+
+### Together AI
+
+Together offers 100+ open models at competitive prices. Great balance of cost and quality.
+
+| Field | Value |
+|-------|-------|
+| Base URL | `https://api.together.xyz/v1` |
+| API Key | Your Together API key ([get one here](https://api.together.xyz/settings/api-keys)) |
+| Model | `meta-llama/Llama-3.3-70B-Instruct-Turbo` |
+
+**Cost per application**: ~$0.002–0.005 (significantly cheaper than OpenAI)
+
+### Groq
+
+Groq's custom hardware delivers extremely fast inference — often 10–20x faster than GPU-based providers. Great for batch applications where speed matters.
+
+| Field | Value |
+|-------|-------|
+| Base URL | `https://api.groq.com/openai/v1` |
+| API Key | Your Groq API key ([get one here](https://console.groq.com/keys)) |
+| Model | `llama-3.3-70b-versatile` |
+
+**Cost per application**: ~$0.002–0.004 (and blazing fast)
+
+### DeepSeek
+
+DeepSeek offers strong reasoning capabilities at very low cost. Good for complex screening questions.
+
+| Field | Value |
+|-------|-------|
+| Base URL | `https://api.deepseek.com/v1` |
+| API Key | Your DeepSeek API key |
+| Model | `deepseek-chat` |
+
+**Cost per application**: ~$0.001–0.003 (one of the cheapest options)
+
+### LM Studio (Local)
+
+Run models on your own machine with a user-friendly GUI. Zero cost, zero data leaving your computer.
+
+| Field | Value |
+|-------|-------|
+| Base URL | `http://localhost:1234/v1` |
+| API Key | *(leave empty)* |
+| Model | Whatever you have loaded (e.g. `llama-3.1-8b-instruct`) |
+
+**Cost per application**: $0 (your electricity only)
+
+### vLLM (Self-Hosted)
+
+For users with GPU servers who want high-throughput inference.
+
+| Field | Value |
+|-------|-------|
+| Base URL | `http://your-server:8000/v1` |
+| API Key | *(leave empty or set if configured)* |
+| Model | The model you launched vLLM with |
+
+**Cost per application**: $0 beyond hardware/cloud GPU costs
+
+## Cost Comparison Per Job Application
+
+A typical job application involves 3–8 LLM calls (page analysis, form filling, question answering). Here's what that costs across providers:
+
+| Provider | Model | Cost/Application | Speed |
+|----------|-------|-----------------|-------|
+| OpenAI | GPT-4o | ~$0.01–0.03 | Fast |
+| Anthropic | Claude Sonnet | ~$0.01–0.03 | Fast |
+| Together AI | Llama 3.3 70B | ~$0.002–0.005 | Moderate |
+| Groq | Llama 3.3 70B | ~$0.002–0.004 | Very fast |
+| DeepSeek | deepseek-chat | ~$0.001–0.003 | Moderate |
+| LM Studio | Llama 3.1 8B | $0 | Depends on hardware |
+| Ollama | Any local model | $0 | Depends on hardware |
+
+If you're applying to 50 jobs a day, the difference between $0.03/app (OpenAI) and $0.002/app (Together) is $1.50 vs $0.10 daily. Over a month-long job search, that's $45 vs $3.
+
+## Which Provider Should You Choose?
+
+**Best quality (money no object)**: OpenAI GPT-4o or Anthropic Claude Sonnet — these remain the strongest general-purpose models for understanding complex forms and writing natural answers.
+
+**Best value**: Together AI or Groq with Llama 3.3 70B — 90%+ of the quality at 1/10th the cost. This is the sweet spot for most users.
+
+**Cheapest cloud option**: DeepSeek — remarkable quality for the price, especially on reasoning-heavy screening questions.
+
+**Maximum privacy**: LM Studio or Ollama — nothing leaves your machine. Use at least a 7B parameter model; 70B+ if your hardware can handle it.
+
+**Fastest**: Groq — if you're running parallel workers and want applications submitted as quickly as possible.
+
+## Tips for Best Results
+
+1. **Use at least a 70B model for form filling** — smaller models (7B–13B) work but make more mistakes on complex multi-step ATS forms
+2. **Test before batch applying** — use the Test Connection button, then try one manual application to verify quality
+3. **Local models need context** — set a minimum 8K context window if your provider supports it; LangHire's prompts can be lengthy with memory context included
+4. **API key is truly optional** — local servers (LM Studio, vLLM, Ollama) don't need one. LangHire sends "not-needed" as a placeholder
+
+## Your Data, Your Choice
+
+This is what local-first means in practice. You can now run LangHire with:
+
+- A local model (Ollama or LM Studio) → **zero external API calls**
+- A privacy-focused cloud provider → **your choice who sees the prompts**
+- A self-hosted GPU server → **enterprise-grade inference under your control**
+
+No matter which option you pick, your resume, profile, application history, and learned memories never leave your machine. Only the LLM inference calls go out — and now you control exactly where they go.
+
+---
+
+Update LangHire to the latest version to see the new OpenAI-Compatible provider option in Settings → LLM. [Download here](https://langhire.org) or pull the latest from [GitHub](https://github.com/jaimaann/LangHire).
