@@ -218,7 +218,7 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
             )}
           </div>
           <div ref={logRef} className="log-viewer">
-            <div className="flex items-center gap-2 mb-2 text-gray-400">
+            <div className="flex items-center gap-2 mb-2 text-muted-foreground">
               <Terminal className="w-3.5 h-3.5" /> {t("log.applicationLog")}
               {running && (
                 <Loader2 className="w-3.5 h-3.5 animate-spin text-green-400" />
@@ -262,7 +262,7 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
                   {/* Row */}
                   <button
                     onClick={() => toggleExpand(row.job.url)}
-                    className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center gap-3"
+                    className="w-full text-left px-4 py-3 hover:bg-secondary transition-colors flex items-center gap-3"
                   >
                     {isExpanded ? (
                       <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />
@@ -313,7 +313,7 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
 
                   {/* Expanded detail panel */}
                   {isExpanded && (
-                    <div className="px-4 py-4 bg-gray-50 border-t border-border">
+                    <div className="px-4 py-4 bg-secondary border-t border-border">
                       <div className="grid grid-cols-2 gap-4">
                         {/* Left column */}
                         <div className="space-y-3">

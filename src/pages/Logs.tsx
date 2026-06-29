@@ -58,8 +58,8 @@ export default function Logs() {
 
       <div className="grid grid-cols-3 gap-4" style={{ minHeight: 500 }}>
         {/* Left: Run list */}
-        <div className="col-span-1 border border-border rounded-2xl overflow-hidden bg-white shadow-sm">
-          <div className="px-4 py-3 bg-gray-50 border-b border-border text-sm font-medium text-foreground">
+        <div className="col-span-1 border border-border rounded-2xl overflow-hidden bg-card shadow-sm">
+          <div className="px-4 py-3 bg-secondary border-b border-border text-sm font-medium text-foreground">
             {t("runs.title", { count: runs.length })}
           </div>
           <div className="overflow-y-auto" style={{ maxHeight: 600 }}>
@@ -73,7 +73,7 @@ export default function Logs() {
                   key={run.id}
                   onClick={() => run.run_id && selectRun(run.run_id)}
                   disabled={!run.run_id}
-                  className={`w-full text-left px-4 py-3 border-b border-border hover:bg-gray-50 transition-colors ${
+                  className={`w-full text-left px-4 py-3 border-b border-border hover:bg-secondary transition-colors ${
                     selectedRunId === run.run_id ? "bg-primary/5 border-l-2 border-l-primary" : ""
                   } ${!run.run_id ? "opacity-50" : ""}`}
                 >
@@ -107,22 +107,22 @@ export default function Logs() {
         </div>
 
         {/* Right: Log detail */}
-        <div className="col-span-2 border border-border rounded-2xl overflow-hidden bg-white shadow-sm">
-          <div className="px-4 py-3 bg-gray-50 border-b border-border text-sm font-medium text-foreground flex items-center gap-2">
+        <div className="col-span-2 border border-border rounded-2xl overflow-hidden bg-card shadow-sm">
+          <div className="px-4 py-3 bg-secondary border-b border-border text-sm font-medium text-foreground flex items-center gap-2">
             <ScrollText className="w-4 h-4" />
             {selectedRunId ? t("detail.runTitle", { id: selectedRunId }) : t("detail.selectPrompt")}
           </div>
           <div className="log-viewer !max-h-none" style={{ maxHeight: 600 }}>
             {!selectedRunId ? (
-              <div className="text-gray-500 text-center mt-16">
+              <div className="text-muted-foreground text-center mt-16">
                 {t("detail.selectFromPanel")}
               </div>
             ) : loadingLogs ? (
               <div className="flex items-center justify-center h-32">
-                <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
               </div>
             ) : runLogs.length === 0 ? (
-              <div className="text-gray-500 text-center mt-16">
+              <div className="text-muted-foreground text-center mt-16">
                 {t("detail.noLogs")}
               </div>
             ) : (

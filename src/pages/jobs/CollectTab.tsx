@@ -258,7 +258,7 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
                     collectSource === source.name
                       ? "border-primary bg-primary/10 text-primary"
-                      : "border-border bg-white text-foreground hover:border-primary/50"
+                      : "border-border bg-card text-foreground hover:border-primary/50"
                   }`}
                 >
                   {source.display_name}
@@ -285,7 +285,7 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
                       }))
                     }
                     disabled={collecting}
-                    className="w-full px-2.5 py-1.5 border border-border rounded-lg text-sm bg-white"
+                    className="w-full px-2.5 py-1.5 border border-border rounded-lg text-sm bg-card"
                   >
                     <option value="">Any</option>
                     {filter.options.map((opt) => (
@@ -363,7 +363,7 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
         {/* Log output */}
         {collectLog.length > 0 && (
           <div ref={logRef} className="log-viewer">
-            <div className="flex items-center gap-2 mb-2 text-gray-400">
+            <div className="flex items-center gap-2 mb-2 text-muted-foreground">
               <Terminal className="w-3.5 h-3.5" /> {t("collector.collectionLog")}
               {collecting && (
                 <Loader2 className="w-3.5 h-3.5 animate-spin text-green-400" />

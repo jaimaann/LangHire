@@ -12,7 +12,7 @@ export default function AutomationDialog({ open, title, onConfirm, onCancel }: A
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onCancel}>
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-card rounded-2xl shadow-xl w-full max-w-lg mx-4 overflow-hidden" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between px-6 pt-6 pb-0">
           <h2 className="text-lg font-bold text-foreground">{title}</h2>
           <button onClick={onCancel} className="p-1.5 rounded-lg hover:bg-secondary transition-colors cursor-pointer">

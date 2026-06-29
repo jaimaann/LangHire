@@ -110,7 +110,7 @@ export default function Memory() {
       {Object.keys(stats.by_category).length > 0 && (
         <div className="flex flex-wrap gap-2 mb-4">
           {Object.entries(stats.by_category).map(([cat, count]) => (
-            <span key={cat} className={`px-2.5 py-1 rounded-full text-xs font-medium ${CATEGORY_COLORS[cat] || "bg-gray-50 text-gray-700"}`}>
+            <span key={cat} className={`px-2.5 py-1 rounded-full text-xs font-medium ${CATEGORY_COLORS[cat] || "bg-secondary text-foreground"}`}>
               {cat.replace("_", " ")}: {count}
             </span>
           ))}
@@ -131,7 +131,7 @@ export default function Memory() {
 
       <div className="grid grid-cols-3 gap-4">
         {/* Domain List */}
-        <div className="col-span-1 bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
+        <div className="col-span-1 bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
           <div className="p-3 border-b border-border">
             <h3 className="text-sm font-bold text-foreground">{t("domains.title")}</h3>
           </div>
@@ -146,7 +146,7 @@ export default function Memory() {
                 <button
                   key={d.website_domain}
                   onClick={() => selectDomain(d.website_domain)}
-                  className={`w-full text-left p-3 hover:bg-gray-50 transition-colors flex items-center justify-between ${
+                  className={`w-full text-left p-3 hover:bg-secondary transition-colors flex items-center justify-between ${
                     selectedDomain === d.website_domain ? "bg-primary/5 border-l-2 border-l-primary" : ""
                   }`}
                 >
@@ -164,7 +164,7 @@ export default function Memory() {
         </div>
 
         {/* Memory List */}
-        <div className="col-span-2 bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
+        <div className="col-span-2 bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
           <div className="p-3 border-b border-border">
             <h3 className="text-sm font-bold text-foreground">
               {searchResults !== null ? t("memories.searchResults", { count: searchResults.length }) :
@@ -189,7 +189,7 @@ export default function Memory() {
                   <div className="flex items-start justify-between gap-2">
                     <p className="text-sm text-foreground flex-1">{m.content}</p>
                     <div className="flex items-center gap-1 flex-shrink-0">
-                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${CATEGORY_COLORS[m.category] || "bg-gray-50 text-gray-700"}`}>
+                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${CATEGORY_COLORS[m.category] || "bg-secondary text-foreground"}`}>
                         {m.category.replace("_", " ")}
                       </span>
                     </div>

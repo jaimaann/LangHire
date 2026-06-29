@@ -150,7 +150,7 @@ export default function Profile() {
             <select
               value={profile.country}
               onChange={(e) => handleCountryChange(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
+              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card"
             >
               <option value="">{t("country.selectPlaceholder")}</option>
               {Object.entries(countries).map(([code, config]) => (
@@ -222,7 +222,7 @@ export default function Profile() {
               <select
                 value={profile.work_authorization}
                 onChange={(e) => update("work_authorization", e.target.value)}
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card"
               >
                 <option value="">{t("work.workAuthPlaceholder")}</option>
                 {countryConfig.work_auth_options.map((opt) => (
@@ -243,7 +243,7 @@ export default function Profile() {
             <select
               value={profile.preferred_work_mode}
               onChange={(e) => update("preferred_work_mode", e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
+              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card"
             >
               <option value="remote">{t("work.remote")}</option>
               <option value="hybrid">{t("work.hybrid")}</option>
@@ -259,7 +259,7 @@ export default function Profile() {
               <select
                 value={profile.notice_period}
                 onChange={(e) => update("notice_period", e.target.value)}
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card"
               >
                 <option value="">{t("work.noticePeriodPlaceholder")}</option>
                 {noticePeriodOptions.map((opt) => (
@@ -291,7 +291,7 @@ export default function Profile() {
             <select
               value={profile.salary_expectation.period}
               onChange={(e) => updateNested("salary_expectation", "period", e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white"
+              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card"
             >
               <option value="annual">{t("salary.annual")}</option>
               <option value="monthly">{t("salary.monthly")}</option>

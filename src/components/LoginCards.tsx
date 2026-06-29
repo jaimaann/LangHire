@@ -77,7 +77,7 @@ export default function LoginCards() {
         return (
           <div
             key={id}
-            className={`bg-white rounded-xl border p-5 ${
+            className={`bg-card rounded-xl border p-5 ${
               loggedIn ? "border-green-200" : "border-amber-200"
             }`}
           >
@@ -98,7 +98,7 @@ export default function LoginCards() {
               </div>
               <button
                 onClick={() => fetchStatus()}
-                className="p-1 text-gray-400 hover:text-gray-600"
+                className="p-1 text-muted-foreground hover:text-foreground"
                 title="Refresh status"
               >
                 <RefreshCw className="w-3.5 h-3.5" />

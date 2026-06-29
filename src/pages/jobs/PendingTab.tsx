@@ -603,7 +603,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-border shadow-sm divide-y divide-border">
+        <div className="bg-card rounded-2xl border border-border shadow-sm divide-y divide-border">
           {jobs.map((job) => {
             const icon = STATUS_ICONS[job.status] || STATUS_ICONS.pending;
             const styles = STATUS_STYLES[job.status] || STATUS_STYLES.pending;
@@ -738,7 +738,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                         </button>
                         {statusMenuJob === job.url && (
                           <div
-                            className="absolute right-0 top-8 z-50 bg-white border border-border rounded-lg shadow-lg py-1 min-w-[160px]"
+                            className="absolute right-0 top-8 z-50 bg-card border border-border rounded-lg shadow-lg py-1 min-w-[160px]"
                             onClick={(e) => e.stopPropagation()}
                           >
                             {(
@@ -799,7 +799,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                               </button>
                             )}
                           </div>
-                          <div className="bg-white rounded-lg border border-border p-4 text-sm text-foreground whitespace-pre-wrap max-h-64 overflow-y-auto leading-relaxed">
+                          <div className="bg-card rounded-lg border border-border p-4 text-sm text-foreground whitespace-pre-wrap max-h-64 overflow-y-auto leading-relaxed">
                             {tailoredContent[job.url]}
                           </div>
                         </div>
@@ -936,7 +936,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
           onClick={() => setCoverLetterJob(null)}
         >
           <div
-            className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col"
+            className="bg-card rounded-2xl shadow-xl max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-5 border-b border-border">

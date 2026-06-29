@@ -143,7 +143,7 @@ export default function SettingsPage() {
           <select
             value={currentLanguage}
             onChange={(e) => handleLanguageChange(e.target.value)}
-            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-white max-w-xs"
+            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card max-w-xs"
           >
             <option value="">{t("language.auto")}</option>
             {Object.entries(LANGUAGE_NAMES).map(([code, name]) => (
@@ -249,7 +249,7 @@ export default function SettingsPage() {
               }}
               className="sr-only peer"
             />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+            <div className="w-11 h-6 bg-secondary peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
           </label>
         </div>
       </Section>
@@ -302,7 +302,7 @@ export default function SettingsPage() {
                     onChange={(e) => handleTogglePlugin(plugin.name, e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-9 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                  <div className="w-9 h-5 bg-secondary peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
                 </label>
                 {!plugin.is_builtin && (
                   <button onClick={() => handleRemovePlugin(plugin.name)} className="text-destructive hover:text-destructive/80">

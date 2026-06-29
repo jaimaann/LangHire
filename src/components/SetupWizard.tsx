@@ -96,7 +96,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-card rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="px-6 pt-5 pb-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -111,7 +111,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
         </div>
 
         {/* Step Indicators */}
-        <div className="px-6 py-3 border-b border-border bg-gray-50/50">
+        <div className="px-6 py-3 border-b border-border bg-secondary/50">
           <div className="flex items-center justify-between">
             {STEPS.map((s, i) => {
               const Icon = s.icon;
@@ -119,11 +119,11 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
               const isDone = i < step;
               return (
                 <div key={s.id} className="flex items-center gap-1.5">
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs ${isDone ? "bg-green-100 text-green-700" : isActive ? "bg-primary text-primary-foreground" : "bg-gray-100 text-gray-400"}`}>
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs ${isDone ? "bg-green-100 text-green-700" : isActive ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
                     {isDone ? <CheckCircle className="w-4 h-4" /> : <Icon className="w-3.5 h-3.5" />}
                   </div>
                   <span className={`text-xs font-medium hidden sm:inline ${isActive ? "text-foreground" : isDone ? "text-green-700" : "text-muted-foreground"}`}>{stepLabels[i]}</span>
-                  {i < STEPS.length - 1 && <div className={`w-4 h-px mx-1 ${isDone ? "bg-green-300" : "bg-gray-200"}`} />}
+                  {i < STEPS.length - 1 && <div className={`w-4 h-px mx-1 ${isDone ? "bg-success/40" : "bg-border"}`} />}
                 </div>
               );
             })}
@@ -143,7 +143,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                 {t("welcome.description")}
               </p>
-              <div className="bg-gray-50 rounded-xl p-5 max-w-md mx-auto text-left">
+              <div className="bg-secondary rounded-xl p-5 max-w-md mx-auto text-left">
                 <h4 className="text-sm font-semibold text-foreground mb-3">{t("welcome.howItWorks")}</h4>
                 <div className="space-y-3">
                   {[
@@ -187,7 +187,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
               </p>
 
               {/* Inline resume picker */}
-              <div className="bg-gray-50 rounded-xl p-4 mb-4">
+              <div className="bg-secondary rounded-xl p-4 mb-4">
                 <ResumePickerForm onSaved={fetchStatus} />
               </div>
 
@@ -237,7 +237,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
                   ? t("profileStep.descriptionParsed")
                   : t("profileStep.descriptionManual")}
               </p>
-              <div className="bg-gray-50 rounded-xl p-5 mb-4">
+              <div className="bg-secondary rounded-xl p-5 mb-4">
                 <div className="flex items-center gap-3 mb-3">
                   {status?.profile ? <CheckCircle className="w-5 h-5 text-green-600" /> : <XCircle className="w-5 h-5 text-amber-500" />}
                   <span className="text-sm font-medium text-foreground">{status?.profile ? t("profileStep.profileConfigured") : t("profileStep.profileNeeded")}</span>
@@ -266,7 +266,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                 {status?.all_required_done ? t("readyStep.descriptionDone") : t("readyStep.descriptionIncomplete")}
               </p>
-              <div className="bg-gray-50 rounded-xl p-5 max-w-sm mx-auto mb-6 text-left">
+              <div className="bg-secondary rounded-xl p-5 max-w-sm mx-auto mb-6 text-left">
                 <h4 className="text-sm font-semibold text-foreground mb-3">{t("readyStep.setupStatus")}</h4>
                 <div className="space-y-2">
                   {[
@@ -290,7 +290,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-border flex items-center justify-between bg-gray-50/50">
+        <div className="px-6 py-4 border-t border-border flex items-center justify-between bg-secondary/50">
           <div>
             {step > 0 && step < STEPS.length - 1 && (
               <button onClick={prev} className="flex items-center gap-1 px-3 py-2 text-sm text-muted-foreground hover:text-foreground">

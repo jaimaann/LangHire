@@ -37,10 +37,10 @@ function AccordionSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
+    <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-gray-50/50 transition-colors"
+        className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-secondary/50 transition-colors"
       >
         <Icon className="w-4 h-4 text-primary flex-shrink-0" />
         <span className="text-sm font-semibold text-foreground flex-1">
@@ -436,7 +436,7 @@ export default function Guide() {
             </p>
             <p>
               <strong>{t("sections.tips.backendNotConnecting")}</strong> {t("sections.tips.backendNotConnectingDesc")}{" "}
-              <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">
+              <code className="bg-secondary px-1.5 py-0.5 rounded text-xs">
                 {t("sections.tips.backendCommand")}
               </code>
             </p>
