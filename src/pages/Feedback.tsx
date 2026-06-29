@@ -142,7 +142,7 @@ export default function Feedback() {
                   onClick={() => setCategoryKey(c)}
                   className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
                     categoryKey === c
-                      ? "bg-foreground text-white"
+                      ? "bg-foreground text-background"
                       : "bg-secondary text-muted-foreground hover:bg-border"
                   }`}
                 >

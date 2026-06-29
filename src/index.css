@@ -58,7 +58,7 @@
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-foreground rounded-xl text-sm font-semibold hover:bg-secondary active:scale-[0.98] transition-all cursor-pointer;
   }
   .btn-dark {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-foreground text-white rounded-xl text-sm font-semibold hover:bg-foreground/90 active:scale-[0.98] transition-all cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-foreground text-background rounded-xl text-sm font-semibold hover:bg-foreground/90 active:scale-[0.98] transition-all cursor-pointer;
   }
   .input-base {
     @apply w-full px-4 py-3 border border-border rounded-xl text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground focus:ring-1 focus:ring-foreground transition-colors;
@@ -82,7 +82,7 @@
     @apply px-3.5 py-1.5 rounded-xl text-[13px] font-semibold transition-colors cursor-pointer;
   }
   .filter-tab-active {
-    @apply bg-foreground text-white;
+    @apply bg-foreground text-background;
   }
   .filter-tab-inactive {
     @apply bg-card border border-border text-muted-foreground hover:text-foreground;

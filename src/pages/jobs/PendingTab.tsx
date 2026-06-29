@@ -707,7 +707,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                                 ? t("jobItem.retryTitle")
                                 : t("jobItem.applyTitle")
                             }
-                            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-foreground text-white hover:bg-foreground/90 disabled:opacity-40 transition-all"
+                            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 transition-all"
                           >
                             {applyingUrl === job.url ? (
                               <Loader2 className="w-3 h-3 animate-spin" />
@@ -886,7 +886,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
           <button
             onClick={handleBatchApply}
             disabled={batchApplying}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-foreground text-white hover:bg-foreground/90 disabled:opacity-40 transition-all"
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 transition-all"
           >
             {batchApplying ? (
               <Loader2 className="w-4 h-4 animate-spin" />

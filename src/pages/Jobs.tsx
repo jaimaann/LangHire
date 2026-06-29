@@ -61,12 +61,12 @@ export default function Jobs() {
               onClick={() => setActiveTab(id)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                 activeTab === id
-                  ? "bg-foreground text-white shadow-sm"
+                  ? "bg-foreground text-background shadow-sm"
                   : "bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground"
               }`}
             >
               <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                activeTab === id ? "bg-white/20 text-white" : "bg-border text-muted-foreground"
+                activeTab === id ? "bg-background/20 text-background" : "bg-border text-muted-foreground"
               }`}>
                 {index + 1}
               </span>

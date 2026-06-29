@@ -136,7 +136,7 @@ export default function QA() {
               onClick={() => setFilter(f)}
               className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                 filter === f
-                  ? "bg-foreground text-white"
+                  ? "bg-foreground text-background"
                   : "bg-secondary text-muted-foreground hover:bg-border"
               }`}
             >
@@ -187,7 +187,7 @@ export default function QA() {
 
       {/* Toast */}
       {toast && (
-        <div className="fixed bottom-6 right-6 bg-foreground text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg z-50 animate-in fade-in">
+        <div className="fixed bottom-6 right-6 bg-foreground text-background px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg z-50 animate-in fade-in">
           {toast}
         </div>
       )}
