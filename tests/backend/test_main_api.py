@@ -500,6 +500,20 @@ class TestSetup:
         body = auth_client.get("/setup/status").json()
         assert body["onboarding_completed"] is True
 
+    def test_setup_status_llm_done_for_gemini(self, auth_client):
+        """A configured Gemini key marks the LLM step done (#40 provider)."""
+        auth_client.put("/settings/llm", json={"provider": "gemini", "gemini": {"api_key": "AIza-x", "model": "gemini-2.5-pro"}})
+        assert auth_client.get("/setup/status").json()["llm"] is True
+
+    def test_setup_status_llm_done_for_openai_compatible(self, auth_client):
+        """A configured base_url marks the LLM step done for openai_compatible."""
+        auth_client.put("/settings/llm", json={"provider": "openai_compatible", "openai_compatible": {"base_url": "https://api.together.xyz/v1", "api_key": "", "model": "m"}})
+        assert auth_client.get("/setup/status").json()["llm"] is True
+
+    def test_setup_status_llm_not_done_when_gemini_key_blank(self, auth_client):
+        auth_client.put("/settings/llm", json={"provider": "gemini", "gemini": {"api_key": "", "model": "gemini-2.5-pro"}})
+        assert auth_client.get("/setup/status").json()["llm"] is False
+
 
 # ── Status endpoints for the long-running workers (no work triggered) ─────────
 class TestWorkerStatus:

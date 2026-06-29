@@ -1563,6 +1563,11 @@ async def get_setup_status():
     elif provider == "ollama":
         ollama = llm.get("ollama") or {}
         llm_done = bool(ollama.get("base_url", "").strip())
+    elif provider == "gemini":
+        llm_done = bool((llm.get("gemini") or {}).get("api_key", "").strip())
+    elif provider == "openai_compatible":
+        compat = llm.get("openai_compatible") or {}
+        llm_done = bool(compat.get("base_url", "").strip())
 
     resume_done = bool(settings.get("resume_path", "").strip())
     onboarding_completed = settings.get("onboarding_completed", False)

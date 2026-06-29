@@ -176,4 +176,20 @@ describe("Dashboard page", () => {
     expect(screen.getByText("cards.successRate")).toBeInTheDocument();
     expect(screen.getAllByText("0%").length).toBeGreaterThan(0); // successRate with no jobs
   });
+
+  it("re-fetches setup status on the langhire:setup-updated event", async () => {
+    // Initial load: nothing required done → 0 of 3 complete.
+    mockGetSetupStatus.mockResolvedValue({ ...setupIncomplete, llm: false, resume: false, profile: false } as never);
+    renderDashboard();
+    await screen.findByText("quickActions.title");
+    const initialCalls = mockGetSetupStatus.mock.calls.length;
+
+    // Wizard finished → everything configured. Fire the event and expect a refetch.
+    mockGetSetupStatus.mockResolvedValue({ ...setupIncomplete, llm: true, resume: true, profile: true, all_required_done: true } as never);
+    window.dispatchEvent(new CustomEvent("langhire:setup-updated"));
+
+    await waitFor(() =>
+      expect(mockGetSetupStatus.mock.calls.length).toBeGreaterThan(initialCalls),
+    );
+  });
 });

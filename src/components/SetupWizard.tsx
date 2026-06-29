@@ -66,6 +66,9 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
     try {
       const s = await getSetupStatus();
       setStatus(s);
+      // Notify other views (e.g. the Dashboard "Getting Started" checklist),
+      // which otherwise wouldn't know setup progressed while this overlay is open.
+      window.dispatchEvent(new CustomEvent("langhire:setup-updated"));
     } catch { /* backend not ready */ }
   }, []);
 
@@ -88,6 +91,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
   const handleFinish = async () => {
     try { await completeOnboarding(); } catch { /* non-fatal */ }
     trackEvent("onboarding_completed");
+    window.dispatchEvent(new CustomEvent("langhire:setup-updated"));
     onClose();
   };
 

@@ -116,6 +116,27 @@ export default function Dashboard() {
     return () => { active = false; };
   }, []);
 
+  // Re-check onboarding progress when the user returns to the Dashboard or
+  // finishes the setup wizard — the wizard is an overlay (no route change), so
+  // without this the "Getting Started" checklist stays stale until a restart.
+  useEffect(() => {
+    let active = true;
+    const refreshSetup = () => {
+      getSetupStatus()
+        .then((s) => { if (active) setSetupStatus(s); })
+        .catch(() => {});
+    };
+    window.addEventListener("focus", refreshSetup);
+    window.addEventListener("langhire:setup-updated", refreshSetup);
+    document.addEventListener("visibilitychange", refreshSetup);
+    return () => {
+      active = false;
+      window.removeEventListener("focus", refreshSetup);
+      window.removeEventListener("langhire:setup-updated", refreshSetup);
+      document.removeEventListener("visibilitychange", refreshSetup);
+    };
+  }, []);
+
   const cards = [
     { label: t("cards.totalJobs"), value: stats.totalJobs, icon: Briefcase, color: "text-[#222222]", bg: "bg-[#F7F7F7]" },
     { label: t("cards.applied"), value: stats.applied, icon: CheckCircle, color: "text-success", bg: "bg-[#F0FFF0]" },
