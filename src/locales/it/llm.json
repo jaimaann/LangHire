@@ -1,0 +1,114 @@
+{
+  "title": "Impostazioni LLM",
+  "subtitle": "Configura il provider del modello IA per le candidature",
+  "selectProvider": "Seleziona provider",
+  "configuration": "Configurazione di {{provider}}",
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (Consigliato)",
+      "description": "Oltre 100 modelli di visione (GPT, Claude, Gemini, Qwen, Llama) tramite una singola chiave API"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "GPT-4o, GPT-4o-mini e altri modelli OpenAI"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "Modelli Claude Sonnet, Haiku e Opus (API diretta)"
+    },
+    "gemini": {
+      "name": "Google Gemini",
+      "description": "Gemini 2.5 Pro / Flash tramite chiave API di Google AI Studio"
+    },
+    "bedrock": {
+      "name": "AWS Bedrock",
+      "description": "Claude e altri modelli tramite AWS Bedrock"
+    },
+    "ollama": {
+      "name": "Ollama",
+      "description": "Esegui modelli open source localmente — nessuna chiave API necessaria"
+    },
+    "openai_compatible": {
+      "name": "Compatibile con OpenAI",
+      "description": "Qualsiasi API che segue il formato OpenAI — Together, Groq, LM Studio, vLLM, ecc."
+    }
+  },
+  "labels": {
+    "apiKey": "Chiave API",
+    "model": "Modello",
+    "modelVision": "Modello (Visione)",
+    "region": "Regione",
+    "accessKey": "Chiave di accesso",
+    "secretKey": "Chiave segreta",
+    "profileName": "Nome del profilo",
+    "serverUrl": "URL del server",
+    "baseUrl": "URL di base",
+    "authentication": "Autenticazione",
+    "awsCliProfile": "Profilo AWS CLI",
+    "accessKeySecretKey": "Chiave di accesso / Chiave segreta",
+    "selectModel": "Seleziona un modello"
+  },
+  "guide": {
+    "howToGetKey": "Come ottenere la tua chiave API di {{provider}}",
+    "openai": {
+      "step1": "Vai sulla piattaforma OpenAI e crea un account gratuito (o accedi).",
+      "step1Link": "platform.openai.com/signup",
+      "step2": "Aggiungi un metodo di pagamento in Settings > Billing. L'accesso alle API richiede la fatturazione anche se hai ChatGPT Plus.",
+      "step2Link": "Aggiungi fatturazione",
+      "step3": "Vai alla pagina delle chiavi API.",
+      "step3Link": "platform.openai.com/api-keys",
+      "step4": "Clicca su \"Create new secret key\", assegnale un nome, poi clicca su Create.",
+      "step5": "Copia la chiave e incollala qui sotto. Inizia con sk- e viene mostrata una sola volta.",
+      "note": "Questo è separato dal tuo abbonamento ChatGPT. L'API ha la propria fatturazione a consumo. GPT-4o costa all'incirca 0,01-0,03 $ per candidatura."
+    },
+    "anthropic": {
+      "step1": "Vai alla console Anthropic e crea un account gratuito (o accedi).",
+      "step1Link": "console.anthropic.com/signup",
+      "step2": "Aggiungi un metodo di pagamento in Settings > Billing. Potrebbe essere disponibile un piccolo credito di prova gratuito.",
+      "step2Link": "Aggiungi fatturazione",
+      "step3": "Vai alla pagina delle chiavi API.",
+      "step3Link": "console.anthropic.com/settings/keys",
+      "step4": "Clicca su \"Create Key\", assegnale un nome, poi clicca su Create.",
+      "step5": "Copia la chiave e incollala qui sotto. Inizia con sk-ant- e viene mostrata una sola volta.",
+      "note": "Claude Sonnet costa all'incirca 0,01-0,03 $ per candidatura. L'API è a consumo."
+    },
+    "openrouter": {
+      "step1": "Vai su OpenRouter e crea un account gratuito (o accedi).",
+      "step1Link": "openrouter.ai",
+      "step2": "Vai alla pagina delle chiavi API.",
+      "step2Link": "openrouter.ai/keys",
+      "step3": "Clicca su \"Create Key\", assegnale un nome, poi clicca su Create.",
+      "step4": "Copia la chiave e incollala qui sotto. Inizia con sk-or-v1-.",
+      "note": "OpenRouter ti dà accesso a oltre 100 modelli con una singola chiave. Aggiungi crediti su openrouter.ai/credits. I prezzi variano per modello."
+    },
+    "note": "Nota:"
+  },
+  "ollama": {
+    "serverUrlHint": "L'URL dove è in esecuzione il tuo server Ollama.",
+    "modelsFound": "{{count}} modello trovato sul tuo server.",
+    "modelsFound_other": "{{count}} modelli trovati sul tuo server.",
+    "noModelsHint": "Inserisci il nome di un modello, oppure avvia il tuo server Ollama per vedere i modelli disponibili."
+  },
+  "openrouter": {
+    "keyHint": "Ottieni la tua chiave su",
+    "modelsAvailable": "{{count}} modelli di visione disponibili. Prezzi per milione di token.",
+    "curatedList": "Mostrando l'elenco selezionato. Connettiti per caricare tutti i modelli di visione.",
+    "browseAt": "Sfoglia su",
+    "customOption": "ID modello personalizzato…",
+    "customHint": "Incolla qualsiasi tag di modello OpenRouter, ad es. openai/gpt-oss-120b:free"
+  },
+  "openaiCompatible": {
+    "baseUrlHint": "L'URL completo dell'endpoint API compatibile con OpenAI (ad es. https://api.together.xyz/v1 o http://localhost:1234/v1)",
+    "apiKeyHint": "Lascia vuoto se il tuo server non richiede autenticazione.",
+    "modelHint": "Il nome del modello come previsto dal tuo server.",
+    "optional": "facoltativo"
+  },
+  "status": {
+    "saving": "Salvataggio in corso...",
+    "saved": "Salvato",
+    "testing": "Verifica in corso...",
+    "testConnection": "Verifica connessione",
+    "connectionSuccessful": "Connessione riuscita!",
+    "connectionFailed": "Connessione non riuscita."
+  }
+}

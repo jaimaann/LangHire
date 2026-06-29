@@ -12,11 +12,13 @@ import {
   ScrollText,
   MessageSquare,
   HelpCircle,
+  BarChart3,
 } from "lucide-react";
 import { checkHealth } from "../../lib/api";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, labelKey: "nav.dashboard" },
+  { to: "/analytics", icon: BarChart3, labelKey: "nav.analytics" },
   { to: "/guide", icon: BookOpen, labelKey: "nav.guide" },
   { to: "/profile", icon: User, labelKey: "nav.profile" },
   { to: "/llm", icon: Cpu, labelKey: "nav.llmSettings" },
@@ -58,7 +60,7 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <aside className="w-60 bg-white border-r border-border flex flex-col h-screen fixed left-0 top-0">
+    <aside className="w-60 bg-card border-r border-border flex flex-col h-screen fixed left-0 top-0">
       {/* Logo */}
       <div className="px-5 pt-6 pb-5">
         <div className="flex items-center gap-2.5">

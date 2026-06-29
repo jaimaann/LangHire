@@ -8,6 +8,7 @@ import {
   getJobs,
   getMetricRuns,
   getSettings,
+  exportJobsCsv,
 } from "../../lib/api";
 
 // i18n: identity translator so assertions can use raw keys.
@@ -23,6 +24,7 @@ vi.mock("../../lib/api", () => ({
   getJobs: vi.fn(),
   getMetricRuns: vi.fn(),
   getSettings: vi.fn(),
+  exportJobsCsv: vi.fn(),
 }));
 
 const mockStopApplying = vi.mocked(stopApplying);
@@ -30,6 +32,7 @@ const mockGetApplyStatus = vi.mocked(getApplyStatus);
 const mockGetJobs = vi.mocked(getJobs);
 const mockGetMetricRuns = vi.mocked(getMetricRuns);
 const mockGetSettings = vi.mocked(getSettings);
+const mockExportJobsCsv = vi.mocked(exportJobsCsv);
 
 const idleApply = { running: false, mode: null, workers: 0, log: [], error: null, finished_at: null };
 
@@ -88,6 +91,7 @@ describe("HistoryTab", () => {
     mockGetMetricRuns.mockResolvedValue([structuredClone(metric)] as never);
     mockGetSettings.mockResolvedValue({ resume_path: "/r.pdf" } as never);
     mockStopApplying.mockResolvedValue({ success: true } as never);
+    mockExportJobsCsv.mockResolvedValue("Job Title,Company\nSenior Engineer,Acme\n" as never);
   });
 
   it("shows a spinner then renders the applied jobs list", async () => {
@@ -150,5 +154,42 @@ describe("HistoryTab", () => {
     expect(
       await screen.findByText("No applications yet. Start applying to see results here."),
     ).toBeInTheDocument();
+  });
+
+  it("exports jobs as CSV and triggers a download when the button is clicked", async () => {
+    // jsdom lacks URL.createObjectURL / anchor download — stub them.
+    const createObjectURL = vi.fn(() => "blob:mock");
+    const revokeObjectURL = vi.fn();
+    vi.stubGlobal("URL", { ...URL, createObjectURL, revokeObjectURL });
+    const clickSpy = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(() => {});
+
+    const user = userEvent.setup();
+    render(<HistoryTab onJobsChanged={onJobsChanged} />);
+    await screen.findByText("Senior Engineer");
+
+    const exportBtn = screen.getByRole("button", { name: /controls\.exportCsv/ });
+    await user.click(exportBtn);
+
+    await waitFor(() => expect(mockExportJobsCsv).toHaveBeenCalled());
+    expect(createObjectURL).toHaveBeenCalled();
+    expect(clickSpy).toHaveBeenCalled();
+
+    clickSpy.mockRestore();
+    vi.unstubAllGlobals();
+  });
+
+  it("export button does not crash when the export request fails", async () => {
+    mockExportJobsCsv.mockRejectedValue(new Error("server error"));
+    const user = userEvent.setup();
+    render(<HistoryTab onJobsChanged={onJobsChanged} />);
+    await screen.findByText("Senior Engineer");
+
+    const exportBtn = screen.getByRole("button", { name: /controls\.exportCsv/ });
+    await user.click(exportBtn);
+    await waitFor(() => expect(mockExportJobsCsv).toHaveBeenCalled());
+    // Button is re-enabled after failure.
+    await waitFor(() => expect(exportBtn).not.toBeDisabled());
   });
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { open } from "@tauri-apps/plugin-dialog";
 import ResumePickerForm from "./ResumePickerForm";
@@ -114,5 +114,112 @@ describe("ResumePickerForm", () => {
 
     const input = await screen.findByPlaceholderText("/path/to/your/resume.pdf");
     expect(input).toHaveValue("");
+  });
+
+  // ── Drag-and-drop ─────────────────────────────────────────────────────────
+  const getDropZone = () =>
+    screen.getByRole("button", { name: /Drop a PDF resume here/i });
+
+  it("highlights the drop zone on drag-over", async () => {
+    render(<ResumePickerForm />);
+    await screen.findByText("Resume PDF Path");
+
+    const zone = getDropZone();
+    expect(zone.className).not.toContain("border-primary");
+    expect(
+      screen.getByText(/Drag & drop a PDF resume here/i),
+    ).toBeInTheDocument();
+
+    fireEvent.dragEnter(zone, { dataTransfer: { types: ["Files"] } });
+    fireEvent.dragOver(zone, { dataTransfer: { types: ["Files"] } });
+
+    expect(zone.className).toContain("border-primary");
+    expect(screen.getByText(/Drop your PDF resume/i)).toBeInTheDocument();
+  });
+
+  it("removes the highlight on drag-leave", async () => {
+    render(<ResumePickerForm />);
+    await screen.findByText("Resume PDF Path");
+
+    const zone = getDropZone();
+    fireEvent.dragEnter(zone, { dataTransfer: { types: ["Files"] } });
+    expect(zone.className).toContain("border-primary");
+
+    fireEvent.dragLeave(zone, { dataTransfer: { types: ["Files"] } });
+    expect(zone.className).not.toContain("border-primary");
+  });
+
+  it("saves and shows success when a PDF file is dropped", async () => {
+    const onSaved = vi.fn();
+    render(<ResumePickerForm onSaved={onSaved} />);
+    await screen.findByText("Resume PDF Path");
+
+    const zone = getDropZone();
+    const file = new File(["%PDF-1.4"], "resume.pdf", {
+      type: "application/pdf",
+    });
+
+    fireEvent.drop(zone, { dataTransfer: { files: [file], types: ["Files"] } });
+
+    await waitFor(() =>
+      expect(mockSaveSettings).toHaveBeenCalledWith(
+        expect.objectContaining({ resume_path: "resume.pdf" }),
+      ),
+    );
+    expect(onSaved).toHaveBeenCalled();
+    expect(await screen.findByText(/Saved/)).toBeInTheDocument();
+    const input = screen.getByPlaceholderText("/path/to/your/resume.pdf");
+    expect(input).toHaveValue("resume.pdf");
+  });
+
+  it("uses the real filesystem path when the dropped File exposes one (Tauri)", async () => {
+    render(<ResumePickerForm />);
+    await screen.findByText("Resume PDF Path");
+
+    const zone = getDropZone();
+    const file = new File(["%PDF-1.4"], "resume.pdf", {
+      type: "application/pdf",
+    });
+    Object.defineProperty(file, "path", { value: "/Users/me/resume.pdf" });
+
+    fireEvent.drop(zone, { dataTransfer: { files: [file], types: ["Files"] } });
+
+    await waitFor(() =>
+      expect(mockSaveSettings).toHaveBeenCalledWith(
+        expect.objectContaining({ resume_path: "/Users/me/resume.pdf" }),
+      ),
+    );
+  });
+
+  it("rejects a non-PDF drop with an error and does not save", async () => {
+    render(<ResumePickerForm />);
+    await screen.findByText("Resume PDF Path");
+
+    const zone = getDropZone();
+    const file = new File(["hello"], "notes.txt", { type: "text/plain" });
+
+    fireEvent.drop(zone, { dataTransfer: { files: [file], types: ["Files"] } });
+
+    expect(await screen.findByText(/Only PDF files are supported/i)).toBeInTheDocument();
+    await new Promise((r) => setTimeout(r, 200));
+    expect(mockSaveSettings).not.toHaveBeenCalled();
+    const input = screen.getByPlaceholderText("/path/to/your/resume.pdf");
+    expect(input).toHaveValue("");
+  });
+
+  it("accepts a .pdf file even when the MIME type is missing", async () => {
+    render(<ResumePickerForm />);
+    await screen.findByText("Resume PDF Path");
+
+    const zone = getDropZone();
+    const file = new File(["%PDF-1.4"], "MyResume.PDF", { type: "" });
+
+    fireEvent.drop(zone, { dataTransfer: { files: [file], types: ["Files"] } });
+
+    await waitFor(() =>
+      expect(mockSaveSettings).toHaveBeenCalledWith(
+        expect.objectContaining({ resume_path: "MyResume.PDF" }),
+      ),
+    );
   });
 });

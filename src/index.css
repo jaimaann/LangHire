@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode: `dark:` variants activate when an ancestor
+   (we use <html>) carries the `dark` class. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Airbnb-inspired palette */
   --color-primary: #FF385C;
@@ -22,12 +26,30 @@
   --color-warning: #E07912;
 }
 
+/* Dark theme: re-map the semantic color tokens. Components that use the
+   semantic utilities (bg-card, bg-background, text-foreground, bg-secondary,
+   border-border, …) adapt automatically; the few hardcoded white surfaces
+   were switched to bg-card so they follow suit. */
+.dark {
+  --color-secondary: #2A2A2E;
+  --color-secondary-foreground: #EDEDED;
+  --color-accent: #2A2A2E;
+  --color-accent-foreground: #EDEDED;
+  --color-muted: #2A2A2E;
+  --color-muted-foreground: #A0A0A8;
+  --color-border: #38383D;
+  --color-background: #161618;
+  --color-foreground: #EDEDED;
+  --color-card: #1E1E22;
+  --color-card-foreground: #EDEDED;
+}
+
 @layer components {
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-[#E31C5F] active:scale-[0.98] transition-all cursor-pointer;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white text-foreground rounded-xl text-sm font-semibold border border-foreground/20 hover:border-foreground/40 active:scale-[0.98] transition-all cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-card text-foreground rounded-xl text-sm font-semibold border border-foreground/20 hover:border-foreground/40 active:scale-[0.98] transition-all cursor-pointer;
   }
   .btn-destructive {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-destructive text-destructive-foreground rounded-xl text-sm font-semibold hover:bg-[#A91102] active:scale-[0.98] transition-all cursor-pointer;
@@ -39,10 +61,10 @@
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-foreground text-white rounded-xl text-sm font-semibold hover:bg-foreground/90 active:scale-[0.98] transition-all cursor-pointer;
   }
   .input-base {
-    @apply w-full px-4 py-3 border border-border rounded-xl text-sm bg-white placeholder:text-muted-foreground focus:outline-none focus:border-foreground focus:ring-1 focus:ring-foreground transition-colors;
+    @apply w-full px-4 py-3 border border-border rounded-xl text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground focus:ring-1 focus:ring-foreground transition-colors;
   }
   .card {
-    @apply bg-white rounded-2xl border border-border p-6 shadow-sm;
+    @apply bg-card rounded-2xl border border-border p-6 shadow-sm;
   }
   .error-banner {
     @apply px-4 py-3 bg-[#FFF0F0] border border-[#FFD0D0] rounded-xl text-sm text-destructive;
@@ -63,7 +85,7 @@
     @apply bg-foreground text-white;
   }
   .filter-tab-inactive {
-    @apply bg-white border border-border text-muted-foreground hover:text-foreground;
+    @apply bg-card border border-border text-muted-foreground hover:text-foreground;
   }
 }
 
@@ -72,8 +94,8 @@ body {
   font-family: "Nunito Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #ffffff;
-  color: #222222;
+  background: var(--color-background);
+  color: var(--color-foreground);
 }
 
 /* Airbnb-style scrollbar */

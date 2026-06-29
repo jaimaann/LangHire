@@ -48,7 +48,7 @@ export interface CandidateProfile {
 }
 
 // ── LLM Settings ──────────────────────────────────────────────────────────
-export type LLMProvider = "openai" | "anthropic" | "bedrock" | "ollama" | "openrouter" | "openai_compatible";
+export type LLMProvider = "openai" | "anthropic" | "gemini" | "bedrock" | "ollama" | "openrouter" | "openai_compatible";
 
 export interface LLMSettings {
   provider: LLMProvider;
@@ -57,6 +57,10 @@ export interface LLMSettings {
     model: string;
   };
   anthropic?: {
+    api_key: string;
+    model: string;
+  };
+  gemini?: {
     api_key: string;
     model: string;
   };
@@ -95,6 +99,7 @@ export interface AppSettings {
   stagger_delay: number;
   data_dir: string;
   telemetry_enabled: boolean;
+  theme?: "light" | "dark" | "system";
 }
 
 // ── Job ───────────────────────────────────────────────────────────────────

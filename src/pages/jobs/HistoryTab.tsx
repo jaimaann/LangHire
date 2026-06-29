@@ -13,6 +13,7 @@ import {
   ChevronRight,
   FileText,
   Zap,
+  Download,
 } from "lucide-react";
 import {
   stopApplying,
@@ -20,6 +21,7 @@ import {
   getJobs,
   getMetricRuns,
   getSettings,
+  exportJobsCsv,
 } from "../../lib/api";
 import { trackEvent } from "../../lib/analytics";
 import LogLine from "../../components/LogLine";
@@ -138,6 +140,37 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
     setRunning(false);
   };
 
+  const [exporting, setExporting] = useState(false);
+
+  // Allow the global Cmd/Ctrl+E shortcut to trigger an export from this tab.
+  useEffect(() => {
+    const onExport = () => { void handleExport(); };
+    window.addEventListener("langhire:export", onExport);
+    return () => window.removeEventListener("langhire:export", onExport);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const csv = await exportJobsCsv();
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "langhire-jobs.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      trackEvent("jobs_exported_csv");
+    } catch {
+      /* surfaced via disabled state reset; non-critical */
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const toggleExpand = (url: string) => {
     setExpandedUrl(expandedUrl === url ? null : url);
   };
@@ -201,12 +234,23 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
       {/* Applied Jobs Section */}
       {appliedJobs.length > 0 && (
         <div className="card">
-          <h3 className="section-title mb-4">
-            Applied Jobs
-            <span className="ml-2 text-sm font-normal text-muted-foreground">
-              ({appliedJobs.length})
-            </span>
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="section-title">
+              Applied Jobs
+              <span className="ml-2 text-sm font-normal text-muted-foreground">
+                ({appliedJobs.length})
+              </span>
+            </h3>
+            <button
+              onClick={handleExport}
+              disabled={exporting}
+              className="btn-secondary text-xs px-3 py-1.5 disabled:opacity-50"
+              title="Export all jobs as CSV"
+            >
+              {exporting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
+              {t("controls.exportCsv", "Export CSV")}
+            </button>
+          </div>
 
           <div className="divide-y divide-border rounded-xl border border-border overflow-hidden">
             {appliedJobs.map((row) => {

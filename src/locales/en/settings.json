@@ -37,5 +37,13 @@
     "label": "Interface Language",
     "auto": "Auto (from country)",
     "description": "Choose the language for the application interface. Set to 'Auto' to match your selected country."
+  },
+  "appearance": {
+    "title": "Appearance",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "description": "Choose light, dark, or follow your system setting."
   }
 }

@@ -210,6 +210,99 @@ async def _generate_tailored_text(
     return tailored
 
 
+# ── PDF layout constants ─────────────────────────────────────────────────────
+_PAGE_WIDTH = 612          # US Letter
+_PAGE_HEIGHT = 792
+_MARGIN_LEFT = 36
+_MARGIN_RIGHT = 576
+_TOP_MARGIN = 50
+_BOTTOM_MARGIN = 50        # usable area ends at _PAGE_HEIGHT - _BOTTOM_MARGIN
+_TEXT_WIDTH = _MARGIN_RIGHT - _MARGIN_LEFT
+_BULLET_INDENT = 15        # x-offset for bullet glyph
+_HANGING_INDENT = 27       # x-offset for wrapped bullet continuation lines
+_BODY_SIZE = 9
+_LINE_GAP = 3              # extra spacing added to fontsize for line-height
+_ENTRY_GAP = 10            # consistent vertical gap between experience entries
+
+# Bullet glyphs we treat as list markers (beyond the original ·/-).
+_BULLET_CHARS = ("·", "-", "•", "*", "–", "—", "‣", "●", "▪", "◦", "○")
+# Numbered bullets like "1." / "12)" / "a." / "iv)".
+_NUMBERED_RE = re.compile(r"^\(?\s*([0-9]+|[a-zA-Z]|[ivxIVX]+)\s*[.)]\s+")
+# A leading date range, e.g. "2019 - 2022", "Jan 2019 – Present", "2020-Now".
+_DATE_RANGE_RE = re.compile(
+    r"^\s*((?:[A-Za-z]{3,9}\.?\s+)?\d{4}|present|current|now)\s*[-–—to]+\s*"
+    r"((?:[A-Za-z]{3,9}\.?\s+)?\d{4}|present|current|now)\b",
+    re.IGNORECASE,
+)
+# "Title — Company" / "Title @ Company" / "Title at Company" style header.
+_TITLE_COMPANY_RE = re.compile(r".+\s+(?:[–—@|]|\bat\b)\s+.+")
+
+
+def _is_bullet(line: str) -> bool:
+    """Return True if ``line`` looks like a list bullet of any common style."""
+    s = line.lstrip()
+    if not s:
+        return False
+    if s[0] in _BULLET_CHARS:
+        return True
+    return bool(_NUMBERED_RE.match(s))
+
+
+def _strip_bullet(line: str) -> str:
+    """Remove a leading bullet marker, returning the bullet text only."""
+    s = line.lstrip()
+    if s and s[0] in _BULLET_CHARS:
+        return s[1:].lstrip()
+    m = _NUMBERED_RE.match(s)
+    if m:
+        return s[m.end():].lstrip()
+    return s
+
+
+def _is_entry_header(line: str) -> bool:
+    """Heuristic: a non-bullet line that begins a new experience entry.
+
+    Catches lines with a leading date range or a "Title — Company" pattern even
+    when the resume uses no explicit bullets.
+    """
+    s = line.strip()
+    if not s or _is_bullet(s):
+        return False
+    return bool(_DATE_RANGE_RE.match(s) or _TITLE_COMPANY_RE.match(s))
+
+
+def _split_entries(content: str) -> list[list[str]]:
+    """Split experience-section text into a list of entries (each a line list).
+
+    An entry boundary is a blank line, OR a new non-bullet header line that
+    follows lines already containing bullets, OR a detected entry-header line.
+    """
+    entries: list[list[str]] = []
+    current: list[str] = []
+    for raw in content.split("\n"):
+        stripped = raw.strip()
+        if not stripped:
+            if current:
+                entries.append(current)
+                current = []
+            continue
+        start_new = False
+        if current:
+            has_bullets = any(_is_bullet(l) for l in current)
+            if not _is_bullet(stripped) and has_bullets:
+                start_new = True
+            elif _is_entry_header(stripped) and not _is_bullet(stripped):
+                # A new header (date range / Title — Company) starts a fresh entry.
+                start_new = True
+        if start_new:
+            entries.append(current)
+            current = []
+        current.append(stripped)
+    if current:
+        entries.append(current)
+    return entries
+
+
 def _generate_fresh_pdf(
     sections: list[dict],
     tailored: dict[int, str],
@@ -218,166 +311,174 @@ def _generate_fresh_pdf(
     education_text: str,
     output_path: Path,
 ):
-    """Generate a professional PDF matching the user's resume style."""
-    doc = fitz.open()
-    page = doc.new_page(width=612, height=792)  # US Letter
+    """Generate a professional PDF matching the user's resume style.
 
-    # Layout constants (matching typical professional resume)
-    margin_left = 36
-    margin_right = 576
-    col_split = 200
-    col_right = 214
-    page_width = margin_right - margin_left
+    Uses real font metrics for wrapping and tracks a y-cursor with page-overflow
+    handling so no text is ever drawn below the usable area.
+    """
+    doc = fitz.open()
+    page = doc.new_page(width=_PAGE_WIDTH, height=_PAGE_HEIGHT)
+    usable_bottom = _PAGE_HEIGHT - _BOTTOM_MARGIN
 
     # Colors
     header_color = (0.09, 0.09, 0.40)  # dark blue for section headers
     body_color = (0.19, 0.19, 0.19)    # dark gray for body
     light_color = (0.40, 0.40, 0.40)   # lighter gray for dates/secondary
 
-    y = 50
+    state = {"page": page, "y": _TOP_MARGIN}
+
+    def ensure_space(needed: float):
+        """Start a new page if drawing ``needed`` points would overflow."""
+        if state["y"] + needed > usable_bottom:
+            state["page"] = doc.new_page(width=_PAGE_WIDTH, height=_PAGE_HEIGHT)
+            state["y"] = _TOP_MARGIN
+
+    def draw_line_text(text: str, *, x: float, fontsize: float, fontname: str,
+                       color: tuple, line_height: float, baseline_pad: float):
+        ensure_space(line_height)
+        state["page"].insert_text(
+            fitz.Point(x, state["y"] + baseline_pad),
+            text, fontsize=fontsize, fontname=fontname, color=color,
+        )
+        state["y"] += line_height
+
+    def draw_wrapped(text: str, *, x: float, hang_x: float, width: float,
+                     fontsize: float, fontname: str, color: tuple):
+        line_height = fontsize + _LINE_GAP
+        wrapped = _wrap_text(text, width, fontsize) or [""]
+        for i, wl in enumerate(wrapped):
+            draw_line_text(
+                wl, x=(x if i == 0 else hang_x), fontsize=fontsize,
+                fontname=fontname, color=color, line_height=line_height,
+                baseline_pad=fontsize,
+            )
+
+    def draw_section_header(title: str):
+        ensure_space(28)
+        state["page"].insert_text(
+            fitz.Point(_MARGIN_LEFT, state["y"] + 12), title,
+            fontsize=12, fontname="helvetica-bold", color=header_color,
+        )
+        state["y"] += 18
+        state["page"].draw_line(
+            fitz.Point(_MARGIN_LEFT, state["y"]),
+            fitz.Point(_MARGIN_RIGHT, state["y"]),
+            color=(0.8, 0.8, 0.8), width=0.5,
+        )
+        state["y"] += 12
 
     # ─── Name ───
-    page.insert_text(fitz.Point(margin_left, y + 30), profile_name.upper() if profile_name else "", fontsize=28, fontname="helvetica-bold", color=(0, 0, 0))
-    y += 42
-    # Accent line under name
-    page.draw_line(fitz.Point(margin_left, y), fitz.Point(margin_right, y), color=(0.85, 0.20, 0.35), width=2)
-    y += 20
+    ensure_space(42)
+    state["page"].insert_text(
+        fitz.Point(_MARGIN_LEFT, state["y"] + 30),
+        profile_name.upper() if profile_name else "",
+        fontsize=28, fontname="helvetica-bold", color=(0, 0, 0),
+    )
+    state["y"] += 42
+    state["page"].draw_line(
+        fitz.Point(_MARGIN_LEFT, state["y"]), fitz.Point(_MARGIN_RIGHT, state["y"]),
+        color=(0.85, 0.20, 0.35), width=2,
+    )
+    state["y"] += 20
 
     # ─── Contact info (below name) ───
     for line in contact_info.split("\n"):
         if line.strip():
-            page.insert_text(fitz.Point(margin_left, y + 10), line.strip(), fontsize=9, fontname="helv", color=body_color)
-            y += 14
-    y += 10
+            draw_line_text(line.strip(), x=_MARGIN_LEFT, fontsize=_BODY_SIZE,
+                           fontname="helv", color=body_color,
+                           line_height=14, baseline_pad=10)
+    state["y"] += 10
 
     # ─── Skills Section ───
-    skills_section = None
-    for i, s in enumerate(sections):
-        if s["section_type"] == "skills":
-            skills_section = (i, s)
-            break
-
+    skills_section = next(
+        ((i, s) for i, s in enumerate(sections) if s["section_type"] == "skills"),
+        None,
+    )
     if skills_section:
         idx, s = skills_section
-        page.insert_text(fitz.Point(margin_left, y + 12), "Skills", fontsize=12, fontname="helvetica-bold", color=header_color)
-        y += 18
-        page.draw_line(fitz.Point(margin_left, y), fitz.Point(margin_right, y), color=(0.8, 0.8, 0.8), width=0.5)
-        y += 10
+        draw_section_header("Skills")
         content = tailored.get(idx, s["text"])
         for line in content.split("\n"):
             if line.strip():
-                page.insert_text(fitz.Point(margin_left, y + 9), line.strip(), fontsize=9, fontname="helv", color=body_color)
-                y += 13
-        y += 10
+                draw_wrapped(line.strip(), x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT,
+                             width=_TEXT_WIDTH, fontsize=_BODY_SIZE,
+                             fontname="helv", color=body_color)
+        state["y"] += 10
 
     # ─── Experience Section ───
-    experience_sections = [(i, s) for i, s in enumerate(sections) if s["section_type"] == "experience"]
-
+    experience_sections = [
+        (i, s) for i, s in enumerate(sections) if s["section_type"] == "experience"
+    ]
     if experience_sections:
-        page.insert_text(fitz.Point(margin_left, y + 12), "Experience", fontsize=12, fontname="helvetica-bold", color=header_color)
-        y += 18
-        page.draw_line(fitz.Point(margin_left, y), fitz.Point(margin_right, y), color=(0.8, 0.8, 0.8), width=0.5)
-        y += 12
-
+        draw_section_header("Experience")
         for idx, s in experience_sections:
             content = tailored.get(idx, s["text"])
-
-            # Pre-process: split into entries, then pre-wrap all lines
-            entries = []
-            current_entry: list[str] = []
-            for line in content.split("\n"):
-                stripped = line.strip()
-                if not stripped:
-                    if current_entry:
-                        entries.append(current_entry)
-                        current_entry = []
-                else:
-                    if (current_entry and
-                        not stripped.startswith("·") and not stripped.startswith("-") and
-                        any(l.startswith("·") or l.startswith("-") for l in current_entry)):
-                        entries.append(current_entry)
-                        current_entry = []
-                    current_entry.append(stripped)
-            if current_entry:
-                entries.append(current_entry)
-
+            entries = _split_entries(content)
             for entry in entries:
-                if y > 720:
-                    page = doc.new_page(width=612, height=792)
-                    y = 50
-
+                # Determine where the bullets begin so header lines (title /
+                # company / date) before them get header styling.
+                first_bullet_idx = next(
+                    (i for i, l in enumerate(entry) if _is_bullet(l)), len(entry)
+                )
                 for ei, eline in enumerate(entry):
-                    is_bullet = eline.startswith("·") or eline.startswith("-")
-
-                    if is_bullet:
-                        # Pre-wrap bullet text, render each wrapped line at same indent
-                        wrapped = _wrap_text(eline, page_width - 30, 9)
-                        for wl in wrapped:
-                            if y > 760:
-                                page = doc.new_page(width=612, height=792)
-                                y = 50
-                            page.insert_text(fitz.Point(margin_left + 15, y + 10), wl, fontsize=9, fontname="helv", color=body_color)
-                            y += 12
+                    if _is_bullet(eline):
+                        bullet_text = "• " + _strip_bullet(eline)
+                        draw_wrapped(
+                            bullet_text, x=_MARGIN_LEFT + _BULLET_INDENT,
+                            hang_x=_MARGIN_LEFT + _HANGING_INDENT,
+                            width=_TEXT_WIDTH - _BULLET_INDENT,
+                            fontsize=_BODY_SIZE, fontname="helv", color=body_color,
+                        )
+                    elif ei == 0 and ei < first_bullet_idx:
+                        # Job title
+                        draw_wrapped(eline, x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT,
+                                     width=_TEXT_WIDTH, fontsize=9.5,
+                                     fontname="helvetica-bold", color=body_color)
+                    elif ei == 1 and ei < first_bullet_idx:
+                        # Company
+                        draw_wrapped(eline, x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT,
+                                     width=_TEXT_WIDTH, fontsize=_BODY_SIZE,
+                                     fontname="helv", color=body_color)
                     else:
-                        # Header line — find first bullet to determine position
-                        first_bullet_idx = len(entry)
-                        for fi, fl in enumerate(entry):
-                            if fl.startswith("·") or fl.startswith("-"):
-                                first_bullet_idx = fi
-                                break
-
-                        header_pos = ei if ei < first_bullet_idx else 0
-
-                        if y > 760:
-                            page = doc.new_page(width=612, height=792)
-                            y = 50
-
-                        if header_pos == 0:
-                            # Job title
-                            page.insert_text(fitz.Point(margin_left, y + 10), eline, fontsize=9.5, fontname="helvetica-bold", color=body_color)
-                            y += 14
-                        elif header_pos == 1:
-                            # Company
-                            page.insert_text(fitz.Point(margin_left, y + 10), eline, fontsize=9, fontname="helv", color=body_color)
-                            y += 12
-                        else:
-                            # Date
-                            page.insert_text(fitz.Point(margin_left, y + 10), eline, fontsize=9, fontname="helv", color=light_color)
-                            y += 12
-
-                y += 10
+                        # Date / secondary line
+                        draw_wrapped(eline, x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT,
+                                     width=_TEXT_WIDTH, fontsize=_BODY_SIZE,
+                                     fontname="helv", color=light_color)
+                state["y"] += _ENTRY_GAP
 
     # ─── Education Section (at the bottom) ───
     if education_text:
-        if y > 700:
-            page = doc.new_page(width=612, height=792)
-            y = 50
-        y += 5
-        page.insert_text(fitz.Point(margin_left, y + 12), "Education", fontsize=12, fontname="helvetica-bold", color=header_color)
-        y += 18
-        page.draw_line(fitz.Point(margin_left, y), fitz.Point(margin_right, y), color=(0.8, 0.8, 0.8), width=0.5)
-        y += 12
+        draw_section_header("Education")
         for line in education_text.split("\n"):
             if line.strip():
-                page.insert_text(fitz.Point(margin_left, y + 9), line.strip(), fontsize=9, fontname="helv", color=body_color)
-                y += 13
+                draw_wrapped(line.strip(), x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT,
+                             width=_TEXT_WIDTH, fontsize=_BODY_SIZE,
+                             fontname="helv", color=body_color)
 
     doc.save(str(output_path))
     doc.close()
 
 
+# Shared font used for both measuring and rendering so wrapping matches output.
+# "helv" maps to Helvetica, the same base-14 font used by insert_text below.
+_MEASURE_FONT = fitz.Font("helv")
+
+
 def _wrap_text(text: str, max_width: float, fontsize: float) -> list[str]:
-    """Simple word-wrap based on approximate character width."""
-    char_width = fontsize * 0.52
-    max_chars = int(max_width / char_width)
+    """Word-wrap ``text`` so each line renders within ``max_width`` points.
+
+    Uses real font metrics (fitz.Font.text_length) rather than an approximate
+    character-width estimate, so wrapped lines match the actually-rendered width.
+    A single word that is wider than ``max_width`` cannot be split and is emitted
+    on its own line.
+    """
     words = text.split()
-    lines = []
+    lines: list[str] = []
     current = ""
     for word in words:
-        test = current + " " + word if current else word
-        if len(test) > max_chars:
-            if current:
-                lines.append(current)
+        test = f"{current} {word}" if current else word
+        if current and _MEASURE_FONT.text_length(test, fontsize) > max_width:
+            lines.append(current)
             current = word
         else:
             current = test
@@ -387,11 +488,12 @@ def _wrap_text(text: str, max_width: float, fontsize: float) -> list[str]:
 
 
 def _draw_wrapped(page, x: float, y: float, text: str, max_width: float, fontsize: float, fontname: str, color: tuple):
-    """Draw text with word wrap."""
+    """Draw text with word wrap. Returns the new y-cursor after drawing."""
     lines = _wrap_text(text, max_width, fontsize)
     for line in lines:
         page.insert_text(fitz.Point(x, y + 8), line, fontsize=fontsize, fontname=fontname, color=color)
-        y += 11
+        y += fontsize + 2
+    return y
 
 
 async def tailor_resume(

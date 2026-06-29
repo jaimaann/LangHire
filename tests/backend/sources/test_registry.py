@@ -37,6 +37,7 @@ BUNDLED_PLUGINS = {
     "indeed",
     "linkedin",
     "naukri",
+    "glassdoor",
 }
 
 
@@ -101,6 +102,46 @@ class TestBundledDiscovery:
         assert "seek" in au
         india = {p.name for p in registry.get_for_country("IN")}
         assert "seek" not in india
+
+
+# ── Glassdoor plugin (issue #35) ─────────────────────────────────────────────
+
+class TestGlassdoorPlugin:
+    """The Glassdoor source plugin is discovered, valid, and renders prompts."""
+
+    def test_glassdoor_discovered_and_builtin(self, registry):
+        plugin = registry.get_by_name("glassdoor")
+        assert plugin is not None
+        assert plugin.is_builtin is True
+        assert plugin.display_name == "Glassdoor"
+        assert "ALL" in plugin.countries
+        assert plugin.requires_login is True
+        assert plugin.file_path.endswith("glassdoor.yaml")
+
+    def test_glassdoor_domain_patterns_present(self, registry):
+        plugin = registry.get_by_name("glassdoor")
+        normalized = {dp.normalize_to for dp in plugin.domain_patterns}
+        assert "glassdoor.com" in normalized
+
+    def test_glassdoor_render_collection_prompt(self, registry):
+        plugin = registry.get_by_name("glassdoor")
+        out = plugin.render_collection_prompt(["Engineer"], ["London"], 25)
+        # Search-URL placeholders are substituted into the prompt.
+        assert "glassdoor.com" in out
+        assert "Engineer" in out
+        assert "London" in out
+        assert "25" in out
+        # Default date filter applied when none supplied.
+        assert "fromAge=7" in out
+
+    def test_glassdoor_render_apply_prompt(self, registry):
+        plugin = registry.get_by_name("glassdoor")
+        job = {"url": "https://www.glassdoor.com/job-listing/x?jl=1", "title": "SWE", "company": "Acme"}
+        out = plugin.render_apply_prompt(
+            job, profile={"name": "Jane"}, qa_bank={}, resume_path="/r.pdf"
+        )
+        assert "https://www.glassdoor.com/job-listing/x?jl=1" in out
+        assert "/r.pdf" in out
 
 
 # ── Schema validation / parsing ─────────────────────────────────────────────

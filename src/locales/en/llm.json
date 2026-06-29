@@ -16,6 +16,10 @@
       "name": "Anthropic",
       "description": "Claude Sonnet, Haiku, and Opus models (direct API)"
     },
+    "gemini": {
+      "name": "Google Gemini",
+      "description": "Gemini 2.5 Pro / Flash via Google AI Studio API key"
+    },
     "bedrock": {
       "name": "AWS Bedrock",
       "description": "Claude and other models via AWS Bedrock"

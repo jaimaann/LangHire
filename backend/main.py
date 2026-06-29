@@ -1061,6 +1061,41 @@ async def get_job_stats():
     return stats
 
 
+@app.get("/jobs/export")
+async def export_jobs_csv():
+    """Export all jobs as a downloadable CSV file."""
+    import csv
+    import io
+    from fastapi.responses import StreamingResponse
+
+    jobs = _load_jobs()
+    rows = list(jobs.values())
+    # Newest first by applied_at, then collected_at — matches the History view ordering.
+    rows.sort(key=lambda j: (j.get("applied_at") or "", j.get("collected_at") or ""), reverse=True)
+
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(["Date Applied", "Date Collected", "Job Title", "Company", "Location", "Status", "Source", "Easy Apply", "URL"])
+    for j in rows:
+        writer.writerow([
+            j.get("applied_at", "") or "",
+            j.get("collected_at", "") or "",
+            j.get("title", "") or "",
+            j.get("company", "") or "",
+            j.get("location", "") or "",
+            j.get("status", "") or "",
+            j.get("source", "") or "",
+            "" if j.get("easy_apply") is None else ("yes" if j.get("easy_apply") else "no"),
+            j.get("url", "") or "",
+        ])
+    buf.seek(0)
+    return StreamingResponse(
+        iter([buf.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="langhire-jobs.csv"'},
+    )
+
+
 # ── Job Management ────────────────────────────────────────────────────────
 
 @app.put("/jobs/status")

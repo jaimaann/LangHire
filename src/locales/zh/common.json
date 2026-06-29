@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "dashboard": "仪表板",
+    "guide": "指南",
+    "profile": "个人资料",
+    "llmSettings": "LLM 设置",
+    "jobs": "职位",
+    "apply": "申请",
+    "memory": "记忆",
+    "qa": "问答",
+    "logs": "日志",
+    "settings": "设置",
+    "feedback": "反馈",
+    "analytics": "分析"
+  },
+  "app": {
+    "title": "LangHire",
+    "tagline": "AI 驱动的职位申请"
+  },
+  "status": {
+    "connected": "已连接",
+    "startingBackend": "正在启动后端...",
+    "connecting": "正在连接..."
+  },
+  "btn": {
+    "save": "保存",
+    "saved": "已保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "search": "搜索",
+    "export": "导出",
+    "start": "开始",
+    "stop": "停止",
+    "back": "返回",
+    "next": "下一步",
+    "finish": "完成",
+    "browse": "浏览",
+    "import": "导入",
+    "copy": "复制",
+    "retry": "重试",
+    "close": "关闭"
+  },
+  "jobStatus": {
+    "pending": "待处理",
+    "applied": "已申请",
+    "failed": "失败",
+    "blocked": "已阻止",
+    "inProgress": "进行中"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "title": "Impostazioni",
+  "subtitle": "Impostazioni generali dell'applicazione",
+  "resume": {
+    "title": "CV",
+    "description": "File PDF del CV usato per le candidature"
+  },
+  "credentials": {
+    "title": "Credenziali dell'account",
+    "description": "Usate per creare account su piattaforme ATS esterne durante le candidature. Memorizzate localmente in chiaro. Preferisci l'uso dell'SSO (Accedi con LinkedIn/Google) quando possibile.",
+    "email": "Email",
+    "password": "Password"
+  },
+  "agent": {
+    "title": "Impostazioni dell'agente",
+    "maxFailures": "Numero massimo di fallimenti per offerta",
+    "maxFailuresDesc": "L'agente smette di provare dopo questo numero di fallimenti consecutivi su una singola offerta."
+  },
+  "telemetry": {
+    "title": "Privacy e telemetria",
+    "usageAnalytics": "Analisi dell'utilizzo",
+    "description": "Aiuta a migliorare LangHire inviando dati di utilizzo anonimi (utilizzo delle funzionalità, segnalazioni di arresti anomali). Nessuna informazione personale o dato delle offerte viene trasmesso."
+  },
+  "blockedDomains": {
+    "title": "Domini bloccati",
+    "description": "Le offerte su questi domini verranno saltate automaticamente.",
+    "empty": "Nessun dominio bloccato"
+  },
+  "plugins": {
+    "title": "Plugin di origine delle offerte",
+    "description": "Gestisci i plugin di origine delle offerte. I plugin integrati forniscono LinkedIn, Indeed, SEEK, Naukri, Reed e StepStone. Importa plugin della community (file .yaml) per altri siti di lavoro.",
+    "builtin": "Integrato",
+    "importPlugin": "Importa plugin"
+  },
+  "language": {
+    "title": "Lingua",
+    "label": "Lingua dell'interfaccia",
+    "auto": "Automatica (dal paese)",
+    "description": "Scegli la lingua per l'interfaccia dell'applicazione. Imposta su 'Automatica' per corrispondere al paese selezionato."
+  },
+  "appearance": {
+    "title": "Aspetto",
+    "theme": "Tema",
+    "light": "Chiaro",
+    "dark": "Scuro",
+    "system": "Sistema",
+    "description": "Scegli chiaro, scuro o segui l'impostazione del sistema."
+  }
+}

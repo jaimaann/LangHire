@@ -1,0 +1,53 @@
+{
+  "title": "Pannello",
+  "subtitle": "Panoramica dei progressi delle tue candidature",
+  "cards": {
+    "totalJobs": "Offerte totali",
+    "applied": "Candidato",
+    "failed": "Fallite",
+    "pending": "In attesa",
+    "successRate": "Tasso di successo",
+    "memories": "Memorie"
+  },
+  "quickActions": {
+    "title": "Azioni rapide",
+    "collectJobs": "Raccogli offerte",
+    "startApplying": "Inizia a candidarti",
+    "viewMemories": "Visualizza memorie"
+  },
+  "setup": {
+    "complete": "Configurazione completata",
+    "gettingStarted": "Per iniziare",
+    "viewGuide": "Visualizza la guida completa",
+    "allDone": "Tutta la configurazione necessaria è completata! Sei pronto a raccogliere offerte e candidarti.",
+    "needHelp": "Hai bisogno di aiuto? Consulta la <guide>Guida</guide> per le istruzioni passo passo.",
+    "stepsComplete": "{{completed}} di {{total}} passaggi completati",
+    "setUp": "Configura",
+    "configureAI": "Configura il provider IA",
+    "setResume": "Imposta il percorso del CV",
+    "setupProfile": "Configura il tuo profilo"
+  },
+  "chromium": {
+    "installing": "Installazione del browser Chromium",
+    "installFailed": "Installazione di Chromium non riuscita: {{message}}. Esegui manualmente <code>python3 -m playwright install chromium</code>."
+  },
+  "backend": {
+    "notConnected": "Backend non connesso. Avvialo con: <code>uv run python backend/main.py</code>"
+  },
+  "analytics": {
+    "title": "Analisi",
+    "subtitle": "Approfondimenti sulle tue candidature",
+    "emptyTitle": "Ancora nessun dato",
+    "emptyDescription": "Raccogli e candidati alle offerte per vedere le analisi qui.",
+    "totalJobs": "Offerte totali",
+    "applied": "Candidature inviate",
+    "successRate": "Tasso di successo",
+    "failed": "Fallite",
+    "appliedThisWeek": "Candidature questa settimana",
+    "appliedThisMonth": "Candidature questo mese",
+    "byStatus": "Per stato",
+    "bySource": "Per fonte",
+    "topCompanies": "Aziende principali",
+    "trend": "Attività recente"
+  }
+}

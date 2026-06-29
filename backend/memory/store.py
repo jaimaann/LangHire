@@ -55,6 +55,10 @@ ATS_DOMAINS: dict[str, str] = {
     "paycomonline.net":      "paycom",
     "indeed.com":            "indeed",
     "ziprecruiter.com":      "ziprecruiter",
+    "glassdoor.com":         "glassdoor",
+    "glassdoor.co.uk":       "glassdoor",
+    "glassdoor.ca":          "glassdoor",
+    "glassdoor.de":          "glassdoor",
     # International job platforms
     "seek.com.au":           "seek",
     "seek.co.nz":            "seek",
@@ -116,6 +120,10 @@ DOMAIN_NORMALIZATION: list[tuple[str, str]] = [
     # ZipRecruiter subdomains: www.ziprecruiter.com, app.ziprecruiter.com → ziprecruiter.com
     (r"[\w-]+\.ziprecruiter\.com$", "ziprecruiter.com"),
     (r"[\w-]+\.ziprecruiter\.co\.uk$", "ziprecruiter.com"),
+    # Glassdoor subdomains/country variants: www.glassdoor.com, www.glassdoor.co.uk → glassdoor.com
+    (r"[\w-]+\.glassdoor\.com$", "glassdoor.com"),
+    (r"(?:[\w-]+\.)?glassdoor\.co\.\w+$", "glassdoor.com"),
+    (r"(?:[\w-]+\.)?glassdoor\.(?:ca|de|fr|ie|nl|com\.au)$", "glassdoor.com"),
     # SEEK: {anything}.seek.com.au → seek.com.au
     (r"[\w-]+\.seek\.com\.au$", "seek.com.au"),
     (r"[\w-]+\.seek\.co\.nz$", "seek.co.nz"),

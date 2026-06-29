@@ -1,0 +1,87 @@
+{
+  "title": "Profilo del candidato",
+  "subtitle": "Le tue informazioni personali usate per le candidature",
+  "save": "Salva profilo",
+  "saved": "Salvato",
+  "saveError": "Salvataggio del profilo non riuscito. Riprova.",
+  "country": {
+    "title": "Paese",
+    "label": "Il tuo paese",
+    "selectPlaceholder": "Seleziona il paese...",
+    "dateFormat": "Formato data: {{format}}",
+    "currency": "Valuta: {{currency}}"
+  },
+  "personal": {
+    "title": "Informazioni personali",
+    "fullName": "Nome completo",
+    "email": "Email",
+    "phone": "Telefono",
+    "phonePrefix": "+1",
+    "phonePlaceholder": "Numero di telefono",
+    "currentRole": "Ruolo attuale",
+    "nationality": "Nazionalità",
+    "dateOfBirth": "Data di nascita"
+  },
+  "address": {
+    "title": "Indirizzo",
+    "street": "Via",
+    "city": "Città",
+    "state": "Provincia/Stato",
+    "zip": "CAP",
+    "country": "Paese"
+  },
+  "work": {
+    "title": "Preferenze di lavoro",
+    "workAuth": "Autorizzazione al lavoro",
+    "workAuthPlaceholder": "Seleziona...",
+    "workMode": "Modalità di lavoro",
+    "remote": "Da remoto",
+    "hybrid": "Ibrida",
+    "onsite": "In sede",
+    "visaSponsorship": "Necessaria sponsorizzazione del visto",
+    "willingToRelocate": "Disponibile al trasferimento",
+    "yearsOfExperience": "Anni di esperienza",
+    "noticePeriod": "Periodo di preavviso",
+    "noticePeriodPlaceholder": "Seleziona..."
+  },
+  "education": {
+    "title": "Istruzione",
+    "degree": "Titolo di studio",
+    "school": "Scuola",
+    "graduation": "Diploma/Laurea"
+  },
+  "salary": {
+    "title": "Aspettativa salariale",
+    "minimum": "Minimo",
+    "maximum": "Massimo",
+    "currency": "Valuta",
+    "period": "Periodo",
+    "annual": "Annuale",
+    "monthly": "Mensile"
+  },
+  "coverLetter": {
+    "title": "Lettera di presentazione",
+    "description": "Modello di lettera di presentazione predefinito usato quando le candidature ne richiedono una.",
+    "placeholder": "Scrivi qui la tua lettera di presentazione predefinita..."
+  },
+  "targetJobTitles": {
+    "title": "Titoli di lavoro target",
+    "placeholder": "Aggiungi un titolo di lavoro..."
+  },
+  "targetLocations": {
+    "title": "Località target",
+    "placeholder": "Aggiungi una località..."
+  },
+  "skills": {
+    "title": "Competenze",
+    "placeholder": "Aggiungi una competenza..."
+  },
+  "languages": {
+    "title": "Lingue",
+    "placeholder": "Aggiungi una lingua..."
+  },
+  "notes": {
+    "title": "Note",
+    "placeholder": "Eventuali istruzioni speciali per l'agente IA..."
+  }
+}

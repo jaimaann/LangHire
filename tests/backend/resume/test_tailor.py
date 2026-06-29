@@ -19,9 +19,20 @@ import pytest
 
 import resume.tailor as tailor
 from resume.tailor import (
+    _MEASURE_FONT,
+    _BODY_SIZE,
+    _TEXT_WIDTH,
+    _BULLET_INDENT,
+    _PAGE_HEIGHT,
+    _PAGE_WIDTH,
     _extract_sections,
+    _generate_fresh_pdf,
     _generate_tailored_text,
     _identify_tailorable_sections,
+    _is_bullet,
+    _is_entry_header,
+    _split_entries,
+    _strip_bullet,
     _url_hash,
     _wrap_text,
     delete_tailored_resume,
@@ -416,3 +427,210 @@ class TestContentLifecycle:
         assert content is not None
         assert content["path"] is None
         assert "Python" in content["content"]
+
+
+# ── Font-metric wrapping ─────────────────────────────────────────────────────
+
+class TestFontMetricWrapping:
+    """_wrap_text now measures with real font metrics, not a char-width guess."""
+
+    def test_every_wrapped_line_fits_real_width(self):
+        # A long realistic sentence wrapped to a narrow column.
+        text = (
+            "Led a cross functional team of engineers to design and ship a "
+            "highly scalable distributed data processing platform handling "
+            "billions of events per day across multiple AWS regions reliably."
+        )
+        width = 200.0
+        lines = _wrap_text(text, width, _BODY_SIZE)
+        assert len(lines) > 1
+        for line in lines:
+            assert _MEASURE_FONT.text_length(line, _BODY_SIZE) <= width
+
+    def test_wrapping_is_tighter_than_old_estimate(self):
+        # With real metrics the produced lines should pack close to the width
+        # without exceeding it (the old 0.52 char-width estimate could overflow
+        # or under-fill). Verify no line exceeds and at least one line uses
+        # most of the available width.
+        text = "alpha beta gamma delta epsilon zeta eta theta iota kappa lambda"
+        width = 150.0
+        lines = _wrap_text(text, width, _BODY_SIZE)
+        assert all(_MEASURE_FONT.text_length(l, _BODY_SIZE) <= width for l in lines)
+        assert max(_MEASURE_FONT.text_length(l, _BODY_SIZE) for l in lines) > width * 0.6
+
+    def test_word_wider_than_width_emitted_alone(self):
+        # A single token that overflows is still emitted (cannot be split).
+        long = "x" * 300
+        lines = _wrap_text(long, 80.0, _BODY_SIZE)
+        assert lines == [long]
+
+
+# ── Bullet / entry detection ─────────────────────────────────────────────────
+
+class TestBulletDetection:
+    @pytest.mark.parametrize("line", [
+        "· dotted bullet",
+        "- dash bullet",
+        "• round bullet",
+        "* asterisk bullet",
+        "– en dash bullet",
+        "— em dash bullet",
+        "‣ triangle bullet",
+        "● filled circle",
+        "1. numbered bullet",
+        "2) numbered paren",
+        "  • indented bullet",
+        "a. lettered",
+    ])
+    def test_recognizes_bullet_styles(self, line):
+        assert _is_bullet(line) is True
+
+    @pytest.mark.parametrize("line", [
+        "Senior Engineer",
+        "Acme Corp",
+        "2019 - 2022",
+        "",
+        "Just a sentence with no marker.",
+    ])
+    def test_non_bullets_rejected(self, line):
+        assert _is_bullet(line) is False
+
+    @pytest.mark.parametrize("line,expected", [
+        ("• built things", "built things"),
+        ("- did work", "did work"),
+        ("1. first item", "first item"),
+        ("2) second item", "second item"),
+        ("plain text", "plain text"),
+    ])
+    def test_strip_bullet(self, line, expected):
+        assert _strip_bullet(line) == expected
+
+    @pytest.mark.parametrize("line", [
+        "2019 - 2022",
+        "Jan 2019 – Present",
+        "Senior Engineer — Acme Corp",
+        "Backend Engineer @ Globex",
+        "Developer at Initech",
+    ])
+    def test_entry_header_detection(self, line):
+        assert _is_entry_header(line) is True
+
+    @pytest.mark.parametrize("line", [
+        "• a bullet is not a header",
+        "Just a normal sentence here",
+        "",
+    ])
+    def test_non_entry_headers(self, line):
+        assert _is_entry_header(line) is False
+
+
+class TestSplitEntries:
+    def test_blank_line_separates_entries(self):
+        content = "Title A\n• did x\n\nTitle B\n• did y"
+        entries = _split_entries(content)
+        assert len(entries) == 2
+        assert entries[0][0] == "Title A"
+        assert entries[1][0] == "Title B"
+
+    def test_new_header_after_bullets_starts_entry(self):
+        # No blank line, but a non-bullet line after bullets begins a new entry.
+        content = "Title A\n• did x\nTitle B\n• did y"
+        entries = _split_entries(content)
+        assert len(entries) == 2
+
+    def test_entry_header_pattern_splits_without_bullets(self):
+        # Bullet-less resume using "Title — Company" headers.
+        content = "Engineer — Acme\nShipped a product\nEngineer — Globex\nBuilt a tool"
+        entries = _split_entries(content)
+        assert len(entries) == 2
+        assert entries[0][0] == "Engineer — Acme"
+        assert entries[1][0] == "Engineer — Globex"
+
+
+# ── _generate_fresh_pdf layout / overflow ────────────────────────────────────
+
+def _make_sections(skills_text="", experience_text=""):
+    secs = []
+    if skills_text:
+        secs.append({"section_type": "skills", "text": skills_text,
+                     "char_count": len(skills_text)})
+    if experience_text:
+        secs.append({"section_type": "experience", "text": experience_text,
+                     "char_count": len(experience_text)})
+    return secs
+
+
+def _all_text_spans(doc):
+    """Yield (page, span_dict) for every text span in the document."""
+    for page in doc:
+        for block in page.get_text("dict")["blocks"]:
+            if block["type"] != 0:
+                continue
+            for line in block.get("lines", []):
+                for span in line.get("spans", []):
+                    yield page, span
+
+
+class TestGenerateFreshPdf:
+    def test_no_text_drawn_off_page(self, tmp_path):
+        long_exp = "\n".join(
+            f"Engineer {i} — Company {i}\n• " + ("achievement detail " * 8)
+            for i in range(40)
+        )
+        out = tmp_path / "out.pdf"
+        _generate_fresh_pdf(_make_sections(experience_text=long_exp), {},
+                            "Jane Doe", "jane@x.com", "BS CS, MIT", out)
+        doc = fitz.open(str(out))
+        try:
+            for page, span in _all_text_spans(doc):
+                x0, y0, x1, y1 = span["bbox"]
+                assert y1 <= _PAGE_HEIGHT, f"text below page bottom: {y1}"
+                assert x1 <= _PAGE_WIDTH + 1, f"text past right edge: {x1}"
+                assert y0 >= 0 and x0 >= 0
+        finally:
+            doc.close()
+
+    def test_enough_content_produces_multiple_pages(self, tmp_path):
+        long_exp = "\n".join(
+            f"Role {i} — Org {i}\n• " + ("did meaningful impactful work " * 6)
+            for i in range(50)
+        )
+        out = tmp_path / "multi.pdf"
+        _generate_fresh_pdf(_make_sections(experience_text=long_exp), {},
+                            "Jane Doe", "jane@x.com", "", out)
+        doc = fitz.open(str(out))
+        try:
+            assert doc.page_count > 1
+        finally:
+            doc.close()
+
+    def test_short_content_single_page(self, tmp_path):
+        out = tmp_path / "short.pdf"
+        _generate_fresh_pdf(
+            _make_sections(skills_text="Python, AWS",
+                           experience_text="Engineer — Acme\n• Built systems"),
+            {}, "Jane", "jane@x.com", "BS CS", out,
+        )
+        doc = fitz.open(str(out))
+        try:
+            assert doc.page_count == 1
+        finally:
+            doc.close()
+
+    def test_bullet_continuation_lines_share_hanging_indent(self, tmp_path):
+        # A long bullet wraps; continuation lines align under the first line's
+        # text, not back at the left margin.
+        bullet = "• " + ("scaled the platform to handle massive traffic " * 6)
+        out = tmp_path / "hang.pdf"
+        _generate_fresh_pdf(_make_sections(experience_text=f"Role — Org\n{bullet}"),
+                            {}, "Jane", "", "", out)
+        doc = fitz.open(str(out))
+        try:
+            spans = [s for _, s in _all_text_spans(doc)
+                     if "scaled" in s["text"] or "platform" in s["text"]]
+            assert len(spans) > 1  # the bullet wrapped
+            xs = sorted({round(s["bbox"][0]) for s in spans})
+            # Bullet glyph line and continuation lines both indented past margin.
+            assert all(x > 36 for x in xs)
+        finally:
+            doc.close()

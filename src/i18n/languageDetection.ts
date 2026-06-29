@@ -1,7 +1,8 @@
-export type SupportedLanguage = 'en' | 'hi' | 'de' | 'fr' | 'nl' | 'ar' | 'ms' | 'ja' | 'ko' | 'pt' | 'es';
+export type SupportedLanguage = 'en' | 'hi' | 'de' | 'fr' | 'nl' | 'ar' | 'ms' | 'ja' | 'ko' | 'pt' | 'es' | 'it' | 'zh';
 
 const COUNTRY_TO_LANGUAGE: Record<string, SupportedLanguage> = {
-  US: 'en', GB: 'en', AU: 'en', CA: 'en', NZ: 'en', IE: 'en', SG: 'en', CN: 'en',
+  US: 'en', GB: 'en', AU: 'en', CA: 'en', NZ: 'en', IE: 'en', SG: 'en',
+  CN: 'zh',
   IN: 'hi',
   DE: 'de',
   FR: 'fr',
@@ -12,6 +13,7 @@ const COUNTRY_TO_LANGUAGE: Record<string, SupportedLanguage> = {
   BR: 'pt',
   ES: 'es',
   MX: 'es',
+  IT: 'it',
 };
 
 export const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
@@ -26,6 +28,8 @@ export const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
   ko: '한국어 (Korean)',
   pt: 'Português (Portuguese)',
   es: 'Español (Spanish)',
+  it: 'Italiano',
+  zh: '中文',
 };
 
 const STORAGE_KEY = 'langhire_language';

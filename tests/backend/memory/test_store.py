@@ -62,6 +62,36 @@ def test_normalize_domain_collapses_subdomains(raw, expected):
     assert MemoryStore.normalize_domain(raw) == expected
 
 
+@pytest.mark.parametrize(
+    "raw, expected",
+    [
+        ("www.glassdoor.com", "glassdoor.com"),
+        ("glassdoor.com", "glassdoor.com"),
+        ("www.glassdoor.co.uk", "glassdoor.com"),
+        ("glassdoor.co.uk", "glassdoor.com"),
+        ("www.glassdoor.ca", "glassdoor.com"),
+        ("glassdoor.de", "glassdoor.com"),
+    ],
+)
+def test_normalize_domain_collapses_glassdoor(raw, expected):
+    """Glassdoor subdomains and country variants collapse to glassdoor.com (issue #35)."""
+    assert MemoryStore.normalize_domain(raw) == expected
+
+
+@pytest.mark.parametrize(
+    "url, expected",
+    [
+        ("https://www.glassdoor.com/job-listing/swe-acme?jl=123", "glassdoor.com"),
+        ("https://www.glassdoor.co.uk/Job/jobs.htm?sc.keyword=eng", "glassdoor.com"),
+    ],
+)
+def test_extract_and_detect_glassdoor(url, expected):
+    """A Glassdoor URL extracts to glassdoor.com and detects as the glassdoor ATS."""
+    domain = MemoryStore.extract_domain(url)
+    assert domain == expected
+    assert MemoryStore.detect_ats_platform(domain) == "glassdoor"
+
+
 def test_normalize_domain_passes_through_unknown():
     """Domains without a normalization rule are returned unchanged."""
     assert MemoryStore.normalize_domain("linkedin.com") == "linkedin.com"

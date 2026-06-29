@@ -1,0 +1,73 @@
+{
+  "title": "设置向导",
+  "steps": {
+    "welcome": "欢迎",
+    "llm": "AI 提供商",
+    "resume": "简历与个人资料",
+    "profile": "查看个人资料",
+    "ready": "就绪！"
+  },
+  "welcome": {
+    "heading": "欢迎使用 LangHire！",
+    "description": "让我们在几分钟内完成设置。本向导将引导你完成基本配置。",
+    "howItWorks": "工作原理：",
+    "items": {
+      "configureAi": "配置 AI 提供商",
+      "configureAiDesc": "填写表单的大脑",
+      "uploadResume": "上传你的简历",
+      "uploadResumeDesc": "AI 读取它并自动填写你的个人资料",
+      "reviewProfile": "查看你的个人资料",
+      "reviewProfileDesc": "核实 AI 提取的信息",
+      "loginLinkedIn": "登录 LinkedIn",
+      "loginLinkedInDesc": "我们在此查找并申请职位"
+    }
+  },
+  "llmStep": {
+    "heading": "配置你的 AI 提供商",
+    "description": "设置驱动一切的 AI 模型 — 简历解析、表单填写和职位申请。"
+  },
+  "resumeStep": {
+    "heading": "简历与自动填写个人资料",
+    "description": "设置你的简历路径，然后让 AI 读取它并自动填写你的候选人资料。",
+    "autoFill": {
+      "title": "AI 自动填写个人资料",
+      "description": "从你的简历中提取姓名、电子邮件、电话、技能、教育、经历、语言和建议的职位名称。",
+      "button": "从简历自动填写个人资料",
+      "parsing": "正在解析你的简历...",
+      "nextHint": "点击\"下一步\"以查看你自动填写的个人资料。",
+      "tryAgain": "重试"
+    },
+    "prerequisite": "请先保存你的 AI 提供商（步骤 1）和上方的简历路径。",
+    "prerequisiteLabel": "要自动填写："
+  },
+  "profileStep": {
+    "heading": "查看你的个人资料",
+    "descriptionParsed": "你的个人资料已从简历中自动填写！打开个人资料页面进行查看和微调。",
+    "descriptionManual": "在个人资料页面填写你的候选人信息。代理会将其用于申请。",
+    "profileConfigured": "个人资料已配置",
+    "profileNeeded": "个人资料至少需要你的姓名",
+    "keyFields": "关键字段：姓名、电子邮件、电话、技能、目标职位名称、目标地点、教育。",
+    "reviewEdit": "查看并编辑个人资料",
+    "goToProfile": "前往个人资料",
+    "autoFilledHint": "请检查目标职位名称和目标地点 — 这些驱动职位收集搜索。",
+    "autoFilledLabel": "已自动填写！"
+  },
+  "readyStep": {
+    "heading": "一切就绪！",
+    "descriptionDone": "一切均已配置。开始收集和申请吧！",
+    "descriptionIncomplete": "你可以稍后完成设置。随时查看指南页面。",
+    "setupStatus": "设置状态：",
+    "aiProvider": "AI 提供商",
+    "resume": "简历",
+    "profile": "个人资料",
+    "collectJobs": "收集职位",
+    "viewGuide": "查看指南"
+  },
+  "nav": {
+    "back": "返回",
+    "skipForNow": "暂时跳过",
+    "letsGo": "开始吧",
+    "next": "下一步",
+    "finishSetup": "完成设置"
+  }
+}

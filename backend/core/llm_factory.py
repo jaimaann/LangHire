@@ -1,7 +1,7 @@
 """
 Multi-provider LLM factory.
 Creates browser_use chat models from user settings.
-Supports: OpenAI, Anthropic (direct), AWS Bedrock.
+Supports: OpenAI, Anthropic (direct), AWS Bedrock, Google Gemini.
 """
 
 
@@ -87,6 +87,14 @@ def create_llm(settings: dict):
             },
         )
 
+    elif provider == "gemini":
+        from browser_use.llm import ChatGoogle
+        cfg = settings.get("gemini", {})
+        return ChatGoogle(
+            model=cfg.get("model", "gemini-2.5-pro"),
+            api_key=cfg.get("api_key", "").strip(),
+        )
+
     elif provider == "openrouter":
         from browser_use.llm import ChatOpenAI
         cfg = settings.get("openrouter", {})
@@ -114,6 +122,7 @@ async def test_connection(llm) -> str:
     import asyncio
     import zlib
     from browser_use.llm.messages import UserMessage
+    from browser_use.llm.exceptions import ModelProviderError
     try:
         # Increase timeout to 60s for local models
         response = await asyncio.wait_for(
@@ -129,3 +138,34 @@ async def test_connection(llm) -> str:
             "This is often caused by a corporate proxy or VPN. "
             "Try disabling your VPN or proxy, or use a direct connection."
         )
+    except ModelProviderError as e:
+        raise RuntimeError(_friendly_llm_error(getattr(e, "message", str(e)), getattr(e, "status_code", None)))
+    except Exception as e:
+        raise RuntimeError(_friendly_llm_error(str(e), getattr(e, "status_code", None)))
+
+
+def _friendly_llm_error(message: str, status_code=None) -> str:
+    """Map an LLM provider failure to a friendly, actionable message."""
+    msg = (message or "").lower()
+    code = status_code
+
+    # Authentication / invalid API key
+    if code in (401, 403) or any(
+        s in msg for s in ("api_key", "api key", "authentication", "unauthorized", "invalid api", "invalid key")
+    ):
+        return "Invalid API key. Please check your key and try again."
+
+    # Rate limit / quota
+    if code == 429 or any(s in msg for s in ("rate limit", "ratelimit", "quota", "too many requests")):
+        return "Rate limit or quota exceeded. Wait a moment and try again."
+
+    # Connection / network
+    if any(
+        s in msg
+        for s in ("connection", "connect", "network", "timed out", "timeout", "name resolution",
+                  "could not resolve", "dns", "unreachable", "refused")
+    ):
+        return "Cannot reach the API. Check your internet connection and base URL."
+
+    # Fall back to the raw provider message so the user still sees something useful.
+    return message or "LLM request failed."

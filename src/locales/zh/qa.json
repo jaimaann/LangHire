@@ -1,0 +1,46 @@
+{
+  "title": "问答库",
+  "subtitle": "{{total}} 个问题 · {{answered}} 个已回答 · {{unanswered}} 个未回答",
+  "subtitle_plural": "{{total}} 个问题 · {{answered}} 个已回答 · {{unanswered}} 个未回答",
+  "actions": {
+    "autoSquash": "自动合并",
+    "squashing": "正在合并...",
+    "smartSquash": "智能合并",
+    "analyzing": "正在分析...",
+    "autoSquashTitle": "合并文本相似的问题",
+    "smartSquashTitle": "使用 LLM 查找语义相同的问题"
+  },
+  "filter": {
+    "all": "全部（{{count}}）",
+    "unanswered": "未回答（{{count}}）"
+  },
+  "searchPlaceholder": "搜索问题或答案...",
+  "mergeMode": {
+    "banner": "点击下方的问题以将“{{question}}”合并到其中。",
+    "label": "合并模式："
+  },
+  "emptyState": {
+    "noMatching": "未找到匹配的问题。",
+    "noQuestions": "尚无问题。随着代理申请职位，问题将显示在此处。"
+  },
+  "card": {
+    "answerPlaceholder": "在此输入你的答案...",
+    "saving": "正在保存...",
+    "unsaved": "未保存",
+    "mergeTitle": "合并到另一个问题",
+    "deleteTitle": "删除问题"
+  },
+  "toast": {
+    "deleted": "问题已删除",
+    "merged": "问题已合并",
+    "squashResult": "已合并 {{count}} 个重复项",
+    "noDuplicates": "未找到重复项",
+    "smartSquashResult": "已智能合并 {{count}} 个重复项",
+    "noSemanticDuplicates": "未找到语义重复项",
+    "autoSquashFailed": "自动合并失败",
+    "smartSquashFailed": "智能合并失败"
+  },
+  "error": {
+    "loadFailed": "加载问答失败"
+  }
+}

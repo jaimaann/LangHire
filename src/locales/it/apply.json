@@ -1,0 +1,32 @@
+{
+  "title": "Candidati",
+  "subtitle": "Candidature automatiche · {{count}} offerte in attesa",
+  "emptyState": {
+    "title": "Nessuna offerta a cui candidarsi ancora",
+    "description": "Raccogli prima le offerte da LinkedIn, poi torna qui per candidarti automaticamente.",
+    "action": "Vai a Offerte e Raccolta"
+  },
+  "controls": {
+    "title": "Controlli candidatura",
+    "loginInfo": "<strong>Accesso:</strong> Si aprirà un browser che controllerà LinkedIn e Gmail. Se non hai effettuato l'accesso, l'agente attenderà che tu acceda manualmente, poi procederà automaticamente.",
+    "limitLabel": "Limite (facoltativo)",
+    "limitPlaceholder": "Nessun limite — candidati a tutte",
+    "limitHelp": "Lascia vuoto per candidarti a tutte le {{count}} offerte in attesa",
+    "stop": "Ferma",
+    "startApplying": "Inizia a candidarti"
+  },
+  "comingSoon": {
+    "badge": "In arrivo",
+    "title": "CV personalizzati",
+    "description": "Personalizza automaticamente il tuo CV per ogni offerta estraendo le competenze dalla descrizione dell'offerta."
+  },
+  "log": {
+    "liveOutput": "Output in tempo reale",
+    "outputLog": "Registro output",
+    "applicationLog": "Registro candidature"
+  },
+  "dialog": {
+    "title": "Inizia a candidarti"
+  },
+  "starting": "Avvio in corso..."
+}

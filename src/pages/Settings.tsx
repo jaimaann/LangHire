@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Save, FolderOpen, X, Upload, Trash2 } from "lucide-react";
+import { Save, FolderOpen, X, Upload, Trash2, Sun, Moon, Monitor } from "lucide-react";
 import { getSettings, saveSettings, getPlugins, togglePlugin, removePlugin, importPlugin } from "../lib/api";
 import { setTelemetryEnabled as setAnalyticsTelemetry } from "../lib/analytics";
+import { getStoredTheme, setTheme, type ThemeMode } from "../lib/theme";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useTranslation } from "react-i18next";
 import { PageHeader, LoadingSpinner, Section } from "../components/ui";
@@ -19,6 +20,7 @@ export default function SettingsPage() {
   const [password, setPassword] = useState("");
   const [maxFailures, setMaxFailures] = useState(8);
   const [telemetryEnabled, setTelemetryEnabled] = useState(true);
+  const [theme, setThemeState] = useState<ThemeMode>(getStoredTheme());
   const [currentLanguage, setCurrentLanguage] = useState<string>(getSavedLanguage() || "");
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -38,6 +40,12 @@ export default function SettingsPage() {
         setBlockedDomains(data.blocked_domains || []);
         setMaxFailures(data.max_failures || 8);
         setTelemetryEnabled(data.telemetry_enabled !== false);
+        // Reconcile theme: a value saved on the backend wins over the local
+        // default and is applied immediately.
+        if (data.theme && data.theme !== getStoredTheme()) {
+          setThemeState(data.theme);
+          setTheme(data.theme);
+        }
         const sens = data.sensitive_data || { email: "", password: "" };
         setEmail(sens.email || "");
         setPassword(sens.password || "");
@@ -71,6 +79,12 @@ export default function SettingsPage() {
     }
   };
 
+  const handleThemeChange = (mode: ThemeMode) => {
+    setThemeState(mode);
+    setTheme(mode); // apply + persist locally immediately
+    saveSettings({ theme: mode }).catch(() => {}); // mirror to backend
+  };
+
   const addDomain = () => {
     if (newDomain.trim() && !blockedDomains.includes(newDomain.trim())) {
       setBlockedDomains([...blockedDomains, newDomain.trim()]);
@@ -91,6 +105,7 @@ export default function SettingsPage() {
         sensitive_data: { email, password },
         max_failures: maxFailures,
         telemetry_enabled: telemetryEnabled,
+        theme,
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -137,6 +152,29 @@ export default function SettingsPage() {
           </select>
           <p className="text-[13px] text-muted-foreground mt-1.5">{t("language.description")}</p>
         </div>
+      </Section>
+
+      {/* Appearance / Theme */}
+      <Section title={t("appearance.title", "Appearance")}>
+        <label className="block text-sm font-semibold text-foreground mb-2">{t("appearance.theme", "Theme")}</label>
+        <div className="flex gap-2" role="radiogroup" aria-label={t("appearance.theme", "Theme")}>
+          {([
+            { mode: "light" as const, label: t("appearance.light", "Light"), Icon: Sun },
+            { mode: "dark" as const, label: t("appearance.dark", "Dark"), Icon: Moon },
+            { mode: "system" as const, label: t("appearance.system", "System"), Icon: Monitor },
+          ]).map(({ mode, label, Icon }) => (
+            <button
+              key={mode}
+              role="radio"
+              aria-checked={theme === mode}
+              onClick={() => handleThemeChange(mode)}
+              className={`filter-tab flex items-center gap-1.5 ${theme === mode ? "filter-tab-active" : "filter-tab-inactive"}`}
+            >
+              <Icon className="w-3.5 h-3.5" /> {label}
+            </button>
+          ))}
+        </div>
+        <p className="text-[13px] text-muted-foreground mt-2">{t("appearance.description", "Choose light, dark, or follow your system setting.")}</p>
       </Section>
 
       {/* Resume */}

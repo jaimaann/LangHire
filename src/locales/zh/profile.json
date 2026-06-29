@@ -1,0 +1,87 @@
+{
+  "title": "候选人资料",
+  "subtitle": "用于职位申请的个人信息",
+  "save": "保存个人资料",
+  "saved": "已保存",
+  "saveError": "保存个人资料失败。请重试。",
+  "country": {
+    "title": "国家/地区",
+    "label": "你的国家/地区",
+    "selectPlaceholder": "选择国家/地区...",
+    "dateFormat": "日期格式：{{format}}",
+    "currency": "货币：{{currency}}"
+  },
+  "personal": {
+    "title": "个人信息",
+    "fullName": "全名",
+    "email": "电子邮件",
+    "phone": "电话",
+    "phonePrefix": "+1",
+    "phonePlaceholder": "电话号码",
+    "currentRole": "当前职位",
+    "nationality": "国籍",
+    "dateOfBirth": "出生日期"
+  },
+  "address": {
+    "title": "地址",
+    "street": "街道",
+    "city": "城市",
+    "state": "州/省",
+    "zip": "邮政编码",
+    "country": "国家/地区"
+  },
+  "work": {
+    "title": "工作偏好",
+    "workAuth": "工作许可",
+    "workAuthPlaceholder": "选择...",
+    "workMode": "工作模式",
+    "remote": "远程",
+    "hybrid": "混合",
+    "onsite": "现场",
+    "visaSponsorship": "需要签证担保",
+    "willingToRelocate": "愿意搬迁",
+    "yearsOfExperience": "工作年限",
+    "noticePeriod": "通知期",
+    "noticePeriodPlaceholder": "选择..."
+  },
+  "education": {
+    "title": "教育",
+    "degree": "学位",
+    "school": "学校",
+    "graduation": "毕业时间"
+  },
+  "salary": {
+    "title": "薪资期望",
+    "minimum": "最低",
+    "maximum": "最高",
+    "currency": "货币",
+    "period": "周期",
+    "annual": "年度",
+    "monthly": "每月"
+  },
+  "coverLetter": {
+    "title": "求职信",
+    "description": "当申请要求提供求职信时使用的默认求职信模板。",
+    "placeholder": "在此撰写你的默认求职信..."
+  },
+  "targetJobTitles": {
+    "title": "目标职位名称",
+    "placeholder": "添加一个职位名称..."
+  },
+  "targetLocations": {
+    "title": "目标地点",
+    "placeholder": "添加一个地点..."
+  },
+  "skills": {
+    "title": "技能",
+    "placeholder": "添加一项技能..."
+  },
+  "languages": {
+    "title": "语言",
+    "placeholder": "添加一种语言..."
+  },
+  "notes": {
+    "title": "备注",
+    "placeholder": "给 AI 代理的任何特殊说明..."
+  }
+}

@@ -86,6 +86,7 @@ def load_llm_settings() -> dict:
         "openai": {"api_key": "", "model": "gpt-4o"},
         "anthropic": {"api_key": "", "model": "claude-sonnet-4-5"},
         "bedrock": {"access_key": "", "secret_key": "", "region": "us-west-2", "model": "us.anthropic.claude-sonnet-4-6"},
+        "gemini": {"api_key": "", "model": "gemini-2.5-pro"},
         "ollama": {"base_url": "http://localhost:11434", "model": ""},
         "openrouter": {"api_key": "", "model": "qwen/qwen3.6-plus"},
     })
@@ -106,6 +107,7 @@ def load_settings() -> dict:
         "stagger_delay": 5,
         "data_dir": str(get_data_dir()),
         "telemetry_enabled": True,
+        "theme": "system",
     })
 
 

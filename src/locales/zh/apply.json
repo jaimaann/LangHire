@@ -1,0 +1,32 @@
+{
+  "title": "申请",
+  "subtitle": "自动投递职位 · {{count}} 个待处理职位",
+  "emptyState": {
+    "title": "暂无可申请的职位",
+    "description": "请先从 LinkedIn 收集职位，然后回到这里自动申请。",
+    "action": "前往职位与收集"
+  },
+  "controls": {
+    "title": "申请控制",
+    "loginInfo": "<strong>登录：</strong>将打开浏览器并检查 LinkedIn 和 Gmail。如果你尚未登录，代理会等待你手动登录，然后自动继续。",
+    "limitLabel": "限制（可选）",
+    "limitPlaceholder": "无限制 — 申请全部",
+    "limitHelp": "留空以申请全部 {{count}} 个待处理职位",
+    "stop": "停止",
+    "startApplying": "开始申请"
+  },
+  "comingSoon": {
+    "badge": "即将推出",
+    "title": "定制简历",
+    "description": "通过从职位描述中提取技能，为每个职位自动定制你的简历。"
+  },
+  "log": {
+    "liveOutput": "实时输出",
+    "outputLog": "输出日志",
+    "applicationLog": "申请日志"
+  },
+  "dialog": {
+    "title": "开始申请"
+  },
+  "starting": "正在启动..."
+}

@@ -1,0 +1,17 @@
+{
+  "title": "日志",
+  "subtitle": "用于调试和监控的历史运行日志",
+  "refresh": "刷新",
+  "runs": {
+    "title": "最近的运行（{{count}}）",
+    "empty": "尚未记录任何运行。收集或申请职位后即可在此查看日志。",
+    "unknown": "未知",
+    "lines": "{{count}} 行"
+  },
+  "detail": {
+    "runTitle": "运行 {{id}}",
+    "selectPrompt": "选择一次运行以查看日志",
+    "selectFromPanel": "从左侧面板选择一次运行以查看其日志",
+    "noLogs": "此次运行未记录日志（日志升级前的运行）"
+  }
+}

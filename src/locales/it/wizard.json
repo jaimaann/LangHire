@@ -1,0 +1,73 @@
+{
+  "title": "Procedura guidata di configurazione",
+  "steps": {
+    "welcome": "Benvenuto",
+    "llm": "Provider IA",
+    "resume": "CV e profilo",
+    "profile": "Rivedi il profilo",
+    "ready": "Pronto!"
+  },
+  "welcome": {
+    "heading": "Benvenuto in LangHire!",
+    "description": "Configuriamoti in pochi minuti. Questa procedura guidata ti accompagnerà nella configurazione essenziale.",
+    "howItWorks": "Come funziona:",
+    "items": {
+      "configureAi": "Configura il provider IA",
+      "configureAiDesc": "Il cervello che compila i moduli",
+      "uploadResume": "Carica il tuo CV",
+      "uploadResumeDesc": "L'IA lo legge e compila automaticamente il tuo profilo",
+      "reviewProfile": "Rivedi il tuo profilo",
+      "reviewProfileDesc": "Verifica le informazioni estratte dall'IA",
+      "loginLinkedIn": "Accedi a LinkedIn",
+      "loginLinkedInDesc": "Dove troviamo le offerte e ci candidiamo"
+    }
+  },
+  "llmStep": {
+    "heading": "Configura il tuo provider IA",
+    "description": "Configura il modello IA che alimenta tutto — analisi del CV, compilazione dei moduli e candidature."
+  },
+  "resumeStep": {
+    "heading": "CV e compilazione automatica del profilo",
+    "description": "Imposta il percorso del tuo CV, poi lascia che l'IA lo legga e compili automaticamente il tuo profilo di candidato.",
+    "autoFill": {
+      "title": "Compilazione automatica del profilo con IA",
+      "description": "Estrai nome, email, telefono, competenze, istruzione, esperienza, lingue e titoli di lavoro suggeriti dal tuo CV.",
+      "button": "Compila automaticamente il profilo dal CV",
+      "parsing": "Analisi del tuo CV...",
+      "nextHint": "Clicca su \"Avanti\" per rivedere il tuo profilo compilato automaticamente.",
+      "tryAgain": "Riprova"
+    },
+    "prerequisite": "Salva prima il tuo provider IA (Passaggio 1) e il percorso del CV qui sopra.",
+    "prerequisiteLabel": "Per compilare automaticamente:"
+  },
+  "profileStep": {
+    "heading": "Rivedi il tuo profilo",
+    "descriptionParsed": "Il tuo profilo è stato compilato automaticamente dal tuo CV! Apri la pagina Profilo per rivedere e perfezionare.",
+    "descriptionManual": "Compila le tue informazioni di candidato nella pagina Profilo. L'agente le usa per le candidature.",
+    "profileConfigured": "Il profilo è configurato",
+    "profileNeeded": "Il profilo richiede almeno il tuo nome",
+    "keyFields": "Campi chiave: Nome, Email, Telefono, Competenze, Titoli di lavoro target, Località target, Istruzione.",
+    "reviewEdit": "Rivedi e modifica il profilo",
+    "goToProfile": "Vai al profilo",
+    "autoFilledHint": "Controlla Titoli di lavoro target e Località target — questi guidano la ricerca per la raccolta delle offerte.",
+    "autoFilledLabel": "Compilato automaticamente!"
+  },
+  "readyStep": {
+    "heading": "Tutto pronto!",
+    "descriptionDone": "Tutto è configurato. Inizia a raccogliere offerte e a candidarti!",
+    "descriptionIncomplete": "Puoi completare la configurazione più tardi. Consulta la pagina Guida in qualsiasi momento.",
+    "setupStatus": "Stato della configurazione:",
+    "aiProvider": "Provider IA",
+    "resume": "CV",
+    "profile": "Profilo",
+    "collectJobs": "Raccogli offerte",
+    "viewGuide": "Visualizza la guida"
+  },
+  "nav": {
+    "back": "Indietro",
+    "skipForNow": "Salta per ora",
+    "letsGo": "Iniziamo",
+    "next": "Avanti",
+    "finishSetup": "Completa la configurazione"
+  }
+}

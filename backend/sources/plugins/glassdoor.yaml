@@ -1,0 +1,133 @@
+name: glassdoor
+display_name: Glassdoor
+version: "1.0.0"
+author: langhire
+description: "Glassdoor job search with Easy Apply and external application support"
+countries: [ALL]
+website: https://www.glassdoor.com
+requires_login: true
+login_url: https://www.glassdoor.com/profile/login_input.htm
+
+auth_cookies:
+  - name: GSESSIONID
+    domain: .glassdoor.com
+  - name: gdId
+    domain: .glassdoor.com
+
+search_url: "https://www.glassdoor.com/Job/jobs.htm?sc.keyword={title}&locKeyword={location}&locT=C"
+
+filters:
+  - key: date_posted
+    label: "Posted within"
+    type: select
+    options:
+      - { value: "1", label: "Last day" }
+      - { value: "3", label: "Last 3 days" }
+      - { value: "7", label: "Last week" }
+      - { value: "14", label: "Last 2 weeks" }
+      - { value: "30", label: "Last month" }
+    url_param: "fromAge"
+    default: "7"
+
+  - key: job_type
+    label: "Job type"
+    type: select
+    options:
+      - { value: "fulltime", label: "Full-time" }
+      - { value: "parttime", label: "Part-time" }
+      - { value: "contract", label: "Contract" }
+      - { value: "temporary", label: "Temporary" }
+      - { value: "internship", label: "Internship" }
+    url_param: "jobType"
+
+  - key: work_type
+    label: "Work type"
+    type: select
+    options:
+      - { value: "1", label: "Remote" }
+    url_param: "remoteWorkType"
+
+  - key: min_rating
+    label: "Minimum company rating"
+    type: select
+    options:
+      - { value: "3", label: "3.0 stars and up" }
+      - { value: "3.5", label: "3.5 stars and up" }
+      - { value: "4", label: "4.0 stars and up" }
+    url_param: "minRating"
+
+collection_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.glassdoor.com/member/home/index.htm to check if you're logged into Glassdoor.
+     - If you see your member home/profile page → logged in ✓
+     - If you see a sign-in page → WAIT for user to log in manually. Check every 15 seconds (refresh). Wait up to 5 minutes.
+
+  THEN: Navigate directly to this search URL:
+  {search_url}
+  Do NOT modify the search filters. Results are ready.
+
+  HOW TO COLLECT JOBS:
+  1. You will see a list of job cards on the left side of the page.
+  2. If a sign-up / email modal pops up over the results, close it (look for the X in the corner) before continuing.
+  3. Click on a job card. The job details appear on the right.
+  4. For each job, extract:
+     - Job title (from the card heading)
+     - Company name
+     - Location
+     - The job URL (from the browser URL bar after clicking — it will contain 'jobListingId=XXXXXXX', or read the card link href)
+     - Whether it shows an "Easy Apply" badge (easy_apply: true) or "Apply on employer site" / external apply (easy_apply: false)
+  5. Output a @@JOB_FOUND marker for each job in your MEMORY field.
+  6. Click the NEXT job in the list and repeat. Scroll down in the left list to load more jobs.
+  7. Repeat until you have {max_jobs} jobs or run out of results.
+
+  IMPORTANT RULES:
+  - Output ONE @@JOB_FOUND marker per job in your MEMORY field. Do NOT batch them.
+  - Do NOT apply to any jobs — only collect listings.
+  - Include both "Easy Apply" and external (employer site) jobs.
+  - Dismiss any login/sign-up walls that appear; do NOT create a new account.
+  - Stop after collecting {max_jobs} NEW jobs and call done.
+
+  @@JOB_FOUND format (in your memory field):
+  @@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", "url": "<full job URL>", "easy_apply": true/false}}
+
+apply_prompt: |
+  FIRST — LOGIN CHECK:
+  1. Go to https://www.glassdoor.com/member/home/index.htm to check if you're logged into Glassdoor.
+     - If you see your member home/profile page → logged in ✓
+     - If you see a sign-in page → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
+
+  THEN: Go to {job_url}
+
+  If a sign-up / email modal pops up over the listing, close it (look for the X) before continuing.
+
+  If this job has "Easy Apply" on Glassdoor:
+  - Click the "Easy Apply" button to open the Glassdoor apply flow.
+  - Fill all form fields using the candidate profile.
+  - Upload resume at {resume_path} when prompted.
+  - Answer screening questions using the Q&A bank.
+  - Review and submit the application.
+
+  If this job shows "Apply on employer site" (external):
+  - Click "Apply on employer site" and follow to the external page (it may open a new tab).
+  - Navigate the external site to find the application form.
+  - Look for 'Apply Now', 'Submit Application', or similar buttons.
+  - Scroll down — the apply button is often below the job description.
+  - Some sites require clicking through 2-3 pages before reaching the actual form.
+  - Fill all fields from candidate profile. Upload resume at {resume_path}.
+  - If the site requires account creation, try 'Sign in with Google' first.
+
+  OTP/VERIFICATION CODES: If ANY site asks for a verification code:
+  1. Choose the EMAIL option if given a choice
+  2. Open a new tab and go to https://mail.google.com
+  3. Find the most recent email with the verification/OTP code
+  4. Copy the code, switch back, and enter it
+
+  If the form is broken after 3 attempts, report failure and stop.
+
+domain_patterns:
+  - pattern: "*.glassdoor.com"
+    normalize_to: "glassdoor.com"
+  - pattern: "glassdoor.co.*"
+    normalize_to: "glassdoor.com"
+  - pattern: "glassdoor.*"
+    normalize_to: "glassdoor.com"

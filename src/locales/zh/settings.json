@@ -1,0 +1,49 @@
+{
+  "title": "设置",
+  "subtitle": "通用应用程序设置",
+  "resume": {
+    "title": "简历",
+    "description": "用于职位申请的 PDF 简历文件"
+  },
+  "credentials": {
+    "title": "账户凭证",
+    "description": "用于在申请期间于外部 ATS 平台上创建账户。以明文形式存储在本地。请尽可能优先使用 SSO（通过 LinkedIn/Google 登录）。",
+    "email": "电子邮件",
+    "password": "密码"
+  },
+  "agent": {
+    "title": "代理设置",
+    "maxFailures": "每个职位的最大失败次数",
+    "maxFailuresDesc": "在单个职位上连续失败达到此次数后，代理将停止尝试。"
+  },
+  "telemetry": {
+    "title": "隐私与遥测",
+    "usageAnalytics": "使用情况分析",
+    "description": "通过发送匿名使用数据（功能使用情况、崩溃报告）帮助改进 LangHire。不会传输任何个人信息或职位数据。"
+  },
+  "blockedDomains": {
+    "title": "已阻止的域名",
+    "description": "这些域名上的职位将被自动跳过。",
+    "empty": "没有已阻止的域名"
+  },
+  "plugins": {
+    "title": "职位来源插件",
+    "description": "管理职位来源插件。内置插件提供 LinkedIn、Indeed、SEEK、Naukri、Reed 和 StepStone。导入社区插件（.yaml 文件）以支持更多职位网站。",
+    "builtin": "内置",
+    "importPlugin": "导入插件"
+  },
+  "language": {
+    "title": "语言",
+    "label": "界面语言",
+    "auto": "自动（根据国家/地区）",
+    "description": "选择应用程序界面的语言。设置为\"自动\"以匹配你所选的国家/地区。"
+  },
+  "appearance": {
+    "title": "外观",
+    "theme": "主题",
+    "light": "浅色",
+    "dark": "深色",
+    "system": "系统",
+    "description": "选择浅色、深色或跟随系统设置。"
+  }
+}

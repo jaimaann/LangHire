@@ -9,6 +9,7 @@ const PROVIDERS: { id: LLMProvider; nameKey: string; descKey: string }[] = [
   { id: "openrouter", nameKey: "providers.openrouter.name", descKey: "providers.openrouter.description" },
   { id: "openai", nameKey: "providers.openai.name", descKey: "providers.openai.description" },
   { id: "anthropic", nameKey: "providers.anthropic.name", descKey: "providers.anthropic.description" },
+  { id: "gemini", nameKey: "providers.gemini.name", descKey: "providers.gemini.description" },
   { id: "bedrock", nameKey: "providers.bedrock.name", descKey: "providers.bedrock.description" },
   { id: "ollama", nameKey: "providers.ollama.name", descKey: "providers.ollama.description" },
   { id: "openai_compatible", nameKey: "providers.openai_compatible.name", descKey: "providers.openai_compatible.description" },
@@ -16,6 +17,7 @@ const PROVIDERS: { id: LLMProvider; nameKey: string; descKey: string }[] = [
 
 const OPENAI_MODELS = ["gpt-5.4-nano", "gpt-5.4-mini", "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"];
 const ANTHROPIC_MODELS = ["claude-sonnet-4-5", "claude-haiku-4-5", "claude-opus-4-5"];
+const GEMINI_MODELS = ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash"];
 const OPENROUTER_FALLBACK_MODELS = [
   "qwen/qwen3.6-plus",
   "bytedance-seed/seed-2.0-lite",
@@ -44,6 +46,7 @@ const defaultSettings: LLMSettings = {
   provider: "openrouter",
   openai: { api_key: "", model: "gpt-4o" },
   anthropic: { api_key: "", model: "claude-sonnet-4-5" },
+  gemini: { api_key: "", model: "gemini-2.5-pro" },
   bedrock: { access_key: "", secret_key: "", region: "us-west-2", model: "us.anthropic.claude-sonnet-4-6", auth_mode: "profile", profile_name: "default" },
   ollama: { base_url: "http://localhost:11434", model: "" },
   openrouter: { api_key: "", model: "qwen/qwen3.6-plus" },
@@ -55,6 +58,7 @@ const OR_CUSTOM = "__custom__";
 const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
   openai: "OpenAI",
   anthropic: "Anthropic",
+  gemini: "Google Gemini",
   bedrock: "AWS Bedrock",
   ollama: "Ollama",
   openrouter: "OpenRouter",
@@ -201,6 +205,12 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
 
   const updateAnthropic = (field: string, value: string) => {
     const ns = { ...settings, anthropic: { ...settings.anthropic!, [field]: value } };
+    setSettings(ns);
+    if (field === "model") immediateSave(ns); else autoSave(ns);
+  };
+
+  const updateGemini = (field: string, value: string) => {
+    const ns = { ...settings, gemini: { ...settings.gemini!, [field]: value } };
     setSettings(ns);
     if (field === "model") immediateSave(ns); else autoSave(ns);
   };
@@ -398,6 +408,21 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
               <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.model")}</label>
 <select value={settings.anthropic?.model || "claude-sonnet-4-5"} onChange={(e) => updateAnthropic("model", e.target.value)} className="input-base">
                 {ANTHROPIC_MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
+              </select>
+            </div>
+          </div>
+        )}
+
+        {settings.provider === "gemini" && (
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.apiKey")}</label>
+              <input type="password" value={settings.gemini?.api_key || ""} onChange={(e) => updateGemini("api_key", e.target.value)} placeholder="AIza..." className="input-base font-mono" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.model")}</label>
+              <select value={settings.gemini?.model || "gemini-2.5-pro"} onChange={(e) => updateGemini("model", e.target.value)} className="input-base">
+                {GEMINI_MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
               </select>
             </div>
           </div>

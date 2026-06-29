@@ -7,9 +7,11 @@ import { getSetupStatus, getSettings } from "./lib/api";
 import { initAnalytics, trackPageView } from "./lib/analytics";
 import { trackStartupComplete, markStart, measureAndTrack } from "./lib/perf";
 import { useDirection } from "./i18n/useDirection";
+import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { Wand2, Loader2 } from "lucide-react";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Analytics = lazy(() => import("./pages/Analytics"));
 const Profile = lazy(() => import("./pages/Profile"));
 const LLMSettings = lazy(() => import("./pages/LLMSettings"));
 const Jobs = lazy(() => import("./pages/Jobs"));
@@ -30,6 +32,7 @@ function PageLoader() {
 
 export default function App() {
   useDirection();
+  useKeyboardShortcuts();
   const [showWizard, setShowWizard] = useState(false);
   const [wizardChecked, setWizardChecked] = useState(false);
   const [wizardPaused, setWizardPaused] = useState(false);
@@ -104,13 +107,14 @@ export default function App() {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-background">
       <Sidebar />
       <main className="flex-1 ml-60 px-10 py-8">
         <ErrorBoundary>
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/analytics" element={<Analytics />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/llm" element={<LLMSettings />} />
               <Route path="/jobs" element={<Jobs />} />

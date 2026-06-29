@@ -1,0 +1,53 @@
+{
+  "title": "仪表板",
+  "subtitle": "你的职位申请进度概览",
+  "cards": {
+    "totalJobs": "职位总数",
+    "applied": "已申请",
+    "failed": "失败",
+    "pending": "待处理",
+    "successRate": "成功率",
+    "memories": "记忆"
+  },
+  "quickActions": {
+    "title": "快捷操作",
+    "collectJobs": "收集职位",
+    "startApplying": "开始申请",
+    "viewMemories": "查看记忆"
+  },
+  "setup": {
+    "complete": "设置完成",
+    "gettingStarted": "快速入门",
+    "viewGuide": "查看完整指南",
+    "allDone": "所有必需的设置都已完成！你已准备好收集和申请职位。",
+    "needHelp": "需要帮助？请访问<guide>指南</guide>获取分步说明。",
+    "stepsComplete": "已完成 {{total}} 个步骤中的 {{completed}} 个",
+    "setUp": "设置",
+    "configureAI": "配置 AI 提供商",
+    "setResume": "设置简历路径",
+    "setupProfile": "设置你的个人资料"
+  },
+  "chromium": {
+    "installing": "正在安装 Chromium 浏览器",
+    "installFailed": "Chromium 安装失败：{{message}}。请手动运行 <code>python3 -m playwright install chromium</code>。"
+  },
+  "backend": {
+    "notConnected": "后端未连接。使用以下命令启动：<code>uv run python backend/main.py</code>"
+  },
+  "analytics": {
+    "title": "分析",
+    "subtitle": "职位申请的数据洞察",
+    "emptyTitle": "暂无数据",
+    "emptyDescription": "收集并申请职位后即可在此查看分析。",
+    "totalJobs": "职位总数",
+    "applied": "已申请",
+    "successRate": "成功率",
+    "failed": "失败",
+    "appliedThisWeek": "本周已申请",
+    "appliedThisMonth": "本月已申请",
+    "byStatus": "按状态",
+    "bySource": "按来源",
+    "topCompanies": "热门公司",
+    "trend": "近期活动"
+  }
+}

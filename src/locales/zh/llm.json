@@ -1,0 +1,114 @@
+{
+  "title": "LLM 设置",
+  "subtitle": "配置用于职位申请的 AI 模型提供商",
+  "selectProvider": "选择提供商",
+  "configuration": "{{provider}} 配置",
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter（推荐）",
+      "description": "通过单个 API 密钥使用 100 多个视觉模型（GPT、Claude、Gemini、Qwen、Llama）"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "GPT-4o、GPT-4o-mini 及其他 OpenAI 模型"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "Claude Sonnet、Haiku 和 Opus 模型（直接 API）"
+    },
+    "gemini": {
+      "name": "Google Gemini",
+      "description": "通过 Google AI Studio API 密钥使用 Gemini 2.5 Pro / Flash"
+    },
+    "bedrock": {
+      "name": "AWS Bedrock",
+      "description": "通过 AWS Bedrock 使用 Claude 及其他模型"
+    },
+    "ollama": {
+      "name": "Ollama",
+      "description": "在本地运行开源模型 — 无需 API 密钥"
+    },
+    "openai_compatible": {
+      "name": "OpenAI 兼容",
+      "description": "任何遵循 OpenAI 格式的 API — Together、Groq、LM Studio、vLLM 等"
+    }
+  },
+  "labels": {
+    "apiKey": "API 密钥",
+    "model": "模型",
+    "modelVision": "模型（视觉）",
+    "region": "区域",
+    "accessKey": "访问密钥",
+    "secretKey": "密钥",
+    "profileName": "配置文件名称",
+    "serverUrl": "服务器 URL",
+    "baseUrl": "基础 URL",
+    "authentication": "身份验证",
+    "awsCliProfile": "AWS CLI 配置文件",
+    "accessKeySecretKey": "访问密钥 / 密钥",
+    "selectModel": "选择一个模型"
+  },
+  "guide": {
+    "howToGetKey": "如何获取你的 {{provider}} API 密钥",
+    "openai": {
+      "step1": "前往 OpenAI 平台并创建免费账户（或登录）。",
+      "step1Link": "platform.openai.com/signup",
+      "step2": "在 Settings > Billing 下添加付款方式。即使你拥有 ChatGPT Plus，API 访问也需要计费。",
+      "step2Link": "添加计费",
+      "step3": "前往 API 密钥页面。",
+      "step3Link": "platform.openai.com/api-keys",
+      "step4": "点击\"Create new secret key\"，为其命名，然后点击 Create。",
+      "step5": "复制密钥并粘贴到下方。它以 sk- 开头，且仅显示一次。",
+      "note": "这与你的 ChatGPT 订阅是分开的。API 有自己的按量付费计费。根据表单复杂度，GPT-4o 每份职位申请的费用约为 $0.01-0.03。"
+    },
+    "anthropic": {
+      "step1": "前往 Anthropic 控制台并创建免费账户（或登录）。",
+      "step1Link": "console.anthropic.com/signup",
+      "step2": "在 Settings > Billing 下添加付款方式。可能提供少量免费试用额度。",
+      "step2Link": "添加计费",
+      "step3": "前往 API 密钥页面。",
+      "step3Link": "console.anthropic.com/settings/keys",
+      "step4": "点击\"Create Key\"，为其命名，然后点击 Create。",
+      "step5": "复制密钥并粘贴到下方。它以 sk-ant- 开头，且仅显示一次。",
+      "note": "Claude Sonnet 每份职位申请的费用约为 $0.01-0.03。该 API 为按量付费。"
+    },
+    "openrouter": {
+      "step1": "前往 OpenRouter 并创建免费账户（或登录）。",
+      "step1Link": "openrouter.ai",
+      "step2": "前往 API 密钥页面。",
+      "step2Link": "openrouter.ai/keys",
+      "step3": "点击\"Create Key\"，为其命名，然后点击 Create。",
+      "step4": "复制密钥并粘贴到下方。它以 sk-or-v1- 开头。",
+      "note": "OpenRouter 让你用单个密钥访问 100 多个模型。在 openrouter.ai/credits 添加额度。价格因模型而异。"
+    },
+    "note": "注意："
+  },
+  "ollama": {
+    "serverUrlHint": "你的 Ollama 服务器运行所在的 URL。",
+    "modelsFound": "在你的服务器上找到 {{count}} 个模型。",
+    "modelsFound_other": "在你的服务器上找到 {{count}} 个模型。",
+    "noModelsHint": "输入模型名称，或启动你的 Ollama 服务器以查看可用模型。"
+  },
+  "openrouter": {
+    "keyHint": "在此获取你的密钥：",
+    "modelsAvailable": "有 {{count}} 个视觉模型可用。价格按每百万 token 计算。",
+    "curatedList": "正在显示精选列表。连接以加载所有视觉模型。",
+    "browseAt": "浏览于",
+    "customOption": "自定义模型 ID…",
+    "customHint": "粘贴任意 OpenRouter 模型标签，例如 openai/gpt-oss-120b:free"
+  },
+  "openaiCompatible": {
+    "baseUrlHint": "OpenAI 兼容 API 端点的完整 URL（例如 https://api.together.xyz/v1 或 http://localhost:1234/v1）",
+    "apiKeyHint": "如果你的服务器不需要身份验证，请留空。",
+    "modelHint": "你的服务器所期望的模型名称。",
+    "optional": "可选"
+  },
+  "status": {
+    "saving": "正在保存...",
+    "saved": "已保存",
+    "testing": "正在测试...",
+    "testConnection": "测试连接",
+    "connectionSuccessful": "连接成功！",
+    "connectionFailed": "连接失败。"
+  }
+}

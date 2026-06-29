@@ -1,0 +1,34 @@
+{
+  "title": "反馈",
+  "subtitle": "请分享你的想法，帮助我们改进 LangHire",
+  "viewDiscussions": "查看讨论",
+  "categories": {
+    "featureRequest": "功能请求",
+    "bugReport": "错误报告",
+    "generalFeedback": "一般反馈"
+  },
+  "form": {
+    "categoryLabel": "类别",
+    "titleLabel": "标题",
+    "titlePlaceholder": "你的反馈的简要概述",
+    "descriptionLabel": "描述",
+    "descriptionPlaceholder": "详细描述你的功能请求、错误或反馈...",
+    "emailLabel": "电子邮件",
+    "emailOptional": "（可选）",
+    "emailPlaceholder": "your@email.com",
+    "emailHelp": "如果你希望我们跟进，请填写你的电子邮件。",
+    "submit": "提交反馈",
+    "submitting": "正在提交..."
+  },
+  "success": {
+    "title": "反馈已提交！",
+    "description": "你的反馈已发布到 GitHub Discussions。",
+    "viewDiscussion": "查看讨论",
+    "submitAnother": "再提交一条"
+  },
+  "error": {
+    "fillRequired": "请同时填写标题和描述。",
+    "notConfigured": "反馈功能未配置。缺少 VITE_GITHUB_TOKEN 环境变量。",
+    "submitFailed": "提交反馈失败"
+  }
+}

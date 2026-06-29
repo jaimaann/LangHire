@@ -238,4 +238,31 @@ describe("SettingsPage", () => {
     await user.click(screen.getByRole("button", { name: /Browse/ }));
     expect(await screen.findByDisplayValue("/new/resume.pdf")).toBeInTheDocument();
   });
+
+  it("renders the theme toggle and persists a selection (#41)", async () => {
+    const user = userEvent.setup();
+    render(<SettingsPage />);
+    await screen.findByDisplayValue("/home/me/resume.pdf");
+
+    const dark = screen.getByRole("radio", { name: /appearance\.dark/ });
+    expect(screen.getByRole("radio", { name: /appearance\.light/ })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: /appearance\.system/ })).toBeInTheDocument();
+
+    await user.click(dark);
+    // Applies immediately and mirrors to the backend.
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
+    await waitFor(() => expect(mockSaveSettings).toHaveBeenCalledWith({ theme: "dark" }));
+    expect(dark).toHaveAttribute("aria-checked", "true");
+
+    // Clean up the global <html> class so other tests aren't affected.
+    document.documentElement.classList.remove("dark");
+  });
+
+  it("applies a theme loaded from backend settings (#41)", async () => {
+    mockGetSettings.mockResolvedValue({ ...baseSettings, theme: "dark" } as never);
+    render(<SettingsPage />);
+    await screen.findByDisplayValue("/home/me/resume.pdf");
+    await waitFor(() => expect(document.documentElement.classList.contains("dark")).toBe(true));
+    document.documentElement.classList.remove("dark");
+  });
 });

@@ -80,3 +80,26 @@ def test_currency_codes_are_three_letters():
     for code, cfg in cc.COUNTRY_CONFIGS.items():
         cur = cfg["currency"]
         assert len(cur) == 3 and cur.isupper(), f"{code} currency {cur!r}"
+
+
+def test_italy_config_present_and_correct():
+    """Italy (IT) config exists with the expected core values."""
+    assert "IT" in cc.COUNTRY_CONFIGS
+    it = cc.get_country_config("IT")
+    assert it is cc.COUNTRY_CONFIGS["IT"]
+    assert it["name"] == "Italy"
+    assert it["flag"] == "🇮🇹"
+    assert it["date_format"] == "DD/MM/YYYY"
+    assert it["currency"] == "EUR"
+    assert it["salary_period"] == "annual"
+    assert it["phone_prefix"] == "+39"
+    assert it["default_sources"] == ["linkedin", "indeed"]
+    assert it["work_auth_options"], "IT has no work_auth_options"
+
+
+def test_italy_config_key_set_matches_other_configs():
+    """IT exposes exactly the same key set as the other country configs."""
+    it_keys = set(cc.COUNTRY_CONFIGS["IT"].keys())
+    de_keys = set(cc.COUNTRY_CONFIGS["DE"].keys())
+    fr_keys = set(cc.COUNTRY_CONFIGS["FR"].keys())
+    assert it_keys == de_keys == fr_keys

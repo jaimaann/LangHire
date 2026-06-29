@@ -1,0 +1,17 @@
+{
+  "title": "Registri",
+  "subtitle": "Registri storici delle esecuzioni per il debug e il monitoraggio",
+  "refresh": "Aggiorna",
+  "runs": {
+    "title": "Esecuzioni recenti ({{count}})",
+    "empty": "Nessuna esecuzione registrata ancora. Raccogli offerte o candidati per vedere i registri qui.",
+    "unknown": "Sconosciuto",
+    "lines": "{{count}} righe"
+  },
+  "detail": {
+    "runTitle": "Esecuzione {{id}}",
+    "selectPrompt": "Seleziona un'esecuzione per visualizzare i registri",
+    "selectFromPanel": "Seleziona un'esecuzione dal pannello a sinistra per visualizzarne i registri",
+    "noLogs": "Nessun registro registrato per questa esecuzione (esecuzione precedente all'aggiornamento del logging)"
+  }
+}

@@ -335,6 +335,38 @@ class TestJobs:
         assert resp.status_code == 400
         assert resp.json()["error"]["code"] == "missing_field"
 
+    def test_export_jobs_csv_empty(self, auth_client):
+        """Export on an empty data dir returns a CSV with only the header row."""
+        resp = auth_client.get("/jobs/export")
+        assert resp.status_code == 200
+        assert "text/csv" in resp.headers["content-type"]
+        assert "attachment" in resp.headers["content-disposition"]
+        assert "langhire-jobs.csv" in resp.headers["content-disposition"]
+        lines = [ln for ln in resp.text.splitlines() if ln.strip()]
+        assert len(lines) == 1  # header only
+        assert "Job Title" in lines[0]
+        assert "Company" in lines[0]
+        assert "URL" in lines[0]
+
+    def test_export_jobs_csv_with_data(self, auth_client):
+        """Added jobs appear as CSV rows with the expected columns."""
+        url = "https://www.linkedin.com/jobs/view/555000"
+        auth_client.post("/jobs/add", json={"url": url, "title": "Engineer", "company": "Globex", "location": "Remote"})
+        resp = auth_client.get("/jobs/export")
+        assert resp.status_code == 200
+        body = resp.text
+        assert "Engineer" in body
+        assert "Globex" in body
+        assert "Remote" in body
+        assert url in body
+        # header + at least one data row
+        assert len([ln for ln in body.splitlines() if ln.strip()]) >= 2
+
+    def test_export_jobs_csv_requires_auth(self, client):
+        """Export endpoint is behind auth like the rest of the API."""
+        resp = client.get("/jobs/export")  # no Authorization header
+        assert resp.status_code == 401
+
     def test_add_duplicate_job_409(self, auth_client):
         url = "https://www.linkedin.com/jobs/view/777"
         auth_client.post("/jobs/add", json={"url": url})

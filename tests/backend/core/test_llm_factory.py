@@ -18,8 +18,10 @@ from browser_use.llm import (
     ChatOpenAI,
     ChatAnthropic,
     ChatAWSBedrock,
+    ChatGoogle,
     ChatOllama,
 )
+from browser_use.llm.exceptions import ModelProviderError
 
 
 # ── _PatchedSession ──────────────────────────────────────────────────────────
@@ -128,6 +130,24 @@ def test_create_llm_ollama_defaults():
     assert isinstance(llm, ChatOllama)
     assert llm.model == "llama3.1"
     assert llm.host == "http://localhost:11434"
+
+
+def test_create_llm_gemini():
+    """gemini provider yields a ChatGoogle with the configured model."""
+    llm = llm_factory.create_llm(
+        {"provider": "gemini", "gemini": {"api_key": " AIza-x ", "model": "gemini-2.5-flash"}}
+    )
+    assert isinstance(llm, ChatGoogle)
+    assert llm.model == "gemini-2.5-flash"
+    # api_key is stripped of surrounding whitespace.
+    assert llm.api_key == "AIza-x"
+
+
+def test_create_llm_gemini_default_model():
+    """gemini with empty sub-config uses the default model."""
+    llm = llm_factory.create_llm({"provider": "gemini"})
+    assert isinstance(llm, ChatGoogle)
+    assert llm.model == "gemini-2.5-pro"
 
 
 def test_create_llm_openrouter():
@@ -303,3 +323,64 @@ async def test_test_connection_wait_for_timeout(monkeypatch):
     monkeypatch.setattr(asyncio, "wait_for", fast_wait_for)
     with pytest.raises(RuntimeError, match="timed out"):
         await llm_factory.test_connection(_FakeLLM(hang))
+
+
+# ── test_connection: friendly error branches (#48) ───────────────────────────
+
+async def test_test_connection_invalid_key_by_status_code():
+    """A 401 ModelProviderError maps to the invalid-API-key message."""
+    async def bad(messages):
+        raise ModelProviderError("Something went wrong", status_code=401)
+
+    with pytest.raises(RuntimeError, match="Invalid API key"):
+        await llm_factory.test_connection(_FakeLLM(bad))
+
+
+async def test_test_connection_invalid_key_by_message():
+    """An auth-related message (no helpful code) still maps to invalid-key."""
+    async def bad(messages):
+        raise ModelProviderError("Incorrect API_KEY provided", status_code=400)
+
+    with pytest.raises(RuntimeError, match="Invalid API key"):
+        await llm_factory.test_connection(_FakeLLM(bad))
+
+
+async def test_test_connection_rate_limit_by_status_code():
+    """A 429 maps to the rate-limit / quota message."""
+    async def bad(messages):
+        raise ModelProviderError("slow down", status_code=429)
+
+    with pytest.raises(RuntimeError, match="Rate limit or quota exceeded"):
+        await llm_factory.test_connection(_FakeLLM(bad))
+
+
+async def test_test_connection_quota_by_message():
+    """A quota message maps to the rate-limit / quota guidance."""
+    async def bad(messages):
+        raise ModelProviderError("You exceeded your current quota", status_code=403)
+
+    # 403 is auth-first, so message-only quota detection is exercised via a
+    # non-auth status code.
+    async def quota(messages):
+        raise ModelProviderError("Resource has been exhausted (quota)", status_code=500)
+
+    with pytest.raises(RuntimeError, match="Rate limit or quota exceeded"):
+        await llm_factory.test_connection(_FakeLLM(quota))
+
+
+async def test_test_connection_network_error():
+    """A connection error maps to the reach-the-API guidance."""
+    async def bad(messages):
+        raise ConnectionError("Failed to establish a new connection")
+
+    with pytest.raises(RuntimeError, match="Cannot reach the API"):
+        await llm_factory.test_connection(_FakeLLM(bad))
+
+
+async def test_test_connection_generic_error_passthrough():
+    """An unclassifiable error surfaces its raw message."""
+    async def bad(messages):
+        raise ValueError("totally unexpected boom")
+
+    with pytest.raises(RuntimeError, match="totally unexpected boom"):
+        await llm_factory.test_connection(_FakeLLM(bad))

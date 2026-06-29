@@ -1,0 +1,38 @@
+{
+  "title": "记忆",
+  "subtitle": "{{domains}} 个域中的 {{total}} 条记忆",
+  "actions": {
+    "export": "导出",
+    "decay": "衰减",
+    "cleanup": "清理"
+  },
+  "search": {
+    "placeholder": "搜索记忆...",
+    "button": "搜索"
+  },
+  "domains": {
+    "title": "域",
+    "empty": "暂无域",
+    "memoryCount": "{{count}} 条记忆",
+    "confidence": "{{percent}}% 置信度"
+  },
+  "memories": {
+    "searchResults": "搜索结果（{{count}}）",
+    "domainTitle": "{{domain}}（{{count}}）",
+    "selectDomain": "选择一个域",
+    "noMemoriesFound": "未找到记忆",
+    "selectDomainPrompt": "选择一个域以查看其记忆",
+    "success": "✓ 成功",
+    "failure": "✗ 失败",
+    "confidence": "{{percent}}% 置信度",
+    "accesses": "{{count}} 次访问"
+  },
+  "confirm": {
+    "decay": "降低 30 天以上未更新的记忆的置信度？",
+    "cleanup": "删除所有置信度低于 0.3 的记忆？"
+  },
+  "toast": {
+    "decayed": "已衰减 {{count}} 条记忆",
+    "deleted": "已删除 {{count}} 条记忆"
+  }
+}

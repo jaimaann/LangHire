@@ -5,6 +5,10 @@ import { HashRouter } from "react-router-dom";
 import "./index.css";
 import "./i18n";
 import App from "./App";
+import { initTheme } from "./lib/theme";
+
+// Apply the persisted theme before first paint to avoid a flash of light mode.
+initTheme();
 
 const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN;
 if (SENTRY_DSN) {

@@ -1,0 +1,46 @@
+{
+  "title": "Archivio domande e risposte",
+  "subtitle": "{{total}} domanda · {{answered}} con risposta · {{unanswered}} senza risposta",
+  "subtitle_plural": "{{total}} domande · {{answered}} con risposta · {{unanswered}} senza risposta",
+  "actions": {
+    "autoSquash": "Unione automatica",
+    "squashing": "Unione in corso...",
+    "smartSquash": "Unione intelligente",
+    "analyzing": "Analisi in corso...",
+    "autoSquashTitle": "Unisci le domande con testo simile",
+    "smartSquashTitle": "Usa l'LLM per trovare domande semanticamente identiche"
+  },
+  "filter": {
+    "all": "Tutte ({{count}})",
+    "unanswered": "Senza risposta ({{count}})"
+  },
+  "searchPlaceholder": "Cerca domande o risposte...",
+  "mergeMode": {
+    "banner": "Clicca una domanda qui sotto per unirvi “{{question}}”.",
+    "label": "Modalità unione:"
+  },
+  "emptyState": {
+    "noMatching": "Nessuna domanda corrispondente trovata.",
+    "noQuestions": "Nessuna domanda ancora. Le domande appariranno qui man mano che l'agente si candida alle offerte."
+  },
+  "card": {
+    "answerPlaceholder": "Digita qui la tua risposta...",
+    "saving": "Salvataggio in corso...",
+    "unsaved": "Non salvato",
+    "mergeTitle": "Unisci a un'altra domanda",
+    "deleteTitle": "Elimina domanda"
+  },
+  "toast": {
+    "deleted": "Domanda eliminata",
+    "merged": "Domande unite",
+    "squashResult": "Uniti {{count}} duplicato/i",
+    "noDuplicates": "Nessun duplicato trovato",
+    "smartSquashResult": "Uniti in modo intelligente {{count}} duplicato/i",
+    "noSemanticDuplicates": "Nessun duplicato semantico trovato",
+    "autoSquashFailed": "Unione automatica non riuscita",
+    "smartSquashFailed": "Unione intelligente non riuscita"
+  },
+  "error": {
+    "loadFailed": "Caricamento delle domande e risposte non riuscito"
+  }
+}

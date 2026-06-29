@@ -1,0 +1,34 @@
+{
+  "title": "Feedback",
+  "subtitle": "Aiutaci a migliorare LangHire con le tue opinioni",
+  "viewDiscussions": "Visualizza le discussioni",
+  "categories": {
+    "featureRequest": "Richiesta di funzionalità",
+    "bugReport": "Segnalazione di bug",
+    "generalFeedback": "Feedback generale"
+  },
+  "form": {
+    "categoryLabel": "Categoria",
+    "titleLabel": "Titolo",
+    "titlePlaceholder": "Breve riassunto del tuo feedback",
+    "descriptionLabel": "Descrizione",
+    "descriptionPlaceholder": "Descrivi in dettaglio la tua richiesta di funzionalità, il bug o il feedback...",
+    "emailLabel": "Email",
+    "emailOptional": "(facoltativo)",
+    "emailPlaceholder": "tua@email.com",
+    "emailHelp": "Includi la tua email se desideri che ti ricontattiamo.",
+    "submit": "Invia feedback",
+    "submitting": "Invio in corso..."
+  },
+  "success": {
+    "title": "Feedback inviato!",
+    "description": "Il tuo feedback è stato pubblicato su GitHub Discussions.",
+    "viewDiscussion": "Visualizza la discussione",
+    "submitAnother": "Invia un altro"
+  },
+  "error": {
+    "fillRequired": "Compila sia il titolo sia la descrizione.",
+    "notConfigured": "Il feedback non è configurato. La variabile d'ambiente VITE_GITHUB_TOKEN è mancante.",
+    "submitFailed": "Invio del feedback non riuscito"
+  }
+}

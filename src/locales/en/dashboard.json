@@ -33,5 +33,21 @@
   },
   "backend": {
     "notConnected": "Backend not connected. Start it with: <code>uv run python backend/main.py</code>"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Insights into your job applications",
+    "emptyTitle": "No data yet",
+    "emptyDescription": "Collect and apply to jobs to see analytics here.",
+    "totalJobs": "Total jobs",
+    "applied": "Applied",
+    "successRate": "Success rate",
+    "failed": "Failed",
+    "appliedThisWeek": "Applied this week",
+    "appliedThisMonth": "Applied this month",
+    "byStatus": "By status",
+    "bySource": "By source",
+    "topCompanies": "Top companies",
+    "trend": "Recent activity"
   }
 }

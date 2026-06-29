@@ -156,6 +156,19 @@ export async function getJobStats() {
   return request<JobStats>("/jobs/stats");
 }
 
+/** Fetch the jobs export as CSV text (authenticated). Caller triggers the download. */
+export async function exportJobsCsv(): Promise<string> {
+  const token = await getToken();
+  const res = await fetch(`${getBaseUrl()}/jobs/export`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "Unknown error");
+    throw new Error(`API Error ${res.status}: ${text}`);
+  }
+  return res.text();
+}
+
 export async function startJobCollection(title?: string, maxJobs?: number, source?: string, filters?: Record<string, string>) {
   const body: Record<string, unknown> = {};
   if (title) body.title = title;

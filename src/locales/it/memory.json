@@ -1,0 +1,38 @@
+{
+  "title": "Memoria",
+  "subtitle": "{{total}} memorie su {{domains}} domini",
+  "actions": {
+    "export": "Esporta",
+    "decay": "Decadimento",
+    "cleanup": "Pulizia"
+  },
+  "search": {
+    "placeholder": "Cerca nelle memorie...",
+    "button": "Cerca"
+  },
+  "domains": {
+    "title": "Domini",
+    "empty": "Nessun dominio ancora",
+    "memoryCount": "{{count}} memorie",
+    "confidence": "{{percent}}% di fiducia"
+  },
+  "memories": {
+    "searchResults": "Risultati della ricerca ({{count}})",
+    "domainTitle": "{{domain}} ({{count}})",
+    "selectDomain": "Seleziona un dominio",
+    "noMemoriesFound": "Nessuna memoria trovata",
+    "selectDomainPrompt": "Seleziona un dominio per visualizzarne le memorie",
+    "success": "✓ successo",
+    "failure": "✗ fallimento",
+    "confidence": "{{percent}}% di fiducia",
+    "accesses": "{{count}} accessi"
+  },
+  "confirm": {
+    "decay": "Ridurre la fiducia delle memorie non aggiornate da oltre 30 giorni?",
+    "cleanup": "Eliminare tutte le memorie con fiducia inferiore a 0,3?"
+  },
+  "toast": {
+    "decayed": "Decadute {{count}} memorie",
+    "deleted": "Eliminate {{count}} memorie"
+  }
+}

@@ -36,6 +36,7 @@ const baseSettings = {
   provider: "openrouter",
   openai: { api_key: "", model: "gpt-4o" },
   anthropic: { api_key: "", model: "claude-sonnet-4-5" },
+  gemini: { api_key: "", model: "gemini-2.5-pro" },
   bedrock: {
     access_key: "",
     secret_key: "",
@@ -80,7 +81,7 @@ describe("LLMSettingsForm", () => {
     await screen.findByText("selectProvider");
 
     const radios = screen.getAllByRole("radio");
-    expect(radios).toHaveLength(6);
+    expect(radios).toHaveLength(7);
     const openrouter = screen.getByRole("radio", { name: /providers\.openrouter/ });
     expect(openrouter).toBeChecked();
     // OpenRouter config field (api key) is present.
@@ -152,6 +153,21 @@ describe("LLMSettingsForm", () => {
     await user.click(screen.getByRole("button", { name: /status\.testConnection/ }));
 
     expect(await screen.findByText("Bad key")).toBeInTheDocument();
+  });
+
+  it("Test Connection shows the backend's friendly invalid-key message (#48)", async () => {
+    mockTestLLMConnection.mockResolvedValue({
+      success: false,
+      message: "Invalid API key. Please check your key and try again.",
+    } as never);
+    const user = userEvent.setup();
+    render(<LLMSettingsForm />);
+    await screen.findByText("selectProvider");
+
+    await user.click(screen.getByRole("button", { name: /status\.testConnection/ }));
+    expect(
+      await screen.findByText("Invalid API key. Please check your key and try again."),
+    ).toBeInTheDocument();
   });
 
   it("Test Connection rejection surfaces the thrown error message", async () => {
@@ -278,6 +294,46 @@ describe("LLMSettingsForm", () => {
       // The debounced ollama fetch (500ms) populates a select with options.
       await waitFor(
         () => expect(screen.getByRole("option", { name: "llama3.1" })).toBeInTheDocument(),
+        { timeout: 2000 },
+      );
+    });
+
+    it("gemini: renders API key + model fields and saves on selection", async () => {
+      const user = userEvent.setup();
+      render(<LLMSettingsForm />);
+      await screen.findByText("selectProvider");
+
+      await user.click(screen.getByRole("radio", { name: /providers\.gemini/ }));
+
+      // API key password field appears.
+      expect(await screen.findByPlaceholderText("AIza...")).toBeInTheDocument();
+      // Model select offers the Gemini models.
+      expect(screen.getByRole("option", { name: "gemini-2.5-pro" })).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: "gemini-2.5-flash" })).toBeInTheDocument();
+      // Switching provider immediate-saves with provider=gemini.
+      await waitFor(() =>
+        expect(mockSaveLLMSettings).toHaveBeenCalledWith(
+          expect.objectContaining({ provider: "gemini" }),
+        ),
+      );
+    });
+
+    it("gemini: editing the API key debounce-saves", async () => {
+      const user = userEvent.setup();
+      render(<LLMSettingsForm />);
+      await screen.findByText("selectProvider");
+
+      await user.click(screen.getByRole("radio", { name: /providers\.gemini/ }));
+      const keyInput = await screen.findByPlaceholderText("AIza...");
+      await user.type(keyInput, "AIzaABC");
+
+      await waitFor(
+        () =>
+          expect(mockSaveLLMSettings).toHaveBeenCalledWith(
+            expect.objectContaining({
+              gemini: expect.objectContaining({ api_key: "AIzaABC" }),
+            }),
+          ),
         { timeout: 2000 },
       );
     });
