@@ -64,6 +64,14 @@ Thumbs.db
 build/
 src-tauri/binaries/
 
+# ── Test / Coverage artifacts ─────────────────────────────────────────────
+coverage/
+htmlcov/
+.coverage
+coverage.xml
+.pytest_cache/
+node_modules/.tmp/
+
 # ── Build artifacts ───────────────────────────────────────────────────────
 *.dmg
 *.exe

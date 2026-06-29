@@ -68,6 +68,13 @@ jobs:
       - name: Frontend build (Vite)
         run: npm run build
 
+      # ── Unit Tests ───────────────────────────────────────────────────
+      - name: Frontend unit tests (Vitest + coverage)
+        run: npm run test:coverage
+
+      - name: Backend unit tests (pytest + coverage)
+        run: uv run pytest tests/ --cov --cov-report=term-missing --cov-report=xml
+
       # ── Install Chromium ─────────────────────────────────────────────
       - name: Install Playwright Chromium
         run: uv run python -m playwright install chromium
