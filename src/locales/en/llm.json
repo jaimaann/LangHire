@@ -89,7 +89,9 @@
     "keyHint": "Get your key at",
     "modelsAvailable": "{{count}} vision models available. Prices per million tokens.",
     "curatedList": "Showing curated list. Connect to load all vision models.",
-    "browseAt": "Browse at"
+    "browseAt": "Browse at",
+    "customOption": "Custom model ID…",
+    "customHint": "Paste any OpenRouter model tag, e.g. openai/gpt-oss-120b:free"
   },
   "openaiCompatible": {
     "baseUrlHint": "The full URL to the OpenAI-compatible API endpoint (e.g. https://api.together.xyz/v1 or http://localhost:1234/v1)",

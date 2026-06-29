@@ -50,6 +50,8 @@ const defaultSettings: LLMSettings = {
   openai_compatible: { base_url: "", api_key: "", model: "" },
 };
 
+const OR_CUSTOM = "__custom__";
+
 const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
   openai: "OpenAI",
   anthropic: "Anthropic",
@@ -77,6 +79,7 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
   const [ollamaFetching, setOllamaFetching] = useState(false);
   const [openrouterModels, setOpenrouterModels] = useState<{ id: string; name: string; context: number; promptPrice: string; completionPrice: string }[]>([]);
   const [openrouterFetching, setOpenrouterFetching] = useState(false);
+  const [openrouterCustom, setOpenrouterCustom] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const ollamaFetchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -143,6 +146,15 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
       .catch(() => {})
       .finally(() => setOpenrouterFetching(false));
   }, [settings.provider, openrouterModels.length]);
+
+  // Start in "custom" mode when the saved model isn't in the known list/fallback.
+  useEffect(() => {
+    if (settings.provider !== "openrouter") return;
+    const model = settings.openrouter?.model;
+    if (!model) return;
+    const known = openrouterModels.some((m) => m.id === model) || OPENROUTER_FALLBACK_MODELS.includes(model);
+    if (!known) setOpenrouterCustom(true);
+  }, [settings.provider, settings.openrouter?.model, openrouterModels]);
 
   // Autosave with debounce
   const autoSave = useCallback((newSettings: LLMSettings) => {
@@ -474,7 +486,18 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                 {t("labels.modelVision")}
                 {openrouterFetching && <Loader2 className="w-3 h-3 animate-spin inline ml-2" />}
               </label>
-              <select value={settings.openrouter?.model || "openai/gpt-4o"} onChange={(e) => updateOpenRouter("model", e.target.value)} className="input-base">
+              <select
+                value={openrouterCustom ? OR_CUSTOM : (settings.openrouter?.model || "openai/gpt-4o")}
+                onChange={(e) => {
+                  if (e.target.value === OR_CUSTOM) {
+                    setOpenrouterCustom(true);
+                  } else {
+                    setOpenrouterCustom(false);
+                    updateOpenRouter("model", e.target.value);
+                  }
+                }}
+                className="input-base"
+              >
                 {openrouterModels.length > 0
                   ? openrouterModels.map((m) => (
                     <option key={m.id} value={m.id}>
@@ -483,8 +506,20 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                   ))
                   : OPENROUTER_FALLBACK_MODELS.map(m => <option key={m} value={m}>{m}</option>)
                 }
+                <option value={OR_CUSTOM}>{t("openrouter.customOption")}</option>
               </select>
-              {openrouterModels.length > 0 && (() => {
+              {openrouterCustom && (
+                <div className="mt-2">
+                  <input
+                    value={settings.openrouter?.model || ""}
+                    onChange={(e) => updateOpenRouter("model", e.target.value)}
+                    placeholder="openai/gpt-oss-120b:free"
+                    className="input-base font-mono"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">{t("openrouter.customHint")}</p>
+                </div>
+              )}
+              {!openrouterCustom && openrouterModels.length > 0 && (() => {
                 const selected = openrouterModels.find(m => m.id === (settings.openrouter?.model || "openai/gpt-4o"));
                 return selected ? (
                   <div className="flex gap-3 mt-2 text-[11px] text-muted-foreground">
