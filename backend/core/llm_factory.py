@@ -68,40 +68,23 @@ def create_llm(settings: dict):
         return ChatAWSBedrock(model=model, session=patched_session)
 
     elif provider == "ollama":
-        from browser_use.llm import ChatOpenAI
-        import httpx
-
-        class _OllamaInterceptor(httpx.AsyncClient):
-            """Intercepts requests to inject Ollama-specific options like num_ctx."""
-            async def request(self, method, url, **kwargs):
-                if method == "POST" and "/chat/completions" in str(url):
-                    if "json" in kwargs and kwargs["json"]:
-                        # Inject Ollama options into the body
-                        options = {
-                            "num_ctx": 32768,
-                            "num_predict": 4096,
-                            "temperature": 0.0,
-                        }
-                        from backend.core.config import logging
-                        logger = logging.getLogger("backend")
-                        logger.info(f"Ollama Interceptor: Injecting num_ctx=32768 into {url}")
-                        
-                        if "options" in kwargs["json"]:
-                            kwargs["json"]["options"].update(options)
-                        else:
-                            kwargs["json"]["options"] = options
-                return await super().request(method, url, **kwargs)
-
+        # Use browser-use's native ChatOllama (not ChatOpenAI against the /v1 shim).
+        # ChatOllama drives Ollama's native `format=<schema>` grammar-constrained
+        # decoding, which small local models (e.g. gemma3:4b) honor reliably —
+        # the OpenAI-compatible `response_format` path produced truncated JSON and
+        # crashed with "Invalid JSON: EOF while parsing" (see issue #60).
+        from browser_use.llm import ChatOllama
         cfg = settings.get("ollama", {})
         base_url = cfg.get("base_url", "http://localhost:11434").rstrip("/")
-        
-        # Use the interceptor to inject context window settings
-        return ChatOpenAI(
-            model=cfg.get("model", "llama3.1"),
-            base_url=f"{base_url}/v1",
-            api_key="ollama",
+        return ChatOllama(
+            model=cfg.get("model") or "llama3.1",
+            host=base_url,  # native Ollama host (NOT the /v1 OpenAI shim)
             timeout=300,
-            http_client=_OllamaInterceptor(),
+            ollama_options={
+                "num_ctx": 32768,    # large context: agent prompt + DOM/screenshot is big
+                "num_predict": 4096,  # room for full JSON output (avoids truncation)
+                "temperature": 0.0,
+            },
         )
 
     elif provider == "openrouter":
