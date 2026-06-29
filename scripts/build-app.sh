@@ -11,8 +11,10 @@
 # this script on each OS (Windows users: see scripts/build-windows.ps1).
 #
 # Usage:
-#   bash scripts/build-app.sh              # build for the host OS
-#   bash scripts/build-app.sh --debug      # faster, unoptimized debug build
+#   bash scripts/build-app.sh                  # build for the host OS
+#   bash scripts/build-app.sh --debug          # faster, unoptimized debug build
+#   bash scripts/build-app.sh --clean-data     # wipe local app data, then build (fresh test)
+#   bash scripts/build-app.sh --clean-data -y  # ...without the confirmation prompt
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -20,7 +22,19 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 cd "$PROJECT_DIR"
 
 DEBUG_FLAG=""
-[ "$1" = "--debug" ] && DEBUG_FLAG="--debug"
+CLEAN_DATA=0
+ASSUME_YES=0
+for arg in "$@"; do
+  case "$arg" in
+    --debug) DEBUG_FLAG="--debug" ;;
+    --clean-data) CLEAN_DATA=1 ;;
+    -y|--yes) ASSUME_YES=1 ;;
+    -h|--help)
+      sed -n '2,17p' "$0" | sed 's/^#$//; s/^# //'
+      exit 0 ;;
+    *) echo "❌ Unknown argument: $arg (try --help)"; exit 1 ;;
+  esac
+done
 
 OS=$(uname -s)
 ARCH=$(uname -m)
@@ -33,6 +47,37 @@ if [ "$OS" != "Darwin" ] && [ "$OS" != "Linux" ]; then
   echo "❌ This script supports macOS and Linux."
   echo "   On Windows, run:  powershell -ExecutionPolicy Bypass -File scripts\\build-windows.ps1"
   exit 1
+fi
+
+# ── 0. Optional: clear local app data for a fresh-install test ───────────────
+# Mirrors core.config.get_data_dir(): macOS → ~/Library/Application Support/langhire,
+# Linux → ~/.config/langhire. Removes profile, jobs, memory DB, settings,
+# saved logins/cookies, and the onboarding flag.
+if [ "$CLEAN_DATA" = "1" ]; then
+  if [ "$OS" = "Darwin" ]; then
+    DATA_DIR="$HOME/Library/Application Support/langhire"
+  else
+    DATA_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/langhire"
+  fi
+
+  if [ -d "$DATA_DIR" ]; then
+    echo "🧹 App data directory: $DATA_DIR"
+    if [ "$ASSUME_YES" != "1" ]; then
+      echo "   This permanently deletes your profile, jobs, memory, settings, and saved logins."
+      printf "   Delete it and start fresh? [y/N] "
+      read -r reply
+      case "$reply" in
+        y|Y|yes|YES) ;;
+        *) echo "   Skipped — keeping existing data."; CLEAN_DATA=0 ;;
+      esac
+    fi
+    if [ "$CLEAN_DATA" = "1" ]; then
+      rm -rf "$DATA_DIR"
+      echo "   ✅ Cleared. The app will onboard from scratch on next launch."
+    fi
+  else
+    echo "🧹 No existing app data at $DATA_DIR — already fresh."
+  fi
 fi
 
 # ── 1. Tooling checks ───────────────────────────────────────────────────────
