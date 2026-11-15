@@ -31,6 +31,14 @@
     "openai_compatible": {
       "name": "Compatibile con OpenAI",
       "description": "Qualsiasi API che segue il formato OpenAI — Together, Groq, LM Studio, vLLM, ecc."
+    },
+    "zai": {
+      "name": "Z.ai (GLM)",
+      "description": "Modelli GLM direttamente da Z.ai, incluso il GLM Coding Plan"
+    },
+    "xai": {
+      "name": "xAI (Grok)",
+      "description": "Modelli Grok direttamente da xAI"
     }
   },
   "labels": {
@@ -117,5 +125,15 @@
     "input": "Input per 1 M",
     "cached": "Input in cache per 1 M",
     "output": "Output per 1 M"
+  },
+  "zai": {
+    "plan": "Piano",
+    "planCoding": "Coding Plan",
+    "planStandard": "A consumo",
+    "planHint": "Coding Plan usa il tuo abbonamento GLM Coding Plan; a consumo viene addebitato il saldo del tuo account Z.ai. A consumo, imposta sotto i prezzi dei token per vedere i costi.",
+    "modelHint": "glm-5.3-flash legge gli screenshot ed è il più economico; glm-5.3 è più potente ma solo testo (l'app disattiva gli screenshot automaticamente)."
+  },
+  "xai": {
+    "modelHint": "grok-4.3 è veloce e più economico; grok-4.7 è il modello di punta di xAI. Funziona qualsiasi ID modello della tua console xAI."
   }
 }

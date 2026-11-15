@@ -11,6 +11,8 @@ const PROVIDERS: { id: LLMProvider; nameKey: string; descKey: string }[] = [
   { id: "anthropic", nameKey: "providers.anthropic.name", descKey: "providers.anthropic.description" },
   { id: "gemini", nameKey: "providers.gemini.name", descKey: "providers.gemini.description" },
   { id: "bedrock", nameKey: "providers.bedrock.name", descKey: "providers.bedrock.description" },
+  { id: "zai", nameKey: "providers.zai.name", descKey: "providers.zai.description" },
+  { id: "xai", nameKey: "providers.xai.name", descKey: "providers.xai.description" },
   { id: "ollama", nameKey: "providers.ollama.name", descKey: "providers.ollama.description" },
   { id: "openai_compatible", nameKey: "providers.openai_compatible.name", descKey: "providers.openai_compatible.description" },
 ];
@@ -35,6 +37,9 @@ const OPENROUTER_FALLBACK_MODELS = [
   "meta-llama/llama-4-maverick",
   "mistralai/mistral-large-2411",
 ];
+// Suggestions only: the model field accepts any ID the provider offers.
+const ZAI_MODELS = ["glm-5.3-flash", "glm-5.3"];
+const XAI_MODELS = ["grok-4.3", "grok-4.7"];
 const BEDROCK_MODELS = [
   "us.anthropic.claude-sonnet-4-6",
   "us.anthropic.claude-haiku-4-6",
@@ -50,6 +55,8 @@ const defaultSettings: LLMSettings = {
   bedrock: { access_key: "", secret_key: "", region: "us-west-2", model: "us.anthropic.claude-sonnet-4-6", auth_mode: "profile", profile_name: "default" },
   ollama: { base_url: "http://localhost:11434", model: "" },
   openrouter: { api_key: "", model: "qwen/qwen3.6-plus" },
+  zai: { api_key: "", model: "glm-5.3-flash", plan: "coding" },
+  xai: { api_key: "", model: "grok-4.3" },
   openai_compatible: { base_url: "", api_key: "", model: "" },
 };
 
@@ -62,6 +69,8 @@ const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
   bedrock: "AWS Bedrock",
   ollama: "Ollama",
   openrouter: "OpenRouter",
+  zai: "Z.ai",
+  xai: "xAI",
   openai_compatible: "OpenAI-Compatible",
 };
 
@@ -231,6 +240,12 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
     const ns = { ...settings, openrouter: { ...settings.openrouter!, [field]: value } };
     setSettings(ns);
     if (field === "model") immediateSave(ns); else autoSave(ns);
+  };
+
+  const updateKeyed = (provider: "zai" | "xai", field: string, value: string) => {
+    const ns = { ...settings, [provider]: { ...defaultSettings[provider]!, ...settings[provider], [field]: value } };
+    setSettings(ns);
+    if (field === "plan") immediateSave(ns); else autoSave(ns);
   };
 
   const updatePricing = (field: "input" | "cached" | "output", value: string) => {
@@ -499,6 +514,52 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
                   ? t("ollama.modelsFound", { count: ollamaModels.length })
                   : t("ollama.noModelsHint")}
               </p>
+            </div>
+          </div>
+        )}
+
+        {settings.provider === "zai" && (
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">{t("zai.plan")}</label>
+              <div className="flex gap-2">
+                <button onClick={() => updateKeyed("zai", "plan", "coding")} className={`filter-tab ${(settings.zai?.plan || "coding") === "coding" ? "filter-tab-active" : "filter-tab-inactive"}`}>{t("zai.planCoding")}</button>
+                <button onClick={() => updateKeyed("zai", "plan", "standard")} className={`filter-tab ${settings.zai?.plan === "standard" ? "filter-tab-active" : "filter-tab-inactive"}`}>{t("zai.planStandard")}</button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">{t("zai.planHint")}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.apiKey")}</label>
+              <input type="password" value={settings.zai?.api_key || ""} onChange={(e) => updateKeyed("zai", "api_key", e.target.value)} className="input-base font-mono" />
+              <p className="text-xs text-muted-foreground mt-1">
+                {t("openrouter.keyHint")}{" "}
+                <a href="https://z.ai/manage-apikey/apikey-list" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">z.ai</a>
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.model")}</label>
+              <input list="zai-models" value={settings.zai?.model ?? "glm-5.3-flash"} onChange={(e) => updateKeyed("zai", "model", e.target.value)} className="input-base font-mono" />
+              <datalist id="zai-models">{ZAI_MODELS.map((m) => <option key={m} value={m} />)}</datalist>
+              <p className="text-xs text-muted-foreground mt-1">{t("zai.modelHint")}</p>
+            </div>
+          </div>
+        )}
+
+        {settings.provider === "xai" && (
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.apiKey")}</label>
+              <input type="password" value={settings.xai?.api_key || ""} onChange={(e) => updateKeyed("xai", "api_key", e.target.value)} placeholder="xai-..." className="input-base font-mono" />
+              <p className="text-xs text-muted-foreground mt-1">
+                {t("openrouter.keyHint")}{" "}
+                <a href="https://console.x.ai" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">console.x.ai</a>
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-1.5">{t("labels.model")}</label>
+              <input list="xai-models" value={settings.xai?.model ?? "grok-4.3"} onChange={(e) => updateKeyed("xai", "model", e.target.value)} className="input-base font-mono" />
+              <datalist id="xai-models">{XAI_MODELS.map((m) => <option key={m} value={m} />)}</datalist>
+              <p className="text-xs text-muted-foreground mt-1">{t("xai.modelHint")}</p>
             </div>
           </div>
         )}

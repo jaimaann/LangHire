@@ -23,6 +23,14 @@
     "ollama": {
       "name": "Ollama",
       "description": "Exécutez des modèles open-source localement — aucune clé API nécessaire"
+    },
+    "zai": {
+      "name": "Z.ai (GLM)",
+      "description": "Modèles GLM directement chez Z.ai, y compris le GLM Coding Plan"
+    },
+    "xai": {
+      "name": "xAI (Grok)",
+      "description": "Modèles Grok directement chez xAI"
     }
   },
   "labels": {
@@ -100,5 +108,15 @@
     "input": "Entrée par million",
     "cached": "Entrée en cache par million",
     "output": "Sortie par million"
+  },
+  "zai": {
+    "plan": "Offre",
+    "planCoding": "Coding Plan",
+    "planStandard": "Paiement à l'usage",
+    "planHint": "Coding Plan utilise votre abonnement GLM Coding Plan ; le paiement à l'usage est débité du solde de votre compte Z.ai. Dans ce cas, saisissez les prix des jetons ci-dessous pour voir les coûts.",
+    "modelHint": "glm-5.3-flash lit les captures d'écran et coûte le moins ; glm-5.3 est plus puissant mais texte uniquement (l'app désactive alors les captures automatiquement)."
+  },
+  "xai": {
+    "modelHint": "grok-4.3 est rapide et moins cher ; grok-4.7 est le modèle phare de xAI. Tout identifiant de modèle de votre console xAI fonctionne."
   }
 }

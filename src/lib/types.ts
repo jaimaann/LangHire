@@ -49,7 +49,7 @@ export interface CandidateProfile {
 }
 
 // ── LLM Settings ──────────────────────────────────────────────────────────
-export type LLMProvider = "openai" | "anthropic" | "gemini" | "bedrock" | "ollama" | "openrouter" | "openai_compatible";
+export type LLMProvider = "openai" | "anthropic" | "gemini" | "bedrock" | "ollama" | "openrouter" | "zai" | "xai" | "openai_compatible";
 
 export interface LLMSettings {
   provider: LLMProvider;
@@ -80,6 +80,16 @@ export interface LLMSettings {
     model: string;
   };
   openrouter?: {
+    api_key: string;
+    model: string;
+  };
+  zai?: {
+    api_key: string;
+    model: string;
+    /** "coding" = GLM Coding Plan endpoint, "standard" = pay-as-you-go API */
+    plan?: "coding" | "standard";
+  };
+  xai?: {
     api_key: string;
     model: string;
   };

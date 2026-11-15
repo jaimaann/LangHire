@@ -1,7 +1,8 @@
 """
 Multi-provider LLM factory.
 Creates browser_use chat models from user settings.
-Supports: OpenAI, Anthropic (direct), AWS Bedrock, Google Gemini.
+Supports: OpenAI, Anthropic (direct), AWS Bedrock, Google Gemini, Ollama, OpenRouter,
+Z.ai (GLM), xAI (Grok) and any OpenAI-compatible endpoint.
 """
 
 
@@ -18,6 +19,12 @@ class _PatchedSession:
 
     def __getattr__(self, name):
         return getattr(self._session, name)
+
+
+ZAI_BASE_URLS = {
+    "coding": "https://api.z.ai/api/coding/paas/v4",  # GLM Coding Plan subscription
+    "standard": "https://api.z.ai/api/paas/v4",       # pay-as-you-go balance
+}
 
 
 def create_llm(settings: dict):
@@ -102,6 +109,25 @@ def create_llm(settings: dict):
             model=cfg.get("model", "openai/gpt-4o"),
             api_key=cfg.get("api_key", "").strip(),
             base_url="https://openrouter.ai/api/v1",
+        )
+
+    elif provider == "zai":
+        # Z.ai (GLM). The Coding Plan endpoint draws on the subscription; the standard one on the balance.
+        from browser_use.llm import ChatOpenAI
+        cfg = settings.get("zai", {})
+        return ChatOpenAI(
+            model=cfg.get("model") or "glm-5.3-flash",
+            api_key=cfg.get("api_key", "").strip(),
+            base_url=ZAI_BASE_URLS.get(cfg.get("plan") or "coding", ZAI_BASE_URLS["coding"]),
+        )
+
+    elif provider == "xai":
+        from browser_use.llm import ChatOpenAI
+        cfg = settings.get("xai", {})
+        return ChatOpenAI(
+            model=cfg.get("model") or "grok-4.3",
+            api_key=cfg.get("api_key", "").strip(),
+            base_url="https://api.x.ai/v1",
         )
 
     elif provider == "openai_compatible":

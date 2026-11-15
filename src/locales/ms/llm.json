@@ -23,6 +23,14 @@
     "ollama": {
       "name": "Ollama",
       "description": "Jalankan model sumber terbuka secara tempatan — tiada kunci API diperlukan"
+    },
+    "zai": {
+      "name": "Z.ai (GLM)",
+      "description": "Model GLM terus daripada Z.ai, termasuk GLM Coding Plan"
+    },
+    "xai": {
+      "name": "xAI (Grok)",
+      "description": "Model Grok terus daripada xAI"
     }
   },
   "labels": {
@@ -100,5 +108,15 @@
     "input": "Input setiap 1 juta",
     "cached": "Input cache setiap 1 juta",
     "output": "Output setiap 1 juta"
+  },
+  "zai": {
+    "plan": "Pelan",
+    "planCoding": "Coding Plan",
+    "planStandard": "Bayar ikut penggunaan",
+    "planHint": "Coding Plan menggunakan langganan GLM Coding Plan anda; bayar ikut penggunaan dicaj daripada baki akaun Z.ai anda. Untuk itu, tetapkan harga token di bawah untuk melihat kos.",
+    "modelHint": "glm-5.3-flash boleh membaca tangkapan skrin dan paling murah; glm-5.3 lebih berkebolehan tetapi teks sahaja (aplikasi mematikan tangkapan skrin untuknya secara automatik)."
+  },
+  "xai": {
+    "modelHint": "grok-4.3 pantas dan lebih murah; grok-4.7 ialah model utama xAI. Mana-mana ID model daripada konsol xAI anda berfungsi."
   }
 }

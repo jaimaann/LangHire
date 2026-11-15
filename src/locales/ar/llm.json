@@ -23,6 +23,14 @@
     "ollama": {
       "name": "Ollama",
       "description": "تشغيل نماذج مفتوحة المصدر محلياً — لا حاجة لمفتاح API"
+    },
+    "zai": {
+      "name": "Z.ai (GLM)",
+      "description": "نماذج GLM مباشرة من Z.ai، بما في ذلك GLM Coding Plan"
+    },
+    "xai": {
+      "name": "xAI (Grok)",
+      "description": "نماذج Grok مباشرة من xAI"
     }
   },
   "labels": {
@@ -100,5 +108,15 @@
     "input": "الإدخال لكل مليون",
     "cached": "الإدخال المخزّن لكل مليون",
     "output": "الإخراج لكل مليون"
+  },
+  "zai": {
+    "plan": "الخطة",
+    "planCoding": "Coding Plan",
+    "planStandard": "الدفع حسب الاستخدام",
+    "planHint": "يستخدم Coding Plan اشتراكك في GLM Coding Plan؛ أما الدفع حسب الاستخدام فيُخصم من رصيد حسابك في Z.ai. في هذه الحالة اضبط أسعار الرموز أدناه لرؤية التكلفة.",
+    "modelHint": "glm-5.3-flash يقرأ لقطات الشاشة وهو الأرخص؛ glm-5.3 أقوى لكنه نصي فقط (يوقف التطبيق لقطات الشاشة له تلقائيًا)."
+  },
+  "xai": {
+    "modelHint": "grok-4.3 سريع وأرخص؛ grok-4.7 هو النموذج الرائد من xAI. يعمل أي معرّف نموذج من وحدة تحكم xAI."
   }
 }

@@ -190,6 +190,27 @@ def test_create_llm_openai_compatible_defaults():
     assert llm.model == "default"
 
 
+@pytest.mark.parametrize("plan,url", [
+    (None, "https://api.z.ai/api/coding/paas/v4"),
+    ("coding", "https://api.z.ai/api/coding/paas/v4"),
+    ("standard", "https://api.z.ai/api/paas/v4"),
+])
+def test_create_llm_zai_picks_endpoint_by_plan(plan, url):
+    cfg = {"api_key": " zk "}
+    if plan:
+        cfg["plan"] = plan
+    llm = llm_factory.create_llm({"provider": "zai", "zai": cfg})
+    assert isinstance(llm, ChatOpenAI)
+    assert llm.model == "glm-5.3-flash" and llm.base_url == url and llm.api_key == "zk"
+
+
+def test_create_llm_xai():
+    llm = llm_factory.create_llm({"provider": "xai", "xai": {"api_key": "xk", "model": "grok-4.7"}})
+    assert isinstance(llm, ChatOpenAI)
+    assert llm.model == "grok-4.7" and llm.base_url == "https://api.x.ai/v1"
+    assert llm_factory.create_llm({"provider": "xai", "xai": {"api_key": "xk"}}).model == "grok-4.3"
+
+
 def test_create_llm_unknown_provider_raises():
     """An unrecognised provider raises a descriptive ValueError."""
     with pytest.raises(ValueError, match="Unknown LLM provider: mystery"):

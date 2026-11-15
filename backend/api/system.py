@@ -71,7 +71,7 @@ def llm_configured(llm: dict) -> bool:
         return True  # AWS profile mode
     if provider in ("ollama", "openai_compatible"):
         return bool((cfg.get("base_url") or "").strip())
-    if provider in ("openai", "anthropic", "openrouter", "gemini"):
+    if provider in ("openai", "anthropic", "openrouter", "gemini", "zai", "xai"):
         return bool((cfg.get("api_key") or "").strip())
     return False
 

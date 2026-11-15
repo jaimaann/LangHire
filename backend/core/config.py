@@ -143,6 +143,8 @@ def _default_llm_settings() -> dict:
         "gemini": {"api_key": "", "model": "gemini-2.5-pro"},
         "ollama": {"base_url": "http://localhost:11434", "model": ""},
         "openrouter": {"api_key": "", "model": "qwen/qwen3.6-plus"},
+        "zai": {"api_key": "", "model": "glm-5.3-flash", "plan": "coding"},
+        "xai": {"api_key": "", "model": "grok-4.3"},
     })
 
 

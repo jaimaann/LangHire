@@ -31,6 +31,14 @@
     "openai_compatible": {
       "name": "OpenAI 兼容",
       "description": "任何遵循 OpenAI 格式的 API — Together、Groq、LM Studio、vLLM 等"
+    },
+    "zai": {
+      "name": "Z.ai (GLM)",
+      "description": "直接使用 Z.ai 的 GLM 模型,包括 GLM Coding Plan"
+    },
+    "xai": {
+      "name": "xAI (Grok)",
+      "description": "直接使用 xAI 的 Grok 模型"
     }
   },
   "labels": {
@@ -117,5 +125,15 @@
     "input": "输入 每百万",
     "cached": "缓存输入 每百万",
     "output": "输出 每百万"
+  },
+  "zai": {
+    "plan": "套餐",
+    "planCoding": "Coding Plan",
+    "planStandard": "按量付费",
+    "planHint": "Coding Plan 使用你的 GLM Coding Plan 订阅;按量付费从你的 Z.ai 账户余额扣费。按量付费时,请在下方设置令牌价格以显示费用。",
+    "modelHint": "glm-5.3-flash 可以读取截图且最便宜;glm-5.3 更强但仅支持文本(应用会自动为其关闭截图)。"
+  },
+  "xai": {
+    "modelHint": "grok-4.3 速度快、价格更低;grok-4.7 是 xAI 的旗舰模型。xAI 控制台中的任何模型 ID 都可使用。"
   }
 }

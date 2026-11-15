@@ -81,7 +81,7 @@ describe("LLMSettingsForm", () => {
     await screen.findByText("selectProvider");
 
     const radios = screen.getAllByRole("radio");
-    expect(radios).toHaveLength(7);
+    expect(radios).toHaveLength(9);
     const openrouter = screen.getByRole("radio", { name: /providers\.openrouter/ });
     expect(openrouter).toBeChecked();
     // OpenRouter config field (api key) is present.
@@ -121,6 +121,43 @@ describe("LLMSettingsForm", () => {
           expect.objectContaining({
             openrouter: expect.objectContaining({ api_key: "sk-or-v1-abc" }),
           }),
+        ),
+      { timeout: 2000 },
+    );
+  });
+
+  it("Z.ai: switching to pay-as-you-go saves the plan with the GLM defaults", async () => {
+    const user = userEvent.setup();
+    render(<LLMSettingsForm />);
+    await screen.findByText("selectProvider");
+
+    await user.click(screen.getByRole("radio", { name: /providers\.zai\b/ }));
+    expect(await screen.findByDisplayValue("glm-5.3-flash")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "zai.planStandard" }));
+    await waitFor(() =>
+      expect(mockSaveLLMSettings).toHaveBeenCalledWith(
+        expect.objectContaining({
+          provider: "zai",
+          zai: expect.objectContaining({ plan: "standard", model: "glm-5.3-flash" }),
+        }),
+      ),
+    );
+  });
+
+  it("xAI: accepts any model ID typed into the model field", async () => {
+    const user = userEvent.setup();
+    render(<LLMSettingsForm />);
+    await screen.findByText("selectProvider");
+
+    await user.click(screen.getByRole("radio", { name: /providers\.xai\b/ }));
+    const model = await screen.findByDisplayValue("grok-4.3");
+    await user.clear(model);
+    await user.type(model, "grok-4.7");
+    await user.type(screen.getByPlaceholderText("xai-..."), "xai-k");
+    await waitFor(
+      () =>
+        expect(mockSaveLLMSettings).toHaveBeenCalledWith(
+          expect.objectContaining({ xai: { api_key: "xai-k", model: "grok-4.7" } }),
         ),
       { timeout: 2000 },
     );

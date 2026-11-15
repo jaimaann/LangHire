@@ -23,6 +23,14 @@
     "ollama": {
       "name": "Ollama",
       "description": "オープンソースモデルをローカルで実行 — APIキー不要"
+    },
+    "zai": {
+      "name": "Z.ai (GLM)",
+      "description": "Z.ai の GLM モデルを直接利用(GLM Coding Plan にも対応)"
+    },
+    "xai": {
+      "name": "xAI (Grok)",
+      "description": "xAI の Grok モデルを直接利用"
     }
   },
   "labels": {
@@ -100,5 +108,15 @@
     "input": "入力 100万あたり",
     "cached": "キャッシュ入力 100万あたり",
     "output": "出力 100万あたり"
+  },
+  "zai": {
+    "plan": "プラン",
+    "planCoding": "Coding Plan",
+    "planStandard": "従量課金",
+    "planHint": "Coding Plan は GLM Coding Plan のサブスクリプションを使い、従量課金は Z.ai アカウントの残高から支払われます。従量課金の場合は下でトークン価格を設定すると費用が表示されます。",
+    "modelHint": "glm-5.3-flash はスクリーンショットを読め、最も安価です。glm-5.3 は高性能ですがテキストのみです(アプリが自動でスクリーンショットをオフにします)。"
+  },
+  "xai": {
+    "modelHint": "grok-4.3 は高速で安価、grok-4.7 は xAI の最上位モデルです。xAI コンソールの任意のモデル ID が使えます。"
   }
 }
