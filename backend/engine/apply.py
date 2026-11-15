@@ -290,7 +290,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
                 outcome = "failed"
                 reason = (f"No application request was captured (submit clicks: {report.submit_clicks}). "
                           + (reason or ""))
-            early = len(interceptor.blocked) - report.intercepted if interceptor else 0
+            early = (sum(b.application for b in interceptor.blocked) - report.intercepted) if interceptor else 0
             if outcome == "failed" and early > 0:
                 # A multi-step form saves each step server-side; test mode blocks those saves,
                 # so this failure may be caused by the test itself, not the site or the agent.

@@ -82,6 +82,8 @@ DEFAULT_PROFILE = {
     "skills": [],
     # No made-up numbers: the agent answers salary questions from this
     "salary_expectation": {"min": 0, "max": 0, "currency": "USD", "period": "annual"},
+    # Free text ("INR 6,00,000 fixed + 50,000 variable"); forms in India ask for current CTC
+    "current_compensation": "",
     "notice_period": "",
     "nationality": "",
     "date_of_birth": "",

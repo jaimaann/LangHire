@@ -123,9 +123,50 @@ def build_apply_tools(report: AgentReport, profile: dict, resume_path: str = "")
         events.emit("field_filled", f"⚡ Prefilled {len(filled)} standard field(s): {', '.join(filled)}",
                     fast_path=True)
         return ActionResult(extracted_content=f"Prefilled: {', '.join(filled)}. Check them, then continue "
-                                              f"with the resume upload and the remaining questions.")
+                                              f"with upload_resume and the remaining questions.")
 
+    @tools.action(
+        "Attach the candidate's resume to the form's Resume/CV field. Works for hidden inputs, styled "
+        "'Attach' buttons and forms inside embedded frames. Use this instead of upload_file, and never type "
+        "a file path into a field.",
+    )
+    async def upload_resume(browser_session):
+        from .upload import upload_resume_any_frame
+        try:
+            msg = await upload_resume_any_frame(browser_session, resume_path)
+        except Exception as e:
+            msg = f"Resume upload failed: {e}. Try upload_file on the resume field instead."
+        events.emit("field_filled", f"📎 {msg}"[:200])
+        return ActionResult(extracted_content=msg, long_term_memory=msg[:200])
+
+    _guard_file_inputs(tools)
     return tools
+
+
+def _guard_file_inputs(tools) -> None:
+    """Typing a path into <input type=file> breaks React upload widgets; send the agent to upload_resume."""
+    from browser_use.agent.views import ActionResult
+
+    action = tools.registry.registry.actions.get("input")
+    if action is None:
+        return
+    original = action.function
+
+    async def guarded_input(*args, **kwargs):
+        params = kwargs.get("params") or (args[0] if args else None)
+        session = kwargs.get("browser_session")
+        index = getattr(params, "index", None)
+        try:
+            node = await session.get_element_by_index(index) if session and index is not None else None
+        except Exception:
+            node = None
+        attrs = (getattr(node, "attributes", None) or {}) if node is not None else {}
+        if node is not None and str(getattr(node, "tag_name", "")).lower() == "input"                 and str(attrs.get("type", "")).lower() == "file":
+            msg = "That is a file field: do not type into it. Call upload_resume to attach the resume."
+            return ActionResult(error=msg, long_term_memory=msg)
+        return await original(*args, **kwargs)
+
+    action.function = guarded_input
 
 
 def build_collect_tools(report: AgentReport):

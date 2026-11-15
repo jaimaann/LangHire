@@ -57,7 +57,9 @@
     "currency": "통화",
     "period": "기간",
     "annual": "연간",
-    "monthly": "월간"
+    "monthly": "월간",
+    "current": "현재 연봉",
+    "currentHint": "예: 고정 6,000만 원 + 변동 500만 원. 많은 양식에서 묻습니다. 비워 두면 따로 묻습니다."
   },
   "coverLetter": {
     "title": "자기소개서",

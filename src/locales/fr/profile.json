@@ -57,7 +57,9 @@
     "currency": "Devise",
     "period": "Période",
     "annual": "Annuel",
-    "monthly": "Mensuel"
+    "monthly": "Mensuel",
+    "current": "Rémunération actuelle",
+    "currentHint": "ex. 60 000 EUR fixe + 5 000 variable. Beaucoup de formulaires la demandent ; laissez vide pour être sollicité."
   },
   "coverLetter": {
     "title": "Lettre de motivation",

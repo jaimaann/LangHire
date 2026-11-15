@@ -57,7 +57,9 @@
     "currency": "货币",
     "period": "周期",
     "annual": "年度",
-    "monthly": "每月"
+    "monthly": "每月",
+    "current": "当前薪酬",
+    "currentHint": "例如：固定 60 万元 + 浮动 5 万元。很多表单会询问；留空则会单独询问你。"
   },
   "coverLetter": {
     "title": "求职信",

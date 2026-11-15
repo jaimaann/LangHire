@@ -302,6 +302,10 @@ export default function Profile() {
             </select>
           </div>
         </div>
+        <div className="mt-4">
+          <Input label={t("salary.current")} value={profile.current_compensation ?? ""} onChange={(v) => update("current_compensation", v)} />
+          <p className="text-xs text-muted-foreground mt-1">{t("salary.currentHint")}</p>
+        </div>
       </Section>
 
       {/* Cover Letter (conditional) */}

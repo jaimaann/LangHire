@@ -57,7 +57,9 @@
     "currency": "通貨",
     "period": "期間",
     "annual": "年収",
-    "monthly": "月収"
+    "monthly": "月収",
+    "current": "現在の報酬",
+    "currentHint": "例: 固定 600万円 + 変動 50万円。多くのフォームで質問されます。空欄の場合は確認されます。"
   },
   "coverLetter": {
     "title": "カバーレター",

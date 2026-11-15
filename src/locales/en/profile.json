@@ -57,7 +57,9 @@
     "currency": "Currency",
     "period": "Period",
     "annual": "Annual",
-    "monthly": "Monthly"
+    "monthly": "Monthly",
+    "current": "Current compensation",
+    "currentHint": "e.g. INR 6,00,000 fixed + 50,000 variable. Many forms ask for current CTC; leave blank to be asked."
   },
   "coverLetter": {
     "title": "Cover Letter",

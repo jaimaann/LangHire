@@ -252,7 +252,8 @@ def build_memory_context(
         f"Target Locations: {lst('target_locations')}",
         f"Languages: {lst('languages')}",
         f"Skills: {lst('skills')}",
-        f"Salary: {salary_str}",
+        f"Expected Salary: {salary_str}",
+        f"Current Compensation (current CTC): {profile.get('current_compensation') or na}",
     ]
     if profile.get('notice_period'):
         profile_lines.append(f"Notice Period: {profile.get('notice_period')}")

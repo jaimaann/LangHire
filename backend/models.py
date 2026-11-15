@@ -84,6 +84,7 @@ class ProfileBody(_Open):
     address: Address = Field(default_factory=Address)
     education: Education = Field(default_factory=Education)
     salary_expectation: Salary = Field(default_factory=Salary)
+    current_compensation: str = ""
     years_of_experience: float = 0
     target_job_titles: list[str] = Field(default_factory=list)
     target_locations: list[str] = Field(default_factory=list)

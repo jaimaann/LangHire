@@ -57,7 +57,9 @@
     "currency": "Moeda",
     "period": "Período",
     "annual": "Anual",
-    "monthly": "Mensal"
+    "monthly": "Mensal",
+    "current": "Remuneração atual",
+    "currentHint": "ex.: 60.000 EUR fixos + 5.000 variáveis. Muitos formulários pedem isso; deixe em branco para ser perguntado."
   },
   "coverLetter": {
     "title": "Carta de apresentação",

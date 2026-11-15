@@ -71,8 +71,13 @@ def engine_rules(*, has_password: bool, gmail_otp: bool, blocked: list[str]) -> 
         "",
         "FORMS:",
         "- As soon as an application form is visible, call prefill_standard_fields once, then fill the rest.",
+        "- To attach the resume, call upload_resume (it handles hidden inputs and embedded frames). Never type a "
+        "file path into a field. Use upload_file only if upload_resume reports it found no field.",
         f"- You have at most {MAX_APPLY_STEPS} steps. If you are stuck on one field for 5 steps, move on or stop.",
         "- If it is a video funnel, a recruitment pitch, or the posting is closed, report outcome=skipped.",
+        "- Never try to solve a CAPTCHA or other human-verification challenge (image grids, puzzles, "
+        "'I am not a robot' checks that open a challenge). If one appears, stop and report outcome=needs_input "
+        "with missing_info=['CAPTCHA on <site>'] so the user can finish it.",
         "",
         "ACCOUNTS:",
         "- Never wait or poll for the user to log in manually, whatever earlier instructions say: if a login is "

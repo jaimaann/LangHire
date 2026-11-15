@@ -57,7 +57,9 @@
     "currency": "Valuta",
     "period": "Periode",
     "annual": "Jaarlijks",
-    "monthly": "Maandelijks"
+    "monthly": "Maandelijks",
+    "current": "Huidige vergoeding",
+    "currentHint": "bijv. EUR 60.000 vast + 5.000 variabel. Veel formulieren vragen hierom; laat leeg om gevraagd te worden."
   },
   "coverLetter": {
     "title": "Motivatiebrief",

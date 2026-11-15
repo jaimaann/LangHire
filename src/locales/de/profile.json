@@ -57,7 +57,9 @@
     "currency": "Währung",
     "period": "Zeitraum",
     "annual": "Jährlich",
-    "monthly": "Monatlich"
+    "monthly": "Monatlich",
+    "current": "Aktuelle Vergütung",
+    "currentHint": "z. B. 60.000 EUR fix + 5.000 variabel. Viele Formulare fragen danach; leer lassen, um gefragt zu werden."
   },
   "coverLetter": {
     "title": "Anschreiben",

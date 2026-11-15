@@ -39,6 +39,7 @@ class Intercepted:
     method: str
     reason: str
     size: int
+    application: bool = True  # False for analytics/telemetry beacons swept up while armed
     at: float = field(default_factory=time.time)
 
 
@@ -79,7 +80,8 @@ class SubmitInterceptor:
         self.armed_until = time.time() + seconds
 
     def blocked_since(self, t: float) -> list[Intercepted]:
-        return [b for b in self.blocked if b.at >= t]
+        """Application requests (not tracker beacons) blocked since time t."""
+        return [b for b in self.blocked if b.at >= t and b.application]
 
     # ── CDP handler ──────────────────────────────────────────────────────
     def _on_paused(self, event, session_id=None):
@@ -96,8 +98,10 @@ class SubmitInterceptor:
             reason = self._block_reason(method, req) if method in WRITE_METHODS else None
             if reason:
                 body = req.get("postData") or ""
-                self.blocked.append(Intercepted(req.get("url", ""), method, reason, len(body)))
-                _log.info(f"test mode: blocked {method} {req.get('url', '')[:120]} ({reason})")
+                app = reason == "contains candidate details" or not is_tracker(req.get("url", ""))
+                self.blocked.append(Intercepted(req.get("url", ""), method, reason, len(body), application=app))
+                _log.info(f"test mode: blocked {method} {req.get('url', '')[:120]} ({reason}"
+                          f"{'' if app else ', tracker'})")
                 await root.send.Fetch.failRequest(params={"requestId": rid, "errorReason": "BlockedByClient"},
                                                   session_id=session_id)
             else:
@@ -123,9 +127,15 @@ class SubmitInterceptor:
         return body
 
     def _block_reason(self, method: str, req: dict) -> str | None:
+        body = self._body_text(req)
+        if body and any(n and n in body.lower() for n in self.needles):
+            return "contains candidate details"
+        if is_captcha(req.get("url", "")):
+            # CAPTCHA traffic carries no application data. Blocking it would stop the form
+            # from ever sending its real request, and a submit would look like a pass.
+            return None
         if time.time() < self.armed_until:
             return "after submit click"
-        body = self._body_text(req)
         if body is None:
             if req.get("hasPostData"):
                 ctype = (req.get("headers") or {}).get("Content-Type", "") or (req.get("headers") or {}).get("content-type", "")
@@ -133,11 +143,45 @@ class SubmitInterceptor:
                     return None  # a file upload to a third party (S3, a CDN) before any submit click
                 return "unreadable body to the site itself"
             return None
-        low = body.lower()
-        for n in self.needles:
-            if n and n in low:
-                return "contains candidate details"
         return None
+
+
+_CAPTCHA_HOSTS = ("hcaptcha.com", "recaptcha.net", "challenges.cloudflare.com", "arkoselabs.com",
+                  "funcaptcha.com", "captcha-delivery.com")
+_TRACKER_HOSTS = ("google-analytics.com", "googletagmanager.com", "doubleclick.net",
+                  "bing.com", "nr-data.net", "segment.io", "segment.com", "hotjar.com",
+                  "mixpanel.com", "amplitude.com", "sentry.io", "datadoghq.com", "fullstory.com",
+                  "clarity.ms", "marketlinc.com", "qualified.com", "heap.io", "intercom.io")
+_TRACKER_PATH = re.compile(r"/(cdn-cgi/rum|pagead|ccm|rmkt|collect|track|tr|beacon|events?|jserrors|log|"
+                           r"metrics|telemetry|analytics|pixel|wa)(/|\?|$)", re.IGNORECASE)
+
+
+def _host(url: str) -> str:
+    from urllib.parse import urlparse
+    return (urlparse(url).hostname or "").lower()
+
+
+def _host_in(host: str, domains) -> bool:
+    return any(host == d or host.endswith("." + d) for d in domains)
+
+
+def is_captcha(url: str) -> bool:
+    host = _host(url)
+    if _host_in(host, _CAPTCHA_HOSTS):
+        return True
+    from urllib.parse import urlparse
+    return host.endswith("google.com") and urlparse(url).path.startswith("/recaptcha")
+
+
+def is_tracker(url: str) -> bool:
+    """Analytics / telemetry beacons: blocked while armed, but they are not the application."""
+    from urllib.parse import urlparse
+    host = _host(url)
+    if _host_in(host, _TRACKER_HOSTS) or host.startswith(("r.", "px.", "bat.", "bam.", "stats.", "metrics.")):
+        return True
+    if host.endswith("google.com") and not urlparse(url).path.startswith("/recaptcha"):
+        return True
+    return bool(_TRACKER_PATH.search(urlparse(url).path or "/"))
 
 
 def _site(host: str) -> str:
@@ -212,7 +256,8 @@ def install_click_hook(tools, interceptor: SubmitInterceptor, report) -> None:
                     "(nothing was sent). Call report_application_result with outcome=ready_to_submit, then done.")
         else:
             note = ("TEST MODE: Submit was clicked but no application request was sent. The page most likely "
-                    "shows validation errors or a further step: look for them, fix them, and try again.")
+                    "shows validation errors or a further step: look for them, fix them, and try again. If a CAPTCHA "
+                    "challenge appeared, do not solve it: report outcome=needs_input.")
         if isinstance(result, ActionResult):
             result.extracted_content = ((result.extracted_content or "") + "\n" + note).strip()
             result.long_term_memory = note

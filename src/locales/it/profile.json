@@ -57,7 +57,9 @@
     "currency": "Valuta",
     "period": "Periodo",
     "annual": "Annuale",
-    "monthly": "Mensile"
+    "monthly": "Mensile",
+    "current": "Retribuzione attuale",
+    "currentHint": "es. 60.000 EUR fissi + 5.000 variabili. Molti moduli la chiedono; lascia vuoto per essere interpellato."
   },
   "coverLetter": {
     "title": "Lettera di presentazione",

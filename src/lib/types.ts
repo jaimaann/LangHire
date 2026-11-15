@@ -39,6 +39,7 @@ export interface CandidateProfile {
   languages: string[];
   skills: string[];
   salary_expectation: SalaryExpectation;
+  current_compensation?: string;
   notice_period: string;
   nationality: string;
   date_of_birth: string;

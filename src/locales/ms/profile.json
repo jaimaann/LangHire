@@ -57,7 +57,9 @@
     "currency": "Mata Wang",
     "period": "Tempoh",
     "annual": "Tahunan",
-    "monthly": "Bulanan"
+    "monthly": "Bulanan",
+    "current": "Pampasan semasa",
+    "currentHint": "cth. MYR 60,000 tetap + 5,000 berubah. Banyak borang bertanya; biarkan kosong untuk ditanya."
   },
   "coverLetter": {
     "title": "Surat Iringan",

@@ -329,3 +329,49 @@ def test_submit_guard_blocks_unreadable_same_site_writes():
     assert g._block_reason("POST", s3) is None          # third-party resume upload is allowed
     g.arm()
     assert g._block_reason("POST", s3) == "after submit click"
+
+
+def test_submit_guard_lets_captcha_through_and_ignores_trackers():
+    """Blocking CAPTCHA traffic stops the real request from ever firing; beacons are not the application."""
+    import time
+
+    from engine.submit_guard import Intercepted, SubmitInterceptor, is_captcha, is_tracker
+    g = SubmitInterceptor(None, {"email": "a@b.co"})
+    g.arm()
+    cap = {"url": "https://api.hcaptcha.com/getcaptcha/x", "postData": "v=1"}
+    assert g._block_reason("POST", cap) is None
+    leak = {"url": "https://api.hcaptcha.com/getcaptcha/x", "postData": "email=a@b.co"}
+    assert g._block_reason("POST", leak) == "contains candidate details"
+    assert g._block_reason("POST", {"url": "https://jobs.lever.co/x/1/apply", "postData": "a=1"}) == "after submit click"
+    assert is_captcha("https://www.recaptcha.net/recaptcha/enterprise/reload")
+    for u in ("https://www.linkedin.com/li/track", "https://r.stripe.com/0", "https://www.google.com/pagead/form-data/1",
+              "https://www.okta.com/cdn-cgi/rum?", "https://www.facebook.com/tr/"):
+        assert is_tracker(u), u
+    for u in ("https://boards.greenhouse.io/gitlab/jobs/1", "https://jobs.lever.co/paytm/1/apply",
+              "https://www.linkedin.com/voyager/api/voyagerJobsDashOnsiteApplyApplication"):
+        assert not is_tracker(u), u
+    t = time.time() - 1
+    g.blocked = [Intercepted("https://r.stripe.com/0", "POST", "after submit click", 0, application=False)]
+    assert g.blocked_since(t) == []  # a tracker beacon alone is not a passed submission
+
+
+def test_upload_resume_registered_and_file_inputs_guarded():
+    import asyncio
+    from types import SimpleNamespace
+
+    from engine.tools import AgentReport, build_apply_tools
+    tools = build_apply_tools(AgentReport(), {}, "/tmp/r.pdf")
+    actions = tools.registry.registry.actions
+    assert "upload_resume" in actions
+
+    file_node = SimpleNamespace(tag_name="input", attributes={"type": "file"})
+    session = SimpleNamespace(get_element_by_index=lambda i: asyncio.sleep(0, result=file_node))
+    params = SimpleNamespace(index=3, text="C:/r.pdf")
+    res = asyncio.run(actions["input"].function(params=params, browser_session=session))
+    assert res.error and "upload_resume" in res.error  # typing a path into a file field is refused
+
+
+def test_engine_rules_mention_upload_resume_and_captcha():
+    from engine.prompts import engine_rules
+    rules = engine_rules(has_password=False, gmail_otp=False, blocked=[])
+    assert "upload_resume" in rules and "CAPTCHA" in rules
