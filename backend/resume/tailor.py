@@ -692,6 +692,10 @@ async def tailor_resume(
     resume_path = settings.get("resume_path", "")
     if not resume_path or not Path(resume_path).exists():
         raise FileNotFoundError("No resume PDF configured or file not found")
+    if Path(resume_path).suffix.lower() != ".pdf":
+        # Tailoring rewrites sections inside the PDF's own layout; Word files are used as-is.
+        raise ValueError("Resume tailoring works on PDF resumes. Export your Word resume as PDF to tailor it; "
+                         "applications still use the Word file.")
 
     doc = fitz.open(resume_path)
     sections = _extract_sections(doc)

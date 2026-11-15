@@ -46,6 +46,7 @@ uv run python -m PyInstaller \
   --collect-submodules engine \
   --collect-submodules keyring \
   --copy-metadata keyring \
+  --collect-data docx \
   --hidden-import uvicorn.logging \
   --hidden-import uvicorn.lifespan.on \
   --hidden-import uvicorn.protocols.http.auto \

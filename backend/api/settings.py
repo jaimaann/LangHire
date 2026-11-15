@@ -104,21 +104,17 @@ async def parse_resume_to_profile():
     resume_file = Path(resume_path).resolve()
     if not resume_file.exists():
         return {"success": False, "message": f"Resume file not found: {resume_path}"}
-    if resume_file.suffix.lower() != ".pdf":
-        return {"success": False, "message": "Resume must be a PDF file."}
+    from resume.text import SUPPORTED, resume_text as _resume_text
+    if resume_file.suffix.lower() not in SUPPORTED:
+        return {"success": False, "message": "Resume must be a PDF or Word (.docx) file."}
 
     try:
-        import fitz  # pymupdf
-        doc = fitz.open(str(resume_file))
-        resume_text = ""
-        for page in doc:
-            resume_text += page.get_text()
-        doc.close()
-        resume_text = resume_text.strip()
+        resume_text = _resume_text(resume_file)
         if not resume_text:
-            return {"success": False, "message": "Could not extract any text from the resume PDF."}
+            return {"success": False, "message": "Could not extract any text from the resume. "
+                                                 "If it is a scanned image, export it as a text PDF or .docx."}
     except Exception as e:
-        return {"success": False, "message": f"Failed to read resume PDF: {e}"}
+        return {"success": False, "message": f"Failed to read the resume: {e}"}
 
     # 2. Send to LLM for structured extraction
     llm_settings = load_llm_settings()

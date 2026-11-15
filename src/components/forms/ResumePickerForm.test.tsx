@@ -82,7 +82,7 @@ describe("ResumePickerForm", () => {
     await user.click(screen.getByRole("button", { name: /Browse/i }));
 
     expect(mockOpen).toHaveBeenCalledWith({
-      filters: [{ name: "PDF", extensions: ["pdf"] }],
+      filters: [{ name: "Resume (PDF or Word)", extensions: ["pdf", "docx"] }],
     });
 
     const input = await screen.findByPlaceholderText("/path/to/your/resume.pdf");
@@ -134,7 +134,7 @@ describe("ResumePickerForm", () => {
     fireEvent.dragOver(zone, { dataTransfer: { types: ["Files"] } });
 
     expect(zone.className).toContain("border-primary");
-    expect(screen.getByText(/Drop your PDF resume/i)).toBeInTheDocument();
+    expect(screen.getByText(/Drop your resume/i)).toBeInTheDocument();
   });
 
   it("removes the highlight on drag-leave", async () => {
@@ -200,11 +200,24 @@ describe("ResumePickerForm", () => {
 
     fireEvent.drop(zone, { dataTransfer: { files: [file], types: ["Files"] } });
 
-    expect(await screen.findByText(/Only PDF files are supported/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Only PDF and Word \(\.docx\) resumes are supported/i)).toBeInTheDocument();
     await new Promise((r) => setTimeout(r, 200));
     expect(mockSaveSettings).not.toHaveBeenCalled();
     const input = screen.getByPlaceholderText("/path/to/your/resume.pdf");
     expect(input).toHaveValue("");
+  });
+
+  it("accepts a Word .docx resume", async () => {
+    render(<ResumePickerForm />);
+    await screen.findByText("Resume PDF Path");
+    const zone = getDropZone();
+    const file = new File(["PK"], "Resume.docx", {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
+    fireEvent.drop(zone, { dataTransfer: { files: [file], types: ["Files"] } });
+    await waitFor(() =>
+      expect(mockSaveSettings).toHaveBeenCalledWith(expect.objectContaining({ resume_path: "Resume.docx" })),
+    );
   });
 
   it("accepts a .pdf file even when the MIME type is missing", async () => {

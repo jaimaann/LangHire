@@ -561,3 +561,42 @@ def test_captcha_override_reaches_the_system_message():
     combined = with_overrides("CANDIDATE PROFILE:\nName: X")
     assert combined.startswith("CANDIDATE PROFILE") and combined.endswith(CAPTCHA_OVERRIDE)
     assert "needs_input" in CAPTCHA_OVERRIDE
+
+
+def test_resume_text_reads_word_files_with_tables_and_header(tmp_path):
+    import docx
+    import pytest
+
+    from resume.text import resume_text
+    d = docx.Document()
+    d.sections[0].header.is_linked_to_previous = False
+    d.sections[0].header.paragraphs[0].text = "Dana Tester | dana@example.com"
+    d.add_paragraph("EXPERIENCE")
+    d.add_paragraph("Data Analyst, Acme Corp (2021-2024)")
+    t = d.add_table(rows=1, cols=2)
+    t.rows[0].cells[0].text = "SKILLS"
+    t.rows[0].cells[1].text = "SQL, Python, Tableau"
+    p = tmp_path / "resume.docx"
+    d.save(str(p))
+    text = resume_text(p)
+    assert text.splitlines()[0] == "Dana Tester | dana@example.com"
+    assert "Data Analyst, Acme Corp" in text and "SKILLS | SQL, Python, Tableau" in text
+    with pytest.raises(ValueError):
+        resume_text(tmp_path / "resume.txt")
+
+
+def test_tailoring_explains_it_needs_a_pdf(data_dir, tmp_path):
+    import asyncio
+
+    import docx
+    import pytest
+
+    from core.config import load_settings, save_settings
+    from resume.tailor import tailor_resume
+    p = tmp_path / "cv.docx"
+    docx.Document().save(str(p))
+    s = load_settings()
+    s["resume_path"] = str(p)
+    save_settings(s)
+    with pytest.raises(ValueError, match="PDF"):
+        asyncio.run(tailor_resume("https://a.co/1", "desc", {"skills": True}))

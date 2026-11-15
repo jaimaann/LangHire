@@ -7,8 +7,10 @@ interface ResumePickerFormProps {
   onSaved?: () => void;
 }
 
-const isPdf = (name: string, type?: string) =>
-  type === "application/pdf" || name.toLowerCase().endsWith(".pdf");
+const DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+/** PDF or Word (.docx): both can be parsed and uploaded; tailoring needs a PDF. */
+const isResumeFile = (name: string, type?: string) =>
+  type === "application/pdf" || type === DOCX || /\.(pdf|docx)$/i.test(name);
 
 export default function ResumePickerForm({ onSaved }: ResumePickerFormProps) {
   const [resumePath, setResumePath] = useState("");
@@ -58,7 +60,7 @@ export default function ResumePickerForm({ onSaved }: ResumePickerFormProps) {
 
   const handleBrowse = async () => {
     try {
-      const file = await open({ filters: [{ name: "PDF", extensions: ["pdf"] }] });
+      const file = await open({ filters: [{ name: "Resume (PDF or Word)", extensions: ["pdf", "docx"] }] });
       if (file) {
         setResumePath(file as string);
         doSave(file as string); // Save immediately on browse
@@ -92,11 +94,11 @@ export default function ResumePickerForm({ onSaved }: ResumePickerFormProps) {
 
     const file = e.dataTransfer?.files?.[0];
     if (!file) {
-      setDropError("No file detected. Please drop a PDF resume.");
+      setDropError("No file detected. Please drop a PDF or Word (.docx) resume.");
       return;
     }
-    if (!isPdf(file.name, file.type)) {
-      setDropError("Only PDF files are supported. Please drop a .pdf resume.");
+    if (!isResumeFile(file.name, file.type)) {
+      setDropError("Only PDF and Word (.docx) resumes are supported.");
       return;
     }
     setDropError("");
@@ -141,7 +143,7 @@ export default function ResumePickerForm({ onSaved }: ResumePickerFormProps) {
         }`}
       >
         <Upload className="w-5 h-5" />
-        <span>{dragging ? "Drop your PDF resume" : "Drag & drop a PDF resume here, or click to browse"}</span>
+        <span>{dragging ? "Drop your resume" : "Drag & drop a PDF resume here (Word .docx works too), or click to browse"}</span>
       </div>
       <div className="flex items-center gap-2 min-h-5">
         {dropError && <span className="text-xs text-red-600">{dropError}</span>}

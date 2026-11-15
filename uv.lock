@@ -1444,6 +1444,7 @@ dependencies = [
     { name = "psutil" },
     { name = "pyinstaller" },
     { name = "pymupdf" },
+    { name = "python-docx" },
     { name = "pyyaml" },
     { name = "uvicorn" },
 ]
@@ -1474,6 +1475,7 @@ requires-dist = [
     { name = "psutil", specifier = ">=7.2.2" },
     { name = "pyinstaller", specifier = ">=6.19.0" },
     { name = "pymupdf", specifier = ">=1.27.2.2" },
+    { name = "python-docx", specifier = ">=1.1.2" },
     { name = "pyyaml", specifier = ">=6.0.1" },
     { name = "uvicorn", specifier = ">=0.44.0" },
 ]
