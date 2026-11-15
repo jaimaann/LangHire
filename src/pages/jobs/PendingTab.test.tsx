@@ -44,6 +44,8 @@ vi.mock("../../lib/perf", () => ({
 }));
 
 vi.mock("../../lib/api", () => ({
+  subscribeEvents: vi.fn(() => () => {}),
+  getApplications: vi.fn(async () => []),
   getJobs: vi.fn(),
   startApplying: vi.fn(),
   getApplyStatus: vi.fn(),

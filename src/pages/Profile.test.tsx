@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Profile from "./Profile";
-import { getProfile, saveProfile, getCountries } from "../lib/api";
+import { getProfile, saveProfile, getCountries, rescoreJobs } from "../lib/api";
 import type { CandidateProfile, CountryConfig } from "../lib/types";
 
 // ── i18n: identity translator (returns the raw key) ────────────────────────
@@ -21,6 +21,7 @@ vi.mock("../i18n/languageDetection", () => ({
 }));
 
 vi.mock("../lib/api", () => ({
+  rescoreJobs: vi.fn(async () => ({ success: true, rescored: 0 })),
   getProfile: vi.fn(),
   saveProfile: vi.fn(),
   getCountries: vi.fn(),
@@ -131,6 +132,18 @@ describe("Profile page", () => {
     );
     // Success state flips the button label to the "saved" key.
     expect(await screen.findByRole("button", { name: "saved" })).toBeInTheDocument();
+    // Match scores are recomputed in the background after a save.
+    await waitFor(() => expect(rescoreJobs).toHaveBeenCalledTimes(1));
+  });
+
+  it("still reports success when the background rescore fails", async () => {
+    vi.mocked(rescoreJobs).mockRejectedValueOnce(new Error("rescore down"));
+    const user = userEvent.setup();
+    render(<Profile />);
+    await screen.findByDisplayValue("Ada Lovelace");
+    await user.click(screen.getByRole("button", { name: "save" }));
+    expect(await screen.findByRole("button", { name: "saved" })).toBeInTheDocument();
+    expect(screen.queryByText("saveError")).not.toBeInTheDocument();
   });
 
   it("adds and removes a tag, persisting the change on save", async () => {

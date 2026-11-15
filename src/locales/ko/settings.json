@@ -30,7 +30,29 @@
     "title": "채용 소스 플러그인",
     "description": "채용 소스 플러그인을 관리합니다. 기본 플러그인은 LinkedIn, Indeed, SEEK, Naukri, Reed, StepStone을 제공합니다. 추가 채용 사이트를 위해 커뮤니티 플러그인(.yaml 파일)을 가져올 수 있습니다.",
     "builtin": "기본 제공",
-    "importPlugin": "플러그인 가져오기"
+    "importPlugin": "플러그인 가져오기",
+    "tampered": "승인 후 변경됨 — 검토하려면 다시 가져오세요",
+    "tamperedToggle": "이 플러그인 파일이 승인 후 변경되었습니다. 활성화하기 전에 다시 가져와 검토하세요.",
+    "toggleFailed": "플러그인을 변경할 수 없습니다.",
+    "previewFailed": "플러그인을 읽을 수 없습니다: {{error}}",
+    "importFailed": "플러그인을 설치할 수 없습니다: {{error}}",
+    "changedDuringReview": "검토하는 동안 파일이 변경되었습니다. 아래 새 버전을 검토한 후 다시 설치하세요.",
+    "review": {
+      "title": "설치 전에 플러그인 검토",
+      "description": "커뮤니티 플러그인은 AI 에이전트가 채용 사이트에서 할 일을 지시합니다. 신뢰할 수 있는 플러그인만 설치하세요.",
+      "name": "플러그인",
+      "author": "작성자",
+      "website": "웹사이트",
+      "requiresLogin": "로그인 필요",
+      "yes": "예",
+      "no": "아니요",
+      "warnings": "경고 ({{n}})",
+      "noWarnings": "경고가 없습니다.",
+      "collectionPrompt": "수집 지침",
+      "applyPrompt": "지원 지침",
+      "install": "설치",
+      "cancel": "취소"
+    }
   },
   "language": {
     "title": "언어",
@@ -57,5 +79,36 @@
     "cancel": "취소",
     "deleting": "삭제 중...",
     "deleteFailed": "데이터를 삭제하지 못했습니다. 다시 시도해 주세요."
+  },
+  "secrets": {
+    "keychain": "API 키는 OS 키체인에 저장됩니다.",
+    "file": "OS 키체인을 사용할 수 없어 API 키와 비밀번호가 이 컴퓨터의 파일에 저장됩니다. 사용자 계정에 접근할 수 있는 사람은 누구나 읽을 수 있습니다."
+  },
+  "automation": {
+    "title": "자동화",
+    "dailyApplyCap": "채용 사이트별 하루 최대 지원 수",
+    "dailyApplyCapHelp": "0 = 제한 없음.",
+    "maxRunCost": "LLM 지출이 이 금액에 도달하면 실행 중지 (USD)",
+    "maxRunCostHelp": "실행 비용이 이 금액에 도달하면 새 지원을 시작하지 않습니다. 0 = 제한 없음.",
+    "browserCdpUrl": "내 Chrome (DevTools 주소)",
+    "browserCdpUrlHelp": "내 Chrome 사용: --remote-debugging-port=9222 옵션으로 실행한 뒤 주소를 붙여 넣으세요. 비워 두면 LangHire 브라우저를 사용합니다.",
+    "emailOtp": "Gmail에서 인증 코드 읽기",
+    "emailOtpHelp": "에이전트가 Gmail에서 최신 인증 코드 이메일을 읽도록 허용"
+  },
+  "logins": {
+    "title": "채용 사이트 로그인",
+    "description": "로그인은 선택 사항입니다. 에이전트가 채용 사이트에서 내 계정을 사용할 수 있게 하며, URL로 채용 공고를 추가할 수도 있습니다.",
+    "loggedIn": "로그인됨",
+    "notLoggedIn": "로그인 안 됨",
+    "optional": "선택 사항",
+    "refresh": "상태 새로 고침",
+    "opening": "여는 중...",
+    "logInTo": "{{name}}에 로그인",
+    "launchFailed": "브라우저를 실행하지 못했습니다",
+    "none": "로그인이 필요한 채용 사이트가 없습니다.",
+    "linkedinReason": "에이전트가 내 계정으로 LinkedIn을 검색하고 Easy Apply를 사용할 수 있습니다.",
+    "gmailReason": "에이전트가 최신 인증 코드 이메일을 읽고 일회용 코드를 대신 입력합니다.",
+    "gmailOptional": "선택 사항입니다. 자동화에서 'Gmail에서 인증 코드 읽기'를 켜면 에이전트가 이메일 코드를 대신 입력합니다.",
+    "genericReason": "에이전트가 내 계정으로 {{name}}에서 검색하고 지원할 수 있습니다."
   }
 }

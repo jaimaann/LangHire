@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "लाइव आउटपुट",
     "outputLog": "आउटपुट लॉग",
-    "applicationLog": "आवेदन लॉग"
+    "applicationLog": "आवेदन लॉग",
+    "cost": "LLM लागत: ${{cost}}",
+    "costTitle": "इस रन में अब तक का LLM खर्च"
   },
   "dialog": {
     "title": "आवेदन शुरू करें"
   },
-  "starting": "शुरू हो रहा है..."
+  "starting": "शुरू हो रहा है...",
+  "needsInput": {
+    "answerAndRetry": "उत्तर दें और फिर से कोशिश करें"
+  },
+  "details": {
+    "button": "विवरण",
+    "open": "आवेदन रिकॉर्ड दिखाएँ",
+    "title": "आवेदन विवरण",
+    "close": "बंद करें",
+    "loadFailed": "आवेदन रिकॉर्ड लोड नहीं हो सका।",
+    "none": "इस नौकरी के लिए अभी कोई आवेदन रिकॉर्ड नहीं है।",
+    "outcome": "परिणाम",
+    "outcomes": {
+      "submitted": "जमा किया गया",
+      "failed": "विफल",
+      "needsInput": "आपका उत्तर चाहिए",
+      "skipped": "छोड़ा गया"
+    },
+    "confirmation": "पुष्टि: {{text}}",
+    "cost": "लागत",
+    "steps": "चरण: {{n}}",
+    "ats": "ATS: {{ats}}",
+    "missingInfo": "एजेंट के पास जो जानकारी नहीं थी",
+    "resume": "उपयोग किया गया रिज़्यूमे:",
+    "openResume": "रिज़्यूमे खोलें",
+    "openScreenshot": "स्क्रीनशॉट खोलें",
+    "openFailed": "फ़ाइल नहीं खुल सकी।",
+    "answers": "उत्तर ({{n}})",
+    "noAnswers": "कोई उत्तर दर्ज नहीं हुआ।",
+    "question": "प्रश्न",
+    "answer": "उत्तर",
+    "source": "स्रोत",
+    "checkAnswer": "जाँचें",
+    "checkAnswerTitle": "एजेंट ने यह उत्तर अनुमान से दिया या उसे यकीन नहीं था। कृपया जाँच लें।"
+  }
 }

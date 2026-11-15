@@ -102,6 +102,14 @@ export interface AppSettings {
   theme?: "light" | "dark" | "system";
   /** Days to keep agent conversation logs; 0 = don't save. Default 14. */
   log_retention_days?: number;
+  /** Max applications per job site per day; 0 = no cap. Default 25. */
+  daily_apply_cap?: number;
+  /** Stop a run after this much LLM spend (USD). Default 5. */
+  max_run_cost_usd?: number;
+  /** Chrome DevTools address of the user's own browser; empty = LangHire's browser. */
+  browser_cdp_url?: string;
+  /** Let the agent read the newest verification-code email in Gmail. */
+  email_otp_via_gmail?: boolean;
 }
 
 // ── Privacy & data ────────────────────────────────────────────────────────
@@ -120,7 +128,7 @@ export interface Job {
   company: string;
   location: string;
   easy_apply: boolean | null;
-  status: "pending" | "in_progress" | "applied" | "failed" | "blocked";
+  status: JobStatus;
   source?: string;
   search_title?: string;
   collected_at?: string;
@@ -128,6 +136,32 @@ export interface Job {
   error?: string;
   description?: string;
   tailored_resume_path?: string;
+  /** How well the job fits the profile, 0-100 (null when not scored yet). */
+  match_score?: number | null;
+}
+
+// ── Application records ──────────────────────────────────────────────────
+export interface ApplicationAnswer {
+  question: string;
+  answer: string;
+  field_type?: string;
+  /** Where the answer came from, e.g. "profile", "qa", "memory", "inferred". */
+  source?: string;
+  confidence?: number | null;
+}
+
+export interface ApplicationRecord {
+  outcome: string;
+  reason?: string | null;
+  confirmation?: string | null;
+  answers: ApplicationAnswer[];
+  missing_info: string[];
+  resume_path?: string | null;
+  screenshot_path?: string | null;
+  cost_usd?: number | null;
+  steps?: number | null;
+  ats?: string | null;
+  created_at: string;
 }
 
 // ── Resume Tailoring ─────────────────────────────────────────────────────
@@ -169,6 +203,24 @@ export interface PluginConfig {
   is_builtin: boolean;
   enabled: boolean;
   filters: PluginFilter[];
+  /** SHA-256 of the plugin file the user approved (community plugins). */
+  sha256?: string | null;
+  /** True when the file changed since it was approved; it stays disabled until re-imported. */
+  tampered?: boolean;
+}
+
+/** What /plugins/preview (and /plugins/import without a hash) returns for review. */
+export interface PluginPreview {
+  name: string;
+  display_name: string;
+  version: string;
+  author: string;
+  website: string;
+  requires_login: boolean;
+  sha256: string;
+  collection_prompt: string;
+  apply_prompt: string;
+  warnings: string[];
 }
 
 // ── Country Config ───────────────────────────────────────────────────────
@@ -265,6 +317,8 @@ export interface HealthResponse {
   frozen: boolean;
   checks: HealthChecks;
   build_id?: string;
+  /** Where API keys and passwords are stored. */
+  secrets_backend?: "keychain" | "file";
 }
 
 // ── Status Responses ─────────────────────────────────────────────────────
@@ -285,9 +339,18 @@ export interface ApplyStatus {
   log: string[];
   error: string | null;
   finished_at: string | null;
+  /** LLM spend of the current/last run so far (USD). */
+  cost_usd?: number;
 }
 
-export type JobStatus = "pending" | "in_progress" | "applied" | "failed" | "blocked";
+export type JobStatus =
+  | "pending"
+  | "in_progress"
+  | "applied"
+  | "failed"
+  | "blocked"
+  | "skipped"
+  | "needs_input";
 
 export interface JobStats {
   total: number;
@@ -296,13 +359,52 @@ export interface JobStats {
   failed: number;
   blocked: number;
   in_progress: number;
+  skipped?: number;
+  needs_input?: number;
+}
+
+/** Success rate and average cost per applicant tracking system. */
+export interface AtsStat {
+  ats: string;
+  attempts: number;
+  submitted: number;
+  /** Fraction 0-1. */
+  success_rate: number;
+  avg_cost_usd: number;
+}
+
+export interface DashboardMetrics {
+  ats?: AtsStat[];
+  cost_7d_usd?: number;
+  [key: string]: unknown;
 }
 
 export interface DashboardResponse {
   jobs: JobStats;
   memory: MemoryStats;
-  metrics?: Record<string, unknown>;
+  metrics?: DashboardMetrics;
 }
+
+// ── Live run events (GET /events, Server-Sent Events) ───────────────────
+export type RunKind = "collect" | "apply";
+
+export interface RunEvent {
+  id: number;
+  run_id: string;
+  kind: RunKind;
+  type: string;
+  level: string;
+  message: string;
+  data: Record<string, unknown>;
+}
+
+// ── Login sessions (GET /auth/status) ────────────────────────────────────
+export interface ServiceLoginStatus {
+  logged_in: boolean;
+  display_name?: string;
+}
+
+export type AuthStatus = Record<string, ServiceLoginStatus>;
 
 export interface DomainInfo {
   website_domain: string;

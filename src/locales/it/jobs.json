@@ -8,7 +8,9 @@
     "applied": "Candidato",
     "failed": "Fallito",
     "blocked": "Bloccato",
-    "inProgress": "In corso"
+    "inProgress": "In corso",
+    "needsInput": "Serve una tua risposta",
+    "skipped": "Saltato"
   },
   "filter": {
     "all": "Tutte"
@@ -51,7 +53,10 @@
     "applying": "Candidatura in corso...",
     "retry": "Riprova",
     "apply": "Candidati",
-    "openOnLinkedIn": "Apri su LinkedIn"
+    "openOnLinkedIn": "Apri su LinkedIn",
+    "match": "{{score}}% di corrispondenza",
+    "matchTitle": "Quanto questa offerta corrisponde al tuo profilo",
+    "answerAndRetry": "Rispondi e riprova"
   },
   "showingJobs": "{{count}} offerta visualizzata",
   "showingJobs_plural": "{{count}} offerte visualizzate",
@@ -72,5 +77,14 @@
     "saveToProfile": "Salva nel profilo",
     "failedGenerate": "Impossibile generare la lettera di presentazione",
     "failedSave": "Impossibile salvare nel profilo"
+  },
+  "sort": {
+    "label": "Ordina per",
+    "match": "Migliore corrispondenza",
+    "newest": "Più recenti"
+  },
+  "progress": {
+    "applying": "Candidatura in corso…",
+    "cost": "Costo LLM finora: ${{cost}}"
   }
 }

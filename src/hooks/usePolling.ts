@@ -23,7 +23,9 @@ export function usePolling<T>(
   const [error, setError] = useState<Error | null>(null);
   const activeRef = useRef(true);
   const fetcherRef = useRef(fetcher);
-  fetcherRef.current = fetcher;
+  useEffect(() => {
+    fetcherRef.current = fetcher;
+  });
 
   const doFetch = useCallback(async () => {
     try {

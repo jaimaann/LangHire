@@ -30,7 +30,29 @@
     "title": "Baanbron-plugins",
     "description": "Beheer baanbron-plugins. Ingebouwde plugins bieden LinkedIn, Indeed, SEEK, Naukri, Reed en StepStone. Importeer community-plugins (.yaml-bestanden) voor extra vacaturesites.",
     "builtin": "Ingebouwd",
-    "importPlugin": "Plugin importeren"
+    "importPlugin": "Plugin importeren",
+    "tampered": "Gewijzigd sinds je het goedkeurde — opnieuw importeren om te controleren",
+    "tamperedToggle": "Het bestand van deze plug-in is gewijzigd sinds je het goedkeurde. Importeer het opnieuw om het te controleren voordat je het inschakelt.",
+    "toggleFailed": "De plug-in kon niet worden gewijzigd.",
+    "previewFailed": "De plug-in kon niet worden gelezen: {{error}}",
+    "importFailed": "De plug-in kon niet worden geïnstalleerd: {{error}}",
+    "changedDuringReview": "Het bestand is gewijzigd terwijl je het controleerde. Controleer de nieuwe versie hieronder en installeer opnieuw.",
+    "review": {
+      "title": "Plug-in controleren vóór installatie",
+      "description": "Community-plug-ins vertellen de AI-agent wat hij op een vacaturesite moet doen. Installeer alleen plug-ins die je vertrouwt.",
+      "name": "Plug-in",
+      "author": "Auteur",
+      "website": "Website",
+      "requiresLogin": "Aanmelding nodig",
+      "yes": "Ja",
+      "no": "Nee",
+      "warnings": "Waarschuwingen ({{n}})",
+      "noWarnings": "Geen waarschuwingen gevonden.",
+      "collectionPrompt": "Verzamelinstructies",
+      "applyPrompt": "Sollicitatie-instructies",
+      "install": "Installeren",
+      "cancel": "Annuleren"
+    }
   },
   "language": {
     "title": "Taal",
@@ -57,5 +79,36 @@
     "cancel": "Annuleren",
     "deleting": "Bezig met verwijderen...",
     "deleteFailed": "Je gegevens konden niet worden verwijderd. Probeer het opnieuw."
+  },
+  "secrets": {
+    "keychain": "API-sleutels worden opgeslagen in de sleutelhanger van je besturingssysteem.",
+    "file": "Er is geen sleutelhanger beschikbaar, dus API-sleutels en wachtwoorden worden in een bestand op deze computer opgeslagen. Iedereen met toegang tot je gebruikersaccount kan ze lezen."
+  },
+  "automation": {
+    "title": "Automatisering",
+    "dailyApplyCap": "Max. sollicitaties per vacaturesite per dag",
+    "dailyApplyCapHelp": "0 = geen limiet.",
+    "maxRunCost": "Een run stoppen na zoveel LLM-uitgaven (USD)",
+    "maxRunCostHelp": "Zodra een run zoveel heeft gekost, starten er geen nieuwe sollicitaties. 0 = geen limiet.",
+    "browserCdpUrl": "Je eigen Chrome (DevTools-adres)",
+    "browserCdpUrlHelp": "Gebruik je eigen Chrome: start het met --remote-debugging-port=9222 en plak het adres. Laat leeg om de browser van LangHire te gebruiken.",
+    "emailOtp": "Verificatiecodes uit Gmail lezen",
+    "emailOtpHelp": "Laat de agent de nieuwste e-mail met verificatiecode in Gmail lezen"
+  },
+  "logins": {
+    "title": "Aanmeldingen bij vacaturesites",
+    "description": "Aanmelden is optioneel. Zo kan de agent je accounts op vacaturesites gebruiken; je kunt vacatures ook via een URL toevoegen.",
+    "loggedIn": "Aangemeld",
+    "notLoggedIn": "Niet aangemeld",
+    "optional": "Optioneel",
+    "refresh": "Status vernieuwen",
+    "opening": "Openen...",
+    "logInTo": "Aanmelden bij {{name}}",
+    "launchFailed": "Browser kon niet worden gestart",
+    "none": "Geen enkele vacaturesite vereist aanmelding.",
+    "linkedinReason": "Hiermee kan de agent met je account op LinkedIn zoeken en Easy Apply gebruiken.",
+    "gmailReason": "De agent leest de nieuwste e-mail met verificatiecode om eenmalige codes voor je in te vullen.",
+    "gmailOptional": "Optioneel. Zet \"Verificatiecodes uit Gmail lezen\" aan onder Automatisering zodat de agent e-mailcodes voor je invult.",
+    "genericReason": "Hiermee kan de agent met je account zoeken en solliciteren op {{name}}."
   }
 }

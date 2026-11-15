@@ -18,8 +18,8 @@
       "uploadResumeDesc": "AI يقرأها ويملأ ملفك الشخصي تلقائياً",
       "reviewProfile": "مراجعة ملفك الشخصي",
       "reviewProfileDesc": "تحقق من المعلومات المستخرجة بواسطة AI",
-      "loginLinkedIn": "تسجيل الدخول إلى LinkedIn",
-      "loginLinkedInDesc": "حيث نجد ونتقدم للوظائف"
+      "loginJobSites": "تسجيل الدخول إلى مواقع التوظيف (اختياري)",
+      "loginJobSitesDesc": "LinkedIn ومواقع أخرى؛ ويمكنك أيضًا إضافة الوظائف عبر الرابط"
     }
   },
   "llmStep": {

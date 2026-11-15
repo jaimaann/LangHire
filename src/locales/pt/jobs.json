@@ -8,7 +8,9 @@
     "applied": "Candidatado",
     "failed": "Falhou",
     "blocked": "Bloqueado",
-    "inProgress": "Em andamento"
+    "inProgress": "Em andamento",
+    "needsInput": "Precisa da sua resposta",
+    "skipped": "Ignorado"
   },
   "filter": {
     "all": "Todas"
@@ -51,7 +53,10 @@
     "applying": "Candidatando...",
     "retry": "Tentar novamente",
     "apply": "Candidatar",
-    "openOnLinkedIn": "Abrir no LinkedIn"
+    "openOnLinkedIn": "Abrir no LinkedIn",
+    "match": "{{score}}% de correspondência",
+    "matchTitle": "O quanto esta vaga combina com seu perfil",
+    "answerAndRetry": "Responder e tentar novamente"
   },
   "showingJobs": "Mostrando {{count}} vaga",
   "showingJobs_plural": "Mostrando {{count}} vagas",
@@ -72,5 +77,14 @@
     "saveToProfile": "Salvar no perfil",
     "failedGenerate": "Falha ao gerar carta de apresentação",
     "failedSave": "Falha ao salvar no perfil"
+  },
+  "sort": {
+    "label": "Ordenar por",
+    "match": "Melhor correspondência",
+    "newest": "Mais recentes"
+  },
+  "progress": {
+    "applying": "Candidatando…",
+    "cost": "Custo de LLM até agora: ${{cost}}"
   }
 }

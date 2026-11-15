@@ -163,7 +163,7 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
                     { icon: Cpu, title: t("welcome.items.configureAi"), desc: t("welcome.items.configureAiDesc") },
                     { icon: FileText, title: t("welcome.items.uploadResume"), desc: t("welcome.items.uploadResumeDesc") },
                     { icon: User, title: t("welcome.items.reviewProfile"), desc: t("welcome.items.reviewProfileDesc") },
-                    { icon: Key, title: t("welcome.items.loginLinkedIn"), desc: t("welcome.items.loginLinkedInDesc") },
+                    { icon: Key, title: t("welcome.items.loginJobSites"), desc: t("welcome.items.loginJobSitesDesc") },
                   ].map((item) => (
                     <div key={item.title} className="flex items-start gap-3">
                       <div className="w-8 h-8 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">

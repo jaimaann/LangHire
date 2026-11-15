@@ -21,6 +21,10 @@ import type {
   RunWithLogs,
   QAEntry,
   QAStats,
+  ApplicationRecord,
+  AuthStatus,
+  PluginPreview,
+  RunEvent,
 } from "./types";
 
 const DEFAULT_PORT = 8743;
@@ -251,6 +255,20 @@ export async function deleteJobs(urls: string[]) {
   });
 }
 
+/** Recompute match scores for all jobs (e.g. after the profile changed). */
+export async function rescoreJobs() {
+  return request<{ success: boolean; rescored: number }>("/jobs/rescore", { method: "POST" });
+}
+
+/** Application records (answers given, resume, screenshot, outcome, cost), newest first. */
+export async function getApplications(params?: { jobUrl?: string; limit?: number }) {
+  const qs = new URLSearchParams();
+  if (params?.jobUrl) qs.set("job_url", params.jobUrl);
+  if (params?.limit) qs.set("limit", String(params.limit));
+  const query = qs.toString();
+  return request<ApplicationRecord[]>(`/applications${query ? `?${query}` : ""}`);
+}
+
 export async function stopJobCollection() {
   return request<{ success: boolean }>("/jobs/collect/stop", { method: "POST" });
 }
@@ -334,15 +352,13 @@ export async function getRunsWithLogs(limit = 50) {
 }
 
 // ── Auth / Login Sessions ─────────────────────────────────────────────────
+/** Login state for every source plugin with a login page, plus Gmail. */
 export async function getAuthStatus() {
-  return request<{
-    linkedin: { logged_in: boolean };
-    gmail: { logged_in: boolean };
-  }>("/auth/status");
+  return request<AuthStatus>("/auth/status");
 }
 
-export async function launchLogin(service: "linkedin" | "gmail") {
-  return request<{ success: boolean; message: string }>(`/auth/login/${service}`, {
+export async function launchLogin(service: string) {
+  return request<{ success: boolean; message: string }>(`/auth/login/${encodeURIComponent(service)}`, {
     method: "POST",
   });
 }
@@ -459,10 +475,28 @@ export async function getPlugins(country?: string) {
   return request<{ success: boolean; plugins: import("./types").PluginConfig[] }>(`/plugins${params}`);
 }
 
-export async function importPlugin(filePath: string) {
-  return request<{ success: boolean; plugin: { name: string; display_name: string } }>("/plugins/import", {
+/** Parse a plugin file without installing it, so the user can review it. */
+export async function previewPlugin(filePath: string) {
+  return request<{ success: boolean; plugin: PluginPreview }>("/plugins/preview", {
     method: "POST",
     body: JSON.stringify({ file_path: filePath }),
+  });
+}
+
+export type ImportPluginResponse =
+  | { success: true; plugin: { name: string; display_name: string } }
+  | { success: false; needs_review: true; plugin: PluginPreview };
+
+/**
+ * Install a community plugin. Pass the SHA-256 the user approved in the
+ * review panel; without it the backend only returns the preview.
+ */
+export async function importPlugin(filePath: string, approvedSha256?: string) {
+  const body: Record<string, string> = { file_path: filePath };
+  if (approvedSha256) body.approved_sha256 = approvedSha256;
+  return request<ImportPluginResponse>("/plugins/import", {
+    method: "POST",
+    body: JSON.stringify(body),
   });
 }
 
@@ -493,5 +527,133 @@ export async function deleteAllData() {
 /** Export everything the backend stores about the user as a JSON object. */
 export async function exportAllData() {
   return request<import("./types").DataExport>("/data/export");
+}
+
+// ── Live events (Server-Sent Events) ──────────────────────────────────────
+
+/**
+ * Incremental parser for a `text/event-stream` body. Feed it decoded text
+ * chunks (which may split lines anywhere); it returns the `data` payload of
+ * every event completed by that chunk. Comments, `id:`, `event:` and `retry:`
+ * fields are ignored: the JSON payload carries everything we need.
+ */
+export class SseParser {
+  private buffer = "";
+  private dataLines: string[] = [];
+
+  push(chunk: string): string[] {
+    this.buffer += chunk;
+    const out: string[] = [];
+    for (;;) {
+      const nl = this.buffer.search(/\r\n|\r|\n/);
+      if (nl < 0) break;
+      const isCr = this.buffer[nl] === "\r";
+      // A trailing "\r" may be the first half of "\r\n": wait for more data.
+      if (isCr && nl === this.buffer.length - 1) break;
+      const sepLen = isCr && this.buffer[nl + 1] === "\n" ? 2 : 1;
+      const line = this.buffer.slice(0, nl);
+      this.buffer = this.buffer.slice(nl + sepLen);
+      if (line === "") {
+        if (this.dataLines.length > 0) out.push(this.dataLines.join("\n"));
+        this.dataLines = [];
+      } else if (line.startsWith("data:")) {
+        const v = line.slice(5);
+        this.dataLines.push(v.startsWith(" ") ? v.slice(1) : v);
+      }
+    }
+    return out;
+  }
+}
+
+/** Parse one SSE data payload into a RunEvent (null when it isn't one). */
+export function parseRunEvent(data: string): RunEvent | null {
+  try {
+    const e = JSON.parse(data) as Partial<RunEvent> | null;
+    if (!e || typeof e !== "object" || typeof e.type !== "string") return null;
+    return {
+      id: typeof e.id === "number" ? e.id : 0,
+      run_id: String(e.run_id ?? ""),
+      kind: e.kind === "collect" ? "collect" : "apply",
+      type: e.type,
+      level: typeof e.level === "string" ? e.level : "info",
+      message: typeof e.message === "string" ? e.message : "",
+      data: e.data && typeof e.data === "object" ? (e.data as Record<string, unknown>) : {},
+    };
+  } catch {
+    return null;
+  }
+}
+
+export interface SubscribeEventsOptions {
+  /** Called whenever the stream (re)connects. */
+  onOpen?: () => void;
+  /** First reconnect delay in ms (doubles up to maxDelayMs). */
+  initialDelayMs?: number;
+  maxDelayMs?: number;
+}
+
+/**
+ * Subscribe to the backend's live run events (`GET /events`). Uses fetch +
+ * ReadableStream because EventSource can't send the Authorization header.
+ * Reconnects with exponential backoff until the returned function is called.
+ */
+export function subscribeEvents(
+  onEvent: (event: RunEvent) => void,
+  options: SubscribeEventsOptions = {},
+): () => void {
+  const initialDelay = options.initialDelayMs ?? 1000;
+  const maxDelay = options.maxDelayMs ?? 30000;
+  let stopped = false;
+  let controller: AbortController | null = null;
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  let delay = initialDelay;
+
+  const scheduleReconnect = () => {
+    if (stopped) return;
+    timer = setTimeout(() => void connect(), delay);
+    delay = Math.min(delay * 2, maxDelay);
+  };
+
+  async function connect() {
+    if (stopped) return;
+    controller = new AbortController();
+    try {
+      const info = await getBackendInfo();
+      const res = await fetch(`${baseUrlFor(info)}/events`, {
+        headers: { Authorization: `Bearer ${info.token}`, Accept: "text/event-stream" },
+        signal: controller.signal,
+      });
+      if (res.status === 401) invalidateBackendInfo();
+      if (!res.ok || !res.body) throw new Error(`Event stream unavailable (${res.status})`);
+      delay = initialDelay;
+      options.onOpen?.();
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      const parser = new SseParser();
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done || stopped) break;
+        for (const data of parser.push(decoder.decode(value, { stream: true }))) {
+          const event = parseRunEvent(data);
+          if (!event) continue;
+          try {
+            onEvent(event);
+          } catch (err) {
+            console.warn("Event handler failed:", err);
+          }
+        }
+      }
+    } catch {
+      /* network error or abort: reconnect below unless stopped */
+    }
+    scheduleReconnect();
+  }
+
+  void connect();
+  return () => {
+    stopped = true;
+    if (timer) clearTimeout(timer);
+    controller?.abort();
+  };
 }
 

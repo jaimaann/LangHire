@@ -18,8 +18,8 @@
       "uploadResumeDesc": "AI lê e preenche seu perfil automaticamente",
       "reviewProfile": "Revisar seu perfil",
       "reviewProfileDesc": "Verificar as informações extraídas pela AI",
-      "loginLinkedIn": "Entrar no LinkedIn",
-      "loginLinkedInDesc": "Onde encontramos e nos candidatamos a vagas"
+      "loginJobSites": "Faça login em sites de vagas (opcional)",
+      "loginJobSitesDesc": "LinkedIn e outros sites; você também pode adicionar vagas por URL"
     }
   },
   "llmStep": {

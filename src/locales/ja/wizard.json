@@ -18,8 +18,8 @@
       "uploadResumeDesc": "AIが読み取りプロフィールを自動入力",
       "reviewProfile": "プロフィールを確認",
       "reviewProfileDesc": "AIが抽出した情報を検証",
-      "loginLinkedIn": "LinkedInにログイン",
-      "loginLinkedInDesc": "求人を探して応募する場所"
+      "loginJobSites": "求人サイトにログイン（任意）",
+      "loginJobSitesDesc": "LinkedInなどのサイト。URLで求人を追加することもできます"
     }
   },
   "llmStep": {

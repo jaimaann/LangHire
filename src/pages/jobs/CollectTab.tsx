@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useRunEvents, appendLogLine, FALLBACK_POLL_MS } from "../../hooks/useRunEvents";
 import { Play, Square, Terminal, Loader2, Plus } from "lucide-react";
 import {
   startJobCollection,
@@ -77,30 +78,46 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
       .catch(() => {});
   }, []);
 
-  // Poll collection status
+  // Sync from the status endpoint (authoritative log + collected count).
+  const wasRunningRef = useRef(false);
   useEffect(() => {
-    let active = true;
-    let wasRunning = collecting;
-    const poll = setInterval(() => {
-      getCollectionStatus()
-        .then((s) => {
-          if (!active) return;
-          if (wasRunning && !s.running) {
-            trackEvent("collection_completed", { jobs_collected: s.collected || 0 });
-            onJobsChanged();
-          }
-          wasRunning = s.running;
-          setCollecting(s.running);
-          setCollectLog(s.log || []);
-          setCollected(s.collected || 0);
-        })
-        .catch(() => {});
-    }, 2000);
-    return () => {
-      active = false;
-      clearInterval(poll);
-    };
-  }, [collecting, onJobsChanged]);
+    wasRunningRef.current = collecting;
+  }, [collecting]);
+  const syncStatus = useCallback(() => {
+    getCollectionStatus()
+      .then((s) => {
+        if (wasRunningRef.current && !s.running) {
+          trackEvent("collection_completed", { jobs_collected: s.collected || 0 });
+          onJobsChanged();
+        }
+        wasRunningRef.current = s.running;
+        setCollecting(s.running);
+        setCollectLog(s.log || []);
+        setCollected(s.collected || 0);
+      })
+      .catch(() => {});
+  }, [onJobsChanged]);
+
+  // Live updates over SSE; job_found / run boundaries re-sync the counters.
+  const syncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useRunEvents("collect", (event) => {
+    if (event.type === "run_started") setCollecting(true);
+    setCollectLog((prev) => appendLogLine(prev, event.message));
+    if (["run_started", "run_finished", "job_found"].includes(event.type)) {
+      if (syncTimer.current) clearTimeout(syncTimer.current);
+      syncTimer.current = setTimeout(syncStatus, 300);
+    }
+  });
+  useEffect(() => () => {
+    if (syncTimer.current) clearTimeout(syncTimer.current);
+  }, []);
+
+  // Slow fallback poll while collecting, in case the event stream drops.
+  useEffect(() => {
+    if (!collecting) return;
+    const poll = setInterval(syncStatus, FALLBACK_POLL_MS);
+    return () => clearInterval(poll);
+  }, [collecting, syncStatus]);
 
   // Auto-scroll log
   useEffect(() => {

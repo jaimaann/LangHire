@@ -8,7 +8,9 @@
     "applied": "已申请",
     "failed": "失败",
     "blocked": "已阻止",
-    "inProgress": "进行中"
+    "inProgress": "进行中",
+    "needsInput": "需要你的回答",
+    "skipped": "已跳过"
   },
   "filter": {
     "all": "全部"
@@ -51,7 +53,10 @@
     "applying": "正在申请...",
     "retry": "重试",
     "apply": "申请",
-    "openOnLinkedIn": "在 LinkedIn 上打开"
+    "openOnLinkedIn": "在 LinkedIn 上打开",
+    "match": "匹配度 {{score}}%",
+    "matchTitle": "此职位与你的资料的匹配程度",
+    "answerAndRetry": "回答并重试"
   },
   "showingJobs": "显示 {{count}} 个职位",
   "showingJobs_plural": "显示 {{count}} 个职位",
@@ -72,5 +77,14 @@
     "saveToProfile": "保存到个人资料",
     "failedGenerate": "生成求职信失败",
     "failedSave": "保存到个人资料失败"
+  },
+  "sort": {
+    "label": "排序方式",
+    "match": "最佳匹配",
+    "newest": "最新"
+  },
+  "progress": {
+    "applying": "正在申请…",
+    "cost": "目前 LLM 费用：${{cost}}"
   }
 }

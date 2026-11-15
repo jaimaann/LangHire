@@ -7,7 +7,8 @@
     "failed": "Échoué",
     "pending": "En attente",
     "successRate": "Taux de réussite",
-    "memories": "Mémoires"
+    "memories": "Mémoires",
+    "llmSpend7d": "Dépenses LLM (7 jours)"
   },
   "quickActions": {
     "title": "Actions rapides",
@@ -33,5 +34,13 @@
   },
   "backend": {
     "notConnected": "Backend non connecté. Démarrez-le avec : <code>uv run python backend/main.py</code>"
+  },
+  "ats": {
+    "title": "Taux de réussite par ATS",
+    "empty": "Aucune candidature enregistrée pour l'instant.",
+    "ats": "ATS",
+    "attempts": "Tentatives",
+    "successRate": "Réussite",
+    "avgCost": "Coût moyen"
   }
 }

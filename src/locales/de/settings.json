@@ -30,7 +30,29 @@
     "title": "Job-Quellen-Plugins",
     "description": "Job-Quellen-Plugins verwalten. Integrierte Plugins bieten LinkedIn, Indeed, SEEK, Naukri, Reed und StepStone. Importieren Sie Community-Plugins (.yaml-Dateien) für zusätzliche Jobseiten.",
     "builtin": "Integriert",
-    "importPlugin": "Plugin importieren"
+    "importPlugin": "Plugin importieren",
+    "tampered": "Seit Ihrer Freigabe geändert – zum Prüfen erneut importieren",
+    "tamperedToggle": "Die Datei dieses Plugins wurde seit Ihrer Freigabe geändert. Importieren Sie es erneut, um es vor dem Aktivieren zu prüfen.",
+    "toggleFailed": "Das Plugin konnte nicht geändert werden.",
+    "previewFailed": "Das Plugin konnte nicht gelesen werden: {{error}}",
+    "importFailed": "Das Plugin konnte nicht installiert werden: {{error}}",
+    "changedDuringReview": "Die Datei wurde während Ihrer Prüfung geändert. Prüfen Sie die neue Version unten und installieren Sie erneut.",
+    "review": {
+      "title": "Plugin vor der Installation prüfen",
+      "description": "Community-Plugins sagen dem KI-Agenten, was er auf einer Jobseite tun soll. Installieren Sie nur Plugins, denen Sie vertrauen.",
+      "name": "Plugin",
+      "author": "Autor",
+      "website": "Website",
+      "requiresLogin": "Anmeldung nötig",
+      "yes": "Ja",
+      "no": "Nein",
+      "warnings": "Warnungen ({{n}})",
+      "noWarnings": "Keine Warnungen gefunden.",
+      "collectionPrompt": "Anweisungen zum Sammeln",
+      "applyPrompt": "Anweisungen zur Bewerbung",
+      "install": "Installieren",
+      "cancel": "Abbrechen"
+    }
   },
   "language": {
     "title": "Sprache",
@@ -57,5 +79,36 @@
     "cancel": "Abbrechen",
     "deleting": "Wird gelöscht...",
     "deleteFailed": "Ihre Daten konnten nicht gelöscht werden. Bitte versuchen Sie es erneut."
+  },
+  "secrets": {
+    "keychain": "API-Schlüssel werden im Schlüsselbund Ihres Betriebssystems gespeichert.",
+    "file": "Kein Schlüsselbund verfügbar, daher werden API-Schlüssel und Passwörter in einer Datei auf diesem Computer gespeichert. Jeder mit Zugriff auf Ihr Benutzerkonto könnte sie lesen."
+  },
+  "automation": {
+    "title": "Automatisierung",
+    "dailyApplyCap": "Max. Bewerbungen pro Jobseite und Tag",
+    "dailyApplyCapHelp": "0 = keine Begrenzung.",
+    "maxRunCost": "Durchlauf nach so vielen LLM-Ausgaben stoppen (USD)",
+    "maxRunCostHelp": "Sobald ein Durchlauf so viel gekostet hat, starten keine neuen Bewerbungen. 0 = keine Begrenzung.",
+    "browserCdpUrl": "Eigenes Chrome (DevTools-Adresse)",
+    "browserCdpUrlHelp": "Eigenes Chrome verwenden: Mit --remote-debugging-port=9222 starten und die Adresse einfügen. Leer lassen, um den Browser von LangHire zu verwenden.",
+    "emailOtp": "Bestätigungscodes aus Gmail lesen",
+    "emailOtpHelp": "Den Agenten die neueste E-Mail mit Bestätigungscode in Gmail lesen lassen"
+  },
+  "logins": {
+    "title": "Anmeldungen bei Jobseiten",
+    "description": "Die Anmeldung ist optional. Damit kann der Agent Ihre Konten auf Jobseiten nutzen; Sie können Stellen auch per URL hinzufügen.",
+    "loggedIn": "Angemeldet",
+    "notLoggedIn": "Nicht angemeldet",
+    "optional": "Optional",
+    "refresh": "Status aktualisieren",
+    "opening": "Wird geöffnet...",
+    "logInTo": "Bei {{name}} anmelden",
+    "launchFailed": "Browser konnte nicht gestartet werden",
+    "none": "Keine Jobseite erfordert eine Anmeldung.",
+    "linkedinReason": "Damit kann der Agent mit Ihrem Konto auf LinkedIn suchen und Easy Apply nutzen.",
+    "gmailReason": "Der Agent liest die neueste E-Mail mit Bestätigungscode, um Einmalcodes für Sie einzugeben.",
+    "gmailOptional": "Optional. Aktivieren Sie unter Automatisierung „Bestätigungscodes aus Gmail lesen“, damit der Agent E-Mail-Codes für Sie eingibt.",
+    "genericReason": "Damit kann der Agent mit Ihrem Konto auf {{name}} suchen und sich bewerben."
   }
 }

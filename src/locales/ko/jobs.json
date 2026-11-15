@@ -8,7 +8,9 @@
     "applied": "지원 완료",
     "failed": "실패",
     "blocked": "차단됨",
-    "inProgress": "진행 중"
+    "inProgress": "진행 중",
+    "needsInput": "답변 필요",
+    "skipped": "건너뜀"
   },
   "filter": {
     "all": "전체"
@@ -51,7 +53,10 @@
     "applying": "지원 중...",
     "retry": "재시도",
     "apply": "지원",
-    "openOnLinkedIn": "LinkedIn에서 열기"
+    "openOnLinkedIn": "LinkedIn에서 열기",
+    "match": "적합도 {{score}}%",
+    "matchTitle": "이 채용 공고가 프로필과 얼마나 맞는지",
+    "answerAndRetry": "답변 후 다시 시도"
   },
   "showingJobs": "{{count}}개 채용 표시 중",
   "showingJobs_plural": "{{count}}개 채용 표시 중",
@@ -72,5 +77,14 @@
     "saveToProfile": "프로필에 저장",
     "failedGenerate": "자기소개서 생성 실패",
     "failedSave": "프로필에 저장 실패"
+  },
+  "sort": {
+    "label": "정렬",
+    "match": "적합도 높은 순",
+    "newest": "최신순"
+  },
+  "progress": {
+    "applying": "지원 중…",
+    "cost": "현재까지 LLM 비용: ${{cost}}"
   }
 }

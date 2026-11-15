@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import LogLine, { getLogLineColor } from "./LogLine";
+import LogLine from "./LogLine";
+import { getLogLineColor } from "../lib/logLineColor";
 
 describe("getLogLineColor", () => {
   it.each([

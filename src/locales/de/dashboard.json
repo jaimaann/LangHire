@@ -7,7 +7,8 @@
     "failed": "Fehlgeschlagen",
     "pending": "Ausstehend",
     "successRate": "Erfolgsquote",
-    "memories": "Erinnerungen"
+    "memories": "Erinnerungen",
+    "llmSpend7d": "LLM-Ausgaben (7 Tage)"
   },
   "quickActions": {
     "title": "Schnellaktionen",
@@ -33,5 +34,13 @@
   },
   "backend": {
     "notConnected": "Backend nicht verbunden. Starten Sie es mit: <code>uv run python backend/main.py</code>"
+  },
+  "ats": {
+    "title": "Erfolgsquote nach ATS",
+    "empty": "Noch keine Bewerbungen aufgezeichnet.",
+    "ats": "ATS",
+    "attempts": "Versuche",
+    "successRate": "Erfolg",
+    "avgCost": "Ø Kosten"
   }
 }

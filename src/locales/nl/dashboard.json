@@ -7,7 +7,8 @@
     "failed": "Mislukt",
     "pending": "In afwachting",
     "successRate": "Slagingspercentage",
-    "memories": "Herinneringen"
+    "memories": "Herinneringen",
+    "llmSpend7d": "LLM-uitgaven (7 dagen)"
   },
   "quickActions": {
     "title": "Snelle acties",
@@ -33,5 +34,13 @@
   },
   "backend": {
     "notConnected": "Backend niet verbonden. Start het met: <code>uv run python backend/main.py</code>"
+  },
+  "ats": {
+    "title": "Slagingspercentage per ATS",
+    "empty": "Nog geen sollicitaties vastgelegd.",
+    "ats": "ATS",
+    "attempts": "Pogingen",
+    "successRate": "Succes",
+    "avgCost": "Gem. kosten"
   }
 }

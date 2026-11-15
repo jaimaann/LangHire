@@ -18,8 +18,8 @@
       "uploadResumeDesc": "AI leest het en vult je profiel automatisch in",
       "reviewProfile": "Je profiel bekijken",
       "reviewProfileDesc": "Verifieer de door AI geëxtraheerde info",
-      "loginLinkedIn": "Inloggen bij LinkedIn",
-      "loginLinkedInDesc": "Waar we banen vinden en solliciteren"
+      "loginJobSites": "Aanmelden bij vacaturesites (optioneel)",
+      "loginJobSitesDesc": "LinkedIn en andere sites; je kunt vacatures ook via een URL toevoegen"
     }
   },
   "llmStep": {

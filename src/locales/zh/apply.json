@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "实时输出",
     "outputLog": "输出日志",
-    "applicationLog": "申请日志"
+    "applicationLog": "申请日志",
+    "cost": "LLM 费用：${{cost}}",
+    "costTitle": "本次运行目前的 LLM 花费"
   },
   "dialog": {
     "title": "开始申请"
   },
-  "starting": "正在启动..."
+  "starting": "正在启动...",
+  "needsInput": {
+    "answerAndRetry": "回答并重试"
+  },
+  "details": {
+    "button": "详情",
+    "open": "查看申请记录",
+    "title": "申请详情",
+    "close": "关闭",
+    "loadFailed": "无法加载申请记录。",
+    "none": "此职位暂无申请记录。",
+    "outcome": "结果",
+    "outcomes": {
+      "submitted": "已提交",
+      "failed": "失败",
+      "needsInput": "需要你的回答",
+      "skipped": "已跳过"
+    },
+    "confirmation": "确认：{{text}}",
+    "cost": "费用",
+    "steps": "步骤：{{n}}",
+    "ats": "ATS：{{ats}}",
+    "missingInfo": "代理缺少的信息",
+    "resume": "使用的简历：",
+    "openResume": "打开简历",
+    "openScreenshot": "打开截图",
+    "openFailed": "无法打开文件。",
+    "answers": "回答（{{n}}）",
+    "noAnswers": "没有记录任何回答。",
+    "question": "问题",
+    "answer": "回答",
+    "source": "来源",
+    "checkAnswer": "请核对",
+    "checkAnswerTitle": "该回答是代理推测的或不确定，请核对。"
+  }
 }

@@ -18,8 +18,8 @@
       "uploadResumeDesc": "AI reads it and auto-fills your profile",
       "reviewProfile": "Review your profile",
       "reviewProfileDesc": "Verify the AI-extracted info",
-      "loginLinkedIn": "Log into LinkedIn",
-      "loginLinkedInDesc": "Where we find and apply to jobs"
+      "loginJobSites": "Log in to job sites (optional)",
+      "loginJobSitesDesc": "LinkedIn and other sites; you can also add jobs by URL"
     }
   },
   "llmStep": {

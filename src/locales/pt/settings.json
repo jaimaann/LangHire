@@ -30,7 +30,29 @@
     "title": "Plugins de fontes de vagas",
     "description": "Gerencie plugins de fontes de vagas. Os plugins integrados oferecem LinkedIn, Indeed, SEEK, Naukri, Reed e StepStone. Importe plugins da comunidade (arquivos .yaml) para sites de vagas adicionais.",
     "builtin": "Integrado",
-    "importPlugin": "Importar plugin"
+    "importPlugin": "Importar plugin",
+    "tampered": "Alterado desde que você o aprovou — importe novamente para revisar",
+    "tamperedToggle": "O arquivo deste plugin mudou desde que você o aprovou. Importe-o novamente para revisá-lo antes de ativar.",
+    "toggleFailed": "Não foi possível alterar o plugin.",
+    "previewFailed": "Não foi possível ler o plugin: {{error}}",
+    "importFailed": "Não foi possível instalar o plugin: {{error}}",
+    "changedDuringReview": "O arquivo mudou enquanto você o revisava. Revise a nova versão abaixo e instale novamente.",
+    "review": {
+      "title": "Revise o plugin antes de instalar",
+      "description": "Plugins da comunidade dizem ao agente de IA o que fazer em um site de vagas. Instale apenas plugins em que você confia.",
+      "name": "Plugin",
+      "author": "Autor",
+      "website": "Site",
+      "requiresLogin": "Exige login",
+      "yes": "Sim",
+      "no": "Não",
+      "warnings": "Avisos ({{n}})",
+      "noWarnings": "Nenhum aviso encontrado.",
+      "collectionPrompt": "Instruções de coleta",
+      "applyPrompt": "Instruções de candidatura",
+      "install": "Instalar",
+      "cancel": "Cancelar"
+    }
   },
   "language": {
     "title": "Idioma",
@@ -57,5 +79,36 @@
     "cancel": "Cancelar",
     "deleting": "Excluindo...",
     "deleteFailed": "Não foi possível excluir seus dados. Tente novamente."
+  },
+  "secrets": {
+    "keychain": "As chaves de API são guardadas no chaveiro do seu sistema operacional.",
+    "file": "Nenhum chaveiro do sistema está disponível, então chaves de API e senhas são guardadas em um arquivo neste computador. Qualquer pessoa com acesso à sua conta de usuário poderia lê-las."
+  },
+  "automation": {
+    "title": "Automação",
+    "dailyApplyCap": "Máximo de candidaturas por site de vagas por dia",
+    "dailyApplyCapHelp": "0 = sem limite.",
+    "maxRunCost": "Parar uma execução após este gasto com LLM (USD)",
+    "maxRunCostHelp": "Ao atingir este custo, nenhuma nova candidatura é iniciada. 0 = sem limite.",
+    "browserCdpUrl": "Seu próprio Chrome (endereço do DevTools)",
+    "browserCdpUrlHelp": "Use seu próprio Chrome: inicie-o com --remote-debugging-port=9222 e cole o endereço. Deixe vazio para usar o navegador do LangHire.",
+    "emailOtp": "Ler códigos de verificação do Gmail",
+    "emailOtpHelp": "Permitir que o agente leia o e-mail mais recente com código de verificação no Gmail"
+  },
+  "logins": {
+    "title": "Logins em sites de vagas",
+    "description": "Fazer login é opcional. Permite que o agente use suas contas nos sites de vagas; você também pode adicionar vagas por URL.",
+    "loggedIn": "Conectado",
+    "notLoggedIn": "Não conectado",
+    "optional": "Opcional",
+    "refresh": "Atualizar status",
+    "opening": "Abrindo...",
+    "logInTo": "Entrar no {{name}}",
+    "launchFailed": "Não foi possível abrir o navegador",
+    "none": "Nenhum site de vagas exige login.",
+    "linkedinReason": "Permite que o agente pesquise no LinkedIn e use o Easy Apply com sua conta.",
+    "gmailReason": "O agente lê o e-mail mais recente com código de verificação para digitar códigos de uso único por você.",
+    "gmailOptional": "Opcional. Ative \"Ler códigos de verificação do Gmail\" em Automação para que o agente digite os códigos por você.",
+    "genericReason": "Permite que o agente pesquise e se candidate no {{name}} com sua conta."
   }
 }

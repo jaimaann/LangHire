@@ -8,7 +8,9 @@
     "applied": "आवेदित",
     "failed": "विफल",
     "blocked": "अवरुद्ध",
-    "inProgress": "प्रगति में"
+    "inProgress": "प्रगति में",
+    "needsInput": "आपका उत्तर चाहिए",
+    "skipped": "छोड़ा गया"
   },
   "filter": {
     "all": "सभी"
@@ -51,7 +53,10 @@
     "applying": "आवेदन कर रहे हैं...",
     "retry": "पुनः प्रयास",
     "apply": "आवेदन करें",
-    "openOnLinkedIn": "LinkedIn पर खोलें"
+    "openOnLinkedIn": "LinkedIn पर खोलें",
+    "match": "{{score}}% मेल",
+    "matchTitle": "यह नौकरी आपकी प्रोफ़ाइल से कितनी मेल खाती है",
+    "answerAndRetry": "उत्तर दें और फिर से कोशिश करें"
   },
   "showingJobs": "{{count}} नौकरी दिखाई जा रही है",
   "showingJobs_plural": "{{count}} नौकरियाँ दिखाई जा रही हैं",
@@ -72,5 +77,14 @@
     "saveToProfile": "प्रोफ़ाइल में सहेजें",
     "failedGenerate": "कवर लेटर बनाने में विफल",
     "failedSave": "प्रोफ़ाइल में सहेजने में विफल"
+  },
+  "sort": {
+    "label": "क्रमबद्ध करें",
+    "match": "सबसे अच्छा मेल",
+    "newest": "सबसे नया"
+  },
+  "progress": {
+    "applying": "आवेदन हो रहा है…",
+    "cost": "अब तक LLM लागत: ${{cost}}"
   }
 }

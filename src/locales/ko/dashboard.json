@@ -7,7 +7,8 @@
     "failed": "실패",
     "pending": "대기 중",
     "successRate": "성공률",
-    "memories": "메모리"
+    "memories": "메모리",
+    "llmSpend7d": "LLM 지출 (7일)"
   },
   "quickActions": {
     "title": "빠른 작업",
@@ -33,5 +34,13 @@
   },
   "backend": {
     "notConnected": "Backend에 연결되지 않았습니다. 다음 명령으로 시작하세요: <code>uv run python backend/main.py</code>"
+  },
+  "ats": {
+    "title": "ATS별 성공률",
+    "empty": "아직 기록된 지원이 없습니다.",
+    "ats": "ATS",
+    "attempts": "시도",
+    "successRate": "성공률",
+    "avgCost": "평균 비용"
   }
 }

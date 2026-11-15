@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { Save, FolderOpen, X, Upload, Trash2, Sun, Moon, Monitor, Download, AlertTriangle } from "lucide-react";
-import { getSettings, saveSettings, getPlugins, togglePlugin, removePlugin, importPlugin, deleteAllData, exportAllData } from "../lib/api";
+import { Save, FolderOpen, X, Upload, Trash2, Sun, Moon, Monitor, Download, AlertTriangle, KeyRound } from "lucide-react";
+import { getSettings, saveSettings, getPlugins, togglePlugin, removePlugin, previewPlugin, importPlugin, deleteAllData, exportAllData, checkHealth } from "../lib/api";
+import PluginReviewPanel from "../components/PluginReviewPanel";
+import LoginCards from "../components/LoginCards";
 import { setTelemetryEnabled as setAnalyticsTelemetry, hasTelemetryConsent } from "../lib/analytics";
 import { clearLocalAppData, restartApp, exportFileName, downloadJson } from "../lib/privacy";
 import { getStoredTheme, setTheme, type ThemeMode } from "../lib/theme";
@@ -8,13 +10,32 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { useTranslation } from "react-i18next";
 import { PageHeader, LoadingSpinner, Section } from "../components/ui";
 import TagInput from "../components/ui/TagInput";
-import type { PluginConfig } from "../lib/types";
+import type { PluginConfig, PluginPreview } from "../lib/types";
 import { LANGUAGE_NAMES, getSavedLanguage, saveLanguagePreference } from "../i18n/languageDetection";
 import { loadLanguage } from "../i18n";
 
 /** Allowed values for agent conversation log retention (days; 0 = don't save). */
 const LOG_RETENTION_OPTIONS = [0, 7, 14, 30, 90] as const;
 const DEFAULT_LOG_RETENTION_DAYS = 14;
+const DEFAULT_DAILY_APPLY_CAP = 25;
+const DEFAULT_MAX_RUN_COST_USD = 5;
+
+function numberOr(value: unknown, fallback: number): number {
+  const n = Number(value);
+  return value === undefined || value === null || value === "" || !Number.isFinite(n) ? fallback : n;
+}
+
+/** Human-readable message from an `API Error <status>: {"error": {"message"}}` error. */
+function apiErrorMessage(e: unknown): string {
+  const raw = e instanceof Error ? e.message : String(e);
+  const body = raw.replace(/^API Error \d+:\s*/, "");
+  try {
+    const parsed = JSON.parse(body);
+    return parsed?.error?.message || parsed?.detail || body;
+  } catch {
+    return body;
+  }
+}
 
 export default function SettingsPage() {
   const { t } = useTranslation("settings");
@@ -37,6 +58,17 @@ export default function SettingsPage() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [plugins, setPlugins] = useState<PluginConfig[]>([]);
+  // Plugin import review
+  const [reviewPath, setReviewPath] = useState<string | null>(null);
+  const [reviewPlugin, setReviewPlugin] = useState<PluginPreview | null>(null);
+  const [installing, setInstalling] = useState(false);
+  const [pluginError, setPluginError] = useState<string | null>(null);
+  // Automation
+  const [dailyApplyCap, setDailyApplyCap] = useState<number>(DEFAULT_DAILY_APPLY_CAP);
+  const [maxRunCost, setMaxRunCost] = useState<number>(DEFAULT_MAX_RUN_COST_USD);
+  const [browserCdpUrl, setBrowserCdpUrl] = useState("");
+  const [emailOtpViaGmail, setEmailOtpViaGmail] = useState(false);
+  const [secretsBackend, setSecretsBackend] = useState<"keychain" | "file" | null>(null);
 
   const handleLanguageChange = async (lang: string) => {
     setCurrentLanguage(lang);
@@ -65,16 +97,35 @@ export default function SettingsPage() {
         const sens = data.sensitive_data || { email: "", password: "" };
         setEmail(sens.email || "");
         setPassword(sens.password || "");
+        setDailyApplyCap(numberOr(data.daily_apply_cap, DEFAULT_DAILY_APPLY_CAP));
+        setMaxRunCost(numberOr(data.max_run_cost_usd, DEFAULT_MAX_RUN_COST_USD));
+        setBrowserCdpUrl(data.browser_cdp_url || "");
+        setEmailOtpViaGmail(data.email_otp_via_gmail === true);
       }),
       getPlugins().then((res) => setPlugins(res.plugins || [])),
     ])
       .catch(() => {})
       .finally(() => setLoading(false));
+    // Where API keys live (OS keychain vs. a local file); informational only.
+    Promise.resolve()
+      .then(() => checkHealth())
+      .then((h) => {
+        if (h && (h.secrets_backend === "keychain" || h.secrets_backend === "file")) {
+          setSecretsBackend(h.secrets_backend);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const handleTogglePlugin = async (name: string, enabled: boolean) => {
-    await togglePlugin(name, enabled);
-    setPlugins((prev) => prev.map((p) => p.name === name ? { ...p, enabled } : p));
+    setPluginError(null);
+    try {
+      await togglePlugin(name, enabled);
+      setPlugins((prev) => prev.map((p) => p.name === name ? { ...p, enabled } : p));
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setPluginError(msg.includes("409") ? t("plugins.tamperedToggle") : t("plugins.toggleFailed"));
+    }
   };
 
   const handleRemovePlugin = async (name: string) => {
@@ -82,16 +133,47 @@ export default function SettingsPage() {
     setPlugins((prev) => prev.filter((p) => p.name !== name));
   };
 
+  const closeReview = () => {
+    setReviewPath(null);
+    setReviewPlugin(null);
+    setPluginError(null);
+  };
+
+  /** Step 1: pick a file and show what it would do, without installing it. */
   const handleImportPlugin = async () => {
+    setPluginError(null);
     const file = await open({ filters: [{ name: "YAML Plugin", extensions: ["yaml", "yml"] }] });
-    if (file) {
-      try {
-        await importPlugin(file as string);
-        const res = await getPlugins();
-        setPlugins(res.plugins || []);
-      } catch (e) {
-        alert(e instanceof Error ? e.message : "Failed to import plugin");
+    if (!file) return;
+    try {
+      const res = await previewPlugin(file as string);
+      if (!res || !res.plugin) throw new Error("no preview");
+      setReviewPath(file as string);
+      setReviewPlugin(res.plugin);
+    } catch (e) {
+      setPluginError(t("plugins.previewFailed", { error: apiErrorMessage(e) }));
+    }
+  };
+
+  /** Step 2: install exactly the reviewed file (the backend checks the hash). */
+  const handleInstallPlugin = async () => {
+    if (!reviewPath || !reviewPlugin) return;
+    setInstalling(true);
+    setPluginError(null);
+    try {
+      const res = await importPlugin(reviewPath, reviewPlugin.sha256);
+      if (!res.success) {
+        // The file changed between preview and install: show the new version.
+        if ("needs_review" in res && res.plugin) setReviewPlugin(res.plugin);
+        setPluginError(t("plugins.changedDuringReview"));
+        return;
       }
+      const list = await getPlugins();
+      setPlugins(list.plugins || []);
+      closeReview();
+    } catch (e) {
+      setPluginError(t("plugins.importFailed", { error: apiErrorMessage(e) }));
+    } finally {
+      setInstalling(false);
     }
   };
 
@@ -161,6 +243,10 @@ export default function SettingsPage() {
         telemetry_enabled: telemetryEnabled,
         log_retention_days: logRetentionDays,
         theme,
+        daily_apply_cap: dailyApplyCap,
+        max_run_cost_usd: maxRunCost,
+        browser_cdp_url: browserCdpUrl.trim(),
+        email_otp_via_gmail: emailOtpViaGmail,
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -253,8 +339,18 @@ export default function SettingsPage() {
       <Section title="Account Credentials">
         <p className="text-[13px] text-muted-foreground mb-4">
           Used for creating accounts on external ATS platforms during applications.
-          Stored locally in plaintext. Prefer using SSO (Sign in with LinkedIn/Google) when possible.
+          Prefer using SSO (Sign in with LinkedIn/Google) when possible.
         </p>
+        {secretsBackend === "keychain" && (
+          <p data-testid="secrets-backend" className="text-[13px] text-green-700 mb-4 flex items-center gap-1.5">
+            <KeyRound className="w-4 h-4 flex-shrink-0" /> {t("secrets.keychain")}
+          </p>
+        )}
+        {secretsBackend === "file" && (
+          <p data-testid="secrets-backend" role="alert" className="text-[13px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-2.5 mb-4 flex items-start gap-1.5">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" /> {t("secrets.file")}
+          </p>
+        )}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-semibold text-foreground mb-1.5">Email</label>
@@ -282,6 +378,87 @@ export default function SettingsPage() {
             Agent stops trying after this many consecutive failures on a single job.
           </p>
         </div>
+      </Section>
+
+      {/* Automation */}
+      <Section title={t("automation.title")}>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="daily-apply-cap" className="block text-sm font-semibold text-foreground mb-1.5">
+              {t("automation.dailyApplyCap")}
+            </label>
+            <input
+              id="daily-apply-cap"
+              type="number"
+              min={0}
+              max={500}
+              value={dailyApplyCap}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setDailyApplyCap(Math.max(0, Math.min(500, Number.isFinite(val) ? Math.round(val) : 0)));
+              }}
+              className="input-base !w-32"
+            />
+            <p className="text-[13px] text-muted-foreground mt-1.5">{t("automation.dailyApplyCapHelp")}</p>
+          </div>
+          <div>
+            <label htmlFor="max-run-cost" className="block text-sm font-semibold text-foreground mb-1.5">
+              {t("automation.maxRunCost")}
+            </label>
+            <input
+              id="max-run-cost"
+              type="number"
+              min={0}
+              max={1000}
+              step={0.5}
+              value={maxRunCost}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setMaxRunCost(Math.max(0, Math.min(1000, Number.isFinite(val) ? val : 0)));
+              }}
+              className="input-base !w-32"
+            />
+            <p className="text-[13px] text-muted-foreground mt-1.5">{t("automation.maxRunCostHelp")}</p>
+          </div>
+        </div>
+
+        <div className="mt-5 pt-5 border-t border-border">
+          <label htmlFor="browser-cdp-url" className="block text-sm font-semibold text-foreground mb-1.5">
+            {t("automation.browserCdpUrl")}
+          </label>
+          <input
+            id="browser-cdp-url"
+            type="text"
+            value={browserCdpUrl}
+            onChange={(e) => setBrowserCdpUrl(e.target.value)}
+            placeholder="http://127.0.0.1:9222"
+            className="input-base"
+          />
+          <p className="text-[13px] text-muted-foreground mt-1.5">{t("automation.browserCdpUrlHelp")}</p>
+        </div>
+
+        <div className="mt-5 pt-5 border-t border-border flex items-center justify-between">
+          <div>
+            <p className="text-sm font-semibold text-foreground">{t("automation.emailOtp")}</p>
+            <p className="text-[13px] text-muted-foreground mt-1">{t("automation.emailOtpHelp")}</p>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
+            <input
+              type="checkbox"
+              aria-label={t("automation.emailOtp")}
+              checked={emailOtpViaGmail}
+              onChange={(e) => setEmailOtpViaGmail(e.target.checked)}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-secondary peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+          </label>
+        </div>
+      </Section>
+
+      {/* Job site logins */}
+      <Section title={t("logins.title")}>
+        <p className="text-[13px] text-muted-foreground mb-4">{t("logins.description")}</p>
+        <LoginCards gmailEnabled={emailOtpViaGmail} />
       </Section>
 
       {/* Privacy & data */}
@@ -408,6 +585,14 @@ export default function SettingsPage() {
                   {plugin.is_builtin && (
                     <span className="text-[11px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">Built-in</span>
                   )}
+                  {plugin.tampered && (
+                    <span
+                      data-testid={`plugin-tampered-${plugin.name}`}
+                      className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold"
+                    >
+                      <AlertTriangle className="w-3 h-3" /> {t("plugins.tampered")}
+                    </span>
+                  )}
                 </div>
                 <p className="text-[12px] text-muted-foreground mt-0.5">
                   {plugin.description} &middot; {plugin.countries.join(", ")}
@@ -417,7 +602,8 @@ export default function SettingsPage() {
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={plugin.enabled}
+                    aria-label={plugin.display_name}
+                    checked={plugin.enabled && !plugin.tampered}
                     onChange={(e) => handleTogglePlugin(plugin.name, e.target.checked)}
                     className="sr-only peer"
                   />
@@ -432,9 +618,23 @@ export default function SettingsPage() {
             </div>
           ))}
         </div>
-        <button onClick={handleImportPlugin} className="btn-secondary">
-          <Upload className="w-4 h-4" /> Import Plugin
-        </button>
+        {pluginError && !reviewPlugin && (
+          <p className="text-[13px] text-destructive mb-3" role="alert">{pluginError}</p>
+        )}
+        {!reviewPlugin && (
+          <button onClick={handleImportPlugin} className="btn-secondary">
+            <Upload className="w-4 h-4" /> Import Plugin
+          </button>
+        )}
+        {reviewPlugin && (
+          <PluginReviewPanel
+            plugin={reviewPlugin}
+            installing={installing}
+            error={pluginError}
+            onInstall={handleInstallPlugin}
+            onCancel={closeReview}
+          />
+        )}
       </Section>
     </div>
   );

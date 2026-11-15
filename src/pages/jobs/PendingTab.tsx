@@ -1,13 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Briefcase,
   Search,
   ExternalLink,
   Loader2,
-  CheckCircle,
-  XCircle,
-  Clock,
-  Ban,
   Play,
   FileText,
   X,
@@ -21,7 +17,12 @@ import {
   ChevronRight,
   Sparkles,
   Send,
+  DollarSign,
+  ArrowUpDown,
 } from "lucide-react";
+import { useRunEvents, costFromEvent, FALLBACK_POLL_MS } from "../../hooks/useRunEvents";
+import JobStatusBadge from "../../components/JobStatusBadge";
+import { sortJobs, type JobSort } from "../../lib/jobSort";
 import {
   getJobs,
   startApplying,
@@ -37,25 +38,18 @@ import {
   openLocalFile,
 } from "../../lib/api";
 import { markStart, measureAndTrack } from "../../lib/perf";
-import type { Job, JobStatus, JobStats, TailorOptions } from "../../lib/types";
+import type { Job, JobStats, TailorOptions } from "../../lib/types";
 import AutomationDialog from "../../components/AutomationDialog";
 import { useTranslation } from "react-i18next";
 
-const STATUS_ICONS: Record<JobStatus, typeof CheckCircle> = {
-  pending: Clock,
-  applied: CheckCircle,
-  failed: XCircle,
-  blocked: Ban,
-  in_progress: Loader2,
-};
+/** Statuses the agent can (re)try from this tab. */
+const RETRYABLE = new Set<string>(["pending", "failed", "needs_input"]);
 
-const STATUS_STYLES: Record<JobStatus, { color: string; bg: string }> = {
-  pending: { color: "text-amber-700", bg: "bg-amber-50" },
-  applied: { color: "text-success", bg: "bg-[#F0FFF0]" },
-  failed: { color: "text-destructive", bg: "bg-[#FFF0F0]" },
-  blocked: { color: "text-muted-foreground", bg: "bg-[#F7F7F7]" },
-  in_progress: { color: "text-primary", bg: "bg-[#FFF0F3]" },
-};
+function matchScoreClass(score: number): string {
+  if (score >= 70) return "bg-green-50 text-green-700";
+  if (score >= 40) return "bg-amber-50 text-amber-700";
+  return "bg-secondary text-muted-foreground";
+}
 
 interface PendingTabProps {
   onJobsChanged: () => void;
@@ -130,13 +124,10 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
   const [refining, setRefining] = useState<Record<string, boolean>>({});
   const [contentLoading, setContentLoading] = useState<Record<string, boolean>>({});
 
-  const STATUS_LABELS: Record<JobStatus, string> = {
-    pending: t("status.pending"),
-    applied: t("status.applied"),
-    failed: t("status.failed"),
-    blocked: t("status.blocked"),
-    in_progress: t("status.inProgress"),
-  };
+  // Sorting (default: best match first) and live LLM cost of the current apply run
+  const [sortBy, setSortBy] = useState<JobSort>("match");
+  const [runCost, setRunCost] = useState<number | null>(null);
+  const sortedJobs = useMemo(() => sortJobs(jobs, sortBy), [jobs, sortBy]);
 
   const fetchJobs = (isBackgroundRefresh = false) => {
     if (!isBackgroundRefresh) {
@@ -166,52 +157,52 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
 
   useEffect(() => {
     fetchJobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter]);
 
-  // Poll apply status for single apply
-  useEffect(() => {
-    if (!applyingUrl) return;
-    let active = true;
-    const poll = setInterval(async () => {
-      try {
-        const s = await getApplyStatus();
-        if (active && !s.running) {
-          setApplyingUrl(null);
-          fetchJobs(true);
-          onJobsChanged();
-        }
-      } catch {
-        /* ignore */
-      }
-    }, 2000);
-    return () => {
-      active = false;
-      clearInterval(poll);
-    };
-  }, [applyingUrl, onJobsChanged]);
+  const isApplying = applyingUrl !== null || batchApplying;
 
-  // Poll apply status during batch apply
+  const finishApplyRun = useCallback(() => {
+    setApplyingUrl(null);
+    setBatchApplying(false);
+    fetchJobs(true);
+    onJobsChanged();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onJobsChanged]);
+
+  // Live progress over SSE: refresh the list as jobs finish, stop at run end.
+  useRunEvents("apply", (event) => {
+    if (event.type === "run_started") setRunCost(0);
+    const cost = costFromEvent(event);
+    if (cost !== null) setRunCost(cost);
+    if (event.type === "job_finished") fetchJobs(true);
+    if (event.type === "run_finished") {
+      if (isApplying) finishApplyRun();
+      else fetchJobs(true);
+    }
+  });
+
+  // Slow fallback poll in case the event stream drops.
   useEffect(() => {
-    if (!batchApplying) return;
+    if (!isApplying) return;
     let active = true;
     const poll = setInterval(async () => {
-      if (!active) return;
       try {
         const s = await getApplyStatus();
-        fetchJobs(true);
-        if (!s.running) {
-          setBatchApplying(false);
-          onJobsChanged();
-        }
+        if (!active) return;
+        if (typeof s.cost_usd === "number") setRunCost(s.cost_usd);
+        if (!s.running) finishApplyRun();
+        else fetchJobs(true);
       } catch {
         /* ignore */
       }
-    }, 2000);
+    }, FALLBACK_POLL_MS);
     return () => {
       active = false;
       clearInterval(poll);
     };
-  }, [batchApplying, onJobsChanged]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isApplying, finishApplyRun]);
 
   // Close status menu on outside click
   useEffect(() => {
@@ -244,6 +235,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
         alert(res.message);
         return;
       }
+      setRunCost(null);
       setApplyingUrl(pendingApplyUrl);
     } catch (e) {
       alert(e instanceof Error ? e.message : "Failed to start");
@@ -311,9 +303,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
   };
 
   // Multi-select helpers
-  const selectableJobs = jobs.filter(
-    (j) => j.status === "pending" || j.status === "failed"
-  );
+  const selectableJobs = jobs.filter((j) => RETRYABLE.has(j.status));
   const allSelectableSelected =
     selectableJobs.length > 0 &&
     selectableJobs.every((j) => selectedJobs.has(j.url));
@@ -536,6 +526,8 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
           { value: "", label: t("filter.all"), count: stats.total - (stats.applied || 0) },
           { value: "pending", label: t("status.pending"), count: stats.pending },
           { value: "failed", label: t("status.failed"), count: stats.failed },
+          { value: "needs_input", label: t("status.needsInput"), count: stats.needs_input ?? 0 },
+          { value: "skipped", label: t("status.skipped"), count: stats.skipped ?? 0 },
           { value: "blocked", label: t("status.blocked"), count: stats.blocked },
         ].map(({ value, label, count }) => (
           <button
@@ -568,17 +560,46 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
         </div>
       </form>
 
-      {/* Select All Toggle */}
-      {!loading && jobs.length > 0 && selectableJobs.length > 0 && (
+      {/* Live apply progress (LLM spend so far) */}
+      {isApplying && (
+        <div className="card mb-4 flex items-center gap-3 text-sm" data-testid="apply-progress">
+          <Loader2 className="w-4 h-4 animate-spin text-primary" />
+          <span className="text-foreground font-medium">{t("progress.applying")}</span>
+          {runCost !== null && (
+            <span className="ml-auto inline-flex items-center gap-1 text-muted-foreground">
+              <DollarSign className="w-3.5 h-3.5" />
+              {t("progress.cost", { cost: runCost.toFixed(3) })}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Select All Toggle + Sort */}
+      {!loading && jobs.length > 0 && (
         <div className="flex items-center gap-2 mb-3">
-          <button
-            onClick={toggleSelectAll}
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <CheckSquare className="w-4 h-4" />
-            {allSelectableSelected ? "Deselect All" : "Select All"} (
-            {selectableJobs.length})
-          </button>
+          {selectableJobs.length > 0 && (
+            <button
+              onClick={toggleSelectAll}
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <CheckSquare className="w-4 h-4" />
+              {allSelectableSelected ? "Deselect All" : "Select All"} (
+              {selectableJobs.length})
+            </button>
+          )}
+          <label className="ml-auto inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+            <ArrowUpDown className="w-3.5 h-3.5" />
+            {t("sort.label")}
+            <select
+              aria-label={t("sort.label")}
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as JobSort)}
+              className="px-2 py-1 border border-border rounded-lg text-sm bg-card text-foreground"
+            >
+              <option value="match">{t("sort.match")}</option>
+              <option value="newest">{t("sort.newest")}</option>
+            </select>
+          </label>
         </div>
       )}
 
@@ -605,11 +626,10 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
         </div>
       ) : (
         <div className="bg-card rounded-2xl border border-border shadow-sm divide-y divide-border">
-          {jobs.map((job) => {
-            const icon = STATUS_ICONS[job.status] || STATUS_ICONS.pending;
-            const styles = STATUS_STYLES[job.status] || STATUS_STYLES.pending;
-            const StatusIcon = icon;
-            const isSelectable = job.status === "pending" || job.status === "failed";
+          {sortedJobs.map((job) => {
+            const isSelectable = RETRYABLE.has(job.status);
+            const isRetry = job.status === "failed" || job.status === "needs_input";
+            const hasScore = typeof job.match_score === "number";
             const hasTailoredResume = !!job.tailored_resume_path;
             const isExpanded = expandedJob === job.url;
             return (
@@ -631,6 +651,15 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                           <h4 className="text-sm font-semibold text-foreground truncate">
                             {job.title || t("jobItem.untitled")}
                           </h4>
+                          {hasScore && (
+                            <span
+                              data-testid="match-score"
+                              title={t("jobItem.matchTitle")}
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0 ${matchScoreClass(job.match_score as number)}`}
+                            >
+                              {t("jobItem.match", { score: Math.round(job.match_score as number) })}
+                            </span>
+                          )}
                           {job.easy_apply && (
                             <span className="px-2 py-0.5 bg-[#FFF0F3] text-primary rounded-full text-[10px] font-semibold flex-shrink-0">
                               {t("jobItem.easyApply")}
@@ -654,6 +683,14 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                           >
                             {t("jobItem.error", { error: job.error })}
                           </p>
+                        )}
+                        {job.status === "needs_input" && (
+                          <a
+                            href="#/qa"
+                            className="mt-1 inline-flex items-center gap-1 text-[12px] font-semibold text-primary hover:underline"
+                          >
+                            {t("jobItem.answerAndRetry")}
+                          </a>
                         )}
                         {job.collected_at && (
                           <p className="text-[11px] text-muted-foreground mt-1">
@@ -683,13 +720,8 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 ml-4 flex-shrink-0">
-                      <span
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold ${styles.bg} ${styles.color}`}
-                      >
-                        <StatusIcon className="w-3 h-3" />{" "}
-                        {STATUS_LABELS[job.status] || STATUS_LABELS.pending}
-                      </span>
-                      {(job.status === "pending" || job.status === "failed") && (
+                      <JobStatusBadge status={job.status} />
+                      {isSelectable && (
                         <>
                           <button
                             onClick={() => handleGenerateCoverLetter(job)}
@@ -704,7 +736,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                             title={
                               applyingUrl
                                 ? t("jobItem.applyRunningTitle")
-                                : job.status === "failed"
+                                : isRetry
                                 ? t("jobItem.retryTitle")
                                 : t("jobItem.applyTitle")
                             }
@@ -717,7 +749,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                             )}
                             {applyingUrl === job.url
                               ? t("jobItem.applying")
-                              : job.status === "failed"
+                              : isRetry
                               ? t("jobItem.retry")
                               : t("jobItem.apply")}
                           </button>

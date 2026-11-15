@@ -7,7 +7,8 @@
     "failed": "Falhou",
     "pending": "Pendente",
     "successRate": "Taxa de sucesso",
-    "memories": "Memórias"
+    "memories": "Memórias",
+    "llmSpend7d": "Gasto com LLM (7 dias)"
   },
   "quickActions": {
     "title": "Ações rápidas",
@@ -33,5 +34,13 @@
   },
   "backend": {
     "notConnected": "Backend não conectado. Inicie-o com: <code>uv run python backend/main.py</code>"
+  },
+  "ats": {
+    "title": "Taxa de sucesso por ATS",
+    "empty": "Nenhuma candidatura registrada ainda.",
+    "ats": "ATS",
+    "attempts": "Tentativas",
+    "successRate": "Sucesso",
+    "avgCost": "Custo médio"
   }
 }

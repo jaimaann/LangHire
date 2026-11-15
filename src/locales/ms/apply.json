@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "Output Langsung",
     "outputLog": "Log Output",
-    "applicationLog": "Log Permohonan"
+    "applicationLog": "Log Permohonan",
+    "cost": "Kos LLM: ${{cost}}",
+    "costTitle": "Perbelanjaan LLM larian ini setakat ini"
   },
   "dialog": {
     "title": "Mula Memohon"
   },
-  "starting": "Memulakan..."
+  "starting": "Memulakan...",
+  "needsInput": {
+    "answerAndRetry": "Jawab dan cuba semula"
+  },
+  "details": {
+    "button": "Butiran",
+    "open": "Tunjukkan rekod permohonan",
+    "title": "Butiran permohonan",
+    "close": "Tutup",
+    "loadFailed": "Rekod permohonan tidak dapat dimuatkan.",
+    "none": "Belum ada rekod permohonan untuk kerja ini.",
+    "outcome": "Keputusan",
+    "outcomes": {
+      "submitted": "Dihantar",
+      "failed": "Gagal",
+      "needsInput": "Perlukan jawapan anda",
+      "skipped": "Dilangkau"
+    },
+    "confirmation": "Pengesahan: {{text}}",
+    "cost": "Kos",
+    "steps": "Langkah: {{n}}",
+    "ats": "ATS: {{ats}}",
+    "missingInfo": "Maklumat yang tiada pada ejen",
+    "resume": "Resume digunakan:",
+    "openResume": "Buka resume",
+    "openScreenshot": "Buka tangkapan skrin",
+    "openFailed": "Fail tidak dapat dibuka.",
+    "answers": "Jawapan ({{n}})",
+    "noAnswers": "Tiada jawapan direkodkan.",
+    "question": "Soalan",
+    "answer": "Jawapan",
+    "source": "Sumber",
+    "checkAnswer": "Semak",
+    "checkAnswerTitle": "Ejen meneka jawapan ini atau tidak pasti. Sila semak."
+  }
 }
