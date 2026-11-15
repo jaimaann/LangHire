@@ -172,6 +172,24 @@ describe("SettingsPage", () => {
     expect(screen.getByText("Built-in")).toBeInTheDocument();
   });
 
+  it("autosaves an edited field without clicking Save, and not on load", async () => {
+    const user = userEvent.setup();
+    render(<SettingsPage />);
+    const resume = await screen.findByDisplayValue("/home/me/resume.pdf");
+    await new Promise((r) => setTimeout(r, 1200));
+    expect(mockSaveSettings).not.toHaveBeenCalledWith(expect.objectContaining({ resume_path: expect.anything() }));
+
+    await user.clear(resume);
+    await user.type(resume, "/home/me/cv.docx");
+    await waitFor(
+      () =>
+        expect(mockSaveSettings).toHaveBeenCalledWith(
+          expect.objectContaining({ resume_path: "/home/me/cv.docx" }),
+        ),
+      { timeout: 3000 },
+    );
+  });
+
   it("saves settings with the current field values", async () => {
     const user = userEvent.setup();
     render(<SettingsPage />);

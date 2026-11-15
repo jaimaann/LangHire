@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Save, FolderOpen, X, Upload, Trash2, Sun, Moon, Monitor, Download, AlertTriangle, KeyRound } from "lucide-react";
 import { getSettings, saveSettings, getPlugins, togglePlugin, removePlugin, previewPlugin, importPlugin, deleteAllData, exportAllData, checkHealth } from "../lib/api";
 import PluginReviewPanel from "../components/PluginReviewPanel";
@@ -239,6 +239,21 @@ export default function SettingsPage() {
     setBlockedDomains(blockedDomains.filter((x) => x !== d));
   };
 
+  // Every field autosaves (the page used to mix instant toggles with fields that
+  // silently needed "Save Settings"). The button stays as an explicit save.
+  const loadedRef = useRef(false);
+  useEffect(() => {
+    if (loading) return;
+    if (!loadedRef.current) {
+      loadedRef.current = true; // the values that just loaded are not an edit
+      return;
+    }
+    const timer = setTimeout(() => void handleSave(), 900);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, resumePath, blockedDomains, email, password, maxFailures, dailyApplyCap, maxRunCost,
+      browserCdpUrl, emailOtpViaGmail]);
+
   const handleSave = async () => {
     try {
       setSaveError(null);
@@ -333,14 +348,14 @@ export default function SettingsPage() {
             placeholder="/path/to/your/resume.pdf"
             className="input-base flex-1" />
           <button onClick={async () => {
-              const file = await open({ filters: [{ name: "PDF", extensions: ["pdf"] }] });
+              const file = await open({ filters: [{ name: "Resume (PDF or Word)", extensions: ["pdf", "docx"] }] });
               if (file) setResumePath(file as string);
             }}
             className="btn-secondary">
             <FolderOpen className="w-4 h-4" /> Browse
           </button>
         </div>
-        <p className="text-[13px] text-muted-foreground mt-2">PDF resume file used for job applications</p>
+        <p className="text-[13px] text-muted-foreground mt-2">PDF or Word (.docx) resume used for applications. Tailoring needs a PDF.</p>
       </Section>
 
       {/* Sensitive Data */}
