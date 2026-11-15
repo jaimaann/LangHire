@@ -58,7 +58,14 @@ uv run python -m PyInstaller `
   --clean `
   backend/main.py
 
-$BinaryPath = "src-tauri/binaries/langhire-backend-" + $Target + ".exe"
+if ($LASTEXITCODE -ne 0) {
+  # e.g. "Access is denied" when an old backend from that file is still running:
+  # without this the build went on and shipped the previous binary.
+  Write-Error "PyInstaller failed (exit $LASTEXITCODE). Is an old langhire-backend still running?"
+  exit 1
+}
+
+$BinaryPath ="src-tauri/binaries/langhire-backend-" + $Target + ".exe"
 Write-Host "Backend binary built: $BinaryPath"
 Get-Item $BinaryPath | Select-Object Name, Length
 

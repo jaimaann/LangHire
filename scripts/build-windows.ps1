@@ -51,6 +51,7 @@ if (-not $Tauri) {
 # 3. Build the Python backend sidecar
 Write-Host "Building Python backend sidecar..."
 powershell -ExecutionPolicy Bypass -File "$PSScriptRoot\build-backend.ps1"
+if ($LASTEXITCODE -ne 0) { Write-Error "Backend build failed; not packaging a stale sidecar."; exit 1 }
 
 # 4. Build the Tauri app + installer (also runs `npm run build`)
 Write-Host "Building Tauri app + installer..."
