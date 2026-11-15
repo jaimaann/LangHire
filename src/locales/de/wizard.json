@@ -74,5 +74,12 @@
     "title": "Helfen Sie, LangHire zu verbessern (optional)",
     "label": "Anonyme Nutzungsstatistiken und Absturzberichte senden",
     "description": "Wenn Sie zustimmen, sendet LangHire anonyme Nutzungsereignisse (z. B. welche Seiten und Funktionen verwendet werden) und Absturzberichte. Ihre Lebensläufe, Profildaten, Jobdaten oder API-Schlüssel werden niemals gesendet. Sie können dies jederzeit in den Einstellungen ändern."
+  },
+  "screening": {
+    "title": "Häufige Screening-Antworten",
+    "hint": "Die meisten Bewerbungsformulare fragen danach. Beantworte sie hier einmal, damit Läufe nicht anhalten, um dich zu fragen. Leere Pflichtfelder sind markiert.",
+    "save": "Antworten speichern",
+    "saved": "Gespeichert",
+    "unavailable": "Starte das Backend, um deine Antworten hier zu bearbeiten, oder nutze die Profilseite."
   }
 }

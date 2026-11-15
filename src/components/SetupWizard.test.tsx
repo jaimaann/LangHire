@@ -39,6 +39,9 @@ vi.mock("../lib/analytics", () => ({
 }));
 
 // Stub the inline child forms — out of scope; keeps the wizard test focused.
+vi.mock("./forms/ScreeningAnswersForm", () => ({
+  default: () => <div data-testid="screening-answers-form" />,
+}));
 vi.mock("./forms/LLMSettingsForm", () => ({
   default: () => <div data-testid="llm-settings-form" />,
 }));

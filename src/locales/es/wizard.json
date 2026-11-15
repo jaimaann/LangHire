@@ -74,5 +74,12 @@
     "title": "Ayuda a mejorar LangHire (opcional)",
     "label": "Enviar estadísticas de uso anónimas e informes de fallos",
     "description": "Si aceptas, LangHire envía eventos de uso anónimos (como qué páginas y funciones se usan) e informes de fallos. Nunca envía tus currículums, datos de perfil, datos de empleo ni claves API. Puedes cambiarlo en cualquier momento en Ajustes."
+  },
+  "screening": {
+    "title": "Respuestas de selección habituales",
+    "hint": "La mayoría de los formularios preguntan esto. Respóndelo una vez aquí para que las ejecuciones no se detengan a preguntarte. Los campos vacíos necesarios están marcados.",
+    "save": "Guardar respuestas",
+    "saved": "Guardado",
+    "unavailable": "Inicia el backend para editar tus respuestas aquí, o usa la página Perfil."
   }
 }

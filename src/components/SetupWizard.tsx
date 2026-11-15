@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LLMSettingsForm from "./forms/LLMSettingsForm";
 import ResumePickerForm from "./forms/ResumePickerForm";
+import ScreeningAnswersForm from "./forms/ScreeningAnswersForm";
 
 interface SetupWizardProps {
   onClose: () => void;
@@ -260,6 +261,11 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
                   className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90">
                   <User className="w-4 h-4" /> {status?.profile ? t("profileStep.reviewEdit") : t("profileStep.goToProfile")}
                 </button>
+              </div>
+              <div className="bg-secondary rounded-xl p-5 mb-4">
+                <h4 className="text-sm font-semibold text-foreground mb-1">{t("screening.title")}</h4>
+                <p className="text-xs text-muted-foreground mb-3">{t("screening.hint")}</p>
+                <ScreeningAnswersForm onSaved={fetchStatus} />
               </div>
               {parseResult?.success && (
                 <div className="bg-green-50 rounded-lg p-4 border border-green-200">

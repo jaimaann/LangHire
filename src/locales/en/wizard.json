@@ -74,5 +74,12 @@
     "title": "Help improve LangHire (optional)",
     "label": "Send anonymous usage statistics and crash reports",
     "description": "If you opt in, LangHire sends anonymous usage events (such as which pages and features are used) and crash reports. It never sends your resumes, profile data, job data or API keys. You can change this anytime in Settings."
+  },
+  "screening": {
+    "title": "Common screening answers",
+    "hint": "Most application forms ask these. Answer them once here so runs don't stop to ask you. Empty fields applications need are outlined.",
+    "save": "Save answers",
+    "saved": "Saved",
+    "unavailable": "Start the backend to edit your answers here, or use the Profile page."
   }
 }

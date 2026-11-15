@@ -74,5 +74,12 @@
     "title": "Aidez à améliorer LangHire (facultatif)",
     "label": "Envoyer des statistiques d'utilisation anonymes et des rapports de crash",
     "description": "Si vous acceptez, LangHire envoie des événements d'utilisation anonymes (par exemple les pages et fonctionnalités utilisées) et des rapports de crash. Il n'envoie jamais vos CV, données de profil, données d'emploi ni clés API. Vous pouvez modifier ce choix à tout moment dans les Paramètres."
+  },
+  "screening": {
+    "title": "Réponses de présélection courantes",
+    "hint": "La plupart des formulaires posent ces questions. Répondez-y une fois ici pour que les exécutions ne s'arrêtent pas pour vous demander. Les champs vides nécessaires sont entourés.",
+    "save": "Enregistrer les réponses",
+    "saved": "Enregistré",
+    "unavailable": "Démarrez le backend pour modifier vos réponses ici, ou utilisez la page Profil."
   }
 }
