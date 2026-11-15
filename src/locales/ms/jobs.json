@@ -100,5 +100,9 @@
     "title": "Jawatan",
     "overview": "Ringkasan",
     "experience": "Pengalaman"
+  },
+  "timeline": {
+    "step": "Langkah {{n}}",
+    "now": "Sekarang: {{goal}}"
   }
 }

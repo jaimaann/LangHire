@@ -22,6 +22,8 @@ import {
   FlaskConical,
 } from "lucide-react";
 import { useRunEvents, costFromEvent, FALLBACK_POLL_MS } from "../../hooks/useRunEvents";
+import ApplyTimeline from "../../components/ApplyTimeline";
+import { applyTimelineEvent, type JobTimeline } from "../../lib/timeline";
 import JobStatusBadge from "../../components/JobStatusBadge";
 import { sortJobs, type JobSort } from "../../lib/jobSort";
 import {
@@ -188,7 +190,9 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
   }, [onJobsChanged]);
 
   // Live progress over SSE: refresh the list as jobs finish, stop at run end.
+  const [timelines, setTimelines] = useState<Map<string, JobTimeline>>(() => new Map());
   useRunEvents("apply", (event) => {
+    setTimelines((prev) => applyTimelineEvent(prev, event));
     if (event.type === "run_started") setRunCost(0);
     const cost = costFromEvent(event);
     if (cost !== null) setRunCost(cost);
@@ -591,15 +595,18 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
 
       {/* Live apply progress (LLM spend so far) */}
       {isApplying && (
-        <div className="card mb-4 flex items-center gap-3 text-sm" data-testid="apply-progress">
-          <Loader2 className="w-4 h-4 animate-spin text-primary" />
-          <span className="text-foreground font-medium">{t("progress.applying")}</span>
-          {runCost !== null && (
-            <span className="ml-auto inline-flex items-center gap-1 text-muted-foreground">
-              <DollarSign className="w-3.5 h-3.5" />
-              {t("progress.cost", { cost: runCost.toFixed(3) })}
-            </span>
-          )}
+        <div className="card mb-4 text-sm" data-testid="apply-progress">
+          <div className="flex items-center gap-3">
+            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+            <span className="text-foreground font-medium">{t("progress.applying")}</span>
+            {runCost !== null && (
+              <span className="ml-auto inline-flex items-center gap-1 text-muted-foreground">
+                <DollarSign className="w-3.5 h-3.5" />
+                {t("progress.cost", { cost: runCost.toFixed(3) })}
+              </span>
+            )}
+          </div>
+          <ApplyTimeline timelines={[...timelines.values()].slice(-4)} />
         </div>
       )}
 

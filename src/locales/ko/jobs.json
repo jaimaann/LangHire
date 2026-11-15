@@ -100,5 +100,9 @@
     "title": "직함",
     "overview": "요약",
     "experience": "경력"
+  },
+  "timeline": {
+    "step": "{{n}}단계",
+    "now": "진행 중: {{goal}}"
   }
 }

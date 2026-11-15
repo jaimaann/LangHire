@@ -100,5 +100,9 @@
     "title": "पद का नाम",
     "overview": "सारांश",
     "experience": "अनुभव"
+  },
+  "timeline": {
+    "step": "चरण {{n}}",
+    "now": "अभी: {{goal}}"
   }
 }

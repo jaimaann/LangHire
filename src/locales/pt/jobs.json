@@ -100,5 +100,9 @@
     "title": "Cargo",
     "overview": "Resumo",
     "experience": "Experiência"
+  },
+  "timeline": {
+    "step": "Passo {{n}}",
+    "now": "Agora: {{goal}}"
   }
 }

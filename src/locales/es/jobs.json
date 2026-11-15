@@ -100,5 +100,9 @@
     "title": "Puesto",
     "overview": "Resumen",
     "experience": "Experiencia"
+  },
+  "timeline": {
+    "step": "Paso {{n}}",
+    "now": "Ahora: {{goal}}"
   }
 }

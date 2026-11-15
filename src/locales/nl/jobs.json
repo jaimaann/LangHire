@@ -100,5 +100,9 @@
     "title": "Functietitel",
     "overview": "Samenvatting",
     "experience": "Ervaring"
+  },
+  "timeline": {
+    "step": "Stap {{n}}",
+    "now": "Nu: {{goal}}"
   }
 }

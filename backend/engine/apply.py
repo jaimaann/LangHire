@@ -203,6 +203,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
         emit("job_skipped", f"⏭️ {tag} Skipped (already claimed): {title} at {company}", job_url=url)
         return {"status": "skipped", "cost_usd": 0.0}
 
+    events.current_job.set(url)  # task-local: each worker task has its own copy
     emit("job_started", f"🚀 {tag} Starting: {title} at {company}", job_url=url, title=title, company=company)
     resume_path = resume_override or settings.get("resume_path", "") or ""
     from resume.tailor import get_tailored_resume_path
@@ -246,6 +247,8 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
     def on_step(state, output, n):
         _log_step(state, output, n)
         steps["n"] += 1
+        goal = (getattr(output, "next_goal", "") or "").strip()
+        emit("agent_step", "", step=steps["n"], goal=goal[:160])  # no log line: the timeline reads it
         if steps["n"] >= prompts.MAX_APPLY_STEPS:
             raise RuntimeError(f"Reached maximum of {prompts.MAX_APPLY_STEPS} steps")
 

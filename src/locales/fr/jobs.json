@@ -100,5 +100,9 @@
     "title": "Intitulé du poste",
     "overview": "Résumé",
     "experience": "Expérience"
+  },
+  "timeline": {
+    "step": "Étape {{n}}",
+    "now": "En cours : {{goal}}"
   }
 }

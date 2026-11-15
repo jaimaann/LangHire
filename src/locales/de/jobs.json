@@ -100,5 +100,9 @@
     "title": "Jobtitel",
     "overview": "Zusammenfassung",
     "experience": "Berufserfahrung"
+  },
+  "timeline": {
+    "step": "Schritt {{n}}",
+    "now": "Jetzt: {{goal}}"
   }
 }

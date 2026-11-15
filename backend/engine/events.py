@@ -26,12 +26,15 @@ from memory.metrics import MetricsStore
 _log = logging.getLogger("engine")
 
 current_run: contextvars.ContextVar["RunContext | None"] = contextvars.ContextVar("current_run", default=None)
+# The job a worker task is applying to; events without a job_url get it, so the UI
+# can show a per-job timeline even with several workers.
+current_job: contextvars.ContextVar[str | None] = contextvars.ContextVar("current_job", default=None)
 
 EVENT_TYPES = {
     "run_started", "run_finished", "log",
     "job_found", "job_started", "job_finished", "job_skipped",
     "field_filled", "answer_needed", "description_fetched",
-    "cost", "learning",
+    "cost", "learning", "agent_step", "job_result",
 }
 
 MAX_LOG_LINES = 500
@@ -96,6 +99,9 @@ def _metrics() -> MetricsStore:
 def emit(type_: str, message: str = "", level: str = "info", **data: Any) -> None:
     """Record an event for the current run (or just log it when there is none)."""
     ctx = current_run.get()
+    job = current_job.get()
+    if job and "job_url" not in data:
+        data["job_url"] = job
     message = _ANSI.sub("", message or "").strip()
     log_fn = {"error": _log.error, "warning": _log.warning}.get(level, _log.info)
     if ctx is None:

@@ -100,5 +100,9 @@
     "title": "職種名",
     "overview": "概要",
     "experience": "職務経歴"
+  },
+  "timeline": {
+    "step": "ステップ {{n}}",
+    "now": "現在: {{goal}}"
   }
 }

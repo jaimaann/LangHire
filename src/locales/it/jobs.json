@@ -100,5 +100,9 @@
     "title": "Qualifica",
     "overview": "Sintesi",
     "experience": "Esperienza"
+  },
+  "timeline": {
+    "step": "Passo {{n}}",
+    "now": "Ora: {{goal}}"
   }
 }
