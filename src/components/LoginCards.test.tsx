@@ -88,7 +88,7 @@ describe("LoginCards", () => {
     await waitFor(() => expect(mockLaunchLogin).toHaveBeenCalledWith("linkedin"));
   });
 
-  it("alerts when launchLogin returns success: false", async () => {
+  it("shows an inline error when launchLogin returns success: false", async () => {
     const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
     mockLaunchLogin.mockResolvedValue({ success: false, message: "no browser" } as never);
     const user = userEvent.setup();
@@ -96,11 +96,12 @@ describe("LoginCards", () => {
     await screen.findByText("Gmail");
 
     await user.click(screen.getByRole("button", { name: /Log in to Gmail/ }));
-    await waitFor(() => expect(alertSpy).toHaveBeenCalledWith("no browser"));
+    expect(await screen.findByRole("alert")).toHaveTextContent("no browser");
+    expect(alertSpy).not.toHaveBeenCalled();
     alertSpy.mockRestore();
   });
 
-  it("alerts the error message when launchLogin throws", async () => {
+  it("shows the error inline when launchLogin throws", async () => {
     const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
     mockLaunchLogin.mockRejectedValue(new Error("boom"));
     const user = userEvent.setup();
@@ -108,7 +109,8 @@ describe("LoginCards", () => {
     await screen.findByText("LinkedIn");
 
     await user.click(screen.getByRole("button", { name: /Log in to LinkedIn/ }));
-    await waitFor(() => expect(alertSpy).toHaveBeenCalledWith("boom"));
+    expect(await screen.findByRole("alert")).toHaveTextContent("boom");
+    expect(alertSpy).not.toHaveBeenCalled();
     alertSpy.mockRestore();
   });
 

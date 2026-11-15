@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { CheckCircle, XCircle, LogIn, Loader2, RefreshCw } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import InlineNotice, { type Notice } from "./InlineNotice";
 import { getAuthStatus, launchLogin } from "../lib/api";
 import type { AuthStatus } from "../lib/types";
 
@@ -55,15 +56,17 @@ export default function LoginCards({ gmailEnabled = false }: LoginCardsProps) {
     return () => clearInterval(interval);
   }, [fetchStatus]);
 
+  const [notice, setNotice] = useState<Notice | null>(null);
+
   const handleLogin = async (service: string) => {
     setLaunching(service);
     try {
       const res = await launchLogin(service);
       if (!res.success) {
-        alert(res.message);
+        setNotice({ kind: "error", text: res.message || t("logins.launchFailed") });
       }
     } catch (e) {
-      alert(e instanceof Error ? e.message : t("logins.launchFailed"));
+      setNotice({ kind: "error", text: e instanceof Error ? e.message : t("logins.launchFailed") });
     } finally {
       setLaunching(null);
     }
@@ -83,6 +86,8 @@ export default function LoginCards({ gmailEnabled = false }: LoginCardsProps) {
   };
 
   return (
+    <>
+    <InlineNotice notice={notice} onClose={() => setNotice(null)} />
     <div className="grid grid-cols-2 gap-4">
       {ids.map((id) => {
         const entry = status[id];
@@ -146,5 +151,6 @@ export default function LoginCards({ gmailEnabled = false }: LoginCardsProps) {
         );
       })}
     </div>
+    </>
   );
 }

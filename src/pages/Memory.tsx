@@ -6,6 +6,7 @@ import { markStart, measureAndTrack } from "../lib/perf";
 import type { DomainInfo, Memory as MemoryType } from "../lib/types";
 import { PageHeader, LoadingSpinner } from "../components/ui";
 import { useTranslation } from "react-i18next";
+import InlineNotice, { type Notice } from "../components/InlineNotice";
 
 const CATEGORY_COLORS: Record<string, string> = {
   navigation: "bg-[#F0F4FF] text-[#3B5998]",
@@ -62,18 +63,20 @@ export default function Memory() {
       .finally(() => setLoadingMemories(false));
   };
 
+  const [notice, setNotice] = useState<Notice | null>(null);
+
   const handleDecay = async () => {
     if (!confirm(t("confirm.decay"))) return;
     const result = await decayMemories(30);
     trackEvent("memory_decay", { affected: result.affected });
-    alert(t("toast.decayed", { count: result.affected }));
+    setNotice({ kind: "info", text: t("toast.decayed", { count: result.affected }) });
   };
 
   const handleCleanup = async () => {
     if (!confirm(t("confirm.cleanup"))) return;
     const result = await cleanupMemories();
     trackEvent("memory_cleanup", { deleted: result.deleted });
-    alert(t("toast.deleted", { count: result.deleted }));
+    setNotice({ kind: "info", text: t("toast.deleted", { count: result.deleted }) });
   };
 
   const handleExport = async () => {
@@ -105,6 +108,7 @@ export default function Memory() {
           </>
         }
       />
+      <InlineNotice notice={notice} onClose={() => setNotice(null)} />
 
       {/* Category stats */}
       {Object.keys(stats.by_category).length > 0 && (

@@ -154,6 +154,8 @@ describe("Memory page", () => {
 
     await waitFor(() => expect(mockDecayMemories).toHaveBeenCalledWith(30));
     expect(mockTrackEvent).toHaveBeenCalledWith("memory_decay", { affected: 4 });
+    expect(await screen.findByTestId("inline-notice")).toHaveTextContent("toast.decayed");
+    expect(window.alert).not.toHaveBeenCalled();
   });
 
   it("cleanup action confirms, calls API, and tracks the event", async () => {
