@@ -70,6 +70,19 @@ class PluginConfig:
     def render_collection_prompt(self, titles: list[str], locations: list[str], max_jobs: int, filters: dict | None = None) -> str:
         title = titles[0] if titles else ""
         location = locations[0] if locations else ""
+        search_url = self.search_url_for(titles, locations, max_jobs, filters)
+        return self.collection_prompt.format(
+            search_url=search_url,
+            title=title, titles=", ".join(titles),
+            location=location, locations=", ".join(locations),
+            max_jobs=max_jobs,
+        )
+
+    def search_url_for(self, titles: list[str], locations: list[str], max_jobs: int = 0,
+                       filters: dict | None = None) -> str:
+        """The board's search URL for these titles/locations, with filter params appended."""
+        title = titles[0] if titles else ""
+        location = locations[0] if locations else ""
         search_url = build_search_url(self.search_url, title, location, titles, locations, max_jobs)
         # Append filter URL params
         filter_params = []
@@ -85,13 +98,7 @@ class PluginConfig:
         if filter_params:
             sep = "&" if "?" in search_url else "?"
             search_url += sep + "&".join(filter_params)
-
-        return self.collection_prompt.format(
-            search_url=search_url,
-            title=title, titles=", ".join(titles),
-            location=location, locations=", ".join(locations),
-            max_jobs=max_jobs,
-        )
+        return search_url
 
     def render_apply_prompt(
         self,

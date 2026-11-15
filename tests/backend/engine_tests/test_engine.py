@@ -269,3 +269,11 @@ def test_delete_all_works_while_other_threads_hold_the_db(data_dir):
     finally:
         done.set()
         t.join()
+
+
+def test_linkedin_url_normalization_handles_slug_urls():
+    from engine.collect import _normalize_url as n
+    assert n("https://in.linkedin.com/jobs/view/senior-data-analyst-at-azilen-4490713768?position=1") \
+        == "https://www.linkedin.com/jobs/view/4490713768/"
+    assert n("https://www.linkedin.com/jobs/search/?currentJobId=4356842209") \
+        == "https://www.linkedin.com/jobs/view/4356842209/"

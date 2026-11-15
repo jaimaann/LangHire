@@ -44,7 +44,8 @@ def parse_job_markers(text: str) -> list[dict]:
 def _normalize_url(url: str) -> str:
     url = (url or "").strip()
     # LinkedIn: keep only the canonical /jobs/view/<id>/ form
-    m = re.search(r"linkedin\.com/jobs/view/(\d+)", url) or re.search(r"currentJobId=(\d+)", url)
+    # (LinkedIn now also uses /jobs/view/<slug>-<id>, which the old pattern missed)
+    m = re.search(r"linkedin\.com/jobs/view/(?:[^/?#]*-)?(\d{6,})", url) or re.search(r"currentJobId=(\d+)", url)
     if m and "linkedin.com" in url:
         return f"https://www.linkedin.com/jobs/view/{m.group(1)}/"
     return url
@@ -100,6 +101,26 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
         if max_jobs and found >= max_jobs and agent_ref.get("agent"):
             events.info(f"✅ Reached {max_jobs} jobs — stopping")
             agent_ref["agent"].stop()
+
+    # Fast path: read the result cards straight from the page (no model calls)
+    from .collect_fastpath import SUPPORTED, collect_cards
+    if plugin.name in SUPPORTED:
+        fast_browser = make_browser_session()
+        try:
+            url = plugin.search_url_for([title], list(profile.get("target_locations") or []), max_jobs, filters)
+            cards = await collect_cards(fast_browser, url, want=(max_jobs + len(known)) if max_jobs else 0)
+            added = save(cards)
+            events.info(f"⚡ Read {len(cards)} job card(s) from {plugin.display_name}; {added} new")
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:
+            events.warn(f"Fast collection failed ({type(e).__name__}: {e}); using the agent")
+        finally:
+            await close_session(fast_browser)
+        if (max_jobs and found >= max_jobs) or (not max_jobs and found > 0):
+            return found
+        if max_jobs:
+            events.info(f"Fast path found {found}/{max_jobs}; the agent will look for the rest")
 
     settings = load_settings()
     convo = None
