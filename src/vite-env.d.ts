@@ -1,5 +1,8 @@
 /// <reference types="vite/client" />
 
+/** App version from package.json, injected by Vite `define`. */
+declare const __APP_VERSION__: string;
+
 interface ImportMetaEnv {
   readonly VITE_GA_MEASUREMENT_ID: string;
   readonly VITE_GA_API_SECRET: string;

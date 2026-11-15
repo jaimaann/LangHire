@@ -25,34 +25,83 @@ import type {
 
 const DEFAULT_PORT = 8743;
 
-let backendPort = DEFAULT_PORT;
-let tokenPromise: Promise<string> | null = null;
-
-export function setBackendPort(port: number) {
-  backendPort = port;
+/** Connection details returned by the Rust `get_backend_info` command. */
+export interface BackendInfo {
+  /** Port the backend listens on (random per launch when managed). */
+  port: number;
+  /** Bearer token for the backend API. */
+  token: string;
+  /** True when the Tauri host spawned and supervises the sidecar. */
+  managed: boolean;
+  /** Last sidecar status known to the host (starting|running|crashed|failed). */
+  status?: string;
 }
 
-function getBaseUrl(): string {
-  return `http://127.0.0.1:${backendPort}`;
+/** Explicit port override (setBackendPort); wins over the host-provided port. */
+let portOverride: number | null = null;
+let infoPromise: Promise<BackendInfo> | null = null;
+
+export function setBackendPort(port: number) {
+  portOverride = port;
+}
+
+/**
+ * Fetch (once) the backend port + token from the Tauri host. The promise is
+ * cached; a failure clears the cache so the next call retries.
+ */
+export function getBackendInfo(): Promise<BackendInfo> {
+  if (!infoPromise) {
+    infoPromise = invoke<BackendInfo | undefined>("get_backend_info")
+      .then((info) => {
+        if (!info || typeof info.token !== "string" || !info.token) {
+          throw new Error("backend info unavailable");
+        }
+        return info;
+      })
+      .catch((e) => {
+        infoPromise = null;
+        throw new Error(`Failed to read API token: ${e instanceof Error ? e.message : e}`);
+      });
+  }
+  return infoPromise;
+}
+
+/** Drop the cached backend info so the next request re-invokes the host. */
+function invalidateBackendInfo() {
+  infoPromise = null;
+}
+
+function baseUrlFor(info: BackendInfo): string {
+  return `http://127.0.0.1:${portOverride ?? info.port ?? DEFAULT_PORT}`;
+}
+
+async function getBaseUrl(): Promise<string> {
+  return baseUrlFor(await getBackendInfo());
 }
 
 async function getToken(): Promise<string> {
-  if (!tokenPromise) {
-    tokenPromise = invoke<string>("get_api_token").catch((e) => {
-      tokenPromise = null;
-      throw new Error(`Failed to read API token: ${e}`);
-    });
-  }
-  return tokenPromise;
+  return (await getBackendInfo()).token;
 }
+
+/**
+ * Open a local file (e.g. a tailored resume PDF) with the OS default app.
+ * The host validates the path (must exist, be a file, and live in the data
+ * dir or have a document/image extension).
+ */
+export async function openLocalFile(path: string): Promise<void> {
+  await invoke("open_file", { path });
+}
+
+export { onBackendStatus, useBackendStatus, type BackendStatus } from "./backendStatus";
 
 async function request<T>(
   path: string,
   options: RequestInit = {},
   _retried = false
 ): Promise<T> {
-  const url = `${getBaseUrl()}${path}`;
-  const token = await getToken();
+  const info = await getBackendInfo();
+  const url = `${baseUrlFor(info)}${path}`;
+  const token = info.token;
   const res = await fetch(url, {
     ...options,
     headers: {
@@ -63,7 +112,7 @@ async function request<T>(
   });
 
   if (res.status === 401 && !_retried) {
-    tokenPromise = null;
+    invalidateBackendInfo();
     await new Promise(r => setTimeout(r, 1000));
     return request<T>(path, options, true);
   }
@@ -88,7 +137,7 @@ export async function checkHealth() {
 }
 
 export async function getChromiumStatus() {
-  const res = await fetch(`${getBaseUrl()}/chromium/status`);
+  const res = await fetch(`${await getBaseUrl()}/chromium/status`);
   return res.json() as Promise<{ state: string; message: string }>;
 }
 
@@ -159,7 +208,7 @@ export async function getJobStats() {
 /** Fetch the jobs export as CSV text (authenticated). Caller triggers the download. */
 export async function exportJobsCsv(): Promise<string> {
   const token = await getToken();
-  const res = await fetch(`${getBaseUrl()}/jobs/export`, {
+  const res = await fetch(`${await getBaseUrl()}/jobs/export`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) {

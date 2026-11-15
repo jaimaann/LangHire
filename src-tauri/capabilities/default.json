@@ -1,22 +1,19 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Capability for the main window",
+  "description": "Capability for the main window. The backend sidecar is spawned from Rust (not the webview), so no shell permissions are granted to the frontend.",
   "windows": ["main"],
   "permissions": [
     "core:default",
     "dialog:default",
-    "shell:allow-open",
-    "shell:allow-execute",
     {
-      "identifier": "shell:allow-spawn",
+      "identifier": "opener:allow-open-url",
       "allow": [
-        {
-          "name": "langhire-backend",
-          "sidecar": true,
-          "args": true
-        }
+        { "url": "https://*" },
+        { "url": "http://*" }
       ]
-    }
+    },
+    "updater:default",
+    "process:allow-restart"
   ]
 }

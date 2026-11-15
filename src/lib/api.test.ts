@@ -3,9 +3,9 @@
  *
  * Strategy:
  *  - Global `fetch` is stubbed (vi.fn) so NO real network occurs.
- *  - Tauri `invoke` is mocked globally in src/test/setup.ts to return
- *    "test-token" for get_api_token. Some tests override it via vi.mocked.
- *  - api.ts holds module-scope state (backendPort + a cached tokenPromise).
+ *  - Tauri `invoke` is mocked globally in src/test/setup.ts; get_backend_info
+ *    returns { port: 8743, token: "test-token" }. Some tests override it.
+ *  - api.ts holds module-scope state (port override + cached info promise).
  *    To keep tests isolated we `vi.resetModules()` and dynamically re-import a
  *    fresh copy of the module per test (and re-apply the invoke mock onto the
  *    fresh module's invoke reference).
@@ -33,7 +33,8 @@ async function loadApi(): Promise<ApiModule> {
   // Re-establish the invoke mock for the freshly-loaded module graph.
   const core = await import("@tauri-apps/api/core");
   vi.mocked(core.invoke).mockImplementation(async (cmd: string) => {
-    if (cmd === "get_api_token") return "test-token";
+    if (cmd === "get_backend_info")
+      return { port: 8743, token: "test-token", managed: false };
     return undefined;
   });
   return import("./api");
@@ -81,10 +82,10 @@ describe("api — auth token", () => {
     await api.getProfile();
     await api.getJobStats();
     await api.checkHealth();
-    // tokenPromise is memoized -> get_api_token invoked exactly once.
+    // info promise is memoized -> get_backend_info invoked exactly once.
     const tokenCalls = vi
       .mocked(core.invoke)
-      .mock.calls.filter((c) => c[0] === "get_api_token");
+      .mock.calls.filter((c) => c[0] === "get_backend_info");
     expect(tokenCalls).toHaveLength(1);
   });
 
@@ -104,7 +105,7 @@ describe("api — auth token", () => {
     const api = await loadApi();
     vi.mocked(core.invoke).mockRejectedValueOnce("transient");
     await expect(api.getProfile()).rejects.toThrow(/Failed to read API token/);
-    // Next call should succeed because tokenPromise was reset to null on failure.
+    // Next call should succeed because the cached info promise was reset on failure.
     await api.getProfile();
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
@@ -164,10 +165,10 @@ describe("api — 401 retry behavior", () => {
 
     expect(res).toEqual({ recovered: true });
     expect(fetchMock).toHaveBeenCalledTimes(2);
-    // Token cache cleared -> invoke("get_api_token") called twice (initial + refresh).
+    // Info cache cleared -> invoke("get_backend_info") called twice (initial + refresh).
     const tokenCalls = vi
       .mocked(core.invoke)
-      .mock.calls.filter((c) => c[0] === "get_api_token");
+      .mock.calls.filter((c) => c[0] === "get_backend_info");
     expect(tokenCalls).toHaveLength(2);
     vi.useRealTimers();
   });
@@ -452,5 +453,38 @@ describe("api — getChromiumStatus (bypasses request helper)", () => {
     // This endpoint calls fetch directly with only the URL (no init object).
     expect(fetchMock.mock.calls.at(-1)![0]).toBe(`${DEFAULT_BASE}/chromium/status`);
     expect(fetchMock.mock.calls.at(-1)![1]).toBeUndefined();
+  });
+});
+
+describe("api — backend info from the Tauri host", () => {
+  it("uses the port and token returned by get_backend_info", async () => {
+    const core = await import("@tauri-apps/api/core");
+    const api = await loadApi();
+    vi.mocked(core.invoke).mockImplementation(async (cmd: string) =>
+      cmd === "get_backend_info"
+        ? { port: 51234, token: "managed-token", managed: true }
+        : undefined
+    );
+    await api.getProfile();
+    expect(fetchMock.mock.calls[0][0]).toBe("http://127.0.0.1:51234/profile");
+    const headers = (fetchMock.mock.calls[0][1] as RequestInit).headers as Record<string, string>;
+    expect(headers.Authorization).toBe("Bearer managed-token");
+  });
+
+  it("rejects when the host returns no token", async () => {
+    const core = await import("@tauri-apps/api/core");
+    const api = await loadApi();
+    vi.mocked(core.invoke).mockResolvedValueOnce(undefined);
+    await expect(api.getProfile()).rejects.toThrow(/Failed to read API token/);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("openLocalFile delegates to the open_file command", async () => {
+    const core = await import("@tauri-apps/api/core");
+    const api = await loadApi();
+    await api.openLocalFile("C:/data/resume.pdf");
+    expect(vi.mocked(core.invoke)).toHaveBeenCalledWith("open_file", {
+      path: "C:/data/resume.pdf",
+    });
   });
 });

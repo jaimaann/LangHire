@@ -42,6 +42,8 @@ vi.mock("./lib/api", () => ({
 vi.mock("./components/layout/Sidebar", () => ({
   default: () => <nav data-testid="sidebar" />,
 }));
+vi.mock("./components/BackendStatusBanner", () => ({ default: () => null }));
+vi.mock("./components/UpdateChecker", () => ({ default: () => null }));
 vi.mock("./components/SetupWizard", () => ({
   default: ({ onClose }: { onClose: () => void }) => (
     <div data-testid="setup-wizard">

@@ -3,6 +3,8 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Sidebar from "./components/layout/Sidebar";
 import ErrorBoundary from "./components/ErrorBoundary";
 import SetupWizard from "./components/SetupWizard";
+import BackendStatusBanner from "./components/BackendStatusBanner";
+import UpdateChecker from "./components/UpdateChecker";
 import { getSetupStatus, getSettings } from "./lib/api";
 import { initAnalytics, trackPageView } from "./lib/analytics";
 import { trackStartupComplete, markStart, measureAndTrack } from "./lib/perf";
@@ -108,6 +110,8 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen bg-background">
+      <BackendStatusBanner />
+      <UpdateChecker />
       <Sidebar />
       <main className="flex-1 ml-60 px-10 py-8">
         <ErrorBoundary>

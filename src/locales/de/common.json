@@ -45,5 +45,15 @@
     "failed": "Fehlgeschlagen",
     "blocked": "Blockiert",
     "inProgress": "In Bearbeitung"
+  },
+  "backend": {
+    "restarting": "Backend wird neu gestartet…",
+    "failed": "Das Backend wurde unerwartet beendet. Bitte starte LangHire neu."
+  },
+  "update": {
+    "available": "Update {{version}} verfügbar",
+    "restartToInstall": "Zum Installieren neu starten",
+    "installing": "Update wird installiert…",
+    "dismiss": "Schließen"
   }
 }
