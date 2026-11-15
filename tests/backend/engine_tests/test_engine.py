@@ -506,3 +506,16 @@ def test_greenhouse_job_urls_use_the_public_board_api():
                               "content": "&lt;p&gt;&lt;strong&gt;Who we are&lt;/strong&gt;&lt;/p&gt;"})
     assert m == {"title": "Billing Operations Analyst 1", "company": "Twilio",
                  "location": "Remote - Mexico", "description": "Who we are"}
+
+
+def test_conversation_dir_fits_windows_path_limit(data_dir, monkeypatch):
+    from core import shared_config
+    from engine.apply import conversation_dir
+    from pathlib import Path
+    deep = Path("C:/Users/someone/AppData/Roaming") / ("x" * 90) / "langhire" / "logs"
+    monkeypatch.setattr(shared_config, "logs_dir", lambda: deep)
+    d = conversation_dir("apply", "Unknown", "Business Intelligence Analyst at Contoso Retail " * 3)
+    assert len(d) + 1 + 60 <= 259
+    assert d.startswith(str(deep)) and "apply_Unknown_Bus" in d
+    short = conversation_dir("apply", "Acme", "Analyst")
+    assert "Acme_Analyst" in short

@@ -122,6 +122,8 @@ def make_browser_session(worker_id: int = 1, **overrides):
         "user_data_dir": str(worker_profile_dir(worker_id)),
         "chromium_sandbox": sys.platform != "linux",
     }
+    if os.environ.get("LANGHIRE_HEADLESS") == "1":  # CI / end-to-end tests: no windows
+        kwargs["headless"] = True
     kwargs.update(overrides)
     return BrowserSession(**kwargs)  # type: ignore[call-overload]
 

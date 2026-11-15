@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import os
 import re
 from datetime import datetime, timezone
 from urllib.parse import urlparse
@@ -99,6 +100,29 @@ def safe_filename(*parts: str, limit: int = 60) -> str:
     text = "_".join(p for p in parts if p)
     text = re.sub(r"[^\w\-.]+", "_", text, flags=re.UNICODE).strip("._")[:limit] or "run"
     return text
+
+
+# browser-use writes conversation_<uuid>_<step>.txt (~55 chars) inside the log folder
+_CONVO_FILE_CHARS = 60
+_WIN_MAX_PATH = 259
+
+
+def conversation_dir(prefix: str, *parts: str) -> str:
+    """Folder for an agent's conversation logs, short enough for Windows' 260-char path limit.
+
+    Found by the end-to-end tests: with a long job title under a deep data folder the
+    log path passed the limit, every log write failed, and browser-use counted each
+    one as a failed step, so the agent gave up on a form it had filled correctly.
+    """
+    from core import shared_config as _sc
+    base = _sc.logs_dir()
+    stamp = f"{datetime.now():%Y%m%d%H%M%S}"
+    room = _WIN_MAX_PATH - len(str(base)) - 1 - len(prefix) - 1 - len(stamp) - 2 - _CONVO_FILE_CHARS
+    name = safe_filename(*parts, limit=min(60, room)) if room >= 8 else ""
+    path = str(base / ("_".join(x for x in (prefix, name, stamp) if x)))
+    if os.name == "nt" and room < 8 and not path.startswith("\\\\?\\"):
+        path = "\\\\?\\" + os.path.abspath(path)  # the data folder alone is too deep: use a long path
+    return path
 
 
 def _domain(url: str) -> str:
@@ -240,7 +264,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
     retention = int(settings.get("log_retention_days", 14) or 0)
     convo_path = None
     if retention > 0:
-        convo_path = str(sc.logs_dir() / f"apply_{safe_filename(company, title)}_{datetime.now():%Y%m%d%H%M%S}")
+        convo_path = conversation_dir("apply", company, title)
 
     steps = {"n": 0}
 

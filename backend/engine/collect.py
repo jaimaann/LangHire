@@ -19,7 +19,6 @@ from core import shared_config as sc
 from core.agent_logger import on_step as _log_step, on_done as _log_done, log_run_start as _log_start
 
 from . import events, prompts
-from .apply import safe_filename
 from .browsers import close_session, make_browser_session
 from .events import RunContext, emit
 from .matching import match_score
@@ -69,7 +68,7 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
     def save(batch: list[dict]) -> int:
         nonlocal found
         now = datetime.now(timezone.utc).isoformat()
-        new = []
+        new: list[dict] = []
         for j in batch:
             if max_jobs and found + len(new) >= max_jobs:
                 break  # never collect more than asked for
@@ -127,7 +126,8 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
     settings = load_settings()
     convo = None
     if int(settings.get("log_retention_days", 14) or 0) > 0:
-        convo = str(sc.logs_dir() / f"collect_{safe_filename(plugin.name, title)}_{datetime.now():%Y%m%d%H%M%S}")
+        from .apply import conversation_dir
+        convo = conversation_dir("collect", plugin.name, title)
 
     from browser_use import Agent
     browser = make_browser_session()

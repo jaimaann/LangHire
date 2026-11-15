@@ -171,7 +171,7 @@ def _guard_file_inputs(tools) -> None:
         clean = strip_leaked_json(text) if isinstance(text, str) else text
         if clean != text:
             try:
-                params.text = clean
+                params.text = clean  # type: ignore[union-attr]
             except Exception:
                 pass
             result = await original(*args, **kwargs)

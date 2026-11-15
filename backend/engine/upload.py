@@ -71,7 +71,8 @@ async def upload_resume_any_frame(browser_session, path: str) -> str:
     targets.sort(key=lambda t: (t.get("targetId") != focus, t.get("type") != "page"))
     if focus:
         targets = [t for t in targets if t.get("targetId") == focus or t.get("type") == "iframe"]
-    candidates, sessions = [], []
+    candidates: list[tuple] = []
+    sessions: list[str] = []
     try:
         return await _upload(root, targets, candidates, sessions, path)
     finally:

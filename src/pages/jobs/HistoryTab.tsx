@@ -33,6 +33,7 @@ import {
   getApplications,
 } from "../../lib/api";
 import { trackEvent, usageParams } from "../../lib/analytics";
+import { countUncertain } from "../../lib/answers";
 import LogLine from "../../components/LogLine";
 import { useTranslation } from "react-i18next";
 import type { Job, RunMetric, AppSettings, ApplicationRecord } from "../../lib/types";
@@ -44,12 +45,6 @@ interface AppliedJobRow {
   uncertain?: number;
 }
 
-/** Answers worth a spot-check: guessed by the agent, or entered with low confidence. */
-export function countUncertain(record: ApplicationRecord): number {
-  return (record.answers || []).filter(
-    (a) => a.source === "inferred" || (typeof a.confidence === "number" && a.confidence < 0.6),
-  ).length;
-}
 
 interface HistoryTabProps {
   onJobsChanged: () => void;
