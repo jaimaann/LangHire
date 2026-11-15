@@ -32,6 +32,9 @@ def test_get_data_dir_creates_dir(data_dir):
 )
 def test_get_data_dir_per_os(data_dir, monkeypatch, system, expected_parts):
     """The data dir location follows the host OS convention."""
+    monkeypatch.delenv("LANGHIRE_DATA_DIR", raising=False)
+    monkeypatch.delenv("APPDATA", raising=False)
+    monkeypatch.delenv("XDG_CONFIG_HOME", raising=False)
     monkeypatch.setattr(config.platform, "system", lambda: system)
     result = config.get_data_dir()
     assert result.parts[-len(expected_parts):] == expected_parts
@@ -147,7 +150,7 @@ def test_load_settings_defaults(data_dir):
     s = config.load_settings()
     assert s["max_failures"] == 8
     assert s["stagger_delay"] == 5
-    assert s["telemetry_enabled"] is True
+    assert s["telemetry_enabled"] is False  # opt-in only
     assert s["data_dir"] == str(data_dir)
 
 
@@ -190,3 +193,44 @@ def test_save_settings_without_optional_keys(data_dir):
     """Saving a minimal dict does not require the clamp/clean keys."""
     config.save_settings({"resume_path": "/r.pdf"})
     assert config.load_settings()["resume_path"] == "/r.pdf"
+
+
+def test_data_dir_env_override(tmp_path, monkeypatch):
+    target = tmp_path / "custom"
+    monkeypatch.setenv("LANGHIRE_DATA_DIR", str(target))
+    assert config.get_data_dir() == target
+    assert target.is_dir()
+
+
+def test_windows_data_dir_uses_appdata(tmp_path, monkeypatch):
+    monkeypatch.delenv("LANGHIRE_DATA_DIR", raising=False)
+    monkeypatch.setenv("APPDATA", str(tmp_path / "Roaming2"))
+    monkeypatch.setattr(config.platform, "system", lambda: "Windows")
+    assert config.get_data_dir() == tmp_path / "Roaming2" / "langhire"
+
+
+def test_llm_keys_never_written_to_disk(data_dir):
+    config.save_llm_settings({"provider": "openai", "openai": {"api_key": "sk-secret-123", "model": "gpt-4o"}})
+    on_disk = (data_dir / "llm_settings.json").read_text(encoding="utf-8")
+    assert "sk-secret-123" not in on_disk
+    assert config.load_llm_settings()["openai"]["api_key"] == "sk-secret-123"
+
+
+def test_plaintext_llm_key_is_migrated(data_dir):
+    import json
+    (data_dir / "llm_settings.json").write_text(json.dumps(
+        {"provider": "anthropic", "anthropic": {"api_key": "old-plain", "model": "m"}}), encoding="utf-8")
+    assert config.load_llm_settings()["anthropic"]["api_key"] == "old-plain"
+    assert "old-plain" not in (data_dir / "llm_settings.json").read_text(encoding="utf-8")
+
+
+def test_site_password_kept_out_of_settings_file(data_dir):
+    config.save_settings({"sensitive_data": {"email": "a@b.co", "password": "hunter2"}})
+    assert "hunter2" not in (data_dir / "settings.json").read_text(encoding="utf-8")
+    assert config.load_settings()["sensitive_data"]["password"] == "hunter2"
+
+
+def test_corrupt_settings_file_falls_back_to_defaults(data_dir):
+    (data_dir / "settings.json").write_text("{not json", encoding="utf-8")
+    assert config.load_settings()["max_failures"] == 8
+    assert (data_dir / "settings.json.corrupt").exists()

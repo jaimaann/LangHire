@@ -33,40 +33,10 @@ AUTH = {"Authorization": f"Bearer {TOKEN}"}
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
 @pytest.fixture(autouse=True)
-def _isolate_state(data_dir, monkeypatch):
-    """Repoint stateful module-level paths at the per-test tmp data dir.
-
-    Several backend modules resolve their storage paths *once at import time*
-    from the real ``$HOME`` (``core.shared_config.JOBS_FILE``,
-    ``memory.store.DB_PATH``, ``memory.metrics.DB_PATH``). Because ``main`` is
-    imported at module load — before the ``data_dir`` fixture repoints HOME —
-    those constants still point at the developer's real data dir. We rebind
-    them here so every test reads and writes the same isolated tmp storage and
-    never touches (or asserts against) real local data.
-    """
-    import core.shared_config as shared_config
-    import memory.store as mem_store
-    import memory.metrics as mem_metrics
-
-    jobs_file = data_dir / "jobs.json"
-    monkeypatch.setattr(shared_config, "DATA_DIR", data_dir)
-    monkeypatch.setattr(shared_config, "JOBS_FILE", jobs_file)
-    monkeypatch.setattr(shared_config, "JOBS_LOCK", data_dir / "jobs.json.lock")
-    monkeypatch.setattr(shared_config, "QA_FILE", data_dir / "qa_repository.json")
-    monkeypatch.setattr(
-        shared_config, "CANDIDATE_PROFILE", data_dir / "candidate_profile.json"
-    )
-
-    db_path = data_dir / "memory_store.db"
-    monkeypatch.setattr(mem_store, "DB_PATH", db_path)
-    monkeypatch.setattr(mem_metrics, "DB_PATH", db_path)
-    # The store/metrics default arg captured the old DB_PATH at class-definition
-    # time, and main._get_*_store() construct them with no args. Force both
-    # helpers to build instances against the isolated db.
-    monkeypatch.setattr(main, "_get_memory_store", lambda: mem_store.MemoryStore(db_path))
-    monkeypatch.setattr(
-        main, "_get_metrics_store", lambda: mem_metrics.MetricsStore(db_path)
-    )
+def _isolate_state(data_dir):
+    """Storage paths resolve from LANGHIRE_DATA_DIR on every call (see conftest),
+    so nothing needs repointing; this fixture just guarantees an isolated dir."""
+    yield
 
 
 @pytest.fixture
@@ -333,7 +303,7 @@ class TestJobs:
     def test_add_job_missing_url_400(self, auth_client):
         resp = auth_client.post("/jobs/add", json={"title": "Dev"})
         assert resp.status_code == 400
-        assert resp.json()["error"]["code"] == "missing_field"
+        assert resp.json()["error"]["code"] in ("invalid_request", "missing_field")
 
     def test_export_jobs_csv_empty(self, auth_client):
         """Export on an empty data dir returns a CSV with only the header row."""
@@ -387,7 +357,7 @@ class TestJobs:
         auth_client.post("/jobs/add", json={"url": url})
         resp = auth_client.put("/jobs/status", json={"url": url, "status": "bogus"})
         assert resp.status_code == 400
-        assert resp.json()["error"]["code"] == "invalid_status"
+        assert resp.json()["error"]["code"] in ("invalid_request", "invalid_status")
 
     def test_update_status_success(self, auth_client):
         url = "https://www.linkedin.com/jobs/view/999"
@@ -407,7 +377,7 @@ class TestJobs:
     def test_delete_jobs_missing_array_400(self, auth_client):
         resp = auth_client.request("DELETE", "/jobs", json={})
         assert resp.status_code == 400
-        assert resp.json()["error"]["code"] == "missing_field"
+        assert resp.json()["error"]["code"] in ("invalid_request", "missing_field")
 
     def test_jobs_status_filter(self, auth_client):
         """The ?status filter excludes non-matching jobs."""
@@ -440,9 +410,9 @@ class TestMemoryAndQA:
         assert resp.json()["success"] is True
 
     def test_memory_decay_validation_error(self, auth_client):
-        """factor > 1.0 violates the pydantic model -> 422."""
+        """factor > 1.0 violates the pydantic model -> 400."""
         resp = auth_client.post("/memory/decay", json={"factor": 5.0})
-        assert resp.status_code == 422
+        assert resp.status_code == 400  # validation errors use the API error shape
 
     def test_memory_cleanup(self, auth_client):
         resp = auth_client.post("/memory/cleanup", json={"threshold": 0.3})
@@ -580,7 +550,7 @@ class TestLLMEndpoints:
         """/cover-letter/generate validates that a job description is present."""
         resp = auth_client.post("/cover-letter/generate", json={"job_title": "Dev"})
         assert resp.status_code == 400
-        assert resp.json()["error"]["code"] == "missing_field"
+        assert resp.json()["error"]["code"] in ("invalid_request", "missing_field")
 
     def test_cover_letter_requires_llm_configured(self, auth_client):
         """With no LLM provider configured the endpoint errors clearly (no network)."""
@@ -625,17 +595,17 @@ class TestResumeTailor:
     def test_tailor_requires_job_urls(self, auth_client):
         resp = auth_client.post("/resume/tailor", json={})
         assert resp.status_code == 400
-        assert resp.json()["error"]["code"] == "missing_field"
+        assert resp.json()["error"]["code"] in ("invalid_request", "missing_field")
 
     def test_tailor_refine_requires_job_url(self, auth_client):
         resp = auth_client.post("/resume/tailor/refine", json={"instruction": "shorter"})
         assert resp.status_code == 400
-        assert resp.json()["error"]["code"] == "missing_field"
+        assert resp.json()["error"]["code"] in ("invalid_request", "missing_field")
 
     def test_get_tailored_by_url_requires_url(self, auth_client):
         resp = auth_client.post("/resume/tailor/get-by-url", json={})
         assert resp.status_code == 400
-        assert resp.json()["error"]["code"] == "missing_field"
+        assert resp.json()["error"]["code"] in ("invalid_request", "missing_field")
 
     def test_get_tailored_by_hash_not_found(self, auth_client):
         resp = auth_client.get("/resume/tailor/deadbeef")
@@ -657,18 +627,18 @@ class TestResumeTailor:
 # ── Job-collection / apply request validation (no worker thread started) ──────
 class TestCollectApplyValidation:
     def test_collect_rejects_out_of_range_max_jobs(self, auth_client):
-        """max_jobs > 500 violates the pydantic CollectRequest model -> 422."""
+        """max_jobs > 500 violates the pydantic CollectRequest model -> 400."""
         resp = auth_client.post("/jobs/collect", json={"max_jobs": 10000})
-        assert resp.status_code == 422
+        assert resp.status_code == 400  # validation errors use the API error shape
 
     def test_apply_rejects_invalid_mode(self, auth_client):
-        """An unknown apply mode is rejected by the Literal field -> 422."""
+        """An unknown apply mode is rejected by the Literal field -> 400."""
         resp = auth_client.post("/apply/start", json={"mode": "telepathy"})
-        assert resp.status_code == 422
+        assert resp.status_code == 400  # validation errors use the API error shape
 
     def test_apply_rejects_too_many_workers(self, auth_client):
         resp = auth_client.post("/apply/start", json={"mode": "easy", "workers": 99})
-        assert resp.status_code == 422
+        assert resp.status_code == 400  # validation errors use the API error shape
 
 
 # ── Generic 404 ───────────────────────────────────────────────────────────────

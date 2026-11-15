@@ -21,11 +21,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-import boto3
 
 from backend.memory import MemoryStore, CATEGORIES
 from backend.memory.extractors import store_learnings
-from backend.core.shared_config import AWS_PROFILE, AWS_REGION, MODEL_ID
+from backend.core.shared_config import get_llm
 
 LOGS_DIR = Path(__file__).resolve().parent.parent / "logs"
 
@@ -289,23 +288,11 @@ def extract_learnings_from_logs(
         print(f"    📝 Prompt length: {len(prompt)} chars")
 
     try:
-        session = boto3.Session(profile_name=AWS_PROFILE, region_name=AWS_REGION)
-        bedrock = session.client("bedrock-runtime")
-
-        response = bedrock.invoke_model(
-            modelId=MODEL_ID,
-            contentType="application/json",
-            accept="application/json",
-            body=json.dumps({
-                "anthropic_version": "bedrock-2023-05-31",
-                "max_tokens": 3000,
-                "temperature": 0.3,
-                "messages": [{"role": "user", "content": prompt}],
-            }),
-        )
-
-        body = json.loads(response["body"].read())
-        text = body["content"][0]["text"].strip()
+        import asyncio
+        from browser_use.llm.messages import UserMessage
+        # Uses whichever LLM the user configured in the app (was hardcoded to Bedrock)
+        resp = asyncio.run(get_llm().ainvoke([UserMessage(content=prompt)]))
+        text = (getattr(resp, "completion", None) or str(resp)).strip()
 
         # Parse JSON array
         match = re.search(r"\[.*\]", text, re.DOTALL)

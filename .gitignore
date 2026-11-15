@@ -78,3 +78,5 @@ node_modules/.tmp/
 *.msi
 *.deb
 *.rpm
+.claude/worktrees/
+!src/locales/*/jobs.json

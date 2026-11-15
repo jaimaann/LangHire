@@ -1,0 +1,217 @@
+"""Unit tests for the agent engine (no browser, no LLM, no network)."""
+import asyncio
+import json
+import time
+from pathlib import Path
+
+import pytest
+
+from core import db
+from engine import ats_fastpath, browsers, matching, memory_packs, prompts
+from engine import data as user_data
+from engine.events import RunContext, current_run, emit
+from engine.runner import RunManager
+
+
+# ── matching ────────────────────────────────────────────────────────────────
+
+PROFILE = {
+    "target_job_titles": ["Data Analyst", "Business Intelligence Analyst"],
+    "skills": ["SQL", "Python", "Tableau", "Excel"],
+    "target_locations": ["Austin, TX"],
+    "preferred_work_mode": "hybrid",
+}
+
+
+def test_match_score_prefers_relevant_jobs():
+    good = {"title": "Senior Data Analyst", "location": "Austin, TX",
+            "description": "We need SQL, Python and Tableau dashboards."}
+    bad = {"title": "Forklift Operator", "location": "Boston, MA", "description": "Operate forklifts."}
+    assert matching.match_score(good, PROFILE) > 70
+    assert matching.match_score(bad, PROFILE) < 30
+
+
+def test_match_score_handles_missing_fields():
+    assert 0 <= matching.match_score({}, {}) <= 100
+
+
+# ── ATS fast path ───────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("url, ats", [
+    ("https://boards.greenhouse.io/acme/jobs/1", "greenhouse"),
+    ("https://job-boards.greenhouse.io/acme/jobs/1", "greenhouse"),
+    ("https://jobs.lever.co/acme/123/apply", "lever"),
+    ("https://jobs.ashbyhq.com/acme/1", "ashby"),
+    ("https://acme.wd5.myworkdayjobs.com/x", "workday"),
+    ("https://evilgreenhouse.io/x", None),
+    ("https://example.com", None),
+])
+def test_detect_ats(url, ats):
+    assert ats_fastpath.detect_ats(url) == ats
+
+
+def test_build_spec_splits_name_and_uses_ats_selectors():
+    spec = ats_fastpath.build_spec("https://boards.greenhouse.io/a/jobs/1",
+                                   {"name": "Ada Lovelace King", "email": "ada@x.io", "phone": "5551234",
+                                    "phone_country_code": "+1"})
+    assert spec["first_name"]["value"] == "Ada"
+    assert spec["last_name"]["value"] == "Lovelace King"
+    assert spec["first_name"]["selectors"][0] == "#first_name"
+    assert spec["phone"]["value"] == "+1 5551234"
+    assert "linkedin" not in spec  # empty values are not filled
+
+
+# ── browser cleanup only matches our profile ───────────────────────────────
+
+def test_profile_args_match(tmp_path):
+    prof = tmp_path / "langhire" / "browser_profile"
+    assert browsers.profile_args_match(["chrome.exe", f"--user-data-dir={prof}"], prof)
+    assert browsers.profile_args_match(["chrome", "--user-data-dir", str(prof)], prof)
+    assert not browsers.profile_args_match(["chrome.exe", f"--user-data-dir={tmp_path / 'Chrome' / 'User Data'}"], prof)
+    assert not browsers.profile_args_match(["chrome.exe"], prof)  # the user's own Chrome
+
+
+# ── prompts use the job's source plugin ─────────────────────────────────────
+
+def test_apply_task_uses_source_plugin(data_dir):
+    prompts.reset_registry()
+    job = {"url": "https://www.indeed.com/viewjob?jk=1", "title": "Analyst", "company": "Acme", "source": "indeed"}
+    task = prompts.build_apply_task(job, {}, {}, "/r.pdf", "", has_password=False, gmail_otp=False, blocked=[])
+    assert "indeed.com" in task
+    assert "linkedin.com/feed" not in task
+    assert "mail.google.com" not in task  # Gmail only when the user opts in
+    assert "report_application_result" in task
+
+
+def test_apply_task_manual_job_goes_direct(data_dir):
+    prompts.reset_registry()
+    job = {"url": "https://jobs.lever.co/acme/1", "title": "Analyst", "company": "Acme", "source": "manual"}
+    task = prompts.build_apply_task(job, {}, {}, "/r.pdf", "", has_password=False, gmail_otp=True, blocked=["x.com"])
+    assert task.startswith("Go to https://jobs.lever.co/acme/1")
+    assert "never invent one" in task
+    assert "mail.google.com" in task
+    assert "x.com" in task
+
+
+def test_plugin_for_job_by_host(data_dir):
+    prompts.reset_registry()
+    p = prompts.plugin_for_job({"url": "https://www.linkedin.com/jobs/view/123/"})
+    assert p is not None and p.name == "linkedin"
+
+
+# ── memory packs ────────────────────────────────────────────────────────────
+
+def test_memory_pack_export_is_scrubbed_and_ats_only(data_dir):
+    from core import shared_config as sc
+    store = sc.get_memory_store()
+    store.add(content="Country field is a typeahead; type then wait. Contact ada@x.io or +1 555 123 4567",
+              website_domain="acme.wd5.myworkdayjobs.com", category="element_interaction",
+              ats_platform="workday", confidence=0.9)
+    store.add(content="Acme's careers page hides the button", website_domain="acme.com",
+              category="navigation", confidence=0.9)
+    pack = memory_packs.export_pack()
+    assert pack["format"] == "langhire-memory-pack"
+    assert len(pack["memories"]) == 1
+    text = pack["memories"][0]["content"]
+    assert "ada@x.io" not in text and "555" not in text
+
+
+def test_memory_pack_import_rejects_garbage(data_dir):
+    with pytest.raises(ValueError):
+        memory_packs.import_pack({"format": "nope"})
+    added = memory_packs.import_pack({"format": "langhire-memory-pack", "memories": [
+        {"ats_platform": "lever", "category": "form_strategy", "content": "Lever puts the resume upload first."},
+        {"ats_platform": "lever", "category": "qa_pattern", "content": "should be skipped as personal"},
+    ]})
+    assert added == 1
+
+
+# ── data export / delete / retention ────────────────────────────────────────
+
+def test_export_has_no_secrets(data_dir):
+    from core import config
+    config.save_llm_settings({"provider": "openai", "openai": {"api_key": "sk-live-xyz", "model": "m"}})
+    config.save_settings({"sensitive_data": {"email": "a@b.co", "password": "pw-123"}})
+    dump = json.dumps(user_data.export_all())
+    assert "sk-live-xyz" not in dump and "pw-123" not in dump
+
+
+def test_delete_all_removes_data_and_secrets(data_dir):
+    from core import config, secrets
+    config.save_llm_settings({"provider": "openai", "openai": {"api_key": "sk-live-xyz", "model": "m"}})
+    db.add_jobs([{"url": "https://a.co/1", "title": "T"}])
+    removed = user_data.delete_all()
+    assert "langhire.db" in removed
+    assert secrets.get_secret("llm.openai.api_key") == ""
+    assert db.read_jobs() == {}
+
+
+def test_prune_logs(data_dir):
+    logs = data_dir / "logs"
+    logs.mkdir()
+    old, new = logs / "old.json", logs / "new.json"
+    old.write_text("x")
+    new.write_text("y")
+    past = time.time() - 40 * 86400
+    import os
+    os.utime(old, (past, past))
+    assert user_data.prune_logs(30) == 1
+    assert new.exists() and not old.exists()
+
+
+# ── db: application records and caps ────────────────────────────────────────
+
+def test_applications_today_and_ats_rates(data_dir):
+    db.add_application({"job_url": "u1", "outcome": "submitted", "source": "indeed", "ats": "greenhouse", "cost_usd": 0.2})
+    db.add_application({"job_url": "u2", "outcome": "failed", "source": "indeed", "ats": "greenhouse", "cost_usd": 0.1})
+    assert db.applications_today("indeed") == 1
+    rates = {r["ats"]: r for r in db.ats_success_rates()}
+    assert rates["greenhouse"]["attempts"] == 2
+    assert rates["greenhouse"]["success_rate"] == 0.5
+
+
+# ── events + run manager ────────────────────────────────────────────────────
+
+def test_run_manager_runs_and_records_events(data_dir):
+    mgr = RunManager()
+
+    async def factory(ctx):
+        emit("job_found", "found one", job_url="https://a.co/1")
+        ctx.counters["collected"] = 1
+        return {"collected": 1}
+
+    st = mgr.start("collect", factory, {"title": "x"})
+    for _ in range(100):
+        if not st.running:
+            break
+        time.sleep(0.05)
+    status = mgr.status("collect")
+    assert status["running"] is False and status["error"] is None
+    assert status["collected"] == 1
+    assert any("found one" in line for line in status["log"])
+    types = [e["type"] for e in db.list_events(st.ctx.run_id)]
+    assert types[0] == "run_started" and "job_found" in types and types[-1] == "run_finished"
+    assert db.list_runs(kind="collect")[0]["status"] == "succeeded"
+
+
+def test_run_manager_cancel(data_dir):
+    mgr = RunManager()
+
+    async def factory(ctx):
+        await asyncio.sleep(30)
+
+    st = mgr.start("apply", factory, {})
+    with pytest.raises(RuntimeError):
+        mgr.start("apply", factory, {})  # one apply run at a time
+    assert mgr.cancel("apply") is True
+    for _ in range(100):
+        if not st.running:
+            break
+        time.sleep(0.05)
+    assert mgr.status("apply")["error"] == "cancelled"
+    assert db.list_runs(kind="apply")[0]["status"] == "cancelled"
+
+
+def test_emit_without_run_does_not_fail():
+    assert current_run.get() is None
+    emit("log", "no run")  # just logs

@@ -31,6 +31,9 @@ def data_dir(tmp_path, monkeypatch):
     """
     home = tmp_path / "home"
     home.mkdir()
+    data = home / "langhire-data"
+    monkeypatch.setenv("LANGHIRE_DATA_DIR", str(data))
+    monkeypatch.setenv("LANGHIRE_SECRETS_BACKEND", "file")
     monkeypatch.setenv("HOME", str(home))
     monkeypatch.setenv("USERPROFILE", str(home))  # Windows
     monkeypatch.setattr(Path, "home", classmethod(lambda cls: home))
@@ -38,3 +41,13 @@ def data_dir(tmp_path, monkeypatch):
     # Return the resolved data dir so tests can assert on files directly.
     import core.config as config
     return config.get_data_dir()
+
+
+@pytest.fixture(autouse=True)
+def _no_real_data_dir(tmp_path_factory, monkeypatch):
+    """Every test gets a throwaway data dir, even ones that don't ask for one."""
+    import os
+    if not os.environ.get("LANGHIRE_DATA_DIR") or "pytest" not in os.environ.get("LANGHIRE_DATA_DIR", ""):
+        d = tmp_path_factory.mktemp("lhdata")
+        monkeypatch.setenv("LANGHIRE_DATA_DIR", str(d))
+        monkeypatch.setenv("LANGHIRE_SECRETS_BACKEND", "file")

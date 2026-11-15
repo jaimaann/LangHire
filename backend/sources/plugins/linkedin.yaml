@@ -62,10 +62,6 @@ collection_prompt: |
   1. Go to https://www.linkedin.com/feed/ to check if you're logged into LinkedIn.
      - If you see the feed/home page → logged in ✓
      - If you see a login page → WAIT for user to log in manually. Check every 15 seconds (refresh). Wait up to 5 minutes.
-  2. Open a new tab and go to https://mail.google.com/mail/u/0/#inbox to check Gmail.
-     - If you see the Gmail inbox → logged in ✓
-     - If you see a Google sign-in page → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
-  3. Close the Gmail tab and switch back to LinkedIn.
 
   THEN: Navigate directly to this pre-filtered search URL:
   {search_url}
@@ -98,10 +94,6 @@ apply_prompt: |
   1. Go to https://www.linkedin.com/feed/ to check if you're logged into LinkedIn.
      - If you see the feed/home page → logged in ✓
      - If you see a login page → WAIT for user to log in manually. Check every 15 seconds (refresh). Wait up to 5 minutes.
-  2. Open a new tab and go to https://mail.google.com/mail/u/0/#inbox to check Gmail.
-     - If you see the Gmail inbox → logged in ✓
-     - If you see a Google sign-in page → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
-  3. Close the Gmail tab and switch back to LinkedIn.
 
   THEN: Go to {job_url} on LinkedIn.
 
@@ -119,11 +111,6 @@ apply_prompt: |
   - NEVER give up because the form isn't immediately visible — explore the page.
   - Auto-fill all fields from candidate profile. Upload resume at {resume_path}.
 
-  OTP/VERIFICATION CODES: If ANY site asks for a verification code:
-  1. Choose the EMAIL option if given a choice
-  2. Open a new tab and go to https://mail.google.com
-  3. Find the most recent email with the verification/OTP code
-  4. Copy the code, switch back, and enter it
 
   If it's a video funnel or recruitment pitch, report failure and stop.
   If the external form is broken after 3 attempts, report failure and stop.

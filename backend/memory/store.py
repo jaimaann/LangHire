@@ -148,18 +148,18 @@ except ImportError:
 
 
 def _get_db_path() -> Path:
-    if getattr(sys, 'frozen', False):
-        return get_data_dir() / "memory_store.db"
-    return Path(__file__).parent.parent.parent / "memory_store.db"
+    """Always the app data dir (dev runs used to write into the repo root)."""
+    return get_data_dir() / "memory_store.db"
 
-DB_PATH = _get_db_path()
+
+DB_PATH = None  # kept for backward compatibility; resolved per instance
 
 
 class MemoryStore:
     """SQLite-backed memory store with per-domain retrieval and deduplication."""
 
-    def __init__(self, db_path: Path = DB_PATH):
-        self.db_path = db_path
+    def __init__(self, db_path: Path | None = None):
+        self.db_path = db_path or DB_PATH or _get_db_path()
         self._local = threading.local()
         self._init_db()
 

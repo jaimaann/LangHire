@@ -50,11 +50,36 @@ def test_validate_job_url_rejects_private_or_invalid(url):
     assert sc.validate_job_url(url) is False
 
 
-def test_validate_job_url_ipv6_loopback_known_gap():
-    """Document a source gap: bracketed IPv6 literals in the denylist never
-    match what urlparse yields (it strips the brackets), so ``https://[::1]``
-    is currently *accepted*. Pinned here so a future fix flips this test."""
-    assert sc.validate_job_url("https://[::1]/x") is True
+@pytest.mark.parametrize("url", [
+    "https://[::1]/x",                 # IPv6 loopback (was a known gap)
+    "http://[fd00::1]/x",              # IPv6 unique-local
+    "http://[::ffff:127.0.0.1]/x",     # IPv4-mapped loopback
+    "http://2130706433/x",             # 127.0.0.1 in decimal
+    "http://0x7f.0.0.1/x",             # hex octet
+    "http://foo.localhost/x",
+])
+def test_validate_job_url_rejects_ip_tricks(url):
+    assert sc.validate_job_url(url, resolve=False) is False
+
+
+def test_validate_job_url_rejects_hostname_resolving_to_private(monkeypatch):
+    monkeypatch.setattr(sc.socket, "getaddrinfo", lambda host, port: [(None, None, None, None, ("10.0.0.5", 0))])
+    assert sc.validate_job_url("https://intranet.example.com/job") is False
+
+
+def test_validate_job_url_local_override(monkeypatch):
+    monkeypatch.setenv("LANGHIRE_ALLOW_LOCAL_URLS", "1")
+    assert sc.validate_job_url("http://127.0.0.1:8000/job") is True
+
+
+@pytest.mark.parametrize("url, blocked, expected", [
+    ("https://jobs.meeboss.com/x", ["meeboss.com"], True),
+    ("https://meeboss.com/x", ["meeboss.com"], True),
+    ("https://notmeeboss.com/x", ["meeboss.com"], False),   # substring match used to block this
+    ("https://example.com/?ref=meeboss.com", ["meeboss.com"], False),
+])
+def test_is_blocked_domain(url, blocked, expected):
+    assert sc.is_blocked_domain(url, blocked) is expected
 
 
 # ── normalize_question ───────────────────────────────────────────────────────
@@ -94,122 +119,75 @@ def test_save_then_load_json_roundtrip(tmp_path):
     assert not p.with_suffix(".tmp").exists()
 
 
-# ── jobs CRUD (read/write/update/claim) ──────────────────────────────────────
+# ── jobs CRUD (SQLite-backed) ────────────────────────────────────────────────
 
 @pytest.fixture
-def jobs_paths(tmp_path, monkeypatch):
-    """Point the jobs file/lock at a tmp location for isolation."""
-    jf = tmp_path / "jobs.json"
-    monkeypatch.setattr(sc, "JOBS_FILE", jf)
-    monkeypatch.setattr(sc, "JOBS_LOCK", tmp_path / "jobs.json.lock")
-    return jf
+def jobs_paths(data_dir):
+    return data_dir
 
 
 def test_read_jobs_empty(jobs_paths):
-    """Reading before any write yields an empty dict."""
     assert sc.read_jobs() == {}
 
 
 def test_write_then_read_jobs(jobs_paths):
-    """write_jobs persists and read_jobs returns it."""
-    sc.write_jobs({"u1": {"status": "pending"}})
-    assert sc.read_jobs() == {"u1": {"status": "pending"}}
-
-
-def test_update_job_existing(jobs_paths):
-    """update_job merges fields into an existing entry."""
     sc.write_jobs({"u1": {"status": "pending", "title": "Eng"}})
-    sc.update_job("u1", status="done", company="Acme")
-    jobs = sc.read_jobs()
-    assert jobs["u1"] == {"status": "done", "title": "Eng", "company": "Acme"}
+    job = sc.read_jobs()["u1"]
+    assert job["status"] == "pending" and job["title"] == "Eng" and job["url"] == "u1"
+
+
+def test_write_jobs_replaces_set(jobs_paths):
+    sc.write_jobs({"u1": {"status": "pending"}, "u2": {"status": "pending"}})
+    sc.write_jobs({"u2": {"status": "applied"}})
+    assert list(sc.read_jobs()) == ["u2"]
+
+
+def test_update_job_existing_keeps_extra_fields(jobs_paths):
+    sc.write_jobs({"u1": {"status": "pending", "title": "Eng"}})
+    sc.update_job("u1", status="applied", company="Acme", tailored_resume_path="/r.pdf")
+    job = sc.read_jobs()["u1"]
+    assert (job["status"], job["title"], job["company"], job["tailored_resume_path"]) == ("applied", "Eng", "Acme", "/r.pdf")
 
 
 def test_update_job_missing_is_noop(jobs_paths):
-    """Updating an unknown URL leaves the store unchanged."""
     sc.write_jobs({"u1": {"status": "pending"}})
     sc.update_job("ghost", status="done")
-    assert sc.read_jobs() == {"u1": {"status": "pending"}}
+    assert list(sc.read_jobs()) == ["u1"]
 
 
 def test_claim_job_success(jobs_paths):
-    """A pending job is claimed and flipped to in_progress."""
     sc.write_jobs({"u1": {"status": "pending"}})
     assert sc.claim_job("u1") is True
     assert sc.read_jobs()["u1"]["status"] == "in_progress"
 
 
 def test_claim_job_already_taken(jobs_paths):
-    """A non-pending job cannot be claimed."""
     sc.write_jobs({"u1": {"status": "in_progress"}})
     assert sc.claim_job("u1") is False
 
 
 def test_claim_job_unknown(jobs_paths):
-    """Claiming an unknown URL returns False."""
-    sc.write_jobs({})
     assert sc.claim_job("nope") is False
 
 
-# ── refresh_credentials ──────────────────────────────────────────────────────
-
-def test_refresh_credentials_no_cmd_returns_true(monkeypatch):
-    """With no ADA_CMD configured, refresh is a silent success."""
-    monkeypatch.setattr(sc, "ADA_CMD", ())
-    assert sc.refresh_credentials() is True
-
-
-def test_refresh_credentials_success(monkeypatch):
-    """A successful subprocess run returns True."""
-    monkeypatch.setattr(sc, "ADA_CMD", ("ada", "creds"))
-    calls = {}
-
-    def fake_run(cmd, **kwargs):
-        calls["cmd"] = cmd
-        return types.SimpleNamespace(returncode=0)
-
-    monkeypatch.setattr(sc.subprocess, "run", fake_run)
-    assert sc.refresh_credentials() is True
-    assert calls["cmd"] == ("ada", "creds")
-
-
-def test_refresh_credentials_failure(monkeypatch):
-    """A CalledProcessError is caught and reported as False."""
-    monkeypatch.setattr(sc, "ADA_CMD", ("ada", "creds"))
-
-    def fake_run(cmd, **kwargs):
-        raise sc.subprocess.CalledProcessError(1, cmd)
-
-    monkeypatch.setattr(sc.subprocess, "run", fake_run)
-    assert sc.refresh_credentials() is False
-
-
-def test_refresh_credentials_timeout(monkeypatch):
-    """A TimeoutExpired is caught and reported as False."""
-    monkeypatch.setattr(sc, "ADA_CMD", ("ada", "creds"))
-
-    def fake_run(cmd, **kwargs):
-        raise sc.subprocess.TimeoutExpired(cmd, 30)
-
-    monkeypatch.setattr(sc.subprocess, "run", fake_run)
-    assert sc.refresh_credentials() is False
+def test_legacy_jobs_json_is_imported(data_dir):
+    import json as _json
+    from core import db
+    db.close_all()
+    (data_dir / "jobs.json").write_text(_json.dumps({"https://a.co/j": {"title": "T", "status": "applied"}}),
+                                        encoding="utf-8")
+    jobs = sc.read_jobs()
+    assert jobs["https://a.co/j"]["status"] == "applied"
+    assert (data_dir / "jobs.json.migrated").exists() and not (data_dir / "jobs.json").exists()
 
 
 # ── get_memory_store singleton ───────────────────────────────────────────────
 
-def test_get_memory_store_is_singleton(monkeypatch):
-    """get_memory_store constructs once and caches the instance."""
-    instances = []
-
-    class FakeStore:
-        def __init__(self):
-            instances.append(self)
-
-    monkeypatch.setattr(sc, "MemoryStore", FakeStore)
-    monkeypatch.setattr(sc, "_memory_store", None)
+def test_get_memory_store_is_singleton(data_dir):
+    sc._memory_store = None
     first = sc.get_memory_store()
-    second = sc.get_memory_store()
-    assert first is second
-    assert len(instances) == 1
+    assert first is sc.get_memory_store()
+    assert str(first.db_path).startswith(str(data_dir))
 
 
 # ── extract_from_history ─────────────────────────────────────────────────────
@@ -320,7 +298,7 @@ def no_op_store(monkeypatch):
         def format_for_prompt(self, memories):
             return "MEM"
 
-    monkeypatch.setattr(sc, "_memory_store", FakeStore())
+    monkeypatch.setattr(sc, "get_memory_store", lambda: FakeStore())
     return FakeStore
 
 
@@ -380,7 +358,7 @@ def test_build_memory_context_injects_website_memory(base_profile, monkeypatch):
         def format_for_prompt(self, memories):
             return "WEBSITE-MEMORY-BLOCK"
 
-    monkeypatch.setattr(sc, "_memory_store", FakeStore())
+    monkeypatch.setattr(sc, "get_memory_store", lambda: FakeStore())
     ctx = sc.build_memory_context(base_profile, qa={}, job_url="https://acme.io/job")
     assert "WEBSITE-MEMORY-BLOCK" in ctx
 
@@ -400,7 +378,7 @@ def test_build_memory_context_qa_db_overrides_passed_in(base_profile, monkeypatc
         def format_for_prompt(self, m):
             return ""
 
-    monkeypatch.setattr(sc, "_memory_store", FakeStore())
+    monkeypatch.setattr(sc, "get_memory_store", lambda: FakeStore())
     ctx = sc.build_memory_context(base_profile, qa={"OLDQ": "OLDA"})
     assert "Q: DBQ\nA: DBA" in ctx
     assert "OLDQ" not in ctx

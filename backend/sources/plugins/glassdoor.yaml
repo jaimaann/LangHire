@@ -116,11 +116,6 @@ apply_prompt: |
   - Fill all fields from candidate profile. Upload resume at {resume_path}.
   - If the site requires account creation, try 'Sign in with Google' first.
 
-  OTP/VERIFICATION CODES: If ANY site asks for a verification code:
-  1. Choose the EMAIL option if given a choice
-  2. Open a new tab and go to https://mail.google.com
-  3. Find the most recent email with the verification/OTP code
-  4. Copy the code, switch back, and enter it
 
   If the form is broken after 3 attempts, report failure and stop.
 

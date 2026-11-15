@@ -4,6 +4,8 @@ Loads built-in plugins from backend/sources/plugins/ and community plugins
 from the user data directory (~/.langhire/plugins/).
 """
 
+import hashlib
+import re
 import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -62,6 +64,8 @@ class PluginConfig:
     is_builtin: bool = False
     enabled: bool = True
     file_path: str = ""
+    sha256: str = ""
+    tampered: bool = False  # community file changed since the user approved it
 
     def render_collection_prompt(self, titles: list[str], locations: list[str], max_jobs: int, filters: dict | None = None) -> str:
         title = titles[0] if titles else ""
@@ -196,9 +200,31 @@ def _parse_plugin_yaml(data: dict, file_path: str, is_builtin: bool) -> Optional
     )
 
 
+_URL = re.compile(r"https?://([\w.-]+)", re.IGNORECASE)
+
+
+def review_warnings(plugin: "PluginConfig") -> list[str]:
+    """Things a user should look at before trusting a community plugin's prompts."""
+    text = f"{plugin.collection_prompt}\n{plugin.apply_prompt}"
+    low = text.lower()
+    site = (plugin.website.split("//")[-1].split("/")[0]).lower().removeprefix("www.")
+    warnings = []
+    other_hosts = sorted({h.lower() for h in _URL.findall(text)
+                          if site and not h.lower().removeprefix("www.").endswith(site)})
+    if other_hosts:
+        warnings.append("Sends the agent to other sites: " + ", ".join(other_hosts[:8]))
+    for needle, why in (("mail.google", "Reads your email"), ("password", "Mentions passwords"),
+                        ("secret", "Mentions secrets"), ("ignore previous", "Tries to override instructions"),
+                        ("api key", "Mentions API keys")):
+        if needle in low:
+            warnings.append(why)
+    return warnings
+
+
 class PluginRegistry:
     def __init__(self):
         self._plugins: dict[str, PluginConfig] = {}
+        self._approved: dict[str, str] = {}
         self._load_all()
 
     def _get_builtin_dir(self) -> Path:
@@ -216,10 +242,14 @@ class PluginRegistry:
 
     def _load_yaml_file(self, path: Path, is_builtin: bool) -> Optional[PluginConfig]:
         try:
-            data = yaml.safe_load(path.read_text(encoding="utf-8"))
+            raw = path.read_bytes()
+            data = yaml.safe_load(raw.decode("utf-8"))
             if not isinstance(data, dict):
                 return None
-            return _parse_plugin_yaml(data, str(path), is_builtin)
+            plugin = _parse_plugin_yaml(data, str(path), is_builtin)
+            if plugin:
+                plugin.sha256 = hashlib.sha256(raw).hexdigest()
+            return plugin
         except Exception as e:
             import logging
             logging.getLogger("plugins").warning(f"Failed to load plugin {path.name}: {e}")
@@ -255,15 +285,25 @@ class PluginRegistry:
         if state_path.exists():
             try:
                 state = json.loads(state_path.read_text(encoding="utf-8"))
+                hashes = state.pop("_approved_sha256", {}) if isinstance(state, dict) else {}
+                self._approved = dict(hashes)
                 for name, enabled in state.items():
-                    if name in self._plugins:
+                    if name in self._plugins and isinstance(enabled, bool):
                         self._plugins[name].enabled = enabled
             except Exception:
                 pass
+        # A community plugin whose file changed after approval stays disabled
+        for p in self._plugins.values():
+            if not p.is_builtin:
+                pinned = self._approved.get(p.name)
+                if pinned and pinned != p.sha256:
+                    p.tampered = True
+                    p.enabled = False
 
     def _save_state(self):
         import json
-        state = {name: p.enabled for name, p in self._plugins.items()}
+        state: dict = {name: p.enabled for name, p in self._plugins.items()}
+        state["_approved_sha256"] = dict(self._approved)
         state_path = self._get_state_path()
         state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
 
@@ -289,7 +329,24 @@ class PluginRegistry:
         self._save_state()
         return True
 
-    def import_plugin(self, source_path: str) -> PluginConfig:
+    def preview_plugin(self, source_path: str) -> dict:
+        """Parse a plugin file without installing it, for the user to review."""
+        source = Path(source_path)
+        if not source.exists():
+            raise FileNotFoundError(f"Plugin file not found: {source_path}")
+        if source.suffix not in (".yaml", ".yml"):
+            raise ValueError("Plugin must be a .yaml or .yml file")
+        plugin = self._load_yaml_file(source, is_builtin=False)
+        if not plugin:
+            raise ValueError("Invalid plugin file: failed to parse")
+        return {
+            "name": plugin.name, "display_name": plugin.display_name, "version": plugin.version,
+            "author": plugin.author, "website": plugin.website, "requires_login": plugin.requires_login,
+            "sha256": plugin.sha256, "collection_prompt": plugin.collection_prompt,
+            "apply_prompt": plugin.apply_prompt, "warnings": review_warnings(plugin),
+        }
+
+    def import_plugin(self, source_path: str, approved_sha256: str | None = None) -> PluginConfig:
         source = Path(source_path)
         if not source.exists():
             raise FileNotFoundError(f"Plugin file not found: {source_path}")
@@ -301,6 +358,9 @@ class PluginRegistry:
             raise ValueError("Invalid plugin file: failed to parse")
         if plugin.name in self._plugins and self._plugins[plugin.name].is_builtin:
             raise ValueError(f"Cannot override built-in plugin: {plugin.name}")
+        if approved_sha256 is not None and approved_sha256 != plugin.sha256:
+            raise ValueError("The plugin file changed after you reviewed it; review it again")
+        self._approved[plugin.name] = plugin.sha256
 
         dest = self._get_community_dir() / source.name
         shutil.copy2(source, dest)
@@ -319,6 +379,7 @@ class PluginRegistry:
         if file_path.exists():
             file_path.unlink()
         del self._plugins[name]
+        self._approved.pop(name, None)
         self._save_state()
         return True
 

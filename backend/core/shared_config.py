@@ -1,92 +1,172 @@
-"""Shared config, utilities, and credential management."""
-import asyncio
+"""Shared helpers for the agent engine: paths, job storage, URL safety, prompt context.
+
+Nothing here reads settings at import time — every value is looked up when it
+is used, so changes made in the UI apply to the next run without a restart.
+"""
+import ipaddress
 import json
+import os
 import re
-import subprocess
+import socket
 import sys
-import threading
 from pathlib import Path
 
-import boto3
-from filelock import FileLock
-from browser_use.llm import ChatAWSBedrock
-
 try:
-    from core.config import get_data_dir
+    from core.config import get_data_dir, load_settings, load_llm_settings
+    from core import db
     from memory import MemoryStore
 except ImportError:
-    from backend.core.config import get_data_dir
+    from backend.core.config import get_data_dir, load_settings, load_llm_settings
+    from backend.core import db
     from backend.memory import MemoryStore
 
 _SOURCE_DIR = Path(__file__).resolve().parent.parent.parent  # project root (or temp dir if frozen)
 
-DATA_DIR = get_data_dir()
 
-# When frozen (PyInstaller), BASE_DIR would be a temp dir — use DATA_DIR instead
-BASE_DIR = DATA_DIR if getattr(sys, 'frozen', False) else _SOURCE_DIR
+# ── Paths (resolved on every call) ──────────────────────────────────────────
 
-# Use OS data dir for settings/profile (written by UI), project root for jobs/logs
-JOBS_FILE = DATA_DIR / "jobs.json"
-JOBS_LOCK = DATA_DIR / "jobs.json.lock"
-QA_FILE = DATA_DIR / "qa_repository.json"
-CANDIDATE_PROFILE = DATA_DIR / "candidate_profile.json"
-LOGS_DIR = BASE_DIR / "logs"
-RESUMES_DIR = BASE_DIR / "resumes"
+def data_dir() -> Path:
+    return get_data_dir()
 
-# Browser profile ALWAYS in OS data dir (must match backend/main.py login endpoint)
-BROWSER_PROFILE_DIR = DATA_DIR / "browser_profile"
 
-AWS_PROFILE = "default"
-AWS_REGION = "us-west-2"
-MODEL_ID = "us.anthropic.claude-sonnet-4-6"
-ADA_CMD: tuple[str, ...] = ()  # Only needed for Amazon internal credential refresh
+def logs_dir() -> Path:
+    d = get_data_dir() / "logs"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
 
-# Load settings from OS data dir (written by desktop app UI) if available
-_settings_file = DATA_DIR / "settings.json"
-_ui_settings = json.loads(_settings_file.read_text(encoding="utf-8")) if _settings_file.exists() else {}
-SENSITIVE_DATA = _ui_settings.get("sensitive_data", {"email": "", "password": ""})
 
-# Fall back to profile email if sensitive_data email is blank
-if not SENSITIVE_DATA.get("email", "").strip():
-    _profile_file = DATA_DIR / "candidate_profile.json"
-    if _profile_file.exists():
-        _profile_data = json.loads(_profile_file.read_text(encoding="utf-8"))
-        _profile_email = _profile_data.get("email", "").strip()
-        if _profile_email:
-            SENSITIVE_DATA["email"] = _profile_email
+def resumes_dir() -> Path:
+    d = get_data_dir() / "resumes"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
 
-RESUME_PATH = _ui_settings.get("resume_path", "")
-BLOCKED_DOMAINS = _ui_settings.get("blocked_domains", ["meeboss.com"])
 
-_PRIVATE_IP_PREFIXES = ("127.", "10.", "192.168.", "172.16.", "172.17.", "172.18.",
-                        "172.19.", "172.20.", "172.21.", "172.22.", "172.23.",
-                        "172.24.", "172.25.", "172.26.", "172.27.", "172.28.",
-                        "172.29.", "172.30.", "172.31.", "0.", "169.254.")
+def browser_profile_dir() -> Path:
+    return get_data_dir() / "browser_profile"
 
-def validate_job_url(url: str) -> bool:
-    """Reject URLs pointing to private/internal networks (SSRF prevention)."""
+
+_LEGACY_PATHS = {
+    "DATA_DIR": lambda: get_data_dir(),
+    "BASE_DIR": lambda: get_data_dir(),
+    "JOBS_FILE": lambda: get_data_dir() / "jobs.json",
+    "QA_FILE": lambda: get_data_dir() / "qa_repository.json",
+    "CANDIDATE_PROFILE": lambda: get_data_dir() / "candidate_profile.json",
+    "LOGS_DIR": logs_dir,
+    "RESUMES_DIR": resumes_dir,
+    "BROWSER_PROFILE_DIR": browser_profile_dir,
+}
+
+
+def __getattr__(name):  # PEP 562: old constant names, resolved lazily
+    if name in _LEGACY_PATHS:
+        return _LEGACY_PATHS[name]()
+    raise AttributeError(name)
+
+
+# ── Settings accessors ──────────────────────────────────────────────────────
+
+def sensitive_data() -> dict:
+    """Login credentials for job sites. The form email falls back to the profile email."""
+    sd = dict(load_settings().get("sensitive_data") or {})
+    if not (sd.get("email") or "").strip():
+        try:
+            from core.config import load_profile
+        except ImportError:
+            from backend.core.config import load_profile
+        sd["email"] = (load_profile().get("email") or "").strip()
+    return {"email": sd.get("email", ""), "password": sd.get("password", "")}
+
+
+def resume_path() -> str:
+    return load_settings().get("resume_path", "") or ""
+
+
+def blocked_domains() -> list[str]:
+    return list(load_settings().get("blocked_domains") or [])
+
+
+def is_blocked_domain(url: str, blocked: list[str] | None = None) -> bool:
+    """True when the URL's host is a blocked domain or a subdomain of one."""
+    from urllib.parse import urlparse
+    host = (urlparse(url).hostname or "").lower().rstrip(".")
+    for d in blocked if blocked is not None else blocked_domains():
+        d = d.lower().strip().lstrip("*.").rstrip(".")
+        if d and (host == d or host.endswith("." + d)):
+            return True
+    return False
+
+
+def get_llm():
+    """A fresh LLM client from the settings the user saved in the UI."""
+    try:
+        from core.llm_factory import create_llm
+    except ImportError:
+        from backend.core.llm_factory import create_llm
+    return create_llm(load_llm_settings())
+
+
+# ── URL safety ──────────────────────────────────────────────────────────────
+
+def _is_public_ip(ip: str) -> bool:
+    try:
+        addr = ipaddress.ip_address(ip.split("%", 1)[0])
+    except ValueError:
+        return False
+    if getattr(addr, "ipv4_mapped", None):
+        addr = addr.ipv4_mapped
+    return not (
+        addr.is_private or addr.is_loopback or addr.is_link_local or addr.is_multicast
+        or addr.is_reserved or addr.is_unspecified
+    )
+
+
+def validate_job_url(url: str, resolve: bool = True) -> bool:
+    """Reject URLs that point at this machine or a private network (SSRF guard).
+
+    Literal IPs in any notation (IPv6, decimal, hex) are checked with
+    ``ipaddress``; hostnames are resolved and every address must be public.
+    ``LANGHIRE_ALLOW_LOCAL_URLS=1`` disables the check for local test harnesses.
+    """
     from urllib.parse import urlparse
     try:
         parsed = urlparse(url)
-        host = (parsed.hostname or "").lower()
-        if not host or not parsed.scheme.startswith("http"):
+        host = (parsed.hostname or "").lower().rstrip(".")
+        if not host or parsed.scheme not in ("http", "https"):
             return False
-        if host in ("localhost", "0.0.0.0", "[::]", "[::1]"):
+        if os.environ.get("LANGHIRE_ALLOW_LOCAL_URLS") == "1":
+            return True
+        if host == "localhost" or host.endswith(".localhost") or host.endswith(".local"):
             return False
-        if any(host.startswith(p) for p in _PRIVATE_IP_PREFIXES):
-            return False
-        return True
+        # Literal IP (inet_aton also accepts decimal/hex/short forms like 2130706433)
+        literal = None
+        try:
+            literal = str(ipaddress.ip_address(host))
+        except ValueError:
+            try:
+                literal = socket.inet_ntoa(socket.inet_aton(host)) if re.fullmatch(r"[0-9a-fx.]+", host) else None
+            except OSError:
+                literal = None
+        if literal is not None:
+            return _is_public_ip(literal)
+        if not resolve:
+            return True
+        try:
+            infos = socket.getaddrinfo(host, None)
+        except OSError:
+            return True  # can't resolve now (offline); the browser will fail on its own
+        return all(_is_public_ip(info[4][0]) for info in infos)
     except Exception:
         return False
 
-# ── Singleton memory store ────────────────────────────────────────────────────
+
+# ── Singleton memory store ──────────────────────────────────────────────────
 _memory_store: MemoryStore | None = None
 
 
 def get_memory_store() -> MemoryStore:
     """Get or create the singleton memory store instance."""
     global _memory_store
-    if _memory_store is None:
+    if _memory_store is None or Path(_memory_store.db_path).parent != get_data_dir():
         _memory_store = MemoryStore()
     return _memory_store
 
@@ -104,70 +184,23 @@ def save_json(path: Path, data):
     tmp.replace(path)
 
 
+# ── Jobs (SQLite-backed; see core/db.py) ────────────────────────────────────
+
 def read_jobs() -> dict:
-    """Read jobs.json with cross-process lock."""
-    with FileLock(JOBS_LOCK):
-        return load_json(JOBS_FILE, {})
+    return db.read_jobs()
 
 
 def write_jobs(jobs: dict):
-    """Write jobs.json with cross-process lock."""
-    with FileLock(JOBS_LOCK):
-        save_json(JOBS_FILE, jobs)
+    db.write_jobs(jobs)
 
 
 def update_job(url: str, **fields):
-    """Atomically update a single job entry."""
-    with FileLock(JOBS_LOCK):
-        jobs = load_json(JOBS_FILE, {})
-        if url in jobs:
-            jobs[url].update(fields)
-            save_json(JOBS_FILE, jobs)
-
-
-_claim_lock = threading.Lock()
+    db.update_job(url, **fields)
 
 
 def claim_job(url: str) -> bool:
-    """Atomically claim a pending job. Returns True if claimed, False if already taken.
-    Uses both FileLock (cross-process) and threading lock (in-process workers)."""
-    with _claim_lock:
-        with FileLock(JOBS_LOCK):
-            jobs = load_json(JOBS_FILE, {})
-            if url in jobs and jobs[url].get("status") == "pending":
-                jobs[url]["status"] = "in_progress"
-                save_json(JOBS_FILE, jobs)
-                return True
-            return False
-
-
-def refresh_credentials():
-    """Run ada credentials update and return True on success."""
-    if not ADA_CMD:
-        # No credential refresh command configured — skip silently
-        # Users should configure AWS credentials via the Settings UI or aws cli
-        return True
-    print("🔑 Refreshing AWS credentials...")
-    try:
-        subprocess.run(ADA_CMD, check=True, timeout=30)
-        print("✅ Credentials refreshed")
-        return True
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
-        print(f"❌ Credential refresh failed: {e}", file=sys.stderr)
-        return False
-
-
-async def credential_refresh_loop(interval_minutes: int = 14):
-    """Background task that refreshes credentials on a timer. Cancels with parent."""
-    while True:
-        await asyncio.sleep(interval_minutes * 60)
-        refresh_credentials()
-
-
-def get_llm() -> ChatAWSBedrock:
-    """Create a fresh LLM client with current credentials."""
-    session = boto3.Session(profile_name=AWS_PROFILE, region_name=AWS_REGION)
-    return ChatAWSBedrock(model=MODEL_ID, session=session)
+    """Atomically claim a pending job. Returns True if claimed."""
+    return db.claim_job(url)
 
 
 def normalize_question(q: str) -> str:
@@ -179,6 +212,7 @@ def build_memory_context(
     qa: dict,
     applied_labels: list[str] | None = None,
     job_url: str | None = None,
+    include_tracking: bool = True,
 ) -> str:
     """Build the system message context with candidate profile, Q&A bank, and per-website learnings."""
     parts = []
@@ -258,7 +292,12 @@ def build_memory_context(
             print(f"    🧠 Injecting {mem_count} memories for {domain}")
             parts.append(store.format_for_prompt(memories))
 
-    parts.append(
+    if include_tracking:
+        parts.append(_TRACKING_INSTRUCTIONS)
+    return "\n\n".join(parts)
+
+
+_TRACKING_INSTRUCTIONS = (
         "TRACKING INSTRUCTIONS:\n"
         "After each successful application: @@JOB_APPLIED: {\"title\": \"...\", \"company\": \"...\", \"location\": \"...\"}\n"
         "For each form question encountered: @@QUESTION: {\"question\": \"...\", \"answer\": \"...\", \"type\": \"text|dropdown|radio|checkbox\"}\n\n"
@@ -269,8 +308,7 @@ def build_memory_context(
         "- Element interaction: 'The checkbox is inside a scrollable div, must scroll to find it'\n"
         "- Form strategy: 'This ATS splits the form into 4 steps: Personal → Resume → Questions → Review'\n"
         "Report at least 2-3 learnings per application run."
-    )
-    return "\n\n".join(parts)
+)
 
 
 def extract_from_history(result):
