@@ -42,9 +42,13 @@ export default function QA() {
   };
 
   const handleUpdate = async (id: number, answer: string) => {
-    await updateQA(id, answer);
+    const res = await updateQA(id, answer);
     setQuestions(prev => prev.map(q => q.id === id ? { ...q, answer } : q));
     trackEvent("qa_answer_updated");
+    if (res?.requeued) {
+      showToast(t("toast.requeued", { count: res.requeued }));
+      trackEvent("qa_jobs_requeued", { count: res.requeued });
+    }
   };
 
   const handleDelete = async (id: number) => {

@@ -38,7 +38,9 @@
     "smartSquashResult": "{{count}} डुप्लिकेट स्मार्ट-मर्ज किए गए",
     "noSemanticDuplicates": "कोई अर्थगत डुप्लिकेट नहीं मिले",
     "autoSquashFailed": "ऑटो-स्क्वैश विफल",
-    "smartSquashFailed": "स्मार्ट स्क्वैश विफल"
+    "smartSquashFailed": "स्मार्ट स्क्वैश विफल",
+    "requeued": "इस उत्तर की प्रतीक्षा कर रही {{count}} नौकरियाँ फिर से कतार में हैं",
+    "requeued_one": "इस उत्तर की प्रतीक्षा कर रही 1 नौकरी फिर से कतार में है"
   },
   "error": {
     "loadFailed": "Q&A लोड करने में विफल"

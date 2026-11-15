@@ -38,7 +38,9 @@
     "smartSquashResult": "{{count}}개 중복 스마트 병합됨",
     "noSemanticDuplicates": "의미적 중복을 찾을 수 없음",
     "autoSquashFailed": "자동 병합 실패",
-    "smartSquashFailed": "스마트 병합 실패"
+    "smartSquashFailed": "스마트 병합 실패",
+    "requeued": "이 답변을 기다리던 채용 공고 {{count}}개가 대기열로 돌아갔습니다",
+    "requeued_one": "이 답변을 기다리던 채용 공고 1개가 대기열로 돌아갔습니다"
   },
   "error": {
     "loadFailed": "Q&A 로드 실패"

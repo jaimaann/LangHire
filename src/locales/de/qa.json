@@ -38,7 +38,9 @@
     "smartSquashResult": "{{count}} Duplikat(e) smart-zusammengeführt",
     "noSemanticDuplicates": "Keine semantischen Duplikate gefunden",
     "autoSquashFailed": "Auto-Zusammenführung fehlgeschlagen",
-    "smartSquashFailed": "Smart-Zusammenführung fehlgeschlagen"
+    "smartSquashFailed": "Smart-Zusammenführung fehlgeschlagen",
+    "requeued": "{{count}} Jobs, die auf diese Antwort warteten, sind wieder in der Warteschlange",
+    "requeued_one": "1 Job, der auf diese Antwort wartete, ist wieder in der Warteschlange"
   },
   "error": {
     "loadFailed": "Q&A konnte nicht geladen werden"

@@ -14,7 +14,7 @@ import {
   HelpCircle,
   BarChart3,
 } from "lucide-react";
-import { checkHealth } from "../../lib/api";
+import { checkHealth, getJobStats, getQAStats } from "../../lib/api";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, labelKey: "nav.dashboard" },
@@ -35,6 +35,9 @@ export default function Sidebar() {
   const [backendOk, setBackendOk] = useState<boolean | null>(null);
   const [buildId, setBuildId] = useState("");
 
+  // Things waiting on the user: unanswered screening questions and jobs stopped on them
+  const [badges, setBadges] = useState<Record<string, number>>({});
+
   const backendOkRef = useRef(backendOk);
   useEffect(() => {
     backendOkRef.current = backendOk;
@@ -45,7 +48,13 @@ export default function Sidebar() {
 
     const check = () => {
       checkHealth()
-        .then((data) => { setBackendOk(true); setBuildId(data.build_id || ""); })
+        .then((data) => {
+          setBackendOk(true);
+          setBuildId(data.build_id || "");
+          Promise.all([getQAStats().catch(() => null), getJobStats().catch(() => null)]).then(([qa, jobs]) =>
+            setBadges({ "/qa": qa?.unanswered || 0, "/jobs": jobs?.needs_input || 0 }),
+          );
+        })
         .catch(() => setBackendOk(false));
     };
     check();
@@ -93,6 +102,16 @@ export default function Sidebar() {
           >
             <Icon className="w-[18px] h-[18px]" />
             {t(labelKey)}
+            {!!badges[to] && (
+              <span
+                className="ml-auto min-w-[20px] h-5 px-1.5 rounded-full bg-amber-500 text-white text-[11px] font-bold flex items-center justify-center"
+                aria-label={t("badge.waiting", { count: badges[to] })}
+                title={t("badge.waiting", { count: badges[to] })}
+                data-testid={`nav-badge-${to.slice(1)}`}
+              >
+                {badges[to]}
+              </span>
+            )}
           </NavLink>
         ))}
       </nav>

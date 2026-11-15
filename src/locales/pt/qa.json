@@ -38,7 +38,9 @@
     "smartSquashResult": "{{count}} duplicata(s) mesclada(s) inteligentemente",
     "noSemanticDuplicates": "Nenhuma duplicata semântica encontrada",
     "autoSquashFailed": "Auto-mesclagem falhou",
-    "smartSquashFailed": "Mesclagem inteligente falhou"
+    "smartSquashFailed": "Mesclagem inteligente falhou",
+    "requeued": "{{count}} vagas que aguardavam esta resposta voltaram para a fila",
+    "requeued_one": "1 vaga que aguardava esta resposta voltou para a fila"
   },
   "error": {
     "loadFailed": "Falha ao carregar Q&A"

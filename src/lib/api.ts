@@ -418,7 +418,7 @@ export async function getQAStats() {
 }
 
 export async function updateQA(id: number, answer: string) {
-  return request<{ success: boolean }>(`/qa/${id}`, {
+  return request<{ success: boolean; requeued?: number }>(`/qa/${id}`, {
     method: "PUT",
     body: JSON.stringify({ answer }),
   });

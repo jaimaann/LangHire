@@ -65,5 +65,9 @@
     "windowBody": "Une fenêtre Chromium va s'ouvrir : c'est l'agent au travail. Ne la fermez pas et n'y cliquez pas, sauf pour vous connecter.",
     "cancel": "Annuler",
     "start": "Compris, démarrer"
+  },
+  "badge": {
+    "waiting": "{{count}} en attente de vous",
+    "waiting_one": "1 en attente de vous"
   }
 }

@@ -38,7 +38,9 @@
     "smartSquashResult": "{{count}} duplica(a)t(en) slim samengevoegd",
     "noSemanticDuplicates": "Geen semantische duplicaten gevonden",
     "autoSquashFailed": "Auto-samenvoegen mislukt",
-    "smartSquashFailed": "Slim samenvoegen mislukt"
+    "smartSquashFailed": "Slim samenvoegen mislukt",
+    "requeued": "{{count}} vacatures die op dit antwoord wachtten staan weer in de wachtrij",
+    "requeued_one": "1 vacature die op dit antwoord wachtte staat weer in de wachtrij"
   },
   "error": {
     "loadFailed": "Q&A laden mislukt"

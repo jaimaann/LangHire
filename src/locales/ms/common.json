@@ -65,5 +65,9 @@
     "windowBody": "Tetingkap Chromium akan muncul — itu ejen sedang bekerja. Jangan tutup atau klik di dalamnya kecuali untuk log masuk.",
     "cancel": "Batal",
     "start": "Faham, mula"
+  },
+  "badge": {
+    "waiting": "{{count}} menunggu anda",
+    "waiting_one": "1 menunggu anda"
   }
 }

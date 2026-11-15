@@ -38,7 +38,9 @@
     "smartSquashResult": "{{count}}件の重複をスマートマージしました",
     "noSemanticDuplicates": "意味的な重複は見つかりませんでした",
     "autoSquashFailed": "自動マージに失敗しました",
-    "smartSquashFailed": "スマートマージに失敗しました"
+    "smartSquashFailed": "スマートマージに失敗しました",
+    "requeued": "この回答を待っていた {{count}} 件の求人をキューに戻しました",
+    "requeued_one": "この回答を待っていた 1 件の求人をキューに戻しました"
   },
   "error": {
     "loadFailed": "Q&Aの読み込みに失敗しました"

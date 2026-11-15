@@ -38,7 +38,9 @@
     "smartSquashResult": "Uniti in modo intelligente {{count}} duplicato/i",
     "noSemanticDuplicates": "Nessun duplicato semantico trovato",
     "autoSquashFailed": "Unione automatica non riuscita",
-    "smartSquashFailed": "Unione intelligente non riuscita"
+    "smartSquashFailed": "Unione intelligente non riuscita",
+    "requeued": "{{count}} offerte in attesa di questa risposta sono tornate in coda",
+    "requeued_one": "1 offerta in attesa di questa risposta è tornata in coda"
   },
   "error": {
     "loadFailed": "Caricamento delle domande e risposte non riuscito"

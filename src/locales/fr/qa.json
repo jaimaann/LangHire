@@ -38,7 +38,9 @@
     "smartSquashResult": "{{count}} doublon(s) fusionné(s) intelligemment",
     "noSemanticDuplicates": "Aucun doublon sémantique trouvé",
     "autoSquashFailed": "Échec de la fusion automatique",
-    "smartSquashFailed": "Échec de la fusion intelligente"
+    "smartSquashFailed": "Échec de la fusion intelligente",
+    "requeued": "{{count}} offres en attente de cette réponse sont revenues dans la file",
+    "requeued_one": "1 offre en attente de cette réponse est revenue dans la file"
   },
   "error": {
     "loadFailed": "Échec du chargement des Q&R"

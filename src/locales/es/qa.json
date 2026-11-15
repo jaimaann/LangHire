@@ -38,7 +38,9 @@
     "smartSquashResult": "{{count}} duplicado(s) fusionado(s) inteligentemente",
     "noSemanticDuplicates": "No se encontraron duplicados semánticos",
     "autoSquashFailed": "Fusión automática fallida",
-    "smartSquashFailed": "Fusión inteligente fallida"
+    "smartSquashFailed": "Fusión inteligente fallida",
+    "requeued": "{{count}} empleos que esperaban esta respuesta volvieron a la cola",
+    "requeued_one": "1 empleo que esperaba esta respuesta volvió a la cola"
   },
   "error": {
     "loadFailed": "Error al cargar Q&A"

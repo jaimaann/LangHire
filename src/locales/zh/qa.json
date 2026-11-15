@@ -38,7 +38,9 @@
     "smartSquashResult": "已智能合并 {{count}} 个重复项",
     "noSemanticDuplicates": "未找到语义重复项",
     "autoSquashFailed": "自动合并失败",
-    "smartSquashFailed": "智能合并失败"
+    "smartSquashFailed": "智能合并失败",
+    "requeued": "{{count}} 个等待此回答的职位已重新加入队列",
+    "requeued_one": "1 个等待此回答的职位已重新加入队列"
   },
   "error": {
     "loadFailed": "加载问答失败"

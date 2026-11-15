@@ -66,5 +66,9 @@
     "windowBody": "Comparirà una finestra di Chromium: è l'agente al lavoro. Non chiuderla e non cliccarci, a meno che tu debba accedere.",
     "cancel": "Annulla",
     "start": "Ho capito, avvia"
+  },
+  "badge": {
+    "waiting": "{{count}} in attesa di te",
+    "waiting_one": "1 in attesa di te"
   }
 }

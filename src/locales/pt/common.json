@@ -65,5 +65,9 @@
     "windowBody": "Uma janela do Chromium vai aparecer — é o agente trabalhando. Não feche nem clique nela, a não ser para fazer login.",
     "cancel": "Cancelar",
     "start": "Entendi, começar"
+  },
+  "badge": {
+    "waiting": "{{count}} aguardando você",
+    "waiting_one": "1 aguardando você"
   }
 }

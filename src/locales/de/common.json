@@ -65,5 +65,9 @@
     "windowBody": "Ein Chromium-Fenster erscheint – das ist der Agent bei der Arbeit. Schließe es nicht und klicke nicht hinein, außer zum Anmelden.",
     "cancel": "Abbrechen",
     "start": "Verstanden, starten"
+  },
+  "badge": {
+    "waiting": "{{count}} warten auf dich",
+    "waiting_one": "1 wartet auf dich"
   }
 }

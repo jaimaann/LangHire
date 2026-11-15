@@ -199,7 +199,8 @@ async def update_qa(qa_id: int, body: QAUpdateRequest):
     if not store:
         return api_error("no_store", "Memory store not available")
     store.qa_update(qa_id, body.answer)
-    return {"success": True}
+    requeued = requeue_answered_jobs(store) if (body.answer or "").strip() else []
+    return {"success": True, "requeued": len(requeued)}
 
 @router.delete("/qa/{qa_id}")
 async def delete_qa(qa_id: int):
@@ -295,3 +296,20 @@ async def import_memory_pack(body: MemoryPackImport):
     except ValueError as e:
         return api_error("invalid_pack", str(e), 400)
     return {"success": True, "added": added}
+
+
+def requeue_answered_jobs(store) -> list[str]:
+    """Jobs that stopped with needs_input go back to the queue once every question they asked is answered."""
+    from core import db
+    requeued = []
+    for url, job in db.read_jobs().items():
+        if job.get("status") != "needs_input":
+            continue
+        latest = db.list_applications(job_url=url, limit=1)
+        missing = latest[0].get("missing_info") if latest else []
+        if not missing:
+            continue
+        if all(store.qa_is_answered(q) for q in missing):
+            db.update_job(url, status="pending", error=None)
+            requeued.append(url)
+    return requeued

@@ -38,7 +38,9 @@
     "smartSquashResult": "Smart-merged {{count}} duplicate(s)",
     "noSemanticDuplicates": "No semantic duplicates found",
     "autoSquashFailed": "Auto-squash failed",
-    "smartSquashFailed": "Smart squash failed"
+    "smartSquashFailed": "Smart squash failed",
+    "requeued": "{{count}} jobs waiting on this answer went back to the queue",
+    "requeued_one": "1 job waiting on this answer went back to the queue"
   },
   "error": {
     "loadFailed": "Failed to load Q&A"

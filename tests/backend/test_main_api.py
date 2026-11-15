@@ -426,6 +426,26 @@ class TestMemoryAndQA:
         stats = auth_client.get("/qa/stats").json()
         assert stats == {"total": 0, "answered": 0, "unanswered": 0}
 
+    def test_answering_requeues_jobs_waiting_on_it(self, auth_client):
+        from api.common import get_memory_store
+        from core import db
+        q1, q2 = "Are you willing to relocate to Pune?", "Current CTC in INR"
+        db.add_jobs([{"url": "https://a.co/1", "title": "A"}, {"url": "https://a.co/2", "title": "B"}])
+        for url, missing in (("https://a.co/1", [q1]), ("https://a.co/2", [q1, q2])):
+            db.update_job(url, status="needs_input", error="Needs your answer")
+            db.add_application({"job_url": url, "outcome": "needs_input", "missing_info": missing})
+        store = get_memory_store()
+        store.qa_add(q1)
+        store.qa_add(q2)
+        ids = {q["question"]: q["id"] for q in auth_client.get("/qa").json()}
+
+        resp = auth_client.put(f"/qa/{ids[q1]}", json={"answer": "Yes"}).json()
+        assert resp["requeued"] == 1                       # job 2 still waits on the CTC question
+        assert db.get_job("https://a.co/1")["status"] == "pending"
+        assert db.get_job("https://a.co/2")["status"] == "needs_input"
+        assert auth_client.put(f"/qa/{ids[q2]}", json={"answer": "INR 3,60,000"}).json()["requeued"] == 1
+        assert db.get_job("https://a.co/2")["status"] == "pending"
+
     def test_qa_auto_squash(self, auth_client):
         resp = auth_client.post("/qa/auto-squash")
         assert resp.status_code == 200

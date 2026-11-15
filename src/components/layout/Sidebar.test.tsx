@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { checkHealth } from "../../lib/api";
+import { checkHealth, getJobStats, getQAStats } from "../../lib/api";
 
 // Identity translator so assertions use raw i18n keys.
 vi.mock("react-i18next", () => ({
@@ -14,6 +14,8 @@ vi.mock("react-i18next", () => ({
 
 vi.mock("../../lib/api", () => ({
   checkHealth: vi.fn(),
+  getQAStats: vi.fn(),
+  getJobStats: vi.fn(),
 }));
 
 const mockCheckHealth = vi.mocked(checkHealth);
@@ -30,6 +32,8 @@ describe("Sidebar", () => {
   beforeEach(() => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockCheckHealth.mockResolvedValue({ build_id: "abc123" } as never);
+    vi.mocked(getQAStats).mockResolvedValue({ total: 3, answered: 1, unanswered: 2 });
+    vi.mocked(getJobStats).mockResolvedValue({ needs_input: 0 } as never);
   });
 
   afterEach(() => {
@@ -101,5 +105,11 @@ describe("Sidebar", () => {
     renderSidebar();
     await waitFor(() => expect(screen.getByText("status.connected")).toBeInTheDocument());
     expect(screen.queryByText(/·/)).not.toBeInTheDocument();
+  });
+
+  it("badges Q&A with unanswered questions and leaves Jobs bare when nothing waits", async () => {
+    renderSidebar();
+    expect(await screen.findByTestId("nav-badge-qa")).toHaveTextContent("2");
+    expect(screen.queryByTestId("nav-badge-jobs")).not.toBeInTheDocument();
   });
 });

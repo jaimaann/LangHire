@@ -38,7 +38,9 @@
     "smartSquashResult": "{{count}} pendua digabungkan secara pintar",
     "noSemanticDuplicates": "Tiada pendua semantik ditemui",
     "autoSquashFailed": "Gabung auto gagal",
-    "smartSquashFailed": "Gabung pintar gagal"
+    "smartSquashFailed": "Gabung pintar gagal",
+    "requeued": "{{count}} kerja yang menunggu jawapan ini kembali ke baris gilir",
+    "requeued_one": "1 kerja yang menunggu jawapan ini kembali ke baris gilir"
   },
   "error": {
     "loadFailed": "Gagal memuatkan S&J"

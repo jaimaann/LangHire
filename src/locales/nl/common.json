@@ -65,5 +65,9 @@
     "windowBody": "Er verschijnt een Chromium-venster — dat is de agent aan het werk. Sluit het niet en klik er niet in, behalve om in te loggen.",
     "cancel": "Annuleren",
     "start": "Begrepen, starten"
+  },
+  "badge": {
+    "waiting": "{{count}} wachten op jou",
+    "waiting_one": "1 wacht op jou"
   }
 }

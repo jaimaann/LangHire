@@ -763,6 +763,21 @@ class MemoryStore:
         conn.commit()
         return merged_count
 
+    def qa_is_answered(self, question: str) -> bool:
+        """Does the bank hold an answer for this question (same matching as qa_add, merges followed)?"""
+        normalized = self._normalize_qa(question)
+        conn = self._get_conn()
+        rows = conn.execute("SELECT normalized, answer, merged_into_id FROM qa_repository").fetchall()
+        by_id = {r[0]: r for r in conn.execute("SELECT id, answer FROM qa_repository").fetchall()}
+        for r in rows:
+            if r["normalized"] == normalized or self._token_overlap(normalized, r["normalized"]) > 0.85:
+                answer = r["answer"]
+                if r["merged_into_id"] and r["merged_into_id"] in by_id:
+                    answer = by_id[r["merged_into_id"]][1]
+                if (answer or "").strip():
+                    return True
+        return False
+
     def qa_get_all_for_prompt(self) -> dict[str, str]:
         """Get all canonical Q&A pairs as a dict for agent prompt injection."""
         conn = self._get_conn()

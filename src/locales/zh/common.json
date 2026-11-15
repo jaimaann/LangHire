@@ -66,5 +66,9 @@
     "windowBody": "会出现一个 Chromium 窗口，那是代理在工作。除非需要登录，否则不要关闭或点击它。",
     "cancel": "取消",
     "start": "知道了，开始"
+  },
+  "badge": {
+    "waiting": "{{count}} 项等待你处理",
+    "waiting_one": "1 项等待你处理"
   }
 }

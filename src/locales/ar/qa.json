@@ -38,7 +38,9 @@
     "smartSquashResult": "تم الدمج الذكي لـ {{count}} مكرر(ات)",
     "noSemanticDuplicates": "لم يتم العثور على مكررات دلالية",
     "autoSquashFailed": "فشل الدمج التلقائي",
-    "smartSquashFailed": "فشل الدمج الذكي"
+    "smartSquashFailed": "فشل الدمج الذكي",
+    "requeued": "عادت {{count}} وظائف كانت تنتظر هذه الإجابة إلى قائمة الانتظار",
+    "requeued_one": "عادت وظيفة واحدة كانت تنتظر هذه الإجابة إلى قائمة الانتظار"
   },
   "error": {
     "loadFailed": "فشل في تحميل الأسئلة والأجوبة"
