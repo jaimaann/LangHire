@@ -21,9 +21,9 @@
     "submitting": "Envoi en cours..."
   },
   "success": {
-    "title": "Retour envoyé !",
-    "description": "Votre retour a été publié sur GitHub Discussions.",
-    "viewDiscussion": "Voir la discussion",
+    "title": "Presque terminé !",
+    "description": "Nous avons ouvert GitHub dans votre navigateur avec vos commentaires pré-remplis. Vérifiez-les puis cliquez sur « Start discussion » pour les publier.",
+    "viewDiscussion": "Ouvrir à nouveau",
     "submitAnother": "Envoyer un autre"
   },
   "error": {

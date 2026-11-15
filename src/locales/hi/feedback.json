@@ -21,9 +21,9 @@
     "submitting": "सबमिट हो रहा है..."
   },
   "success": {
-    "title": "प्रतिक्रिया सबमिट हुई!",
-    "description": "आपकी प्रतिक्रिया GitHub Discussions पर पोस्ट की गई है।",
-    "viewDiscussion": "चर्चा देखें",
+    "title": "लगभग हो गया!",
+    "description": "हमने आपकी प्रतिक्रिया भरकर आपके ब्राउज़र में GitHub खोल दिया है। इसे जाँचें और पोस्ट करने के लिए \"Start discussion\" दबाएँ।",
+    "viewDiscussion": "फिर से खोलें",
     "submitAnother": "एक और सबमिट करें"
   },
   "error": {

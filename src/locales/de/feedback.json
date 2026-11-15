@@ -21,9 +21,9 @@
     "submitting": "Wird gesendet..."
   },
   "success": {
-    "title": "Feedback gesendet!",
-    "description": "Ihr Feedback wurde in GitHub Discussions veröffentlicht.",
-    "viewDiscussion": "Diskussion ansehen",
+    "title": "Fast geschafft!",
+    "description": "Wir haben GitHub in deinem Browser mit deinem Feedback geöffnet. Prüfe es und klicke auf „Start discussion“, um es zu veröffentlichen.",
+    "viewDiscussion": "Erneut öffnen",
     "submitAnother": "Weiteres senden"
   },
   "error": {

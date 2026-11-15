@@ -54,6 +54,16 @@ export function setBackendPort(port: number) {
  * cached; a failure clears the cache so the next call retries.
  */
 export function getBackendInfo(): Promise<BackendInfo> {
+  // Dev only: run the UI in a normal browser against a hand-started backend
+  // (`VITE_DEV_BACKEND_TOKEN=... npm run dev`). Never active in production builds.
+  const devToken = import.meta.env.DEV ? import.meta.env.VITE_DEV_BACKEND_TOKEN : undefined;
+  if (!infoPromise && devToken) {
+    infoPromise = Promise.resolve({
+      port: Number(import.meta.env.VITE_DEV_BACKEND_PORT) || DEFAULT_PORT,
+      token: devToken,
+      managed: false,
+    });
+  }
   if (!infoPromise) {
     infoPromise = invoke<BackendInfo | undefined>("get_backend_info")
       .then((info) => {

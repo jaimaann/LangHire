@@ -21,9 +21,9 @@
     "submitting": "Enviando..."
   },
   "success": {
-    "title": "¡Comentario enviado!",
-    "description": "Tu comentario ha sido publicado en GitHub Discussions.",
-    "viewDiscussion": "Ver discusión",
+    "title": "¡Casi listo!",
+    "description": "Abrimos GitHub en tu navegador con tus comentarios ya escritos. Revísalos y pulsa \"Start discussion\" para publicarlos.",
+    "viewDiscussion": "Abrir de nuevo",
     "submitAnother": "Enviar otro"
   },
   "error": {

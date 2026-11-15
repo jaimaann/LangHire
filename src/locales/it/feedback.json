@@ -21,9 +21,9 @@
     "submitting": "Invio in corso..."
   },
   "success": {
-    "title": "Feedback inviato!",
-    "description": "Il tuo feedback è stato pubblicato su GitHub Discussions.",
-    "viewDiscussion": "Visualizza la discussione",
+    "title": "Quasi fatto!",
+    "description": "Abbiamo aperto GitHub nel browser con il tuo feedback già compilato. Controllalo e premi \"Start discussion\" per pubblicarlo.",
+    "viewDiscussion": "Apri di nuovo",
     "submitAnother": "Invia un altro"
   },
   "error": {

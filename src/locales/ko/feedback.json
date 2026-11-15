@@ -21,9 +21,9 @@
     "submitting": "제출 중..."
   },
   "success": {
-    "title": "피드백이 제출되었습니다!",
-    "description": "피드백이 GitHub Discussions에 게시되었습니다.",
-    "viewDiscussion": "토론 보기",
+    "title": "거의 다 됐어요!",
+    "description": "피드백이 입력된 상태로 브라우저에서 GitHub를 열었습니다. 내용을 확인한 뒤 \"Start discussion\"을 눌러 게시하세요.",
+    "viewDiscussion": "다시 열기",
     "submitAnother": "추가 제출"
   },
   "error": {

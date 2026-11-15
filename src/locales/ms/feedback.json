@@ -21,9 +21,9 @@
     "submitting": "Menghantar..."
   },
   "success": {
-    "title": "Maklum Balas Dihantar!",
-    "description": "Maklum balas anda telah disiarkan di GitHub Discussions.",
-    "viewDiscussion": "Lihat Perbincangan",
+    "title": "Hampir siap!",
+    "description": "Kami telah membuka GitHub dalam pelayar anda dengan maklum balas anda diisi. Semak dan tekan \"Start discussion\" untuk menyiarkannya.",
+    "viewDiscussion": "Buka semula",
     "submitAnother": "Hantar Lagi"
   },
   "error": {

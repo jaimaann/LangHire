@@ -21,9 +21,9 @@
     "submitting": "正在提交..."
   },
   "success": {
-    "title": "反馈已提交！",
-    "description": "你的反馈已发布到 GitHub Discussions。",
-    "viewDiscussion": "查看讨论",
+    "title": "就差一步！",
+    "description": "我们已在浏览器中打开 GitHub，并填好了你的反馈。检查无误后点击“Start discussion”即可发布。",
+    "viewDiscussion": "再次打开",
     "submitAnother": "再提交一条"
   },
   "error": {

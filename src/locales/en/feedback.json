@@ -21,9 +21,9 @@
     "submitting": "Submitting..."
   },
   "success": {
-    "title": "Feedback Submitted!",
-    "description": "Your feedback has been posted to GitHub Discussions.",
-    "viewDiscussion": "View Discussion",
+    "title": "Almost done!",
+    "description": "We opened GitHub in your browser with your feedback filled in. Check it and press \"Start discussion\" to post it.",
+    "viewDiscussion": "Open it again",
     "submitAnother": "Submit Another"
   },
   "error": {

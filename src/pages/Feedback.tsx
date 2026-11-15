@@ -1,53 +1,15 @@
 import { useState } from "react";
 import { Send, ExternalLink, CheckCircle, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { buildDiscussionUrl, CATEGORY_KEYS } from "../lib/feedbackUrl";
 
-const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN || "";
-const GITHUB_GRAPHQL_URL = "https://api.github.com/graphql";
-const REPO_OWNER = "jaimaann";
-const REPO_NAME = "LangHire";
-
-const CATEGORY_KEYS = ["featureRequest", "bugReport", "generalFeedback"] as const;
-const CATEGORY_MAP: Record<string, string> = {
-  featureRequest: "Feature Request",
-  bugReport: "Bug Report",
-  generalFeedback: "General Feedback",
-};
-
-async function createDiscussion(title: string, body: string, categoryName: string): Promise<string> {
-  const headers = { Authorization: `Bearer ${GITHUB_TOKEN}`, "Content-Type": "application/json" };
-
-  const repoRes = await fetch(GITHUB_GRAPHQL_URL, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      query: `{ repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") { id, discussionCategories(first: 25) { nodes { id, name } } } }`,
-    }),
-  });
-  const repoData = await repoRes.json();
-  if (repoData.errors) throw new Error(repoData.errors[0].message);
-
-  const repoId = repoData.data.repository.id;
-  const cats = repoData.data.repository.discussionCategories.nodes;
-  const cat = cats.find((c: { name: string }) => c.name.toLowerCase() === categoryName.toLowerCase()) || cats[0];
-  if (!cat) throw new Error("No discussion categories found.");
-
-  const mutRes = await fetch(GITHUB_GRAPHQL_URL, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      query: `mutation($repoId: ID!, $catId: ID!, $title: String!, $body: String!) {
-        createDiscussion(input: {repositoryId: $repoId, categoryId: $catId, title: $title, body: $body}) {
-          discussion { url }
-        }
-      }`,
-      variables: { repoId, catId: cat.id, title, body },
-    }),
-  });
-  const mutData = await mutRes.json();
-  if (mutData.errors) throw new Error(mutData.errors[0].message);
-
-  return mutData.data.createDiscussion.discussion.url;
+async function openExternal(url: string): Promise<void> {
+  try {
+    const { openUrl } = await import("@tauri-apps/plugin-opener");
+    await openUrl(url);
+  } catch {
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
 }
 
 export default function Feedback() {
@@ -65,17 +27,14 @@ export default function Feedback() {
       setError(t("error.fillRequired"));
       return;
     }
-    if (!GITHUB_TOKEN) {
-      setError(t("error.notConfigured"));
-      return;
-    }
     setError(null);
     setSubmitting(true);
     try {
       let body = description.trim();
       if (email.trim()) body += `\n\n---\n*Contact: ${email.trim()}*`;
 
-      const url = await createDiscussion(title.trim(), body, CATEGORY_MAP[categoryKey]);
+      const url = buildDiscussionUrl(title.trim(), body, categoryKey);
+      await openExternal(url);
       setSuccess(url);
       setTitle("");
       setDescription("");

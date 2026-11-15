@@ -21,9 +21,9 @@
     "submitting": "送信中..."
   },
   "success": {
-    "title": "フィードバックが送信されました！",
-    "description": "あなたのフィードバックがGitHub Discussionsに投稿されました。",
-    "viewDiscussion": "ディスカッションを見る",
+    "title": "あと少しです！",
+    "description": "フィードバックを入力した状態でブラウザに GitHub を開きました。内容を確認し、「Start discussion」を押して投稿してください。",
+    "viewDiscussion": "もう一度開く",
     "submitAnother": "もう一件送信"
   },
   "error": {

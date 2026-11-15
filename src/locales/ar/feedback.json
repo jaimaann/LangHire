@@ -21,9 +21,9 @@
     "submitting": "جارٍ الإرسال..."
   },
   "success": {
-    "title": "تم إرسال الملاحظات!",
-    "description": "تم نشر ملاحظاتك في GitHub Discussions.",
-    "viewDiscussion": "عرض النقاش",
+    "title": "أوشكت على الانتهاء!",
+    "description": "فتحنا GitHub في متصفحك مع ملاحظاتك معبأة مسبقًا. راجعها ثم اضغط \"Start discussion\" لنشرها.",
+    "viewDiscussion": "افتحها مرة أخرى",
     "submitAnother": "إرسال أخرى"
   },
   "error": {

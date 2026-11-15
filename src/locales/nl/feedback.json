@@ -21,9 +21,9 @@
     "submitting": "Versturen..."
   },
   "success": {
-    "title": "Feedback verstuurd!",
-    "description": "Je feedback is geplaatst op GitHub Discussions.",
-    "viewDiscussion": "Discussie bekijken",
+    "title": "Bijna klaar!",
+    "description": "We hebben GitHub in je browser geopend met je feedback ingevuld. Controleer het en klik op \"Start discussion\" om het te plaatsen.",
+    "viewDiscussion": "Opnieuw openen",
     "submitAnother": "Nog een versturen"
   },
   "error": {
