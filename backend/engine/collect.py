@@ -134,7 +134,7 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
     _log_start("collect", f"{plugin.display_name}: {title}")
     try:
         agent: Agent = Agent(
-            task=task, llm=sc.get_llm(), tools=tools, use_vision=vision.use_vision(), llm_call_timeout=300,
+            task=task, llm=sc.get_llm(), tools=tools, use_vision=vision.use_vision(), llm_timeout=180,
             browser_session=browser, max_failures=int(settings.get("max_failures", 8) or 8), calculate_cost=True,
             register_new_step_callback=on_step, register_done_callback=_log_done,
             save_conversation_path=convo,

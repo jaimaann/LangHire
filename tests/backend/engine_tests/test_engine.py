@@ -299,3 +299,19 @@ def test_outcome_text_with_words_between():
     from engine.apply import parse_outcome_text
     text = "OUTCOME (had report_application_result been callable): needs_input — form is mostly filled"
     assert parse_outcome_text(text)[0] == "needs_input"
+
+
+def test_agent_kwargs_we_pass_exist_in_browser_use():
+    """browser-use accepts **kwargs, so a misspelt option is silently ignored
+    (llm_call_timeout was, for months). Every option we pass must be a real one."""
+    import inspect
+    import re
+    from pathlib import Path
+    from browser_use import Agent
+    params = set(inspect.signature(Agent.__init__).parameters)
+    root = Path(__file__).resolve().parents[3] / "backend" / "engine"
+    for f in ("apply.py", "collect.py"):
+        src = (root / f).read_text(encoding="utf-8")
+        for call in re.findall(r"Agent\((.*?)\n\s*\)", src, re.S):
+            for kw in re.findall(r"^\s*(\w+)=", call, re.M) + re.findall(r",\s*(\w+)=", call):
+                assert kw in params, f"{f}: Agent({kw}=...) is not a browser-use option"

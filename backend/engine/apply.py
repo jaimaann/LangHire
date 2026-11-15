@@ -223,7 +223,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             llm=sc.get_llm(),
             tools=tools,
             use_vision=vision_on,
-            llm_call_timeout=300,
+            llm_timeout=180,  # (was llm_call_timeout, which browser-use silently ignored: 75 s default)
             max_failures=int(settings.get("max_failures", 8) or 8),
             loop_detection_enabled=True,
             loop_detection_window=5,
