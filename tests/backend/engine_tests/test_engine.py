@@ -247,3 +247,25 @@ def test_parallel_workers_get_separate_profiles(data_dir):
     assert w2 != main
     assert (w2 / "Default" / "Network" / "Cookies").exists()   # logins carried over
     assert not (w2 / "SingletonLock").exists()                 # Chrome's lock is not copied
+
+
+def test_delete_all_works_while_other_threads_hold_the_db(data_dir):
+    """Windows can't unlink an open SQLite file; delete_all must still remove the data."""
+    import threading
+    db.add_jobs([{"url": "https://a.co/1", "title": "T"}])
+    ready, done = threading.Event(), threading.Event()
+
+    def hold():
+        db.read_jobs()  # opens this thread's own connection and keeps it
+        ready.set()
+        done.wait(10)
+
+    t = threading.Thread(target=hold)
+    t.start()
+    ready.wait(5)
+    try:
+        user_data.delete_all()
+        assert db.read_jobs() == {}
+    finally:
+        done.set()
+        t.join()

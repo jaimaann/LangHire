@@ -11,6 +11,7 @@ from __future__ import annotations
 import logging
 import shutil
 import time
+from pathlib import Path
 
 from core import db, secrets
 from core.config import get_data_dir, load_llm_settings, load_profile, load_settings
@@ -74,6 +75,11 @@ def delete_all() -> list[str]:
     """Delete everything LangHire stored. Returns the top-level names removed."""
     names = secrets.all_secret_names(load_llm_settings())
     secrets.delete_all(names)
+    # Empty every table first. On Windows a database file can't be deleted while
+    # any thread (the engine loop, the metrics logger) still has it open, and
+    # the old version silently left all jobs and memories in place.
+    for path in (get_data_dir() / "langhire.db", get_data_dir() / "memory_store.db"):
+        _wipe_sqlite(path)
     db.close_all()
     try:
         sc.get_memory_store().close()
@@ -102,3 +108,24 @@ def delete_all() -> list[str]:
         except OSError as e:
             _log.warning(f"could not delete {p.name}: {e}")
     return removed
+
+
+def _wipe_sqlite(path: Path) -> None:
+    """Delete all rows from every table (schema kept) and checkpoint the WAL."""
+    if not path.exists():
+        return
+    import sqlite3
+    try:
+        conn = sqlite3.connect(str(path), timeout=30)
+        try:
+            tables = [r[0] for r in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name != 'schema_version'")]
+            with conn:
+                for t in tables:
+                    conn.execute(f'DELETE FROM "{t}"')
+            conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+            conn.execute("VACUUM")
+        finally:
+            conn.close()
+    except sqlite3.Error as e:
+        _log.warning(f"could not wipe {path.name}: {e}")
