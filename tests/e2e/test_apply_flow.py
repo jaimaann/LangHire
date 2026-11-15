@@ -44,7 +44,8 @@ def test_add_by_url_reads_the_posting(backend, ats):
     url = f"{ats['base']}/jobs/lv-1"
     _add(backend, url)
     job = _job(backend, url)
-    assert "Business Intelligence Analyst" in job["title"]      # was "Manually Added" before
+    # was "Manually Added · Unknown" before
+    assert job["title"] == "Business Intelligence Analyst" and job["company"] == "Contoso Retail"
 
 
 def test_test_mode_fills_the_form_clicks_submit_and_sends_nothing(backend, ats):

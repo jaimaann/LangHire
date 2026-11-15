@@ -485,7 +485,11 @@ def test_job_meta_reads_jsonld_then_opengraph():
           '<meta property="og:site_name" content="Meesho"><meta name="description" content="Build models">')
     assert parse_job_html(og) == {"title": "Senior Data Scientist", "company": "Meesho", "location": "",
                                   "description": "Build models"}
-    assert parse_job_html("<title> Jobs at X </title>")["title"] == "Jobs at X"
+    assert parse_job_html("<title>Data Analyst at Northwind Analytics</title>")[
+        "title"] == "Data Analyst"
+    assert parse_job_html("<title>Data Analyst at Northwind Analytics</title>")["company"] == "Northwind Analytics"
+    assert parse_job_html("<title>Careers</title>") == {"title": "Careers", "company": "", "location": "",
+                                                        "description": ""}
     assert parse_job_html('<script type="application/ld+json">{broken</script>')["title"] == ""
 
 
@@ -519,3 +523,9 @@ def test_conversation_dir_fits_windows_path_limit(data_dir, monkeypatch):
     assert d.startswith(str(deep)) and "apply_Unknown_Bus" in d
     short = conversation_dir("apply", "Acme", "Analyst")
     assert "Acme_Analyst" in short
+
+
+def test_job_meta_does_not_split_on_a_dash():
+    from engine.job_meta import parse_job_html
+    m = parse_job_html("<title>Senior Analyst, Advanced Analytics - Gurugram</title>")
+    assert m["title"] == "Senior Analyst, Advanced Analytics - Gurugram" and m["company"] == ""

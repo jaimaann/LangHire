@@ -1,0 +1,179 @@
+name: End-to-end tests
+
+# The whole app on every commit: the production UI bundle, the real backend and
+# the real browser agent in Chromium, against a local mock job site and a
+# scripted OpenAI-compatible model (tests/fixtures). No API keys, no network,
+# no real employers. See tests/e2e/conftest.py and docs/ci-macos-runner.md.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"   # nightly: also runs the packaged-backend variant
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  LANGHIRE_E2E: "1"
+  LANGHIRE_HEADLESS: "1"
+  PYTHONUTF8: "1"
+
+jobs:
+  e2e:
+    name: E2E (${{ matrix.label }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: Linux
+          - os: windows-latest
+            label: Windows
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+          enable-cache: true
+      - name: Install dependencies
+        run: |
+          npm ci
+          uv sync
+      - name: Build the UI (production bundle)
+        run: npm run build
+      - name: Install Chromium
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            uv run python -m playwright install --with-deps chromium
+          else
+            uv run python -m playwright install chromium
+          fi
+      - name: End-to-end tests (backend from source)
+        run: uv run pytest tests/e2e -v -p no:cacheprovider --basetemp=${{ runner.temp }}/e2e
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-logs-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/e2e/**/backend.out
+            ${{ runner.temp }}/e2e/**/logs/**
+          retention-days: 7
+
+  # Your own Mac, registered as a self-hosted runner (docs/ci-macos-runner.md).
+  # Off until the repository variable MACOS_RUNNER is set to "true", so commits
+  # don't queue forever while no Mac is connected. Pull requests from forks never
+  # run here: a public repo must not run strangers' code on a personal machine.
+  e2e-macos:
+    name: E2E (macOS, self-hosted)
+    if: >-
+      vars.MACOS_RUNNER == 'true' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, macOS, langhire-e2e]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: |
+          npm ci
+          uv sync
+      - name: Build the UI (production bundle)
+        run: npm run build
+      - name: Install Chromium
+        run: uv run python -m playwright install chromium
+      - name: End-to-end tests (backend from source)
+        run: uv run pytest tests/e2e -v -p no:cacheprovider --basetemp=${{ runner.temp }}/e2e
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-logs-macOS
+          path: |
+            ${{ runner.temp }}/e2e/**/backend.out
+            ${{ runner.temp }}/e2e/**/logs/**
+          retention-days: 7
+
+  # The backend users actually run is a PyInstaller binary; packaging breaks
+  # (missing hidden imports, data files) don't show up when running from source.
+  # Slower, so: pushes to main, pull requests, nightly and manual runs.
+  e2e-binary:
+    name: E2E packaged backend (${{ matrix.label }})
+    if: >-
+      github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: Linux
+            target: x86_64-unknown-linux-gnu
+            binary: src-tauri/binaries/langhire-backend-x86_64-unknown-linux-gnu
+          - os: windows-latest
+            label: Windows
+            target: x86_64-pc-windows-msvc
+            binary: src-tauri/binaries/langhire-backend-x86_64-pc-windows-msvc.exe
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+          enable-cache: true
+      - name: Install dependencies
+        run: |
+          npm ci
+          uv sync
+      - name: Build the UI
+        run: npm run build
+      - name: Build backend binary (Unix)
+        if: runner.os != 'Windows'
+        run: bash scripts/build-backend.sh ${{ matrix.target }}
+      - name: Build backend binary (Windows)
+        if: runner.os == 'Windows'
+        run: powershell -ExecutionPolicy Bypass -File scripts/build-backend.ps1
+      - name: Install Chromium
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            uv run python -m playwright install --with-deps chromium
+          else
+            uv run python -m playwright install chromium
+          fi
+      - name: End-to-end tests (packaged backend)
+        env:
+          LANGHIRE_E2E_BACKEND: ${{ github.workspace }}/${{ matrix.binary }}
+        run: uv run pytest tests/e2e -v -p no:cacheprovider --basetemp=${{ runner.temp }}/e2e
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-binary-logs-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/e2e/**/backend.out
+            ${{ runner.temp }}/e2e/**/logs/**
+          retention-days: 7

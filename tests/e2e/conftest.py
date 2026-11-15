@@ -111,15 +111,16 @@ def ats(tmp_path_factory):
     httpd.shutdown()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def llm():
     httpd, state = _load("scripted_llm", "tests/fixtures/llm/server.py").serve(0)
     yield {"base_url": f"http://127.0.0.1:{httpd.server_address[1]}/v1", "state": state}
     httpd.shutdown()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def backend(tmp_path_factory, llm):
+    """A fresh backend (and data folder) per test module, so modules don't depend on each other."""
     data = tmp_path_factory.mktemp("langhire-data")
     port = _free_port()
     log = data.parent / "backend.out"
@@ -172,12 +173,18 @@ class _QuietHandler(http.server.SimpleHTTPRequestHandler):
 
 
 @pytest.fixture(scope="session")
-def ui(backend):
+def ui():
     """The production UI bundle (dist/), served statically. Build it first: npm run build."""
     dist = ROOT / "dist"
     if not (dist / "index.html").exists():
         pytest.skip("dist/ not built: run `npm run build` first")
-    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(_QuietHandler, directory=str(dist)))
+    # The backend only answers its own app's origins (CORS + an origin check); 127.0.0.1:1420
+    # is the allowed dev origin, so the UI is served from exactly there.
+    try:
+        httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 1420),
+                                                functools.partial(_QuietHandler, directory=str(dist)))
+    except OSError as e:
+        pytest.fail(f"port 1420 is busy (is `npm run dev` running?): {e}")
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
     yield f"http://127.0.0.1:{httpd.server_address[1]}"
     httpd.shutdown()

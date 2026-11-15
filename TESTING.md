@@ -65,7 +65,41 @@ its browser/subprocess/worker endpoints are exercised by the end-to-end harness
 
 Run the coverage commands above to see the current per-module breakdown.
 
-## Real-browser and end-to-end tests
+## End-to-end tests on every commit (no API key)
+
+`tests/e2e/` runs the whole app the way a user does, offline and deterministically:
+
+| Piece | What stands in for the real world |
+|---|---|
+| UI | the production bundle (`dist/`), driven by Playwright; a stub replaces the Tauri host and hands over the backend's port and token |
+| Backend | `backend/main.py`, or the packaged binary when `LANGHIRE_E2E_BACKEND` points at it |
+| Agent | the real browser-use agent in a real Chromium |
+| Model | `tests/fixtures/llm/server.py`: an OpenAI-compatible server whose rules read the agent's indexed page and return actions (with token usage) |
+| Employer | `tests/fixtures/ats/server.py`: the mock ATS |
+
+```bash
+npm run build                                   # the UI tests use dist/
+LANGHIRE_E2E=1 uv run pytest tests/e2e -v       # ~4 min; skipped without LANGHIRE_E2E=1
+LANGHIRE_E2E=1 LANGHIRE_E2E_HEADED=1 uv run pytest tests/e2e/test_ui.py   # watch the UI
+LANGHIRE_E2E=1 LANGHIRE_E2E_BACKEND=src-tauri/binaries/langhire-backend-<target> uv run pytest tests/e2e
+```
+
+Covered: every page renders without errors; add a job by URL (details fetched);
+apply in test mode from the UI (live timeline, History, details with token counts,
+nothing sent); a real submit that reaches the employer with the PDF; needs-input
+-> Q&A badge -> answer -> job re-queued -> retry passes.
+
+Port 1420 must be free (the backend only answers its own app's origins, and
+`http://127.0.0.1:1420` is the allowed dev origin). `.github/workflows/e2e.yml`
+runs this on every push on Linux and Windows, the packaged-backend variant on
+main/PRs/nightly, and on your own Mac once a self-hosted runner is registered:
+see [docs/ci-macos-runner.md](docs/ci-macos-runner.md).
+
+When the agent's prompt or actions change, the scripted model may need a new
+rule; it fails loudly (the job ends `failed` with the reason in the record and
+`backend.out` uploaded as a CI artifact) rather than passing by accident.
+
+## Real-browser tests and real-LLM runs
 
 **Mock ATS.** `tests/fixtures/ats/server.py` serves job postings and application
 forms shaped like Greenhouse, Lever, a two-step form and a form with a required
