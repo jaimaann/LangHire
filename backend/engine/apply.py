@@ -172,7 +172,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
 
     from browser_use import Agent
     vision_on = vision.use_vision() if _vision is None else _vision
-    browser = make_browser_session(keep_alive=True)  # we screenshot, then close it ourselves
+    browser = make_browser_session(worker_id, keep_alive=True)  # we screenshot, then close it ourselves
     started = datetime.now(timezone.utc)
     _log_start("apply", f"{title} at {company}")
     history = None

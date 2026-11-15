@@ -38,19 +38,24 @@ def profile_args_match(cmdline: list[str], profile_dir: Path) -> bool:
     return False
 
 
+def _our_profile_dirs() -> list[Path]:
+    main = browser_profile_dir()
+    return [main, *sorted(main.parent.glob("browser_profile_w*"))]
+
+
 def kill_profile_browsers(profile_dir: Path | None = None, timeout: float = 3.0) -> int:
-    """Terminate Chromium processes using our profile dir. Returns how many."""
+    """Terminate Chromium processes using one of our profile dirs. Returns how many."""
     try:
         import psutil
     except ImportError:  # psutil is a declared dependency; never fall back to killing all Chrome
         _log.warning("psutil missing; skipping browser cleanup")
         return 0
-    profile_dir = profile_dir or browser_profile_dir()
+    dirs = [profile_dir] if profile_dir else _our_profile_dirs()
     procs = []
     for proc in psutil.process_iter(["pid", "cmdline"]):
         try:
             cmd = proc.info.get("cmdline") or []
-            if cmd and profile_args_match(cmd, profile_dir):
+            if cmd and any(profile_args_match(cmd, d) for d in dirs):
                 procs.append(proc)
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             continue
@@ -70,7 +75,33 @@ def kill_profile_browsers(profile_dir: Path | None = None, timeout: float = 3.0)
     return len(procs)
 
 
-def make_browser_session(**overrides):
+_CLONE_SKIP = ("Cache", "Code Cache", "GPUCache", "Service Worker", "ShaderCache", "GrShaderCache",
+               "Crashpad", "SingletonLock", "SingletonCookie", "SingletonSocket", "lockfile")
+
+
+def worker_profile_dir(worker_id: int) -> Path:
+    """Chrome locks a profile directory, so parallel workers can't share one.
+
+    Worker 1 uses the main profile (where the user logged in); workers 2+ get a
+    copy of it (logins included, caches and lock files skipped), refreshed when
+    the main profile is newer.
+    """
+    main = browser_profile_dir()
+    if worker_id <= 1:
+        return main
+    clone = main.parent / f"browser_profile_w{worker_id}"
+    main.mkdir(parents=True, exist_ok=True)
+    stamp = clone / ".cloned_at"
+    main_mtime = max((p.stat().st_mtime for p in main.glob("Default/**/Cookies")), default=0.0)
+    if not stamp.exists() or float(stamp.read_text() or 0) < main_mtime:
+        import shutil
+        shutil.rmtree(clone, ignore_errors=True)
+        shutil.copytree(main, clone, ignore=shutil.ignore_patterns(*_CLONE_SKIP), dirs_exist_ok=True)
+        stamp.write_text(str(main_mtime))
+    return clone
+
+
+def make_browser_session(worker_id: int = 1, **overrides):
     """A browser-use session: the user's own Chrome over CDP if configured, else our profile."""
     from browser_use import BrowserSession
     settings = load_settings()
@@ -78,7 +109,7 @@ def make_browser_session(**overrides):
     if cdp_url:
         return BrowserSession(cdp_url=cdp_url, **overrides)
     kwargs: dict = {
-        "user_data_dir": str(browser_profile_dir()),
+        "user_data_dir": str(worker_profile_dir(worker_id)),
         "chromium_sandbox": sys.platform != "linux",
     }
     kwargs.update(overrides)

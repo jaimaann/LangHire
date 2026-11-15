@@ -235,3 +235,15 @@ def test_text_only_model_is_remembered(data_dir):
     config.save_llm_settings({"provider": "openai_compatible", "use_vision": "on",
                               "openai_compatible": {"model": "glm-5.3", "base_url": "x"}})
     assert vision.use_vision() is True
+
+
+def test_parallel_workers_get_separate_profiles(data_dir):
+    main = browsers.browser_profile_dir()
+    (main / "Default" / "Network").mkdir(parents=True)
+    (main / "Default" / "Network" / "Cookies").write_text("c")
+    (main / "SingletonLock").write_text("lock")
+    assert browsers.worker_profile_dir(1) == main
+    w2 = browsers.worker_profile_dir(2)
+    assert w2 != main
+    assert (w2 / "Default" / "Network" / "Cookies").exists()   # logins carried over
+    assert not (w2 / "SingletonLock").exists()                 # Chrome's lock is not copied
