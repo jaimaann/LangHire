@@ -112,6 +112,8 @@
     "linkedinReason": "Hiermee kan de agent met je account op LinkedIn zoeken en Easy Apply gebruiken.",
     "gmailReason": "De agent leest de nieuwste e-mail met verificatiecode om eenmalige codes voor je in te vullen.",
     "gmailOptional": "Optioneel. Zet \"Verificatiecodes uit Gmail lezen\" aan onder Automatisering zodat de agent e-mailcodes voor je invult.",
-    "genericReason": "Hiermee kan de agent met je account zoeken en solliciteren op {{name}}."
+    "genericReason": "Hiermee kan de agent met je account zoeken en solliciteren op {{name}}.",
+    "otherBoards": "Andere sites ({{count}}) niet gebruikt in {{country}}",
+    "hideOtherBoards": "Andere sites verbergen"
   }
 }

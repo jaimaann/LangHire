@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor, within, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import LoginCards from "./LoginCards";
 import { getAuthStatus, launchLogin } from "../lib/api";
@@ -29,6 +29,7 @@ vi.mock("react-i18next", () => ({
 vi.mock("../lib/api", () => ({
   getAuthStatus: vi.fn(),
   launchLogin: vi.fn(),
+  getProfile: vi.fn(() => Promise.resolve({ country: "DE" })),
 }));
 
 const mockGetAuthStatus = vi.mocked(getAuthStatus);
@@ -198,5 +199,23 @@ describe("LoginCards", () => {
     mockGetAuthStatus.mockResolvedValue({} as never);
     render(<LoginCards />);
     expect(await screen.findByText("No job sites need a login.")).toBeInTheDocument();
+  });
+
+  it("shows the boards for the user's country first and folds the rest away", async () => {
+    mockGetAuthStatus.mockResolvedValue({
+      linkedin: { logged_in: false, display_name: "LinkedIn", countries: ["ALL"] },
+      stepstone: { logged_in: false, display_name: "StepStone", countries: ["DE"] },
+      naukri: { logged_in: false, display_name: "Naukri", countries: ["IN"] },
+      seek: { logged_in: true, display_name: "SEEK", countries: ["AU"] },
+      gmail: { logged_in: false, display_name: "Gmail", countries: ["ALL"] },
+    } as never);
+    render(<LoginCards />);
+    expect(await screen.findByText("StepStone")).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText("Naukri")).not.toBeInTheDocument());
+    expect(screen.getByText("SEEK")).toBeInTheDocument(); // logged in: always shown
+    const toggle = screen.getByTestId("login-other-boards");
+    expect(toggle).toHaveTextContent("logins.otherBoards");
+    fireEvent.click(toggle);
+    expect(await screen.findByText("Naukri")).toBeInTheDocument();
   });
 });

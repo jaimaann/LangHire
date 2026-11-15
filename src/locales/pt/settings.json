@@ -112,6 +112,8 @@
     "linkedinReason": "Permite que o agente pesquise no LinkedIn e use o Easy Apply com sua conta.",
     "gmailReason": "O agente lê o e-mail mais recente com código de verificação para digitar códigos de uso único por você.",
     "gmailOptional": "Opcional. Ative \"Ler códigos de verificação do Gmail\" em Automação para que o agente digite os códigos por você.",
-    "genericReason": "Permite que o agente pesquise e se candidate no {{name}} com sua conta."
+    "genericReason": "Permite que o agente pesquise e se candidate no {{name}} com sua conta.",
+    "otherBoards": "Outros sites ({{count}}) não usados em {{country}}",
+    "hideOtherBoards": "Ocultar outros sites"
   }
 }

@@ -31,7 +31,8 @@
     "start": "시작",
     "startingCollection": "수집 시작 중...",
     "collectedProgress": "{{max}}개 중 {{collected}}개 수집됨",
-    "collectionLog": "수집 로그"
+    "collectionLog": "수집 로그",
+    "sourcesForCountry": "{{country}}에서 쓰는 채용 사이트를 표시합니다. 다른 사이트는 프로필에서 국가를 바꾸면 보입니다."
   },
   "emptyState": {
     "noMatching": "일치하는 채용 없음",

@@ -38,6 +38,7 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
   // Add job form state
   const [showAddJobForm, setShowAddJobForm] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
+  const [profileCountry, setProfileCountry] = useState("");
   const [addJobUrl, setAddJobUrl] = useState("");
   const [addJobTitle, setAddJobTitle] = useState("");
   const [addJobCompany, setAddJobCompany] = useState("");
@@ -52,6 +53,7 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
     getProfile()
       .then((p) => {
         const country = p.country || "US";
+        setProfileCountry(country);
         getPlugins(country)
           .then((res) => {
             if (res.plugins) setAvailableSources(res.plugins);
@@ -270,6 +272,11 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
             <label className="block text-sm font-semibold text-foreground mb-1.5">
               {t("collector.sourcePlatform")}
             </label>
+            {profileCountry && (
+              <p className="text-[12px] text-muted-foreground mb-2" data-testid="sources-country-hint">
+                {t("collector.sourcesForCountry", { country: profileCountry })}
+              </p>
+            )}
             <div className="flex gap-2 flex-wrap">
               {availableSources.map((source) => (
                 <button

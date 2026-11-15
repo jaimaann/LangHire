@@ -31,7 +31,8 @@
     "start": "بدء",
     "startingCollection": "جارٍ بدء الجمع...",
     "collectedProgress": "تم جمع {{collected}} من {{max}} وظيفة",
-    "collectionLog": "سجل الجمع"
+    "collectionLog": "سجل الجمع",
+    "sourcesForCountry": "تُعرض مواقع التوظيف المتاحة في {{country}}. غيّر بلدك من الملف الشخصي لرؤية غيرها."
   },
   "emptyState": {
     "noMatching": "لا توجد وظائف مطابقة",

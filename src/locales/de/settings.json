@@ -112,6 +112,8 @@
     "linkedinReason": "Damit kann der Agent mit Ihrem Konto auf LinkedIn suchen und Easy Apply nutzen.",
     "gmailReason": "Der Agent liest die neueste E-Mail mit Bestätigungscode, um Einmalcodes für Sie einzugeben.",
     "gmailOptional": "Optional. Aktivieren Sie unter Automatisierung „Bestätigungscodes aus Gmail lesen“, damit der Agent E-Mail-Codes für Sie eingibt.",
-    "genericReason": "Damit kann der Agent mit Ihrem Konto auf {{name}} suchen und sich bewerben."
+    "genericReason": "Damit kann der Agent mit Ihrem Konto auf {{name}} suchen und sich bewerben.",
+    "otherBoards": "Weitere Jobbörsen ({{count}}), nicht für {{country}}",
+    "hideOtherBoards": "Weitere Jobbörsen ausblenden"
   }
 }

@@ -31,7 +31,8 @@
     "start": "Iniciar",
     "startingCollection": "Iniciando recopilación...",
     "collectedProgress": "{{collected}} de {{max}} empleos recopilados",
-    "collectionLog": "Registro de recopilación"
+    "collectionLog": "Registro de recopilación",
+    "sourcesForCountry": "Se muestran los portales de empleo de {{country}}. Cambia tu país en Perfil para ver otros."
   },
   "emptyState": {
     "noMatching": "No hay empleos que coincidan",

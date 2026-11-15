@@ -31,7 +31,8 @@
     "start": "Start",
     "startingCollection": "Verzameling wordt gestart...",
     "collectedProgress": "{{collected}} van {{max}} banen verzameld",
-    "collectionLog": "Verzamelingslog"
+    "collectionLog": "Verzamelingslog",
+    "sourcesForCountry": "Vacaturesites voor {{country}} worden getoond. Wijzig je land in je profiel om andere te zien."
   },
   "emptyState": {
     "noMatching": "Geen overeenkomende banen",

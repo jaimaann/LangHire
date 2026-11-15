@@ -112,6 +112,8 @@
     "linkedinReason": "Membolehkan ejen mencari di LinkedIn dan menggunakan Easy Apply dengan akaun anda.",
     "gmailReason": "Ejen membaca e-mel kod pengesahan terbaharu supaya dapat memasukkan kod sekali guna untuk anda.",
     "gmailOptional": "Pilihan. Hidupkan \"Baca kod pengesahan daripada Gmail\" di bawah Automasi supaya ejen memasukkan kod e-mel untuk anda.",
-    "genericReason": "Membolehkan ejen mencari dan memohon di {{name}} dengan akaun anda."
+    "genericReason": "Membolehkan ejen mencari dan memohon di {{name}} dengan akaun anda.",
+    "otherBoards": "Laman lain ({{count}}) tidak digunakan di {{country}}",
+    "hideOtherBoards": "Sembunyikan laman lain"
   }
 }

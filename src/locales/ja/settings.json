@@ -112,6 +112,8 @@
     "linkedinReason": "エージェントがあなたのアカウントでLinkedInを検索し、Easy Applyを使えるようにします。",
     "gmailReason": "エージェントが最新の確認コードメールを読み、ワンタイムコードを代わりに入力します。",
     "gmailOptional": "任意です。「自動化」の「Gmailから確認コードを読み取る」をオンにすると、エージェントがメールのコードを入力します。",
-    "genericReason": "エージェントがあなたのアカウントで {{name}} を検索・応募できるようにします。"
+    "genericReason": "エージェントがあなたのアカウントで {{name}} を検索・応募できるようにします。",
+    "otherBoards": "{{country}} で使わないその他のサイト({{count}})",
+    "hideOtherBoards": "その他のサイトを隠す"
   }
 }

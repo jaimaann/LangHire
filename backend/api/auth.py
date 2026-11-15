@@ -56,8 +56,9 @@ def _services() -> dict[str, dict]:
     for p in plugin_registry().get_all():
         if p.login_url:
             cookies = [(c.domain.lstrip("."), (c.name,), 1) for c in p.auth_cookies]
-            out[p.name] = {"login_url": p.login_url, "cookies": cookies, "display_name": p.display_name}
-    out["gmail"] = {**GMAIL, "display_name": "Gmail"}
+            out[p.name] = {"login_url": p.login_url, "cookies": cookies, "display_name": p.display_name,
+                           "countries": list(p.countries)}
+    out["gmail"] = {**GMAIL, "display_name": "Gmail", "countries": ["ALL"]}
     return out
 
 
@@ -72,7 +73,8 @@ def _cookie_db(profile_dir: str) -> Path | None:
 @router.get("/auth/status")
 async def auth_status():
     services = _services()
-    result = {name: {"logged_in": False, "display_name": s["display_name"]} for name, s in services.items()}
+    result = {name: {"logged_in": False, "display_name": s["display_name"], "countries": s.get("countries", ["ALL"])}
+              for name, s in services.items()}
     cookies_db = _cookie_db(browser_profile_dir())
     if cookies_db is None:
         return result

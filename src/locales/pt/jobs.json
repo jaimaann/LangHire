@@ -31,7 +31,8 @@
     "start": "Iniciar",
     "startingCollection": "Iniciando coleta...",
     "collectedProgress": "{{collected}} de {{max}} vagas coletadas",
-    "collectionLog": "Log de coleta"
+    "collectionLog": "Log de coleta",
+    "sourcesForCountry": "Mostrando os sites de vagas de {{country}}. Mude seu país no Perfil para ver outros."
   },
   "emptyState": {
     "noMatching": "Nenhuma vaga correspondente",

@@ -112,6 +112,8 @@
     "linkedinReason": "에이전트가 내 계정으로 LinkedIn을 검색하고 Easy Apply를 사용할 수 있습니다.",
     "gmailReason": "에이전트가 최신 인증 코드 이메일을 읽고 일회용 코드를 대신 입력합니다.",
     "gmailOptional": "선택 사항입니다. 자동화에서 'Gmail에서 인증 코드 읽기'를 켜면 에이전트가 이메일 코드를 대신 입력합니다.",
-    "genericReason": "에이전트가 내 계정으로 {{name}}에서 검색하고 지원할 수 있습니다."
+    "genericReason": "에이전트가 내 계정으로 {{name}}에서 검색하고 지원할 수 있습니다.",
+    "otherBoards": "{{country}}에서 쓰지 않는 다른 사이트 ({{count}})",
+    "hideOtherBoards": "다른 사이트 숨기기"
   }
 }

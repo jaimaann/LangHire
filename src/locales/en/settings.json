@@ -120,6 +120,8 @@
     "linkedinReason": "Lets the agent search LinkedIn and use Easy Apply with your account.",
     "gmailReason": "The agent reads the newest verification-code email so it can enter one-time codes for you.",
     "gmailOptional": "Optional. Turn on \"Read verification codes from Gmail\" under Automation to let the agent enter email codes for you.",
-    "genericReason": "Lets the agent search and apply on {{name}} with your account."
+    "genericReason": "Lets the agent search and apply on {{name}} with your account.",
+    "otherBoards": "Other boards ({{count}}) not used in {{country}}",
+    "hideOtherBoards": "Hide other boards"
   }
 }

@@ -31,7 +31,8 @@
     "start": "Start",
     "startingCollection": "Starting collection...",
     "collectedProgress": "Collected {{collected}} of {{max}} jobs",
-    "collectionLog": "Collection Log"
+    "collectionLog": "Collection Log",
+    "sourcesForCountry": "Showing the job boards that serve {{country}}. Change your country on the Profile page to see others."
   },
   "emptyState": {
     "noMatching": "No matching jobs",

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { CheckCircle, XCircle, LogIn, Loader2, RefreshCw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import InlineNotice, { type Notice } from "./InlineNotice";
-import { getAuthStatus, launchLogin } from "../lib/api";
+import { getAuthStatus, getProfile, launchLogin } from "../lib/api";
 import type { AuthStatus } from "../lib/types";
 
 /** Brand colors for well-known services; everything else uses the app theme. */
@@ -38,6 +38,16 @@ export default function LoginCards({ gmailEnabled = false }: LoginCardsProps) {
   const [status, setStatus] = useState<AuthStatus>({});
   const [loading, setLoading] = useState(true);
   const [launching, setLaunching] = useState<string | null>(null);
+  const [country, setCountry] = useState("");
+  const [showOthers, setShowOthers] = useState(false);
+
+  useEffect(() => {
+    // never let the country lookup break the login cards (shown before setup is done)
+    Promise.resolve()
+      .then(() => getProfile())
+      .then((p) => setCountry((p?.country || "").toUpperCase()))
+      .catch(() => {});
+  }, []);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -85,11 +95,21 @@ export default function LoginCards({ gmailEnabled = false }: LoginCardsProps) {
     return t("logins.genericReason", { name });
   };
 
+  // Boards for the user's country first; the rest folded away (a Naukri login means
+  // nothing to someone in Germany). Logged-in boards always stay visible.
+  const serves = (id: string) => {
+    const c = status[id]?.countries;
+    return !country || !c || c.length === 0 || c.includes("ALL") || c.includes(country) || !!status[id]?.logged_in;
+  };
+  const primary = ids.filter(serves);
+  const others = ids.filter((id) => !serves(id));
+  const shown = showOthers ? [...primary, ...others] : primary;
+
   return (
     <>
     <InlineNotice notice={notice} onClose={() => setNotice(null)} />
     <div className="grid grid-cols-2 gap-4">
-      {ids.map((id) => {
+      {shown.map((id) => {
         const entry = status[id];
         const name = entry?.display_name || FALLBACK_NAMES[id] || id;
         const loggedIn = !!entry?.logged_in;
@@ -151,6 +171,16 @@ export default function LoginCards({ gmailEnabled = false }: LoginCardsProps) {
         );
       })}
     </div>
+    {others.length > 0 && (
+      <button
+        type="button"
+        onClick={() => setShowOthers((v) => !v)}
+        className="mt-3 text-[13px] text-muted-foreground hover:text-foreground underline-offset-2 hover:underline"
+        data-testid="login-other-boards"
+      >
+        {showOthers ? t("logins.hideOtherBoards") : t("logins.otherBoards", { count: others.length, country })}
+      </button>
+    )}
     </>
   );
 }

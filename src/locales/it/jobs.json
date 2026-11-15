@@ -31,7 +31,8 @@
     "start": "Avvia",
     "startingCollection": "Avvio della raccolta...",
     "collectedProgress": "Raccolte {{collected}} offerte su {{max}}",
-    "collectionLog": "Registro raccolta"
+    "collectionLog": "Registro raccolta",
+    "sourcesForCountry": "Sono mostrati i portali di lavoro per {{country}}. Cambia il paese nel Profilo per vederne altri."
   },
   "emptyState": {
     "noMatching": "Nessuna offerta corrispondente",

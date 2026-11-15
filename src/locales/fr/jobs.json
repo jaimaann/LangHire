@@ -31,7 +31,8 @@
     "start": "Démarrer",
     "startingCollection": "Démarrage de la collecte...",
     "collectedProgress": "{{collected}} sur {{max}} emplois collectés",
-    "collectionLog": "Journal de collecte"
+    "collectionLog": "Journal de collecte",
+    "sourcesForCountry": "Sites d'emploi disponibles pour {{country}}. Changez votre pays dans le Profil pour en voir d'autres."
   },
   "emptyState": {
     "noMatching": "Aucun emploi correspondant",

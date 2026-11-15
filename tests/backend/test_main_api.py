@@ -547,6 +547,7 @@ class TestAuthStatus:
         body = auth_client.get("/auth/status").json()
         assert body["linkedin"]["logged_in"] is False
         assert body["gmail"]["logged_in"] is False
+        assert body["naukri"]["countries"] == ["IN"] and "ALL" in body["linkedin"]["countries"]
 
     def test_login_unknown_service(self, auth_client):
         """An unknown login service is rejected without launching anything."""

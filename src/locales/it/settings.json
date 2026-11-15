@@ -120,6 +120,8 @@
     "linkedinReason": "Consente all'agente di cercare su LinkedIn e usare Easy Apply con il tuo account.",
     "gmailReason": "L'agente legge l'email più recente con il codice di verifica per inserire i codici monouso al posto tuo.",
     "gmailOptional": "Facoltativo. Attiva \"Leggi i codici di verifica da Gmail\" in Automazione perché l'agente inserisca i codici al posto tuo.",
-    "genericReason": "Consente all'agente di cercare e candidarsi su {{name}} con il tuo account."
+    "genericReason": "Consente all'agente di cercare e candidarsi su {{name}} con il tuo account.",
+    "otherBoards": "Altri portali ({{count}}) non usati in {{country}}",
+    "hideOtherBoards": "Nascondi altri portali"
   }
 }

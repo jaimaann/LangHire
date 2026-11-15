@@ -31,7 +31,8 @@
     "start": "开始",
     "startingCollection": "正在开始收集...",
     "collectedProgress": "已收集 {{collected}} / {{max}} 个职位",
-    "collectionLog": "收集日志"
+    "collectionLog": "收集日志",
+    "sourcesForCountry": "显示适用于 {{country}} 的招聘网站。在个人资料中更改国家即可查看其他网站。"
   },
   "emptyState": {
     "noMatching": "没有匹配的职位",

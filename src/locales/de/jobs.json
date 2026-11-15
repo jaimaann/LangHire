@@ -31,7 +31,8 @@
     "start": "Start",
     "startingCollection": "Sammlung wird gestartet...",
     "collectedProgress": "{{collected}} von {{max}} Jobs gesammelt",
-    "collectionLog": "Sammlungsprotokoll"
+    "collectionLog": "Sammlungsprotokoll",
+    "sourcesForCountry": "Es werden die Jobbörsen für {{country}} angezeigt. Ändere dein Land im Profil, um andere zu sehen."
   },
   "emptyState": {
     "noMatching": "Keine passenden Jobs",

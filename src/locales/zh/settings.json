@@ -120,6 +120,8 @@
     "linkedinReason": "让代理使用你的账户搜索 LinkedIn 并使用 Easy Apply。",
     "gmailReason": "代理会读取最新的验证码邮件，替你填写一次性验证码。",
     "gmailOptional": "可选。在“自动化”中开启“从 Gmail 读取验证码”，代理即可替你填写邮件验证码。",
-    "genericReason": "让代理使用你的账户在 {{name}} 上搜索并申请职位。"
+    "genericReason": "让代理使用你的账户在 {{name}} 上搜索并申请职位。",
+    "otherBoards": "{{country}} 不使用的其他网站({{count}})",
+    "hideOtherBoards": "隐藏其他网站"
   }
 }

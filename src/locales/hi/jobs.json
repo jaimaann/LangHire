@@ -31,7 +31,8 @@
     "start": "शुरू करें",
     "startingCollection": "संकलन शुरू हो रहा है...",
     "collectedProgress": "{{max}} में से {{collected}} नौकरियाँ संकलित",
-    "collectionLog": "संकलन लॉग"
+    "collectionLog": "संकलन लॉग",
+    "sourcesForCountry": "{{country}} के लिए नौकरी साइटें दिखाई जा रही हैं। अन्य देखने के लिए प्रोफ़ाइल में अपना देश बदलें।"
   },
   "emptyState": {
     "noMatching": "कोई मिलती-जुलती नौकरियाँ नहीं",

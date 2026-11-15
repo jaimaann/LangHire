@@ -31,7 +31,8 @@
     "start": "Mula",
     "startingCollection": "Memulakan pengumpulan...",
     "collectedProgress": "{{collected}} daripada {{max}} kerja dikumpul",
-    "collectionLog": "Log Pengumpulan"
+    "collectionLog": "Log Pengumpulan",
+    "sourcesForCountry": "Memaparkan laman kerja untuk {{country}}. Tukar negara anda di Profil untuk melihat yang lain."
   },
   "emptyState": {
     "noMatching": "Tiada kerja yang sepadan",

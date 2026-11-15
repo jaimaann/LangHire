@@ -430,6 +430,8 @@ export interface RunEvent {
 export interface ServiceLoginStatus {
   logged_in: boolean;
   display_name?: string;
+  /** Country codes the board serves ("ALL" for global boards). */
+  countries?: string[];
 }
 
 export type AuthStatus = Record<string, ServiceLoginStatus>;
