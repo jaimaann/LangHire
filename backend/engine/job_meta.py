@@ -93,11 +93,11 @@ def parse_job_html(page: str) -> dict:
     out["company"] = meta("og:site_name")
     # "Data Analyst at Northwind Analytics" from a bare <title>
     # only " at " / " @ " / " | ": a dash usually precedes a city ("Senior Analyst - Gurugram")
-    m = re.match(r"^(.{3,120}?)\s+(?:at|@|\|)\s+(.{2,80}?)(?:\s+[|\-–—].*)?$", title)
-    if m and not out["company"]:
-        out["title"], out["company"] = m.group(1).strip(), m.group(2).strip()
-    elif m and out["company"] and m.group(2).strip().lower() == out["company"].lower():
-        out["title"] = m.group(1).strip()
+    split = re.match(r"^(.{3,120}?)\s+(?:at|@|\|)\s+(.{2,80}?)(?:\s+[|\-–—].*)?$", title)
+    if split and not out["company"]:
+        out["title"], out["company"] = split.group(1).strip(), split.group(2).strip()
+    elif split and out["company"] and split.group(2).strip().lower() == out["company"].lower():
+        out["title"] = split.group(1).strip()
     out["description"] = meta("og:description") or meta("description")
     return out
 
