@@ -49,7 +49,9 @@
   },
   "backend": {
     "restarting": "Backend restarting…",
-    "failed": "Backend stopped unexpectedly. Please restart LangHire."
+    "failed": "Backend stopped unexpectedly. Please restart LangHire.",
+    "notStarted": "The backend didn't start. Restart LangHire; if it keeps happening, check that antivirus isn't blocking it and attach the log files to a GitHub issue.",
+    "logsAt": "Logs: {{dir}}"
   },
   "update": {
     "available": "Update {{version}} available",

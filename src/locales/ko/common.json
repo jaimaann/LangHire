@@ -48,7 +48,9 @@
   },
   "backend": {
     "restarting": "백엔드를 다시 시작하는 중…",
-    "failed": "백엔드가 예기치 않게 중지되었습니다. LangHire를 다시 시작하세요."
+    "failed": "백엔드가 예기치 않게 중지되었습니다. LangHire를 다시 시작하세요.",
+    "notStarted": "백엔드가 시작되지 않았습니다. LangHire를 다시 시작하세요. 계속 발생하면 백신 프로그램이 차단하지 않는지 확인하고 로그 파일을 GitHub 이슈에 첨부하세요.",
+    "logsAt": "로그: {{dir}}"
   },
   "update": {
     "available": "업데이트 {{version}} 사용 가능",

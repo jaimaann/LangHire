@@ -32,6 +32,8 @@ const MAX_RESTARTS: usize = 5;
 const RESTART_WINDOW: Duration = Duration::from_secs(120);
 /// How long to wait for a (re)started sidecar to accept TCP connections.
 const READY_TIMEOUT: Duration = Duration::from_secs(90);
+/// After reporting "failed", keep checking this long in case the start was just slow.
+const LATE_READY_TIMEOUT: Duration = Duration::from_secs(600);
 
 /// File extensions that may be opened even when they live outside the data dir.
 const OPEN_EXT_ALLOWLIST: &[&str] = &[
@@ -174,6 +176,31 @@ async fn wait_until_ready(app: AppHandle) {
         tokio::time::sleep(Duration::from_millis(500)).await;
     }
     log::warn!("Backend did not accept connections within {READY_TIMEOUT:?}");
+    // Tell the UI instead of leaving it on "starting" forever (#87). Keep watching: a first
+    // launch of the one-file binary can be very slow while antivirus scans the unpacked files.
+    if *app.state::<Backend>().status.lock().unwrap() != "starting" {
+        return;
+    }
+    set_status(&app, "failed");
+    let late_deadline = Instant::now() + LATE_READY_TIMEOUT;
+    while Instant::now() < late_deadline {
+        if app.state::<Backend>().shutting_down.load(Ordering::SeqCst) {
+            return;
+        }
+        let ok = tauri::async_runtime::spawn_blocking(move || {
+            TcpStream::connect_timeout(&addr, Duration::from_millis(300)).is_ok()
+        })
+        .await
+        .unwrap_or(false);
+        if ok {
+            if *app.state::<Backend>().status.lock().unwrap() == "failed" {
+                log::info!("Backend came up after the startup timeout");
+                set_status(&app, "running");
+            }
+            return;
+        }
+        tokio::time::sleep(Duration::from_secs(2)).await;
+    }
 }
 
 /// Forward a sidecar output event to the app log.
@@ -293,6 +320,10 @@ async fn get_backend_info(app: AppHandle) -> Result<BackendInfo, String> {
             status,
         });
     }
+    if status == "failed" {
+        // Release build whose sidecar could not launch: let the UI show that, not a token error
+        return Ok(BackendInfo { port: dev_port(), token: String::new(), managed: false, status });
+    }
     let token = read_dev_token().await?;
     Ok(BackendInfo {
         port: dev_port(),
@@ -391,6 +422,11 @@ pub fn run() {
                 Err(e) => {
                     // Dev mode: the developer runs `python backend/main.py`.
                     log::warn!("Backend sidecar not started ({e}); expecting a dev backend on port {}", dev_port());
+                    if !cfg!(debug_assertions) {
+                        // A release build always ships the sidecar: this is a real failure (#87)
+                        log::error!("Backend sidecar could not be launched: {e}");
+                        set_status(&handle, "failed");
+                    }
                 }
             }
             Ok(())

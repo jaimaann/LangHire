@@ -49,7 +49,9 @@
   },
   "backend": {
     "restarting": "Riavvio del backend…",
-    "failed": "Il backend si è arrestato in modo imprevisto. Riavvia LangHire."
+    "failed": "Il backend si è arrestato in modo imprevisto. Riavvia LangHire.",
+    "notStarted": "Il backend non si è avviato. Riavvia LangHire; se succede ancora, verifica che l'antivirus non lo blocchi e allega i log a una issue su GitHub.",
+    "logsAt": "Log: {{dir}}"
   },
   "update": {
     "available": "Aggiornamento {{version}} disponibile",

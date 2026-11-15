@@ -48,7 +48,9 @@
   },
   "backend": {
     "restarting": "Backend wordt opnieuw gestart…",
-    "failed": "De backend is onverwacht gestopt. Start LangHire opnieuw."
+    "failed": "De backend is onverwacht gestopt. Start LangHire opnieuw.",
+    "notStarted": "De backend is niet gestart. Start LangHire opnieuw; gebeurt het weer, controleer dan of antivirus het niet blokkeert en voeg de logbestanden toe aan een GitHub-issue.",
+    "logsAt": "Logs: {{dir}}"
   },
   "update": {
     "available": "Update {{version}} beschikbaar",

@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { appLogDir } from "@tauri-apps/api/path";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { getBackendInfo } from "../lib/api";
@@ -20,12 +21,19 @@ export default function BackendStatusBanner() {
     getBackendInfo()
       .then((info) => {
         const s = info.status as BackendStatus | undefined;
-        if (info.managed && s && KNOWN.includes(s) && s !== "starting") {
+        // "failed" also when unmanaged: a release build whose sidecar could not even launch
+        if (s && KNOWN.includes(s) && s !== "starting" && (info.managed || s === "failed")) {
           applyBackendStatus({ status: s });
         }
       })
       .catch(() => {});
   }, []);
+
+  const [logDir, setLogDir] = useState("");
+  useEffect(() => {
+    if (status !== "failed") return;
+    appLogDir().then(setLogDir).catch(() => setLogDir(""));
+  }, [status]);
 
   const restarting = status === "crashed" || (status === "starting" && restarts > 0);
   if (!restarting && status !== "failed") return null;
@@ -46,7 +54,12 @@ export default function BackendStatusBanner() {
       ) : (
         <Loader2 className="w-4 h-4 animate-spin text-primary" />
       )}
-      {failed ? t("backend.failed") : t("backend.restarting")}
+      <span>
+        {failed ? t(restarts > 0 ? "backend.failed" : "backend.notStarted") : t("backend.restarting")}
+        {failed && logDir && (
+          <span className="block text-xs font-normal opacity-80 select-all">{t("backend.logsAt", { dir: logDir })}</span>
+        )}
+      </span>
     </div>
   );
 }

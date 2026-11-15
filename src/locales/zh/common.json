@@ -49,7 +49,9 @@
   },
   "backend": {
     "restarting": "正在重新启动后端…",
-    "failed": "后端意外停止。请重新启动 LangHire。"
+    "failed": "后端意外停止。请重新启动 LangHire。",
+    "notStarted": "后端未能启动。请重启 LangHire；如果仍然发生，请检查杀毒软件是否拦截了它，并将日志文件附加到 GitHub issue。",
+    "logsAt": "日志：{{dir}}"
   },
   "update": {
     "available": "有可用更新 {{version}}",

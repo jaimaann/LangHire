@@ -48,7 +48,9 @@
   },
   "backend": {
     "restarting": "Reiniciando el backend…",
-    "failed": "El backend se detuvo inesperadamente. Reinicia LangHire."
+    "failed": "El backend se detuvo inesperadamente. Reinicia LangHire.",
+    "notStarted": "El backend no se inició. Reinicia LangHire; si vuelve a pasar, comprueba que el antivirus no lo bloquee y adjunta los registros a un issue de GitHub.",
+    "logsAt": "Registros: {{dir}}"
   },
   "update": {
     "available": "Actualización {{version}} disponible",

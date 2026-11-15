@@ -48,7 +48,9 @@
   },
   "backend": {
     "restarting": "Memulakan semula backend…",
-    "failed": "Backend berhenti secara tidak dijangka. Sila mulakan semula LangHire."
+    "failed": "Backend berhenti secara tidak dijangka. Sila mulakan semula LangHire.",
+    "notStarted": "Backend tidak bermula. Mulakan semula LangHire; jika berulang, pastikan antivirus tidak menyekatnya dan lampirkan fail log pada isu GitHub.",
+    "logsAt": "Log: {{dir}}"
   },
   "update": {
     "available": "Kemas kini {{version}} tersedia",

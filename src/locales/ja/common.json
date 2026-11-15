@@ -48,7 +48,9 @@
   },
   "backend": {
     "restarting": "バックエンドを再起動しています…",
-    "failed": "バックエンドが予期せず停止しました。LangHire を再起動してください。"
+    "failed": "バックエンドが予期せず停止しました。LangHire を再起動してください。",
+    "notStarted": "バックエンドが起動しませんでした。LangHire を再起動してください。繰り返す場合は、ウイルス対策ソフトがブロックしていないか確認し、ログファイルを GitHub の issue に添付してください。",
+    "logsAt": "ログ: {{dir}}"
   },
   "update": {
     "available": "アップデート {{version}} が利用可能です",

@@ -48,7 +48,9 @@
   },
   "backend": {
     "restarting": "Redémarrage du backend…",
-    "failed": "Le backend s'est arrêté de manière inattendue. Veuillez redémarrer LangHire."
+    "failed": "Le backend s'est arrêté de manière inattendue. Veuillez redémarrer LangHire.",
+    "notStarted": "Le backend n'a pas démarré. Redémarrez LangHire ; si cela se reproduit, vérifiez que l'antivirus ne le bloque pas et joignez les journaux à un ticket GitHub.",
+    "logsAt": "Journaux : {{dir}}"
   },
   "update": {
     "available": "Mise à jour {{version}} disponible",
