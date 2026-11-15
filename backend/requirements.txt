@@ -1,5 +1,5 @@
 boto3>=1.42.84
-browser-use>=0.12.6,<1.0
+browser-use==0.13.14
 fastapi>=0.135.3
 filelock>=3.25.2
 langchain-anthropic>=1.3.1

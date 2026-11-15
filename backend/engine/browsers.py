@@ -112,6 +112,10 @@ def make_browser_session(worker_id: int = 1, **overrides):
     from browser_use import BrowserSession
     settings = load_settings()
     cdp_url = (settings.get("browser_cdp_url") or "").strip()
+    # Blocked domains are enforced by the browser itself, not only asked of the model
+    blocked = [d.strip() for d in settings.get("blocked_domains") or [] if d and d.strip()]
+    if blocked:
+        overrides.setdefault("prohibited_domains", [p for d in blocked for p in (d, f"*.{d}")])
     if cdp_url:
         return BrowserSession(cdp_url=cdp_url, **overrides)
     kwargs: dict = {
