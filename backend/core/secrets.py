@@ -18,6 +18,7 @@ import os
 import stat
 import threading
 from pathlib import Path
+from .fileutil import replace_file
 
 _log = logging.getLogger("secrets")
 SERVICE = "langhire"
@@ -85,7 +86,7 @@ def _write_file(data: dict) -> None:
         os.chmod(tmp, stat.S_IRUSR | stat.S_IWUSR)
     except OSError:
         pass
-    tmp.replace(p)
+    replace_file(tmp, p)
 
 
 def get_secret(name: str) -> str:

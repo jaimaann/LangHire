@@ -238,3 +238,32 @@ def test_corrupt_settings_file_falls_back_to_defaults(data_dir):
     (data_dir / "settings.json").write_text("{not json", encoding="utf-8")
     assert config.load_settings()["max_failures"] == 8
     assert (data_dir / "settings.json.corrupt").exists()
+
+
+def test_replace_file_retries_brief_windows_locks(tmp_path, monkeypatch):
+    """Antivirus/indexer briefly lock a just-written file; saving must not fail on that."""
+    import os
+
+    from core import fileutil
+    src, dst = tmp_path / "a.tmp", tmp_path / "a.json"
+    src.write_text("new")
+    dst.write_text("old")
+    real, calls = os.replace, {"n": 0}
+
+    def flaky(a, b):
+        calls["n"] += 1
+        if calls["n"] < 3:
+            raise PermissionError(5, "Access is denied")
+        return real(a, b)
+    monkeypatch.setattr(fileutil.os, "replace", flaky)
+    monkeypatch.setattr(fileutil.os, "name", "nt")
+    monkeypatch.setattr(fileutil.time, "sleep", lambda s: None)
+    fileutil.replace_file(src, dst)
+    assert dst.read_text() == "new" and calls["n"] == 3
+
+    monkeypatch.setattr(fileutil.os, "name", "posix")  # elsewhere a permission error is real
+    src.write_text("x")
+    calls["n"] = 0
+    import pytest
+    with pytest.raises(PermissionError):
+        fileutil.replace_file(src, dst)

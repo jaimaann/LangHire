@@ -7,6 +7,7 @@ import json
 import os
 import platform
 from pathlib import Path
+from .fileutil import replace_file
 
 
 def get_data_dir() -> Path:
@@ -48,7 +49,7 @@ def _save_json(path: Path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
     tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-    tmp.replace(path)
+    replace_file(tmp, path)
     if any(s in path.name for s in ("llm_settings", "settings")):
         try:
             import os, stat

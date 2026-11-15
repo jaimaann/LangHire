@@ -10,6 +10,7 @@ import os
 import re
 import socket
 from pathlib import Path
+from .fileutil import replace_file
 
 try:
     from core.config import get_data_dir, load_settings, load_llm_settings
@@ -181,7 +182,7 @@ def save_json(path: Path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
     tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-    tmp.replace(path)
+    replace_file(tmp, path)
 
 
 # ── Jobs (SQLite-backed; see core/db.py) ────────────────────────────────────
