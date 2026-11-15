@@ -20,8 +20,11 @@ def main():
     p.add_argument("--limit", type=int)
     p.add_argument("--mode", choices=["easy", "external", "all"], default="all")
     p.add_argument("--url", help="Apply to one job URL")
+    p.add_argument("--test-mode", action="store_true",
+                   help="Click Submit but intercept the application request: nothing is sent")
     a = p.parse_args()
-    stats = run("apply", lambda ctx: run_apply(ctx, mode=a.mode, workers=a.workers, limit=a.limit, job_url=a.url),
+    stats = run("apply", lambda ctx: run_apply(ctx, mode=a.mode, workers=a.workers, limit=a.limit, job_url=a.url,
+                                                   test_mode=a.test_mode),
                 vars(a))
     print(f"Results: {stats}")
 
