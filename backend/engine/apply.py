@@ -185,7 +185,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             tools=tools,
             use_vision=vision_on,
             llm_call_timeout=300,
-            max_failures=10,
+            max_failures=int(settings.get("max_failures", 8) or 8),
             loop_detection_enabled=True,
             loop_detection_window=5,
             browser_session=browser,
