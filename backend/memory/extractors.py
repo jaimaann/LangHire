@@ -13,6 +13,9 @@ import json
 import re
 
 from .store import MemoryStore, CATEGORIES
+import logging
+
+_log = logging.getLogger("engine")
 
 
 # ── Marker-based extraction ──────────────────────────────────────────────────
@@ -173,7 +176,7 @@ Return ONLY the JSON array."""
                 if isinstance(l, dict) and l.get("content", "").strip()
             ]
     except Exception as e:
-        print(f"    ⚠️  Memory extraction LLM call failed: {e}")
+        _log.warning(f"Memory extraction LLM call failed: {e}")
 
     return []
 
@@ -209,8 +212,8 @@ def store_learnings(
             reinforced_count += 1
 
     if new_count > 0:
-        print(f"    🧠 Stored {new_count} new memories for {domain}")
+        _log.info(f"Stored {new_count} new memories for {domain}")
     if reinforced_count > 0:
-        print(f"    🧠 Reinforced {reinforced_count} existing memories for {domain}")
+        _log.info(f"Reinforced {reinforced_count} existing memories for {domain}")
 
     return new_count, reinforced_count

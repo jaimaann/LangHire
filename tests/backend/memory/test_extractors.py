@@ -246,7 +246,7 @@ def test_extract_via_llm_no_json_array_returns_empty():
     assert learnings == []
 
 
-def test_extract_via_llm_swallows_llm_exception(capsys):
+def test_extract_via_llm_swallows_llm_exception(caplog):
     """An exception inside llm_call is caught and reported, not raised."""
     def boom(_):
         raise RuntimeError("model down")
@@ -255,7 +255,7 @@ def test_extract_via_llm_swallows_llm_exception(capsys):
         _result_with_content(), "https://x.com", "Eng", True, llm_call=boom
     )
     assert learnings == []
-    assert "LLM call failed" in capsys.readouterr().out
+    assert "LLM call failed" in caplog.text  # logged, not printed (print crashed on cp1252 consoles)
 
 
 def test_extract_via_llm_malformed_json_returns_empty():

@@ -4,6 +4,7 @@ Nothing here reads settings at import time — every value is looked up when it
 is used, so changes made in the UI apply to the next run without a restart.
 """
 import ipaddress
+import logging
 import json
 import os
 import re
@@ -288,7 +289,7 @@ def build_memory_context(
         if memories:
             domain = store.extract_domain(job_url)
             mem_count = len(memories)
-            print(f"    🧠 Injecting {mem_count} memories for {domain}")
+            logging.getLogger("engine").info(f"Injecting {mem_count} memories for {domain}")
             parts.append(store.format_for_prompt(memories))
 
     if include_tracking:
