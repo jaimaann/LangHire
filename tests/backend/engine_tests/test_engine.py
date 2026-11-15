@@ -315,3 +315,17 @@ def test_agent_kwargs_we_pass_exist_in_browser_use():
         for call in re.findall(r"Agent\((.*?)\n\s*\)", src, re.S):
             for kw in re.findall(r"^\s*(\w+)=", call, re.M) + re.findall(r",\s*(\w+)=", call):
                 assert kw in params, f"{f}: Agent({kw}=...) is not a browser-use option"
+
+
+def test_submit_guard_blocks_unreadable_same_site_writes():
+    from engine.submit_guard import SubmitInterceptor, _same_site
+    g = SubmitInterceptor(None, {"email": "a@b.co"})
+    same = {"url": "https://jobs.lever.co/acme/1/apply", "hasPostData": True,
+            "headers": {"Content-Type": "multipart/form-data; boundary=x", "Origin": "https://jobs.lever.co"}}
+    s3 = {"url": "https://bucket.s3.amazonaws.com/upload", "hasPostData": True,
+          "headers": {"Content-Type": "multipart/form-data; boundary=x", "Origin": "https://jobs.lever.co"}}
+    assert _same_site(same) and not _same_site(s3)
+    assert g._block_reason("POST", same) == "unreadable body to the site itself"
+    assert g._block_reason("POST", s3) is None          # third-party resume upload is allowed
+    g.arm()
+    assert g._block_reason("POST", s3) == "after submit click"

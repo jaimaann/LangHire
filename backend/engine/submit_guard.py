@@ -129,15 +129,36 @@ class SubmitInterceptor:
         if body is None:
             if req.get("hasPostData"):
                 ctype = (req.get("headers") or {}).get("Content-Type", "") or (req.get("headers") or {}).get("content-type", "")
-                if "multipart" in ctype.lower():
-                    return None  # file upload before any submit click (resume parsing, S3 upload)
-                return "unreadable body"
+                if "multipart" in ctype.lower() and not _same_site(req):
+                    return None  # a file upload to a third party (S3, a CDN) before any submit click
+                return "unreadable body to the site itself"
             return None
         low = body.lower()
         for n in self.needles:
             if n and n in low:
                 return "contains candidate details"
         return None
+
+
+def _site(host: str) -> str:
+    """Registrable domain, approximately: last two labels (three for co.uk-style suffixes)."""
+    parts = [p for p in (host or "").lower().split(".") if p]
+    if len(parts) >= 3 and parts[-2] in ("co", "com", "org", "net", "ac", "gov", "edu") and len(parts[-1]) == 2:
+        return ".".join(parts[-3:])
+    return ".".join(parts[-2:])
+
+
+def _same_site(req: dict) -> bool:
+    """Is this request going to the same site as the page that made it?"""
+    from urllib.parse import urlparse
+    headers = {k.lower(): v for k, v in (req.get("headers") or {}).items()}
+    origin = headers.get("origin") or headers.get("referer") or ""
+    target = urlparse(req.get("url", "")).hostname or ""
+    source = urlparse(origin).hostname or ""
+    return not source or _site(source) == _site(target)
+
+
+_WEAK_SUBMIT = re.compile(r"\bapply(\s+now)?\b|\bsend\b|\bcomplete\b|\bconfirm\b", re.IGNORECASE)
 
 
 def install_click_hook(tools, interceptor: SubmitInterceptor, report) -> None:
@@ -164,6 +185,20 @@ def install_click_hook(tools, interceptor: SubmitInterceptor, report) -> None:
             node = None
         label = element_label(node) if node is not None else ""
         if not looks_like_final_submit(label):
+            if _WEAK_SUBMIT.search(label or ""):
+                # 'Apply' may open a form or send one: arm silently, and only speak up
+                # if an application request actually got intercepted.
+                started = time.time()
+                interceptor.arm()
+                result = await original(*args, **kwargs)
+                await asyncio.sleep(4)
+                if interceptor.blocked_since(started) and isinstance(result, ActionResult):
+                    report.intercepted += len(interceptor.blocked_since(started))
+                    note = ("TEST MODE: that click sent the application, which was intercepted (nothing was sent). "
+                            "Call report_application_result with outcome=ready_to_submit, then done.")
+                    result.extracted_content = ((result.extracted_content or "") + " " + note).strip()
+                    result.long_term_memory = note
+                return result
             return await original(*args, **kwargs)
         report.submit_clicks += 1
         started = time.time()
