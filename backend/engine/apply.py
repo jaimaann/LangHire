@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import logging
 import os
 import re
 from datetime import datetime, timezone
@@ -27,6 +28,8 @@ from .browsers import close_session, make_browser_session
 from .events import RunContext, emit
 from .tools import AgentReport, ApplicationResult, build_apply_tools
 from . import vision
+
+_log = logging.getLogger("engine")
 
 _ERROR_MAP = [
     # AI provider errors (checked first: they often also contain "Timeout" or "Error")
@@ -56,6 +59,19 @@ _ERROR_MAP = [
 
 STATUS_FOR_OUTCOME = {"submitted": "applied", "failed": "failed", "needs_input": "needs_input", "skipped": "skipped",
                       "ready_to_submit": "test_passed"}
+
+
+def apply_submit_verdict(observer, reason: str) -> tuple[str, str]:
+    """A real run the model calls 'submitted': trust the site's HTTP answer over its claim (#89)."""
+    verdict, resp = observer.submission_verdict()
+    if verdict == "rejected" and resp is not None:
+        host = urlparse(resp.url).hostname or "the site"
+        return "failed", (f"The site answered HTTP {resp.status} to the application request ({host}), so it was "
+                          "probably not received, even if the page showed a success message. Not marked as applied. "
+                          + (reason or "")).strip()
+    if verdict == "unverified":
+        _log.info("submit check: no application request observed; trusting the agent's report")
+    return "submitted", reason
 
 
 _OUTCOME_TEXT = re.compile(r"outcome[^\n]{0,80}?\b(submitted|failed|needs_input|skipped|ready_to_submit)\b", re.I)
@@ -323,6 +339,17 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             if not await interceptor.install():
                 raise RuntimeError("Test mode: could not install the submission guard; job not attempted")
             install_click_hook(tools, interceptor, report)
+        else:
+            # Real application: watch (never block) what the site answers to the submit, so a
+            # success page over a failed request isn't recorded as applied (#89). Best effort.
+            from .submit_guard import SubmitInterceptor, install_arm_hook
+            observer = SubmitInterceptor(browser, profile, observe=True)
+            try:
+                if await observer.install():
+                    interceptor = observer
+                    install_arm_hook(tools, observer, report)
+            except Exception as e:
+                _log.info(f"submit check unavailable: {e}")
         agent: Agent = Agent(
             task=task,
             llm=sc.get_llm(),
@@ -400,6 +427,8 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
                 # A multi-step form saves each step server-side; test mode blocks those saves,
                 # so this failure may be caused by the test itself, not the site or the agent.
                 reason = (f"[test mode blocked {early} intermediate save(s)] " + (reason or "")).strip()
+        elif interceptor is not None and outcome == "submitted":
+            outcome, reason = apply_submit_verdict(interceptor, reason)
         status = STATUS_FOR_OUTCOME[outcome]
     except asyncio.CancelledError:
         db.update_job(url, status="pending", error=None)

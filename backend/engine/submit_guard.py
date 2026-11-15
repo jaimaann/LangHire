@@ -43,11 +43,25 @@ class Intercepted:
     at: float = field(default_factory=time.time)
 
 
+@dataclass
+class Observed:
+    url: str
+    method: str
+    status: int
+    at: float = field(default_factory=time.time)
+
+
 class SubmitInterceptor:
-    def __init__(self, browser_session, profile: dict):
+    """Test mode: block the application request. ``observe=True`` (real applications):
+    block nothing, but record the HTTP status the site returned for it, so a success
+    page shown over a failed request (issue #89) isn't recorded as "applied"."""
+
+    def __init__(self, browser_session, profile: dict, *, observe: bool = False):
         self.session = browser_session
+        self.observe = observe
         self.armed_until = 0.0
         self.blocked: list[Intercepted] = []
+        self.responses: list[Observed] = []
         self.passed_writes = 0
         self.installed = False
         self._tasks: set[asyncio.Task] = set()
@@ -72,7 +86,8 @@ class SubmitInterceptor:
         if root is None:
             return False
         root.register.Fetch.requestPaused(self._on_paused)
-        await root.send.Fetch.enable(params={"patterns": [{"urlPattern": "*", "requestStage": "Request"}]})
+        stage = "Response" if self.observe else "Request"
+        await root.send.Fetch.enable(params={"patterns": [{"urlPattern": "*", "requestStage": stage}]})
         self.installed = True
         return True
 
@@ -94,6 +109,9 @@ class SubmitInterceptor:
         req = event.get("request", {})
         rid = event["requestId"]
         method = (req.get("method") or "GET").upper()
+        if self.observe:
+            await self._observe(event, session_id, req, method)
+            return
         try:
             reason = self._block_reason(method, req) if method in WRITE_METHODS else None
             if reason:
@@ -110,6 +128,35 @@ class SubmitInterceptor:
                 await root.send.Fetch.continueRequest(params={"requestId": rid}, session_id=session_id)
         except Exception as e:  # the target may be gone; never leave a request hanging silently
             _log.debug(f"test mode: fetch handling failed: {e}")
+
+    async def _observe(self, event, session_id, req: dict, method: str) -> None:
+        root = self.session._cdp_client_root
+        rid = event["requestId"]
+        try:
+            code = event.get("responseStatusCode")
+            if code is not None and method in WRITE_METHODS:
+                reason = self._block_reason(method, req)
+                if reason and is_application(reason, req):
+                    self.responses.append(Observed(req.get("url", ""), method, int(code)))
+                    _log.info(f"submit check: {method} {req.get('url', '')[:120]} -> HTTP {code}")
+        finally:
+            try:
+                await root.send.Fetch.continueResponse(params={"requestId": rid}, session_id=session_id)
+            except Exception:
+                try:  # older Chrome: continueRequest also resumes a response-stage pause
+                    await root.send.Fetch.continueRequest(params={"requestId": rid}, session_id=session_id)
+                except Exception as e:
+                    _log.debug(f"submit check: could not resume request: {e}")
+
+    def submission_verdict(self) -> tuple[str, Observed | None]:
+        """("confirmed" | "rejected" | "unverified", the deciding response).
+
+        The last application request decides: an earlier autosave that worked does not
+        make a final submit that returned 500 a success."""
+        if not self.responses:
+            return "unverified", None
+        last = self.responses[-1]
+        return ("rejected" if last.status >= 400 else "confirmed"), last
 
     def _body_text(self, req: dict) -> str | None:
         body = req.get("postData")
@@ -278,3 +325,32 @@ def install_click_hook(tools, interceptor: SubmitInterceptor, report) -> None:
         return ActionResult(extracted_content=note, long_term_memory=note)
 
     click.function = hooked_click
+
+
+def install_arm_hook(tools, interceptor: SubmitInterceptor, report) -> None:
+    """Real applications: arm the observer around submit-like clicks. Changes nothing about the click."""
+    from .dryrun import element_label, looks_like_final_submit
+
+    click = tools.registry.registry.actions.get("click")
+    if click is None:
+        return
+    original = click.function
+
+    async def armed_click(*args, **kwargs):
+        params = kwargs.get("params") or (args[0] if args else None)
+        session = kwargs.get("browser_session")
+        index = getattr(params, "index", None)
+        label = ""
+        if index is not None and session is not None:
+            try:
+                node = await session.get_element_by_index(index)
+                label = element_label(node) if node is not None else ""
+            except Exception:
+                label = ""
+        if index is None or looks_like_final_submit(label) or _WEAK_SUBMIT.search(label or ""):
+            if looks_like_final_submit(label):
+                report.submit_clicks += 1
+            interceptor.arm()
+        return await original(*args, **kwargs)
+
+    click.function = armed_click

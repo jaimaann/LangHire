@@ -600,3 +600,19 @@ def test_tailoring_explains_it_needs_a_pdf(data_dir, tmp_path):
     save_settings(s)
     with pytest.raises(ValueError, match="PDF"):
         asyncio.run(tailor_resume("https://a.co/1", "desc", {"skills": True}))
+
+
+def test_submit_verdict_last_application_request_decides():
+    from engine.apply import apply_submit_verdict
+    from engine.submit_guard import Observed, SubmitInterceptor
+    obs = SubmitInterceptor(None, {"email": "a@b.co"}, observe=True)
+    assert obs.submission_verdict() == ("unverified", None)
+    assert apply_submit_verdict(obs, "done") == ("submitted", "done")  # nothing seen: trust the agent
+
+    obs.responses = [Observed("https://ats.example.com/autosave", "POST", 200),
+                     Observed("https://ats.example.com/apply", "POST", 500)]
+    outcome, reason = apply_submit_verdict(obs, "Application successfully submitted")
+    assert outcome == "failed" and "HTTP 500" in reason and "ats.example.com" in reason  # issue #89
+
+    obs.responses.append(Observed("https://ats.example.com/apply", "POST", 201))
+    assert apply_submit_verdict(obs, "ok") == ("submitted", "ok")
