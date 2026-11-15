@@ -9,7 +9,7 @@
   },
   "controls": {
     "title": "Contrôles de candidature",
-    "loginInfo": "<strong>Connexion :</strong> Un navigateur s'ouvrira et vérifiera LinkedIn et Gmail. Si vous n'êtes pas connecté, l'agent attendra votre connexion manuelle — puis continuera automatiquement.",
+    "loginInfo": "<strong>Connexion :</strong> L'agent postule en invité quand c'est possible. Si un site exige un compte ou un code reçu par e-mail, la candidature s'arrête et vous demande au lieu de deviner.",
     "limitLabel": "Limite (optionnel)",
     "limitPlaceholder": "Pas de limite — postuler à tous",
     "limitHelp": "Laisser vide pour postuler aux {{count}} emplois en attente",

@@ -9,7 +9,7 @@
   },
   "controls": {
     "title": "Controles de candidatura",
-    "loginInfo": "<strong>Login:</strong> Um navegador será aberto e verificará LinkedIn e Gmail. Se você não estiver logado, o agente aguardará seu login manual — e depois prosseguirá automaticamente.",
+    "loginInfo": "<strong>Login:</strong> O agente se candidata como convidado quando possível. Se um site exigir conta ou código por e-mail, a vaga para e pergunta a você em vez de adivinhar.",
     "limitLabel": "Limite (opcional)",
     "limitPlaceholder": "Sem limite — candidatar a todas",
     "limitHelp": "Deixe vazio para se candidatar a todas as {{count}} vagas pendentes",

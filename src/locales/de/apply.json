@@ -9,7 +9,7 @@
   },
   "controls": {
     "title": "Bewerbungssteuerung",
-    "loginInfo": "<strong>Anmeldung:</strong> Ein Browser öffnet sich und prüft LinkedIn & Gmail. Wenn du nicht eingeloggt bist, wartet der Agent auf deine manuelle Anmeldung — dann geht es automatisch weiter.",
+    "loginInfo": "<strong>Anmeldung:</strong> Der Agent bewirbt sich wenn möglich als Gast. Verlangt eine Seite ein Konto oder einen Code per E-Mail, hält der Job an und fragt dich, statt zu raten.",
     "limitLabel": "Limit (optional)",
     "limitPlaceholder": "Kein Limit — auf alle bewerben",
     "limitHelp": "Leer lassen, um sich auf alle {{count}} ausstehenden Jobs zu bewerben",

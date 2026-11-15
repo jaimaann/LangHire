@@ -9,7 +9,7 @@
   },
   "controls": {
     "title": "Application Controls",
-    "loginInfo": "<strong>Login:</strong> A browser will open and check LinkedIn & Gmail. If you're not logged in, the agent will wait for you to log in manually — then proceed automatically.",
+    "loginInfo": "<strong>Login:</strong> The agent applies as a guest where it can. If a site requires an account or an emailed code, the job stops and asks you instead of guessing.",
     "limitLabel": "Limit (optional)",
     "limitPlaceholder": "No limit — apply to all",
     "limitHelp": "Leave blank to apply to all {{count}} pending jobs",

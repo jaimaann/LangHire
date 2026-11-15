@@ -9,7 +9,7 @@
   },
   "controls": {
     "title": "Controles de solicitud",
-    "loginInfo": "<strong>Inicio de sesión:</strong> Se abrirá un navegador y verificará LinkedIn y Gmail. Si no estás conectado, el agente esperará a que inicies sesión manualmente — luego continuará automáticamente.",
+    "loginInfo": "<strong>Inicio de sesión:</strong> El agente se postula como invitado cuando puede. Si un sitio exige una cuenta o un código por correo, el empleo se detiene y te pregunta en lugar de adivinar.",
     "limitLabel": "Límite (opcional)",
     "limitPlaceholder": "Sin límite — aplicar a todos",
     "limitHelp": "Dejar vacío para aplicar a los {{count}} empleos pendientes",

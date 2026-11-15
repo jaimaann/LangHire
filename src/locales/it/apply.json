@@ -9,7 +9,7 @@
   },
   "controls": {
     "title": "Controlli candidatura",
-    "loginInfo": "<strong>Accesso:</strong> Si aprirà un browser che controllerà LinkedIn e Gmail. Se non hai effettuato l'accesso, l'agente attenderà che tu acceda manualmente, poi procederà automaticamente.",
+    "loginInfo": "<strong>Accesso:</strong> L'agente si candida come ospite quando può. Se un sito richiede un account o un codice via email, la candidatura si ferma e ti chiede invece di indovinare.",
     "limitLabel": "Limite (facoltativo)",
     "limitPlaceholder": "Nessun limite — candidati a tutte",
     "limitHelp": "Lascia vuoto per candidarti a tutte le {{count}} offerte in attesa",

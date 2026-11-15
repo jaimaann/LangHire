@@ -9,7 +9,7 @@
   },
   "controls": {
     "title": "Sollicitatiebesturing",
-    "loginInfo": "<strong>Inloggen:</strong> Er opent een browser die LinkedIn en Gmail controleert. Als je niet bent ingelogd, wacht de agent tot je handmatig inlogt — en gaat daarna automatisch verder.",
+    "loginInfo": "<strong>Inloggen:</strong> De agent solliciteert waar mogelijk als gast. Vraagt een site om een account of een code per e-mail, dan stopt de vacature en vraagt het jou in plaats van te gokken.",
     "limitLabel": "Limiet (optioneel)",
     "limitPlaceholder": "Geen limiet — solliciteer op alle",
     "limitHelp": "Laat leeg om op alle {{count}} openstaande banen te solliciteren",

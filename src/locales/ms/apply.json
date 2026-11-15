@@ -9,7 +9,7 @@
   },
   "controls": {
     "title": "Kawalan Permohonan",
-    "loginInfo": "<strong>Log masuk:</strong> Pelayar akan dibuka dan menyemak LinkedIn & Gmail. Jika anda tidak log masuk, ejen akan menunggu anda log masuk secara manual — kemudian meneruskan secara automatik.",
+    "loginInfo": "<strong>Log masuk:</strong> Ejen memohon sebagai tetamu jika boleh. Jika laman memerlukan akaun atau kod e-mel, kerja itu berhenti dan bertanya kepada anda dan bukannya meneka.",
     "limitLabel": "Had (pilihan)",
     "limitPlaceholder": "Tiada had — mohon semua",
     "limitHelp": "Kosongkan untuk memohon semua {{count}} kerja yang menunggu",

@@ -9,7 +9,7 @@
   },
   "controls": {
     "title": "申请控制",
-    "loginInfo": "<strong>登录：</strong>将打开浏览器并检查 LinkedIn 和 Gmail。如果你尚未登录，代理会等待你手动登录，然后自动继续。",
+    "loginInfo": "<strong>登录:</strong>代理会尽量以访客身份申请。如果网站要求账户或邮件验证码，该职位会暂停并询问你，而不是猜测。",
     "limitLabel": "限制（可选）",
     "limitPlaceholder": "无限制 — 申请全部",
     "limitHelp": "留空以申请全部 {{count}} 个待处理职位",
