@@ -7,8 +7,9 @@ import {
   getSetupStatus,
   completeOnboarding,
   parseResumeToProfile,
+  saveSettings,
 } from "../lib/api";
-import { trackEvent } from "../lib/analytics";
+import { trackEvent, hasTelemetryConsent, setTelemetryEnabled } from "../lib/analytics";
 
 // ── Mocks ───────────────────────────────────────────────────────────────────
 const mockNavigate = vi.fn();
@@ -28,10 +29,13 @@ vi.mock("../lib/api", () => ({
   getSetupStatus: vi.fn(),
   completeOnboarding: vi.fn(),
   parseResumeToProfile: vi.fn(),
+  saveSettings: vi.fn(),
 }));
 
 vi.mock("../lib/analytics", () => ({
   trackEvent: vi.fn(),
+  hasTelemetryConsent: vi.fn(() => false),
+  setTelemetryEnabled: vi.fn(),
 }));
 
 // Stub the inline child forms — out of scope; keeps the wizard test focused.
@@ -46,6 +50,9 @@ const mockGetSetupStatus = vi.mocked(getSetupStatus);
 const mockCompleteOnboarding = vi.mocked(completeOnboarding);
 const mockParseResume = vi.mocked(parseResumeToProfile);
 const mockTrackEvent = vi.mocked(trackEvent);
+const mockSaveSettings = vi.mocked(saveSettings);
+const mockHasConsent = vi.mocked(hasTelemetryConsent);
+const mockSetTelemetry = vi.mocked(setTelemetryEnabled);
 
 const baseStatus = {
   profile: false,
@@ -74,6 +81,10 @@ describe("SetupWizard", () => {
     mockGetSetupStatus.mockResolvedValue(structuredClone(baseStatus) as never);
     mockCompleteOnboarding.mockResolvedValue({ success: true } as never);
     mockParseResume.mockResolvedValue({ success: true, message: "Filled 12 fields", fields_filled: 12 } as never);
+    mockSaveSettings.mockResolvedValue({ success: true } as never);
+    mockHasConsent.mockReturnValue(false);
+    mockSaveSettings.mockClear();
+    mockSetTelemetry.mockClear();
   });
 
   it("renders the wizard header and the welcome step by default", async () => {
@@ -203,5 +214,46 @@ describe("SetupWizard", () => {
     await waitFor(() => expect(mockGetSetupStatus).toHaveBeenCalled());
     expect(await screen.findByText("readyStep.descriptionIncomplete")).toBeInTheDocument();
     expect(screen.getByText("readyStep.aiProvider")).toBeInTheDocument();
+  });
+
+  describe("telemetry consent", () => {
+    it("shows an unchecked consent checkbox on the ready step by default", async () => {
+      renderWizard({ initialStep: 4 });
+      const box = await screen.findByRole("checkbox", { name: /consent\.label/ });
+      expect(box).not.toBeChecked();
+      expect(screen.getByText("consent.description")).toBeInTheDocument();
+      // Nothing is enabled or persisted without an explicit choice.
+      expect(mockSetTelemetry).not.toHaveBeenCalled();
+      expect(mockSaveSettings).not.toHaveBeenCalled();
+    });
+
+    it("finishing without ticking the box never enables telemetry", async () => {
+      const user = userEvent.setup();
+      renderWizard({ initialStep: 4 });
+      await user.click(screen.getByRole("button", { name: /nav\.finishSetup/ }));
+      await waitFor(() => expect(mockCompleteOnboarding).toHaveBeenCalled());
+      expect(mockSetTelemetry).not.toHaveBeenCalledWith(true);
+      expect(mockSaveSettings).not.toHaveBeenCalledWith({ telemetry_enabled: true });
+    });
+
+    it("opting in saves telemetry_enabled and updates the analytics module", async () => {
+      const user = userEvent.setup();
+      renderWizard({ initialStep: 4 });
+      const box = await screen.findByRole("checkbox", { name: /consent\.label/ });
+      await user.click(box);
+      expect(box).toBeChecked();
+      expect(mockSetTelemetry).toHaveBeenCalledWith(true);
+      expect(mockSaveSettings).toHaveBeenCalledWith({ telemetry_enabled: true });
+
+      await user.click(box);
+      expect(mockSetTelemetry).toHaveBeenLastCalledWith(false);
+      expect(mockSaveSettings).toHaveBeenLastCalledWith({ telemetry_enabled: false });
+    });
+
+    it("reflects an existing opt-in when the wizard is reopened", async () => {
+      mockHasConsent.mockReturnValue(true);
+      renderWizard({ initialStep: 4 });
+      expect(await screen.findByRole("checkbox", { name: /consent\.label/ })).toBeChecked();
+    });
   });
 });

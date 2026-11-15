@@ -432,3 +432,17 @@ export async function reloadPlugins() {
   return request<{ success: boolean; count: number }>("/plugins/reload", { method: "POST" });
 }
 
+// ── Privacy & data ────────────────────────────────────────────────────────
+/** Permanently delete all locally stored user data on the backend. */
+export async function deleteAllData() {
+  return request<import("./types").DeleteAllDataResponse>("/data/delete", {
+    method: "POST",
+    body: JSON.stringify({ confirm: true }),
+  });
+}
+
+/** Export everything the backend stores about the user as a JSON object. */
+export async function exportAllData() {
+  return request<import("./types").DataExport>("/data/export");
+}
+

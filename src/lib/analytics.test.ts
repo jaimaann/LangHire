@@ -1,9 +1,9 @@
 /**
- * Tests for src/lib/analytics.ts — Google Analytics Measurement Protocol client.
+ * Tests for src/lib/analytics.ts — opt-in usage analytics + crash-reporting gate.
  *
- * analytics.ts reads `import.meta.env.VITE_GA_MEASUREMENT_ID` / `VITE_GA_API_SECRET`
- * into module-scope constants AT IMPORT TIME. To exercise both the "no GA id"
- * (telemetry disabled) and the "configured" code paths we stub the env with
+ * analytics.ts reads `import.meta.env.VITE_ANALYTICS_ENDPOINT` into a
+ * module-scope constant AT IMPORT TIME. To exercise both the "no endpoint"
+ * (silent no-op) and the "configured" code paths we stub the env with
  * `vi.stubEnv`, reset the module registry, and dynamically re-import a fresh
  * copy of the module per scenario.
  *
@@ -11,28 +11,27 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-const GA_ENDPOINT = "https://www.google-analytics.com/mp/collect";
+const ENDPOINT = "https://telemetry.example.test/collect";
 
 type AnalyticsModule = typeof import("./analytics");
 
 /** Re-import analytics with the given env applied, after resetting modules. */
-async function loadAnalytics(env: {
-  measurementId?: string;
-  apiSecret?: string;
-}): Promise<AnalyticsModule> {
+async function loadAnalytics(env: { endpoint?: string } = {}): Promise<AnalyticsModule> {
   vi.resetModules();
-  vi.stubEnv("VITE_GA_MEASUREMENT_ID", env.measurementId ?? "");
-  vi.stubEnv("VITE_GA_API_SECRET", env.apiSecret ?? "");
+  vi.stubEnv("VITE_ANALYTICS_ENDPOINT", env.endpoint ?? "");
   return import("./analytics");
+}
+
+/** Simulate an explicit opt-in recorded on this device. */
+function grantConsent(): void {
+  localStorage.setItem("langhire_telemetry", "true");
 }
 
 let fetchMock: ReturnType<typeof vi.fn>;
 
 /**
  * The bundled jsdom in this project exposes `localStorage` as a bare object
- * without the Storage API methods (getItem/setItem/etc are undefined), so the
- * analytics module — which calls localStorage.getItem/setItem — would throw.
- * Install a minimal in-memory Storage shim for these tests.
+ * without the Storage API methods, so install a minimal in-memory shim.
  */
 function installLocalStorage(): void {
   const store = new Map<string, string>();
@@ -65,58 +64,110 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("analytics — telemetry disabled (no GA measurement id)", () => {
-  it("trackEvent does NOT hit the network when GA_ID is empty", async () => {
-    const analytics = await loadAnalytics({ measurementId: "" });
-    analytics.trackEvent("some_event", { foo: "bar" });
-    expect(fetchMock).not.toHaveBeenCalled();
+describe("analytics — consent is required (opt-in default)", () => {
+  it("hasTelemetryConsent is false when nothing is stored", async () => {
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
+    expect(analytics.hasTelemetryConsent()).toBe(false);
   });
 
-  it("initAnalytics is a no-op (no app_launch, no fetch) when GA_ID is empty", async () => {
-    const analytics = await loadAnalytics({ measurementId: "" });
+  it("only the exact value 'true' counts as consent", async () => {
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
+    for (const v of ["false", "1", "yes", "TRUE", ""]) {
+      localStorage.setItem("langhire_telemetry", v);
+      expect(analytics.hasTelemetryConsent()).toBe(false);
+    }
+    localStorage.setItem("langhire_telemetry", "true");
+    expect(analytics.hasTelemetryConsent()).toBe(true);
+  });
+
+  it("initAnalytics(true) sends NOTHING without stored consent", async () => {
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
     await analytics.initAnalytics(true);
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
-  it("trackPageView / trackException also short-circuit without GA_ID", async () => {
-    const analytics = await loadAnalytics({ measurementId: "" });
+    analytics.trackEvent("some_event");
     analytics.trackPageView("/dashboard");
     analytics.trackException("boom", true);
     expect(fetchMock).not.toHaveBeenCalled();
   });
+
+  it("a backend 'false' wins even if the device has consent", async () => {
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
+    await analytics.initAnalytics(false);
+    analytics.trackEvent("should_be_suppressed");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("does not start crash reporting without consent", async () => {
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
+    const init = vi.fn();
+    analytics.registerCrashReporter(init);
+    await analytics.initAnalytics(true);
+    expect(init).not.toHaveBeenCalled();
+    expect(analytics.initCrashReporting()).toBe(false);
+  });
 });
 
-describe("analytics — configured GA, not yet initialized", () => {
-  it("trackEvent does NOT send until initAnalytics() has run", async () => {
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
-    // `initialized` is false at this point.
-    analytics.trackEvent("premature");
+describe("analytics — no endpoint configured (silent no-op)", () => {
+  it("never hits the network even with consent", async () => {
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: "" });
+    await analytics.initAnalytics(true);
+    analytics.trackEvent("some_event", { foo: "bar" });
+    analytics.trackPageView("/dashboard");
+    analytics.trackException("boom", true);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("setTelemetryEnabled(true) does not send without an endpoint", async () => {
+    const analytics = await loadAnalytics({ endpoint: "" });
+    analytics.setTelemetryEnabled(true);
+    await Promise.resolve();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });
 
-describe("analytics — configured GA, initialized", () => {
-  it("initAnalytics sends an app_launch event to the GA endpoint", async () => {
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
+describe("analytics — consented and configured", () => {
+  it("does NOT send until initAnalytics() has run", async () => {
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
+    analytics.trackEvent("premature");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("initAnalytics posts {client_id, events} JSON to the proxy endpoint", async () => {
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
     await analytics.initAnalytics(true);
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, opts] = fetchMock.mock.calls[0];
-    expect(url).toContain(GA_ENDPOINT);
-    expect(url).toContain("measurement_id=G-TEST123");
+    expect(url).toBe(ENDPOINT);
     expect(opts.method).toBe("POST");
     expect(opts.keepalive).toBe(true);
+    expect(opts.headers).toMatchObject({ "Content-Type": "application/json" });
 
     const payload = JSON.parse(opts.body as string);
+    expect(Object.keys(payload).sort()).toEqual(["client_id", "events"]);
     expect(payload.client_id).toBeTruthy();
     expect(payload.events).toHaveLength(1);
     expect(payload.events[0].name).toBe("app_launch");
-    // engagement_time_msec is appended to every event's params.
     expect(payload.events[0].params.engagement_time_msec).toBe("100");
   });
 
+  it("never puts an api_secret or measurement id in the request", async () => {
+    grantConsent();
+    vi.stubEnv("VITE_GA_API_SECRET", "secret-abc");
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
+    await analytics.initAnalytics(true);
+    const [url, opts] = fetchMock.mock.calls[0];
+    expect(String(url)).not.toContain("api_secret");
+    expect(String(url)).not.toContain("secret-abc");
+    expect(String(opts.body)).not.toContain("secret-abc");
+  });
+
   it("does not re-initialize / re-send app_launch on a second init call", async () => {
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
     await analytics.initAnalytics(true);
     fetchMock.mockClear();
     await analytics.initAnalytics(true);
@@ -124,7 +175,8 @@ describe("analytics — configured GA, initialized", () => {
   });
 
   it("trackEvent sends the named event with merged params after init", async () => {
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
     await analytics.initAnalytics(true);
     fetchMock.mockClear();
 
@@ -138,7 +190,8 @@ describe("analytics — configured GA, initialized", () => {
   });
 
   it("trackPageView sends a page_view event with page_path", async () => {
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
     await analytics.initAnalytics(true);
     fetchMock.mockClear();
 
@@ -148,55 +201,45 @@ describe("analytics — configured GA, initialized", () => {
     expect(payload.events[0].params.page_path).toBe("/settings");
   });
 
-  it("trackException sends an exception event and truncates long descriptions to 500 chars", async () => {
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
+  it("trackException truncates long descriptions to 500 chars", async () => {
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
     await analytics.initAnalytics(true);
     fetchMock.mockClear();
 
-    const longDesc = "x".repeat(900);
-    analytics.trackException(longDesc, true);
+    analytics.trackException("x".repeat(900), true);
     const payload = JSON.parse(fetchMock.mock.calls[0][1].body as string);
     expect(payload.events[0].name).toBe("exception");
     expect(payload.events[0].params.fatal).toBe(true);
     expect(payload.events[0].params.description).toHaveLength(500);
   });
 
-  it("appends api_secret to the URL when configured", async () => {
-    const analytics = await loadAnalytics({
-      measurementId: "G-TEST123",
-      apiSecret: "secret-abc",
-    });
-    await analytics.initAnalytics(true);
-    const url = fetchMock.mock.calls[0][0] as string;
-    expect(url).toContain("api_secret=secret-abc");
-    expect(url).toContain("measurement_id=G-TEST123");
-  });
-
   it("swallows fetch rejections (no unhandled error escapes)", async () => {
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
     await analytics.initAnalytics(true);
     fetchMock.mockClear();
     fetchMock.mockRejectedValueOnce(new Error("network down"));
-
-    // Should not throw despite the rejected fetch (.catch(() => {})).
     expect(() => analytics.trackEvent("after_failure")).not.toThrow();
-    // Give the microtask queue a tick to settle the rejected promise.
     await Promise.resolve();
   });
 
-  it("does not send when telemetry is disabled even though GA is configured", async () => {
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
-    // initAnalytics(false) sets telemetryEnabled=false and returns early
-    // (so `initialized` stays false too).
-    await analytics.initAnalytics(false);
-    analytics.trackEvent("should_be_suppressed");
+  it("stops sending immediately after opting out", async () => {
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
+    await analytics.initAnalytics(true);
+    fetchMock.mockClear();
+
+    analytics.setTelemetryEnabled(false);
+    analytics.trackEvent("after_opt_out");
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });
 
 describe("analytics — client id persistence", () => {
   it("persists a generated client id in localStorage and reuses it", async () => {
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
     await analytics.initAnalytics(true);
 
     const stored = localStorage.getItem("langhire_ga_client_id");
@@ -208,30 +251,25 @@ describe("analytics — client id persistence", () => {
     expect(payload.client_id).toBe(stored);
   });
 
-  it("uses a pre-existing client id from localStorage", async () => {
-    localStorage.setItem("langhire_ga_client_id", "preset-client-id");
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
+  it("does not create a client id before consent", async () => {
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
     await analytics.initAnalytics(true);
-    const payload = JSON.parse(fetchMock.mock.calls[0][1].body as string);
-    expect(payload.client_id).toBe("preset-client-id");
+    expect(localStorage.getItem("langhire_ga_client_id")).toBeNull();
   });
 });
 
 describe("analytics — setTelemetryEnabled", () => {
-  it("writes the preference to localStorage", async () => {
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
+  it("writes the explicit choice to localStorage", async () => {
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
     analytics.setTelemetryEnabled(false);
     expect(localStorage.getItem("langhire_telemetry")).toBe("false");
-
     analytics.setTelemetryEnabled(true);
     expect(localStorage.getItem("langhire_telemetry")).toBe("true");
   });
 
-  it("auto-initializes analytics when enabled and GA is configured but not yet initialized", async () => {
-    const analytics = await loadAnalytics({ measurementId: "G-TEST123" });
-    // Not initialized yet; enabling should kick off initAnalytics -> app_launch.
+  it("opting in lazily starts analytics (app_launch)", async () => {
+    const analytics = await loadAnalytics({ endpoint: ENDPOINT });
     analytics.setTelemetryEnabled(true);
-    // initAnalytics is async; allow it to resolve.
     await Promise.resolve();
     await Promise.resolve();
     expect(fetchMock).toHaveBeenCalled();
@@ -239,10 +277,27 @@ describe("analytics — setTelemetryEnabled", () => {
     expect(payload.events[0].name).toBe("app_launch");
   });
 
-  it("does NOT auto-initialize when GA is not configured", async () => {
-    const analytics = await loadAnalytics({ measurementId: "" });
+  it("opting in lazily initialises crash reporting exactly once", async () => {
+    const analytics = await loadAnalytics({ endpoint: "" });
+    const init = vi.fn();
+    analytics.registerCrashReporter(init);
+    expect(init).not.toHaveBeenCalled();
+
     analytics.setTelemetryEnabled(true);
     await Promise.resolve();
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(init).toHaveBeenCalledTimes(1);
+
+    analytics.setTelemetryEnabled(false);
+    analytics.setTelemetryEnabled(true);
+    await Promise.resolve();
+    expect(init).toHaveBeenCalledTimes(1);
+  });
+
+  it("registerCrashReporter initialises immediately when consent already exists", async () => {
+    grantConsent();
+    const analytics = await loadAnalytics({ endpoint: "" });
+    const init = vi.fn();
+    analytics.registerCrashReporter(init);
+    expect(init).toHaveBeenCalledTimes(1);
   });
 });

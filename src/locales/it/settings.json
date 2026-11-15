@@ -19,7 +19,7 @@
   "telemetry": {
     "title": "Privacy e telemetria",
     "usageAnalytics": "Analisi dell'utilizzo",
-    "description": "Aiuta a migliorare LangHire inviando dati di utilizzo anonimi (utilizzo delle funzionalità, segnalazioni di arresti anomali). Nessuna informazione personale o dato delle offerte viene trasmesso."
+    "description": "Facoltativo e disattivato per impostazione predefinita. Se attivato, LangHire invia eventi di utilizzo anonimi e segnalazioni di arresti anomali. Non invia mai i tuoi curriculum, i dati del profilo, i dati delle offerte o le chiavi API."
   },
   "blockedDomains": {
     "title": "Domini bloccati",
@@ -45,5 +45,25 @@
     "dark": "Scuro",
     "system": "Sistema",
     "description": "Scegli chiaro, scuro o segui l'impostazione del sistema."
+  },
+  "privacy": {
+    "title": "Privacy e dati",
+    "retentionLabel": "Conserva i registri delle conversazioni dell'agente per",
+    "retentionDescription": "I registri delle conversazioni dell'agente più vecchi vengono eliminati automaticamente. Scegli \"Non salvare\" per non conservarne nessuno.",
+    "retentionNone": "Non salvare",
+    "retentionDays": "{{days}} giorni",
+    "exportTitle": "Esporta i miei dati",
+    "exportDescription": "Scarica tutto ciò che LangHire memorizza su di te come file JSON.",
+    "exportButton": "Esporta i miei dati",
+    "exporting": "Esportazione in corso...",
+    "exportFailed": "Esportazione non riuscita. Riprova.",
+    "deleteTitle": "Elimina tutti i miei dati",
+    "deleteDescription": "Elimina definitivamente il profilo, i curriculum, le offerte, i registri, le impostazioni e le chiavi API memorizzati da LangHire su questo computer. L'operazione non può essere annullata.",
+    "deleteButton": "Elimina tutti i miei dati",
+    "deleteConfirm": "Sei sicuro? Questa operazione elimina definitivamente tutti i tuoi dati di LangHire e riavvia la procedura guidata di configurazione.",
+    "deleteConfirmButton": "Sì, elimina tutto",
+    "cancel": "Annulla",
+    "deleting": "Eliminazione in corso...",
+    "deleteFailed": "Impossibile eliminare i tuoi dati. Riprova."
   }
 }

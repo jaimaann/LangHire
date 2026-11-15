@@ -19,7 +19,7 @@
   "telemetry": {
     "title": "Privacidade e telemetria",
     "usageAnalytics": "Análise de uso",
-    "description": "Ajude a melhorar o LangHire enviando dados de uso anônimos (uso de recursos, relatórios de falhas). Nenhuma informação pessoal ou dados de vagas são transmitidos."
+    "description": "Opcional e desativado por padrão. Se ativado, o LangHire envia eventos de uso anônimos e relatórios de falhas. Ele nunca envia seus currículos, dados de perfil, dados de vagas ou chaves de API."
   },
   "blockedDomains": {
     "title": "Domínios bloqueados",
@@ -37,5 +37,25 @@
     "label": "Idioma da interface",
     "auto": "Automático (por país)",
     "description": "Escolha o idioma da interface do aplicativo. Defina como 'Automático' para corresponder ao seu país selecionado."
+  },
+  "privacy": {
+    "title": "Privacidade e dados",
+    "retentionLabel": "Manter os registros de conversa do agente por",
+    "retentionDescription": "Registros de conversa do agente mais antigos são excluídos automaticamente. Escolha \"Não salvar\" para não manter nenhum.",
+    "retentionNone": "Não salvar",
+    "retentionDays": "{{days}} dias",
+    "exportTitle": "Exportar meus dados",
+    "exportDescription": "Baixe tudo o que o LangHire armazena sobre você como um arquivo JSON.",
+    "exportButton": "Exportar meus dados",
+    "exporting": "Exportando...",
+    "exportFailed": "Falha na exportação. Tente novamente.",
+    "deleteTitle": "Excluir todos os meus dados",
+    "deleteDescription": "Exclui permanentemente seu perfil, currículos, vagas, registros, configurações e chaves de API armazenados pelo LangHire neste computador. Esta ação não pode ser desfeita.",
+    "deleteButton": "Excluir todos os meus dados",
+    "deleteConfirm": "Tem certeza? Isso exclui permanentemente todos os seus dados do LangHire e reinicia o assistente de configuração.",
+    "deleteConfirmButton": "Sim, excluir tudo",
+    "cancel": "Cancelar",
+    "deleting": "Excluindo...",
+    "deleteFailed": "Não foi possível excluir seus dados. Tente novamente."
   }
 }

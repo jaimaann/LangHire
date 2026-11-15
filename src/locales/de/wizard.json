@@ -69,5 +69,10 @@
     "letsGo": "Los geht's",
     "next": "Weiter",
     "finishSetup": "Einrichtung abschließen"
+  },
+  "consent": {
+    "title": "Helfen Sie, LangHire zu verbessern (optional)",
+    "label": "Anonyme Nutzungsstatistiken und Absturzberichte senden",
+    "description": "Wenn Sie zustimmen, sendet LangHire anonyme Nutzungsereignisse (z. B. welche Seiten und Funktionen verwendet werden) und Absturzberichte. Ihre Lebensläufe, Profildaten, Jobdaten oder API-Schlüssel werden niemals gesendet. Sie können dies jederzeit in den Einstellungen ändern."
   }
 }

@@ -19,7 +19,7 @@
   "telemetry": {
     "title": "Confidentialité et télémétrie",
     "usageAnalytics": "Analyse d'utilisation",
-    "description": "Aidez à améliorer LangHire en envoyant des données d'utilisation anonymes (utilisation des fonctionnalités, rapports de crash). Aucune information personnelle ni donnée d'emploi n'est transmise."
+    "description": "Facultatif et désactivé par défaut. S'il est activé, LangHire envoie des événements d'utilisation anonymes et des rapports de crash. Il n'envoie jamais vos CV, données de profil, données d'emploi ni clés API."
   },
   "blockedDomains": {
     "title": "Domaines bloqués",
@@ -37,5 +37,25 @@
     "label": "Langue de l'interface",
     "auto": "Automatique (selon le pays)",
     "description": "Choisissez la langue de l'interface de l'application. Réglez sur 'Automatique' pour correspondre à votre pays sélectionné."
+  },
+  "privacy": {
+    "title": "Confidentialité et données",
+    "retentionLabel": "Conserver les journaux de conversation de l'agent pendant",
+    "retentionDescription": "Les journaux de conversation de l'agent plus anciens sont supprimés automatiquement. Choisissez « Ne pas enregistrer » pour n'en conserver aucun.",
+    "retentionNone": "Ne pas enregistrer",
+    "retentionDays": "{{days}} jours",
+    "exportTitle": "Exporter mes données",
+    "exportDescription": "Téléchargez toutes les données que LangHire conserve sur vous dans un fichier JSON.",
+    "exportButton": "Exporter mes données",
+    "exporting": "Exportation...",
+    "exportFailed": "L'exportation a échoué. Veuillez réessayer.",
+    "deleteTitle": "Supprimer toutes mes données",
+    "deleteDescription": "Supprime définitivement votre profil, vos CV, offres, journaux, paramètres et clés API stockés par LangHire sur cet ordinateur. Cette action est irréversible.",
+    "deleteButton": "Supprimer toutes mes données",
+    "deleteConfirm": "Êtes-vous sûr ? Cela supprime définitivement toutes vos données LangHire et relance l'assistant de configuration.",
+    "deleteConfirmButton": "Oui, tout supprimer",
+    "cancel": "Annuler",
+    "deleting": "Suppression...",
+    "deleteFailed": "Impossible de supprimer vos données. Veuillez réessayer."
   }
 }

@@ -100,7 +100,18 @@ export interface AppSettings {
   data_dir: string;
   telemetry_enabled: boolean;
   theme?: "light" | "dark" | "system";
+  /** Days to keep agent conversation logs; 0 = don't save. Default 14. */
+  log_retention_days?: number;
 }
+
+// ── Privacy & data ────────────────────────────────────────────────────────
+export interface DeleteAllDataResponse {
+  ok: boolean;
+  deleted: string[];
+}
+
+/** Full user-data export returned by GET /data/export (shape owned by the backend). */
+export type DataExport = Record<string, unknown>;
 
 // ── Job ───────────────────────────────────────────────────────────────────
 export interface Job {

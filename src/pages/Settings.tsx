@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Save, FolderOpen, X, Upload, Trash2, Sun, Moon, Monitor } from "lucide-react";
-import { getSettings, saveSettings, getPlugins, togglePlugin, removePlugin, importPlugin } from "../lib/api";
-import { setTelemetryEnabled as setAnalyticsTelemetry } from "../lib/analytics";
+import { Save, FolderOpen, X, Upload, Trash2, Sun, Moon, Monitor, Download, AlertTriangle } from "lucide-react";
+import { getSettings, saveSettings, getPlugins, togglePlugin, removePlugin, importPlugin, deleteAllData, exportAllData } from "../lib/api";
+import { setTelemetryEnabled as setAnalyticsTelemetry, hasTelemetryConsent } from "../lib/analytics";
+import { clearLocalAppData, restartApp, exportFileName, downloadJson } from "../lib/privacy";
 import { getStoredTheme, setTheme, type ThemeMode } from "../lib/theme";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useTranslation } from "react-i18next";
@@ -11,6 +12,10 @@ import type { PluginConfig } from "../lib/types";
 import { LANGUAGE_NAMES, getSavedLanguage, saveLanguagePreference } from "../i18n/languageDetection";
 import { loadLanguage } from "../i18n";
 
+/** Allowed values for agent conversation log retention (days; 0 = don't save). */
+const LOG_RETENTION_OPTIONS = [0, 7, 14, 30, 90] as const;
+const DEFAULT_LOG_RETENTION_DAYS = 14;
+
 export default function SettingsPage() {
   const { t } = useTranslation("settings");
   const [resumePath, setResumePath] = useState("");
@@ -19,7 +24,13 @@ export default function SettingsPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [maxFailures, setMaxFailures] = useState(8);
-  const [telemetryEnabled, setTelemetryEnabled] = useState(true);
+  const [telemetryEnabled, setTelemetryEnabled] = useState(false);
+  const [logRetentionDays, setLogRetentionDays] = useState<number>(DEFAULT_LOG_RETENTION_DAYS);
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(false);
   const [theme, setThemeState] = useState<ThemeMode>(getStoredTheme());
   const [currentLanguage, setCurrentLanguage] = useState<string>(getSavedLanguage() || "");
   const [saved, setSaved] = useState(false);
@@ -39,7 +50,12 @@ export default function SettingsPage() {
         setResumePath(data.resume_path || "");
         setBlockedDomains(data.blocked_domains || []);
         setMaxFailures(data.max_failures || 8);
-        setTelemetryEnabled(data.telemetry_enabled !== false);
+        // Opt-in: on only if the backend says so AND this device has consent.
+        setTelemetryEnabled(data.telemetry_enabled === true && hasTelemetryConsent());
+        const retention = Number(data.log_retention_days);
+        setLogRetentionDays(
+          (LOG_RETENTION_OPTIONS as readonly number[]).includes(retention) ? retention : DEFAULT_LOG_RETENTION_DAYS,
+        );
         // Reconcile theme: a value saved on the backend wins over the local
         // default and is applied immediately.
         if (data.theme && data.theme !== getStoredTheme()) {
@@ -85,6 +101,44 @@ export default function SettingsPage() {
     saveSettings({ theme: mode }).catch(() => {}); // mirror to backend
   };
 
+  const handleTelemetryChange = (enabled: boolean) => {
+    setTelemetryEnabled(enabled);
+    setAnalyticsTelemetry(enabled);
+    saveSettings({ telemetry_enabled: enabled }).catch(() => {});
+  };
+
+  const handleRetentionChange = (days: number) => {
+    setLogRetentionDays(days);
+    saveSettings({ log_retention_days: days }).catch(() => {});
+  };
+
+  const handleExportData = async () => {
+    setExporting(true);
+    setExportError(false);
+    try {
+      const data = await exportAllData();
+      downloadJson(data, exportFileName());
+    } catch {
+      setExportError(true);
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleDeleteAllData = async () => {
+    setDeleting(true);
+    setDeleteError(false);
+    try {
+      const res = await deleteAllData();
+      if (!res || res.ok !== true) throw new Error("delete failed");
+      clearLocalAppData();
+      restartApp();
+    } catch {
+      setDeleteError(true);
+      setDeleting(false);
+    }
+  };
+
   const addDomain = () => {
     if (newDomain.trim() && !blockedDomains.includes(newDomain.trim())) {
       setBlockedDomains([...blockedDomains, newDomain.trim()]);
@@ -105,6 +159,7 @@ export default function SettingsPage() {
         sensitive_data: { email, password },
         max_failures: maxFailures,
         telemetry_enabled: telemetryEnabled,
+        log_retention_days: logRetentionDays,
         theme,
       });
       setSaved(true);
@@ -229,28 +284,92 @@ export default function SettingsPage() {
         </div>
       </Section>
 
-      {/* Privacy & Telemetry */}
-      <Section title="Privacy & Telemetry">
+      {/* Privacy & data */}
+      <Section title={t("privacy.title")}>
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold text-foreground">Usage Analytics</p>
-            <p className="text-[13px] text-muted-foreground mt-1">
-              Help improve LangHire by sending anonymous usage data (feature usage, crash reports).
-              No personal information or job data is transmitted.
-            </p>
+            <p className="text-sm font-semibold text-foreground">{t("telemetry.usageAnalytics")}</p>
+            <p className="text-[13px] text-muted-foreground mt-1">{t("telemetry.description")}</p>
           </div>
           <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
             <input
               type="checkbox"
+              aria-label={t("telemetry.usageAnalytics")}
               checked={telemetryEnabled}
-              onChange={(e) => {
-                setTelemetryEnabled(e.target.checked);
-                setAnalyticsTelemetry(e.target.checked);
-              }}
+              onChange={(e) => handleTelemetryChange(e.target.checked)}
               className="sr-only peer"
             />
             <div className="w-11 h-6 bg-secondary peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
           </label>
+        </div>
+
+        <div className="mt-5 pt-5 border-t border-border">
+          <label htmlFor="log-retention" className="block text-sm font-semibold text-foreground mb-1.5">
+            {t("privacy.retentionLabel")}
+          </label>
+          <select
+            id="log-retention"
+            value={logRetentionDays}
+            onChange={(e) => handleRetentionChange(Number(e.target.value))}
+            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card max-w-xs"
+          >
+            {LOG_RETENTION_OPTIONS.map((days) => (
+              <option key={days} value={days}>
+                {days === 0 ? t("privacy.retentionNone") : t("privacy.retentionDays", { days })}
+              </option>
+            ))}
+          </select>
+          <p className="text-[13px] text-muted-foreground mt-1.5">{t("privacy.retentionDescription")}</p>
+        </div>
+
+        <div className="mt-5 pt-5 border-t border-border flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold text-foreground">{t("privacy.exportTitle")}</p>
+            <p className="text-[13px] text-muted-foreground mt-1">{t("privacy.exportDescription")}</p>
+            {exportError && <p className="text-[13px] text-destructive mt-1" role="alert">{t("privacy.exportFailed")}</p>}
+          </div>
+          <button onClick={handleExportData} disabled={exporting} className="btn-secondary flex-shrink-0">
+            <Download className="w-4 h-4" /> {exporting ? t("privacy.exporting") : t("privacy.exportButton")}
+          </button>
+        </div>
+
+        <div className="mt-5 pt-5 border-t border-border">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-destructive">{t("privacy.deleteTitle")}</p>
+              <p className="text-[13px] text-muted-foreground mt-1">{t("privacy.deleteDescription")}</p>
+            </div>
+            {!confirmingDelete && (
+              <button
+                onClick={() => { setConfirmingDelete(true); setDeleteError(false); }}
+                className="btn-secondary flex-shrink-0 !text-destructive !border-destructive/40"
+              >
+                <Trash2 className="w-4 h-4" /> {t("privacy.deleteButton")}
+              </button>
+            )}
+          </div>
+          {confirmingDelete && (
+            <div role="alertdialog" aria-label={t("privacy.deleteTitle")}
+              className="mt-3 p-4 rounded-lg border border-destructive/40 bg-destructive/5">
+              <p className="text-sm text-foreground flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 text-destructive flex-shrink-0 mt-0.5" />
+                {t("privacy.deleteConfirm")}
+              </p>
+              {deleteError && <p className="text-[13px] text-destructive mt-2" role="alert">{t("privacy.deleteFailed")}</p>}
+              <div className="flex gap-2 mt-3 justify-end">
+                <button onClick={() => setConfirmingDelete(false)} disabled={deleting} className="btn-secondary">
+                  {t("privacy.cancel")}
+                </button>
+                <button
+                  onClick={handleDeleteAllData}
+                  disabled={deleting}
+                  className="btn-primary !bg-destructive hover:!bg-destructive/90"
+                >
+                  <Trash2 className="w-4 h-4" /> {deleting ? t("privacy.deleting") : t("privacy.deleteConfirmButton")}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </Section>
 

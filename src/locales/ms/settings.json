@@ -19,7 +19,7 @@
   "telemetry": {
     "title": "Privasi & Telemetri",
     "usageAnalytics": "Analisis Penggunaan",
-    "description": "Bantu meningkatkan LangHire dengan menghantar data penggunaan tanpa nama (penggunaan ciri, laporan ranap). Tiada maklumat peribadi atau data kerja dihantar."
+    "description": "Pilihan dan dimatikan secara lalai. Jika didayakan, LangHire menghantar peristiwa penggunaan tanpa nama dan laporan ranap. Ia tidak pernah menghantar resume, data profil, data kerja atau kunci API anda."
   },
   "blockedDomains": {
     "title": "Domain Disekat",
@@ -37,5 +37,25 @@
     "label": "Bahasa Antaramuka",
     "auto": "Automatik (mengikut negara)",
     "description": "Pilih bahasa untuk antaramuka aplikasi. Tetapkan kepada 'Automatik' untuk memadankan negara yang dipilih."
+  },
+  "privacy": {
+    "title": "Privasi & Data",
+    "retentionLabel": "Simpan log perbualan ejen selama",
+    "retentionDescription": "Log perbualan ejen yang lebih lama dipadam secara automatik. Pilih \"Jangan simpan\" untuk tidak menyimpan apa-apa.",
+    "retentionNone": "Jangan simpan",
+    "retentionDays": "{{days}} hari",
+    "exportTitle": "Eksport data saya",
+    "exportDescription": "Muat turun semua yang disimpan oleh LangHire tentang anda sebagai fail JSON.",
+    "exportButton": "Eksport data saya",
+    "exporting": "Mengeksport...",
+    "exportFailed": "Eksport gagal. Sila cuba lagi.",
+    "deleteTitle": "Padam semua data saya",
+    "deleteDescription": "Padam secara kekal profil, resume, kerja, log, tetapan dan kunci API anda yang disimpan oleh LangHire pada komputer ini. Tindakan ini tidak boleh dibatalkan.",
+    "deleteButton": "Padam semua data saya",
+    "deleteConfirm": "Adakah anda pasti? Ini akan memadam semua data LangHire anda secara kekal dan memulakan semula wizard persediaan.",
+    "deleteConfirmButton": "Ya, padam semuanya",
+    "cancel": "Batal",
+    "deleting": "Memadam...",
+    "deleteFailed": "Tidak dapat memadam data anda. Sila cuba lagi."
   }
 }

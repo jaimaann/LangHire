@@ -20,9 +20,10 @@ import {
   getSetupStatus,
   completeOnboarding,
   parseResumeToProfile,
+  saveSettings,
   type SetupStatus,
 } from "../lib/api";
-import { trackEvent } from "../lib/analytics";
+import { trackEvent, hasTelemetryConsent, setTelemetryEnabled } from "../lib/analytics";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LLMSettingsForm from "./forms/LLMSettingsForm";
@@ -52,7 +53,15 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
     message: string;
     fields_filled?: number;
   } | null>(null);
+  // Telemetry is opt-in: unchecked unless the user already consented earlier.
+  const [telemetryConsent, setTelemetryConsent] = useState<boolean>(() => hasTelemetryConsent());
   const navigate = useNavigate();
+
+  const handleConsentChange = (enabled: boolean) => {
+    setTelemetryConsent(enabled);
+    setTelemetryEnabled(enabled);
+    saveSettings({ telemetry_enabled: enabled }).catch(() => { /* backend not ready; local choice still applies */ });
+  };
 
   const stepLabels = [
     t("steps.welcome"),
@@ -284,6 +293,22 @@ export default function SetupWizard({ onClose, onNavigateAway, initialStep = 0 }
                     </div>
                   ))}
                 </div>
+              </div>
+              <div className="bg-secondary rounded-xl p-4 max-w-md mx-auto mb-6 text-left">
+                <h4 className="text-sm font-semibold text-foreground mb-2">{t("consent.title")}</h4>
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={telemetryConsent}
+                    onChange={(e) => handleConsentChange(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 flex-shrink-0 accent-primary"
+                    aria-describedby="telemetry-consent-desc"
+                  />
+                  <span className="text-sm text-foreground">{t("consent.label")}</span>
+                </label>
+                <p id="telemetry-consent-desc" className="text-xs text-muted-foreground mt-2 ml-7">
+                  {t("consent.description")}
+                </p>
               </div>
               <div className="flex gap-3 justify-center">
                 <button onClick={() => { handleFinish(); navigate("/jobs"); }} className="btn-primary"><Search className="w-4 h-4" /> {t("readyStep.collectJobs")}</button>

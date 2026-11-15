@@ -19,7 +19,7 @@
   "telemetry": {
     "title": "プライバシーとテレメトリー",
     "usageAnalytics": "使用状況分析",
-    "description": "匿名の使用データ（機能使用状況、クラッシュレポート）を送信してLangHireの改善にご協力ください。個人情報や求人データは送信されません。"
+    "description": "任意で、デフォルトではオフです。有効にすると、LangHireは匿名の使用状況イベントとクラッシュレポートを送信します。履歴書、プロフィールデータ、求人データ、APIキーが送信されることはありません。"
   },
   "blockedDomains": {
     "title": "ブロックされたドメイン",
@@ -37,5 +37,25 @@
     "label": "インターフェース言語",
     "auto": "自動（国に基づく）",
     "description": "アプリケーションインターフェースの言語を選択してください。選択した国に合わせるには「自動」に設定してください。"
+  },
+  "privacy": {
+    "title": "プライバシーとデータ",
+    "retentionLabel": "エージェントの会話ログの保存期間",
+    "retentionDescription": "古いエージェントの会話ログは自動的に削除されます。ログを一切残さない場合は「保存しない」を選択してください。",
+    "retentionNone": "保存しない",
+    "retentionDays": "{{days}}日間",
+    "exportTitle": "データをエクスポート",
+    "exportDescription": "LangHireが保存しているあなたに関するすべてのデータをJSONファイルとしてダウンロードします。",
+    "exportButton": "データをエクスポート",
+    "exporting": "エクスポート中...",
+    "exportFailed": "エクスポートに失敗しました。もう一度お試しください。",
+    "deleteTitle": "すべてのデータを削除",
+    "deleteDescription": "このコンピューター上にLangHireが保存しているプロフィール、履歴書、求人、ログ、設定、APIキーを完全に削除します。この操作は元に戻せません。",
+    "deleteButton": "すべてのデータを削除",
+    "deleteConfirm": "よろしいですか？LangHireのすべてのデータが完全に削除され、セットアップウィザードが再起動します。",
+    "deleteConfirmButton": "はい、すべて削除します",
+    "cancel": "キャンセル",
+    "deleting": "削除中...",
+    "deleteFailed": "データを削除できませんでした。もう一度お試しください。"
   }
 }
