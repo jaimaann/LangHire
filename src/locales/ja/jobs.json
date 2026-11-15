@@ -1,6 +1,7 @@
 {
   "title": "求人",
   "subtitle": "{{total}}件収集 · {{applied}}件応募済み · {{pending}}件保留中",
+  "subtitle_one": "{{total}}件収集 · {{applied}}件応募済み · {{pending}}件保留中",
   "hideCollector": "コレクターを隠す",
   "collectJobs": "求人を収集",
   "status": {

@@ -1,6 +1,7 @@
 {
   "title": "Jobs",
   "subtitle": "{{total}} Jobs gesammelt · {{applied}} beworben · {{pending}} ausstehend",
+  "subtitle_one": "{{total}} Jobs gesammelt · {{applied}} beworben · {{pending}} ausstehend",
   "hideCollector": "Sammler ausblenden",
   "collectJobs": "Jobs sammeln",
   "status": {

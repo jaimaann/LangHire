@@ -1,6 +1,7 @@
 {
   "title": "Kerja",
   "subtitle": "{{total}} kerja dikumpul · {{applied}} dimohon · {{pending}} menunggu",
+  "subtitle_one": "{{total}} kerja dikumpul · {{applied}} dimohon · {{pending}} menunggu",
   "hideCollector": "Sembunyikan Pengumpul",
   "collectJobs": "Kumpul Kerja",
   "status": {

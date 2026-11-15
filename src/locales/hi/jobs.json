@@ -1,6 +1,7 @@
 {
   "title": "नौकरियाँ",
   "subtitle": "{{total}} नौकरियाँ संकलित · {{applied}} आवेदित · {{pending}} लंबित",
+  "subtitle_one": "{{total}} नौकरियाँ संकलित · {{applied}} आवेदित · {{pending}} लंबित",
   "hideCollector": "कलेक्टर छिपाएँ",
   "collectJobs": "नौकरियाँ संकलित करें",
   "status": {

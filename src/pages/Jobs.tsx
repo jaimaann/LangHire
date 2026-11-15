@@ -47,6 +47,7 @@ export default function Jobs() {
       <PageHeader
         title={t("title")}
         subtitle={t("subtitle", {
+          count: stats.total || 0,
           total: stats.total || 0,
           applied: stats.applied || 0,
           pending: stats.pending || 0,

@@ -1,6 +1,7 @@
 {
   "title": "Offerte",
   "subtitle": "{{total}} offerte raccolte · {{applied}} candidature · {{pending}} in attesa",
+  "subtitle_one": "{{total}} offerte raccolte · {{applied}} candidature · {{pending}} in attesa",
   "hideCollector": "Nascondi raccolta",
   "collectJobs": "Raccogli offerte",
   "status": {

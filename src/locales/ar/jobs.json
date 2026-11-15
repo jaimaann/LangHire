@@ -1,6 +1,7 @@
 {
   "title": "الوظائف",
   "subtitle": "{{total}} وظيفة مجمعة · {{applied}} تم التقديم · {{pending}} قيد الانتظار",
+  "subtitle_one": "{{total}} وظيفة مجمعة · {{applied}} تم التقديم · {{pending}} قيد الانتظار",
   "hideCollector": "إخفاء المجمّع",
   "collectJobs": "جمع الوظائف",
   "status": {

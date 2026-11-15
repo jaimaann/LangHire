@@ -1,6 +1,7 @@
 {
   "title": "Jobs",
   "subtitle": "{{total}} jobs collected · {{applied}} applied · {{pending}} pending",
+  "subtitle_one": "{{total}} job collected · {{applied}} applied · {{pending}} pending",
   "hideCollector": "Hide Collector",
   "collectJobs": "Collect Jobs",
   "status": {

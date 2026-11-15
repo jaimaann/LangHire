@@ -1,6 +1,7 @@
 {
   "title": "职位",
   "subtitle": "已收集 {{total}} 个职位 · 已申请 {{applied}} 个 · 待处理 {{pending}} 个",
+  "subtitle_one": "已收集 {{total}} 个职位 · 已申请 {{applied}} 个 · 待处理 {{pending}} 个",
   "hideCollector": "隐藏收集器",
   "collectJobs": "收集职位",
   "status": {

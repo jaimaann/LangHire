@@ -1,6 +1,7 @@
 {
   "title": "Vagas",
   "subtitle": "{{total}} vagas coletadas · {{applied}} candidatadas · {{pending}} pendentes",
+  "subtitle_one": "{{total}} vagas coletadas · {{applied}} candidatadas · {{pending}} pendentes",
   "hideCollector": "Ocultar coletor",
   "collectJobs": "Coletar vagas",
   "status": {

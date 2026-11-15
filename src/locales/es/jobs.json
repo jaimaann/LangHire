@@ -1,6 +1,7 @@
 {
   "title": "Empleos",
   "subtitle": "{{total}} empleos recopilados · {{applied}} aplicados · {{pending}} pendientes",
+  "subtitle_one": "{{total}} empleos recopilados · {{applied}} aplicados · {{pending}} pendientes",
   "hideCollector": "Ocultar recopilador",
   "collectJobs": "Recopilar empleos",
   "status": {

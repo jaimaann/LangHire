@@ -1,6 +1,7 @@
 {
   "title": "채용",
   "subtitle": "{{total}}개 수집 · {{applied}}개 지원 완료 · {{pending}}개 대기 중",
+  "subtitle_one": "{{total}}개 수집 · {{applied}}개 지원 완료 · {{pending}}개 대기 중",
   "hideCollector": "수집기 숨기기",
   "collectJobs": "채용 수집",
   "status": {

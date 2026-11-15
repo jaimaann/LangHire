@@ -1,6 +1,7 @@
 {
   "title": "Banen",
   "subtitle": "{{total}} banen verzameld · {{applied}} gesolliciteerd · {{pending}} in afwachting",
+  "subtitle_one": "{{total}} banen verzameld · {{applied}} gesolliciteerd · {{pending}} in afwachting",
   "hideCollector": "Verzamelaar verbergen",
   "collectJobs": "Banen verzamelen",
   "status": {
