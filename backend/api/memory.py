@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 import logging
-
 from fastapi import APIRouter, Query
+from core.llm_factory import ainvoke_text
 
 from core.config import load_llm_settings
 from core import db
@@ -250,8 +250,7 @@ async def smart_squash_qa():
         f"{q_list}"
     )
     try:
-        from browser_use.llm.messages import UserMessage
-        response = await llm.ainvoke([UserMessage(content=prompt)])
+        response = await ainvoke_text(llm, prompt)
         import json as _json
         text = llm_text(response)
         # Extract JSON from response

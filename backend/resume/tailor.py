@@ -58,6 +58,74 @@ def classify_heading(text: str) -> str | None:
     return None
 
 
+_BULLET_ONLY = re.compile(r"^[•●▪◦‣·\-–*○]$")
+_PAGE_NUMBER = re.compile(r"^(page\s*)?\d{1,2}(\s*(of|/)\s*\d{1,2})?$", re.IGNORECASE)
+_ENTRY_START = re.compile(
+    r"^\s*((?:[A-Za-z]{3,9}\.?\s+)?\d{4}|present|current|now)\s*[-–—to]+\s*((?:[A-Za-z]{3,9}\.?\s+)?\d{4}|present|current|now)\b",
+    re.IGNORECASE,
+)
+
+
+def _rebuild_paragraphs(lines: list[str]) -> str:
+    """Turn PDF text lines back into paragraphs.
+
+    PDF text comes out one visual line at a time: a bullet glyph alone on a line,
+    sentences split at every wrap, and page numbers mixed in. Lines are grouped
+    by PDF block (an empty string marks a block end), wrapped lines are joined,
+    lone bullet glyphs are attached to the next paragraph, page numbers dropped,
+    and a blank line is put before each dated entry so jobs/projects stay apart.
+    """
+    paras: list[str] = []
+    cur: list[str] = []
+    bullet_next = False
+
+    def flush():
+        nonlocal cur, bullet_next
+        parts = [x.strip() for x in cur if x.strip()]
+        cur = []
+
+        def short(x: str) -> bool:
+            return len(x.split()) <= 6 and not x.endswith((".", ",", ";", ":"))
+
+        if len(parts) > 1 and len(parts[0].split()) <= 3 and short(parts[0]) and (not short(parts[1]) or "," in parts[1]):
+            text = parts[0] + ": " + " ".join(parts[1:])      # "Programming: Python, R, SQL"
+        elif len(parts) > 1 and all(short(x) for x in parts):
+            text = " · ".join(parts)                          # a column list of courses / tools
+        else:
+            text = " ".join(parts)
+        if not text:
+            return
+        if _BULLET_ONLY.match(text):
+            bullet_next = True
+            return
+        if _PAGE_NUMBER.match(text):
+            return
+        prev = paras[-1] if paras else ""
+        continues = (prev and not bullet_next and not _ENTRY_START.match(text)
+                     and not prev.rstrip().endswith((".", "!", "?", ":"))
+                     and (text[0].islower() or text[0] in "(&,/" or prev.rstrip().endswith((",", ";", "&", "/", "-"))))
+        if continues:  # a wrapped line that the PDF stored as its own block
+            paras[-1] = prev.rstrip() + " " + text
+            return
+        if bullet_next:
+            text = "• " + text.lstrip("•●▪◦‣·-–*○ ")
+            bullet_next = False
+        if _ENTRY_START.match(text) and paras:
+            paras.append("")
+        paras.append(text)
+
+    for ln in lines:
+        if ln == "":
+            flush()
+        elif _BULLET_ONLY.match(ln.strip()):
+            flush()
+            bullet_next = True
+        else:
+            cur.append(ln)
+    flush()
+    return re.sub(r"\n{3,}", "\n\n", "\n".join(paras)).strip()
+
+
 def _extract_sections(doc: fitz.Document) -> list[dict]:
     """Split a resume PDF into titled sections, in reading order.
 
@@ -130,8 +198,7 @@ def _extract_sections(doc: fitz.Document) -> list[dict]:
 
     result = []
     for sec in sections:
-        text = "\n".join(sec["lines"])
-        text = re.sub(r"\n{3,}", "\n\n", text).strip()
+        text = _rebuild_paragraphs(sec["lines"])
         if not text:
             continue
         bb = sec["bboxes"]
@@ -254,8 +321,8 @@ async def _generate_tailored_text(
         '{"0": "tailored text for section 0", "1": "tailored text for section 1", ...}\n'
     )
 
-    from browser_use.llm.messages import UserMessage
-    response = await llm.ainvoke([UserMessage(content=prompt)])
+    from core.llm_factory import ainvoke_text
+    response = await ainvoke_text(llm, prompt, timeout=300)
     if hasattr(response, "completion"):
         text = response.completion
     elif hasattr(response, "content") and isinstance(response.content, str):

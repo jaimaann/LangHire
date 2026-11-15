@@ -5,6 +5,8 @@ import re
 
 from fastapi import APIRouter
 
+from core.llm_factory import ainvoke_text
+
 from core.config import load_llm_settings, load_profile
 from models import CoverLetterRequest, JobUrlRequest, RefineRequest, TailorRequest
 
@@ -161,9 +163,8 @@ async def generate_cover_letter(body: CoverLetterRequest):
 
     try:
         from core.llm_factory import create_llm
-        from browser_use.llm.messages import UserMessage
         llm = create_llm(llm_settings)
-        response = await llm.ainvoke([UserMessage(content=prompt)])
+        response = await ainvoke_text(llm, prompt)
         text = llm_text(response)
         return {"success": True, "cover_letter": text.strip()}
     except Exception as e:

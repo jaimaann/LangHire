@@ -7,6 +7,8 @@ from pathlib import Path
 
 from fastapi import APIRouter
 
+from core.llm_factory import ainvoke_text
+
 from core.config import (load_llm_settings, load_profile, load_settings, save_llm_settings,
                          save_profile, save_settings)
 from models import LLMSettingsBody, OllamaModelsRequest, ProfileBody, SettingsBody
@@ -167,8 +169,7 @@ RESUME TEXT:
 {resume_text[:6000]}"""
 
     try:
-        from browser_use.llm.messages import UserMessage
-        response = await llm.ainvoke([UserMessage(content=prompt)])
+        response = await ainvoke_text(llm, prompt)
         response_text = llm_text(response)
 
         # Parse JSON from response

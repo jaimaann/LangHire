@@ -169,3 +169,21 @@ def _friendly_llm_error(message: str, status_code=None) -> str:
 
     # Fall back to the raw provider message so the user still sees something useful.
     return message or "LLM request failed."
+
+
+LLM_CALL_TIMEOUT = 180  # seconds; provider SDKs default to 10 minutes per attempt, with retries
+
+
+async def ainvoke_text(llm, prompt: str, timeout: float = LLM_CALL_TIMEOUT):
+    """One LLM call with a hard time limit (tailoring, cover letters, resume parsing).
+
+    Without it a stalled provider left the UI spinning for 10+ minutes per retry.
+    Raises TimeoutError with a readable message.
+    """
+    import asyncio
+    from browser_use.llm.messages import UserMessage
+    try:
+        return await asyncio.wait_for(llm.ainvoke([UserMessage(content=prompt)]), timeout=timeout)
+    except asyncio.TimeoutError as e:
+        raise TimeoutError(f"The AI provider did not answer within {int(timeout)} seconds. Try again, "
+                           "or pick a faster model in LLM Settings.") from e
