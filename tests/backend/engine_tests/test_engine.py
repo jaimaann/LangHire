@@ -262,7 +262,9 @@ def test_delete_all_works_while_other_threads_hold_the_db(data_dir):
 
     t = threading.Thread(target=hold)
     t.start()
-    ready.wait(5)
+    # Under heavy load the helper thread could start late; without this the test would
+    # race delete_all against the thread's first connection instead of testing a held one.
+    assert ready.wait(60), "helper thread never opened its connection"
     try:
         user_data.delete_all()
         assert db.read_jobs() == {}
