@@ -46,7 +46,8 @@
       "submitted": "已提交",
       "failed": "失败",
       "needsInput": "需要你的回答",
-      "skipped": "已跳过"
+      "skipped": "已跳过",
+      "readyToSubmit": "验证通过（未发送）"
     },
     "confirmation": "确认：{{text}}",
     "cost": "费用",
@@ -63,6 +64,7 @@
     "answer": "回答",
     "source": "来源",
     "checkAnswer": "请核对",
-    "checkAnswerTitle": "该回答是代理推测的或不确定，请核对。"
+    "checkAnswerTitle": "该回答是代理推测的或不确定，请核对。",
+    "intercepted": "已拦截请求：{{n}}"
   }
 }

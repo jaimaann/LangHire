@@ -10,7 +10,8 @@
     "blocked": "अवरुद्ध",
     "inProgress": "प्रगति में",
     "needsInput": "आपका उत्तर चाहिए",
-    "skipped": "छोड़ा गया"
+    "skipped": "छोड़ा गया",
+    "testPassed": "परीक्षण सफल"
   },
   "filter": {
     "all": "सभी"
@@ -86,5 +87,6 @@
   "progress": {
     "applying": "आवेदन हो रहा है…",
     "cost": "अब तक LLM लागत: ${{cost}}"
-  }
+  },
+  "testModePill": "परीक्षण मोड: आवेदन नहीं भेजे जाते"
 }

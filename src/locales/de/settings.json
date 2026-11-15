@@ -93,7 +93,9 @@
     "browserCdpUrl": "Eigenes Chrome (DevTools-Adresse)",
     "browserCdpUrlHelp": "Eigenes Chrome verwenden: Mit --remote-debugging-port=9222 starten und die Adresse einfügen. Leer lassen, um den Browser von LangHire zu verwenden.",
     "emailOtp": "Bestätigungscodes aus Gmail lesen",
-    "emailOtpHelp": "Den Agenten die neueste E-Mail mit Bestätigungscode in Gmail lesen lassen"
+    "emailOtpHelp": "Den Agenten die neueste E-Mail mit Bestätigungscode in Gmail lesen lassen",
+    "testMode": "Testmodus (nichts wird abgeschickt)",
+    "testModeHelp": "Der Agent füllt jedes Feld aus und klickt auf Absenden, aber die Bewerbung wird im Browser gestoppt, bevor sie gesendet wird. So kannst du prüfen, wie gut Bewerbungen laufen würden."
   },
   "logins": {
     "title": "Anmeldungen bei Jobseiten",

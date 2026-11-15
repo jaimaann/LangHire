@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle, Clock, Ban, Loader2, HelpCircle, SkipForward } from "lucide-react";
+import { CheckCircle, XCircle, Clock, Ban, Loader2, HelpCircle, SkipForward, FlaskConical } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { JobStatus } from "../lib/types";
 
@@ -10,6 +10,7 @@ const STATUS_ICONS: Record<JobStatus, typeof CheckCircle> = {
   in_progress: Loader2,
   needs_input: HelpCircle,
   skipped: SkipForward,
+  test_passed: FlaskConical,
 };
 
 const STATUS_STYLES: Record<JobStatus, { color: string; bg: string }> = {
@@ -20,6 +21,7 @@ const STATUS_STYLES: Record<JobStatus, { color: string; bg: string }> = {
   in_progress: { color: "text-primary", bg: "bg-[#FFF0F3]" },
   needs_input: { color: "text-violet-700", bg: "bg-violet-50" },
   skipped: { color: "text-muted-foreground", bg: "bg-secondary" },
+  test_passed: { color: "text-sky-700", bg: "bg-sky-50" },
 };
 
 /** i18n key (in the "jobs" namespace) of each status label. */
@@ -31,6 +33,7 @@ const STATUS_LABEL_KEYS: Record<JobStatus, string> = {
   in_progress: "status.inProgress",
   needs_input: "status.needsInput",
   skipped: "status.skipped",
+  test_passed: "status.testPassed",
 };
 
 /** Colored pill with an icon and the translated label of a job status. */

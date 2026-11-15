@@ -93,7 +93,9 @@
     "browserCdpUrl": "自分のChrome（DevToolsアドレス）",
     "browserCdpUrlHelp": "自分のChromeを使う: --remote-debugging-port=9222 を付けて起動し、アドレスを貼り付けてください。空欄の場合はLangHireのブラウザーを使います。",
     "emailOtp": "Gmailから確認コードを読み取る",
-    "emailOtpHelp": "Gmailで最新の確認コードメールをエージェントが読めるようにする"
+    "emailOtpHelp": "Gmailで最新の確認コードメールをエージェントが読めるようにする",
+    "testMode": "テストモード（何も送信されません）",
+    "testModeHelp": "エージェントはすべての項目を入力して送信ボタンをクリックしますが、応募は送信前にブラウザ内で止められます。応募がどの程度うまくいくかを確認するのに使います。"
   },
   "logins": {
     "title": "求人サイトへのログイン",

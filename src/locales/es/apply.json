@@ -46,7 +46,8 @@
       "submitted": "Enviada",
       "failed": "Fallida",
       "needsInput": "Necesita tu respuesta",
-      "skipped": "Omitida"
+      "skipped": "Omitida",
+      "readyToSubmit": "Validación superada (no enviada)"
     },
     "confirmation": "Confirmación: {{text}}",
     "cost": "Costo",
@@ -63,6 +64,7 @@
     "answer": "Respuesta",
     "source": "Origen",
     "checkAnswer": "Revisar",
-    "checkAnswerTitle": "El agente adivinó esta respuesta o no estaba seguro. Revísala."
+    "checkAnswerTitle": "El agente adivinó esta respuesta o no estaba seguro. Revísala.",
+    "intercepted": "Solicitudes interceptadas: {{n}}"
   }
 }

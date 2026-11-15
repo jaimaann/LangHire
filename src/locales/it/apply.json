@@ -46,7 +46,8 @@
       "submitted": "Inviata",
       "failed": "Non riuscita",
       "needsInput": "Serve una tua risposta",
-      "skipped": "Saltata"
+      "skipped": "Saltata",
+      "readyToSubmit": "Convalida superata (non inviata)"
     },
     "confirmation": "Conferma: {{text}}",
     "cost": "Costo",
@@ -63,6 +64,7 @@
     "answer": "Risposta",
     "source": "Fonte",
     "checkAnswer": "Verifica",
-    "checkAnswerTitle": "L'agente ha indovinato questa risposta o non ne era sicuro. Controllala."
+    "checkAnswerTitle": "L'agente ha indovinato questa risposta o non ne era sicuro. Controllala.",
+    "intercepted": "Richieste intercettate: {{n}}"
   }
 }

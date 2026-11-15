@@ -10,7 +10,8 @@
     "blocked": "Blocked",
     "inProgress": "In Progress",
     "needsInput": "Needs your answer",
-    "skipped": "Skipped"
+    "skipped": "Skipped",
+    "testPassed": "Test passed"
   },
   "filter": {
     "all": "All"
@@ -86,5 +87,6 @@
   "progress": {
     "applying": "Applying…",
     "cost": "LLM cost so far: ${{cost}}"
-  }
+  },
+  "testModePill": "Test mode: applications are not sent"
 }

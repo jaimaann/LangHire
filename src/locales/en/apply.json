@@ -46,7 +46,8 @@
       "submitted": "Submitted",
       "failed": "Failed",
       "needsInput": "Needs your answer",
-      "skipped": "Skipped"
+      "skipped": "Skipped",
+      "readyToSubmit": "Passed validation (not sent)"
     },
     "confirmation": "Confirmation: {{text}}",
     "cost": "Cost",
@@ -63,6 +64,7 @@
     "answer": "Answer",
     "source": "Source",
     "checkAnswer": "Check",
-    "checkAnswerTitle": "The agent guessed this answer or was not sure. Please check it."
+    "checkAnswerTitle": "The agent guessed this answer or was not sure. Please check it.",
+    "intercepted": "Intercepted requests: {{n}}"
   }
 }

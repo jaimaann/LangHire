@@ -46,7 +46,8 @@
       "submitted": "Eingereicht",
       "failed": "Fehlgeschlagen",
       "needsInput": "Antwort benötigt",
-      "skipped": "Übersprungen"
+      "skipped": "Übersprungen",
+      "readyToSubmit": "Validierung bestanden (nicht gesendet)"
     },
     "confirmation": "Bestätigung: {{text}}",
     "cost": "Kosten",
@@ -63,6 +64,7 @@
     "answer": "Antwort",
     "source": "Quelle",
     "checkAnswer": "Prüfen",
-    "checkAnswerTitle": "Der Agent hat diese Antwort geraten oder war unsicher. Bitte prüfen Sie sie."
+    "checkAnswerTitle": "Der Agent hat diese Antwort geraten oder war unsicher. Bitte prüfen Sie sie.",
+    "intercepted": "Abgefangene Anfragen: {{n}}"
   }
 }

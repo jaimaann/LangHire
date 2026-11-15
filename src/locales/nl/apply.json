@@ -46,7 +46,8 @@
       "submitted": "Verzonden",
       "failed": "Mislukt",
       "needsInput": "Jouw antwoord nodig",
-      "skipped": "Overgeslagen"
+      "skipped": "Overgeslagen",
+      "readyToSubmit": "Validatie geslaagd (niet verzonden)"
     },
     "confirmation": "Bevestiging: {{text}}",
     "cost": "Kosten",
@@ -63,6 +64,7 @@
     "answer": "Antwoord",
     "source": "Bron",
     "checkAnswer": "Controleren",
-    "checkAnswerTitle": "De agent heeft dit antwoord geraden of was niet zeker. Controleer het."
+    "checkAnswerTitle": "De agent heeft dit antwoord geraden of was niet zeker. Controleer het.",
+    "intercepted": "Onderschepte verzoeken: {{n}}"
   }
 }

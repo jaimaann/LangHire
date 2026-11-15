@@ -46,7 +46,8 @@
       "submitted": "Envoyée",
       "failed": "Échec",
       "needsInput": "Réponse requise",
-      "skipped": "Ignorée"
+      "skipped": "Ignorée",
+      "readyToSubmit": "Validation réussie (non envoyée)"
     },
     "confirmation": "Confirmation : {{text}}",
     "cost": "Coût",
@@ -63,6 +64,7 @@
     "answer": "Réponse",
     "source": "Source",
     "checkAnswer": "À vérifier",
-    "checkAnswerTitle": "L'agent a deviné cette réponse ou n'en était pas sûr. Veuillez la vérifier."
+    "checkAnswerTitle": "L'agent a deviné cette réponse ou n'en était pas sûr. Veuillez la vérifier.",
+    "intercepted": "Requêtes interceptées : {{n}}"
   }
 }

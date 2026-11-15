@@ -46,7 +46,8 @@
       "submitted": "送信済み",
       "failed": "失敗",
       "needsInput": "回答が必要",
-      "skipped": "スキップ"
+      "skipped": "スキップ",
+      "readyToSubmit": "検証合格（未送信）"
     },
     "confirmation": "確認: {{text}}",
     "cost": "費用",
@@ -63,6 +64,7 @@
     "answer": "回答",
     "source": "出典",
     "checkAnswer": "要確認",
-    "checkAnswerTitle": "エージェントがこの回答を推測したか、確信がありませんでした。確認してください。"
+    "checkAnswerTitle": "エージェントがこの回答を推測したか、確信がありませんでした。確認してください。",
+    "intercepted": "ブロックしたリクエスト：{{n}}"
   }
 }

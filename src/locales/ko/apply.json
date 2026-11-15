@@ -46,7 +46,8 @@
       "submitted": "제출됨",
       "failed": "실패",
       "needsInput": "답변 필요",
-      "skipped": "건너뜀"
+      "skipped": "건너뜀",
+      "readyToSubmit": "검증 통과 (전송 안 됨)"
     },
     "confirmation": "확인: {{text}}",
     "cost": "비용",
@@ -63,6 +64,7 @@
     "answer": "답변",
     "source": "출처",
     "checkAnswer": "확인 필요",
-    "checkAnswerTitle": "에이전트가 이 답변을 추측했거나 확신하지 못했습니다. 확인해 주세요."
+    "checkAnswerTitle": "에이전트가 이 답변을 추측했거나 확신하지 못했습니다. 확인해 주세요.",
+    "intercepted": "차단된 요청: {{n}}"
   }
 }

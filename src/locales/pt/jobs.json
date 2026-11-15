@@ -10,7 +10,8 @@
     "blocked": "Bloqueado",
     "inProgress": "Em andamento",
     "needsInput": "Precisa da sua resposta",
-    "skipped": "Ignorado"
+    "skipped": "Ignorado",
+    "testPassed": "Teste aprovado"
   },
   "filter": {
     "all": "Todas"
@@ -86,5 +87,6 @@
   "progress": {
     "applying": "Candidatando…",
     "cost": "Custo de LLM até agora: ${{cost}}"
-  }
+  },
+  "testModePill": "Modo de teste: as candidaturas não são enviadas"
 }

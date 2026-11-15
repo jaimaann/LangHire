@@ -10,7 +10,8 @@
     "blocked": "Geblokkeerd",
     "inProgress": "Bezig",
     "needsInput": "Jouw antwoord nodig",
-    "skipped": "Overgeslagen"
+    "skipped": "Overgeslagen",
+    "testPassed": "Test geslaagd"
   },
   "filter": {
     "all": "Alle"
@@ -86,5 +87,6 @@
   "progress": {
     "applying": "Bezig met solliciteren…",
     "cost": "LLM-kosten tot nu toe: ${{cost}}"
-  }
+  },
+  "testModePill": "Testmodus: sollicitaties worden niet verzonden"
 }

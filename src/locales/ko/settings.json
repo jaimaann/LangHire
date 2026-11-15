@@ -93,7 +93,9 @@
     "browserCdpUrl": "내 Chrome (DevTools 주소)",
     "browserCdpUrlHelp": "내 Chrome 사용: --remote-debugging-port=9222 옵션으로 실행한 뒤 주소를 붙여 넣으세요. 비워 두면 LangHire 브라우저를 사용합니다.",
     "emailOtp": "Gmail에서 인증 코드 읽기",
-    "emailOtpHelp": "에이전트가 Gmail에서 최신 인증 코드 이메일을 읽도록 허용"
+    "emailOtpHelp": "에이전트가 Gmail에서 최신 인증 코드 이메일을 읽도록 허용",
+    "testMode": "테스트 모드 (아무것도 제출되지 않음)",
+    "testModeHelp": "에이전트가 모든 항목을 채우고 제출을 클릭하지만, 지원서는 전송되기 전에 브라우저에서 중단됩니다. 지원이 얼마나 잘 진행될지 확인할 때 사용하세요."
   },
   "logins": {
     "title": "채용 사이트 로그인",

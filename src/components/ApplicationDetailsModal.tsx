@@ -19,6 +19,7 @@ const OUTCOME_STYLES: Record<string, string> = {
   failed: "bg-red-50 text-red-700",
   needs_input: "bg-violet-50 text-violet-700",
   skipped: "bg-secondary text-muted-foreground",
+  ready_to_submit: "bg-sky-50 text-sky-700",
 };
 
 interface Props {
@@ -74,6 +75,8 @@ export default function ApplicationDetailsModal({ job, onClose }: Props) {
         return t("details.outcomes.needsInput");
       case "skipped":
         return t("details.outcomes.skipped");
+      case "ready_to_submit":
+        return t("details.outcomes.readyToSubmit");
       default:
         return outcome;
     }
@@ -133,6 +136,11 @@ export default function ApplicationDetailsModal({ job, onClose }: Props) {
                   >
                     {outcomeLabel(record.outcome)}
                   </span>
+                  {record.outcome === "ready_to_submit" && (
+                    <p data-testid="intercepted-count" className="text-[13px] text-muted-foreground mt-1">
+                      {t("details.intercepted", { n: Number(record.intercepted ?? 0) })}
+                    </p>
+                  )}
                   {record.reason && (
                     <p className="text-[13px] text-muted-foreground mt-1">{record.reason}</p>
                   )}

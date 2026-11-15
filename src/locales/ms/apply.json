@@ -46,7 +46,8 @@
       "submitted": "Dihantar",
       "failed": "Gagal",
       "needsInput": "Perlukan jawapan anda",
-      "skipped": "Dilangkau"
+      "skipped": "Dilangkau",
+      "readyToSubmit": "Lulus pengesahan (tidak dihantar)"
     },
     "confirmation": "Pengesahan: {{text}}",
     "cost": "Kos",
@@ -63,6 +64,7 @@
     "answer": "Jawapan",
     "source": "Sumber",
     "checkAnswer": "Semak",
-    "checkAnswerTitle": "Ejen meneka jawapan ini atau tidak pasti. Sila semak."
+    "checkAnswerTitle": "Ejen meneka jawapan ini atau tidak pasti. Sila semak.",
+    "intercepted": "Permintaan dipintas: {{n}}"
   }
 }

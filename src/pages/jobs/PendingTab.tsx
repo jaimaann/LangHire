@@ -19,6 +19,7 @@ import {
   Send,
   DollarSign,
   ArrowUpDown,
+  FlaskConical,
 } from "lucide-react";
 import { useRunEvents, costFromEvent, FALLBACK_POLL_MS } from "../../hooks/useRunEvents";
 import JobStatusBadge from "../../components/JobStatusBadge";
@@ -26,6 +27,7 @@ import { sortJobs, type JobSort } from "../../lib/jobSort";
 import {
   getJobs,
   startApplying,
+  getSettings,
   getApplyStatus,
   generateCoverLetter,
   saveProfile,
@@ -154,6 +156,21 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
         if (!isBackgroundRefresh) measureAndTrack("jobs_page_load");
       });
   };
+
+  // Test mode (nothing is submitted): show a persistent reminder near Apply.
+  const [testMode, setTestMode] = useState(false);
+  useEffect(() => {
+    let active = true;
+    Promise.resolve()
+      .then(() => getSettings())
+      .then((s) => {
+        if (active) setTestMode(s?.test_mode === true);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     fetchJobs();
@@ -520,10 +537,22 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
         )}
       </div>
 
+      {testMode && (
+        <div className="mb-4">
+          <span
+            data-testid="test-mode-pill"
+            role="status"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-semibold bg-amber-50 text-amber-800 border border-amber-200"
+          >
+            <FlaskConical className="w-3.5 h-3.5" /> {t("testModePill")}
+          </span>
+        </div>
+      )}
+
       {/* Status Filter Sub-tabs */}
       <div className="flex gap-2 mb-5">
         {[
-          { value: "", label: t("filter.all"), count: stats.total - (stats.applied || 0) },
+          { value: "", label: t("filter.all"), count: stats.total - (stats.applied || 0) - (stats.test_passed || 0) },
           { value: "pending", label: t("status.pending"), count: stats.pending },
           { value: "failed", label: t("status.failed"), count: stats.failed },
           { value: "needs_input", label: t("status.needsInput"), count: stats.needs_input ?? 0 },

@@ -93,7 +93,9 @@
     "browserCdpUrl": "Chrome anda sendiri (alamat DevTools)",
     "browserCdpUrlHelp": "Gunakan Chrome anda sendiri: mulakan dengan --remote-debugging-port=9222 dan tampal alamatnya. Biarkan kosong untuk menggunakan pelayar LangHire.",
     "emailOtp": "Baca kod pengesahan daripada Gmail",
-    "emailOtpHelp": "Benarkan ejen membaca e-mel kod pengesahan terbaharu dalam Gmail"
+    "emailOtpHelp": "Benarkan ejen membaca e-mel kod pengesahan terbaharu dalam Gmail",
+    "testMode": "Mod ujian (tiada apa yang dihantar)",
+    "testModeHelp": "Ejen mengisi setiap medan dan mengklik Hantar, tetapi permohonan dihentikan dalam pelayar sebelum dihantar. Gunakannya untuk menyemak sejauh mana permohonan akan berjaya."
   },
   "logins": {
     "title": "Log masuk laman kerja",

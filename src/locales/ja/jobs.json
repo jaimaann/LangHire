@@ -10,7 +10,8 @@
     "blocked": "ブロック",
     "inProgress": "進行中",
     "needsInput": "回答が必要",
-    "skipped": "スキップ"
+    "skipped": "スキップ",
+    "testPassed": "テスト合格"
   },
   "filter": {
     "all": "すべて"
@@ -86,5 +87,6 @@
   "progress": {
     "applying": "応募中…",
     "cost": "これまでのLLM費用: ${{cost}}"
-  }
+  },
+  "testModePill": "テストモード：応募は送信されません"
 }

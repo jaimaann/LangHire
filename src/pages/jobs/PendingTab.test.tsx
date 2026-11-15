@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import PendingTab from "./PendingTab";
 import {
   getJobs,
+  getSettings,
   startApplying,
   getApplyStatus,
   generateCoverLetter,
@@ -47,6 +48,7 @@ vi.mock("../../lib/api", () => ({
   subscribeEvents: vi.fn(() => () => {}),
   getApplications: vi.fn(async () => []),
   getJobs: vi.fn(),
+  getSettings: vi.fn(async () => ({})),
   startApplying: vi.fn(),
   getApplyStatus: vi.fn(),
   generateCoverLetter: vi.fn(),
@@ -366,5 +368,20 @@ describe("PendingTab", () => {
     // Tailored job shows the "Tailored" badge.
     const tailoredRow = screen.getByText("Staff Engineer").closest("div");
     expect(within(tailoredRow!.parentElement as HTMLElement).getByText("Tailored")).toBeInTheDocument();
+  });
+
+  describe("test mode pill", () => {
+    it("is hidden when test mode is off", async () => {
+      vi.mocked(getSettings).mockResolvedValue({ test_mode: false } as never);
+      render(<PendingTab onJobsChanged={onJobsChanged} stats={stats} />);
+      await screen.findByText("Backend Engineer");
+      expect(screen.queryByTestId("test-mode-pill")).not.toBeInTheDocument();
+    });
+
+    it("shows a persistent warning when test mode is on", async () => {
+      vi.mocked(getSettings).mockResolvedValue({ test_mode: true } as never);
+      render(<PendingTab onJobsChanged={onJobsChanged} stats={stats} />);
+      expect(await screen.findByTestId("test-mode-pill")).toHaveTextContent("testModePill");
+    });
   });
 });

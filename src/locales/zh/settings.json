@@ -101,7 +101,9 @@
     "browserCdpUrl": "使用你自己的 Chrome（DevTools 地址）",
     "browserCdpUrlHelp": "使用你自己的 Chrome：用 --remote-debugging-port=9222 启动它并粘贴地址。留空则使用 LangHire 的浏览器。",
     "emailOtp": "从 Gmail 读取验证码",
-    "emailOtpHelp": "允许代理读取 Gmail 中最新的验证码邮件"
+    "emailOtpHelp": "允许代理读取 Gmail 中最新的验证码邮件",
+    "testMode": "测试模式（不会提交任何内容）",
+    "testModeHelp": "代理会填写每个字段并点击提交，但申请会在发送前于浏览器中被拦截。用它来检查申请的效果如何。"
   },
   "logins": {
     "title": "招聘网站登录",

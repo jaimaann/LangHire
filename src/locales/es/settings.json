@@ -93,7 +93,9 @@
     "browserCdpUrl": "Tu propio Chrome (dirección de DevTools)",
     "browserCdpUrlHelp": "Usa tu propio Chrome: inícialo con --remote-debugging-port=9222 y pega la dirección. Déjalo vacío para usar el navegador de LangHire.",
     "emailOtp": "Leer códigos de verificación de Gmail",
-    "emailOtpHelp": "Permite que el agente lea el correo más reciente con código de verificación en Gmail"
+    "emailOtpHelp": "Permite que el agente lea el correo más reciente con código de verificación en Gmail",
+    "testMode": "Modo de prueba (no se envía nada)",
+    "testModeHelp": "El agente rellena todos los campos y pulsa Enviar, pero la solicitud se detiene en el navegador antes de enviarse. Úsalo para comprobar cómo irían las solicitudes."
   },
   "logins": {
     "title": "Inicios de sesión en sitios de empleo",

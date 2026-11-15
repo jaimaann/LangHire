@@ -46,7 +46,8 @@
       "submitted": "Enviada",
       "failed": "Falhou",
       "needsInput": "Precisa da sua resposta",
-      "skipped": "Ignorada"
+      "skipped": "Ignorada",
+      "readyToSubmit": "Validação aprovada (não enviada)"
     },
     "confirmation": "Confirmação: {{text}}",
     "cost": "Custo",
@@ -63,6 +64,7 @@
     "answer": "Resposta",
     "source": "Origem",
     "checkAnswer": "Verificar",
-    "checkAnswerTitle": "O agente deduziu esta resposta ou não tinha certeza. Verifique-a."
+    "checkAnswerTitle": "O agente deduziu esta resposta ou não tinha certeza. Verifique-a.",
+    "intercepted": "Pedidos interceptados: {{n}}"
   }
 }

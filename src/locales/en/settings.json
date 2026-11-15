@@ -101,7 +101,9 @@
     "browserCdpUrl": "Your own Chrome (DevTools address)",
     "browserCdpUrlHelp": "Use your own Chrome: start it with --remote-debugging-port=9222 and paste the address. Leave empty to use LangHire's browser.",
     "emailOtp": "Read verification codes from Gmail",
-    "emailOtpHelp": "Let the agent read the newest verification-code email in Gmail"
+    "emailOtpHelp": "Let the agent read the newest verification-code email in Gmail",
+    "testMode": "Test mode (nothing is submitted)",
+    "testModeHelp": "The agent fills every field and clicks Submit, but the application is stopped in the browser before it is sent. Use it to check how well applications would go."
   },
   "logins": {
     "title": "Job site logins",

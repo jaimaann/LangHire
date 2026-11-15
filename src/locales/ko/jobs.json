@@ -10,7 +10,8 @@
     "blocked": "차단됨",
     "inProgress": "진행 중",
     "needsInput": "답변 필요",
-    "skipped": "건너뜀"
+    "skipped": "건너뜀",
+    "testPassed": "테스트 통과"
   },
   "filter": {
     "all": "전체"
@@ -86,5 +87,6 @@
   "progress": {
     "applying": "지원 중…",
     "cost": "현재까지 LLM 비용: ${{cost}}"
-  }
+  },
+  "testModePill": "테스트 모드: 지원서가 전송되지 않습니다"
 }

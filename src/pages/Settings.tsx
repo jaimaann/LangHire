@@ -68,6 +68,7 @@ export default function SettingsPage() {
   const [maxRunCost, setMaxRunCost] = useState<number>(DEFAULT_MAX_RUN_COST_USD);
   const [browserCdpUrl, setBrowserCdpUrl] = useState("");
   const [emailOtpViaGmail, setEmailOtpViaGmail] = useState(false);
+  const [testMode, setTestMode] = useState(false);
   const [secretsBackend, setSecretsBackend] = useState<"keychain" | "file" | null>(null);
 
   const handleLanguageChange = async (lang: string) => {
@@ -101,6 +102,7 @@ export default function SettingsPage() {
         setMaxRunCost(numberOr(data.max_run_cost_usd, DEFAULT_MAX_RUN_COST_USD));
         setBrowserCdpUrl(data.browser_cdp_url || "");
         setEmailOtpViaGmail(data.email_otp_via_gmail === true);
+        setTestMode(data.test_mode === true);
       }),
       getPlugins().then((res) => setPlugins(res.plugins || [])),
     ])
@@ -189,6 +191,11 @@ export default function SettingsPage() {
     saveSettings({ telemetry_enabled: enabled }).catch(() => {});
   };
 
+  const handleTestModeChange = (enabled: boolean) => {
+    setTestMode(enabled);
+    saveSettings({ test_mode: enabled }).catch(() => {});
+  };
+
   const handleRetentionChange = (days: number) => {
     setLogRetentionDays(days);
     saveSettings({ log_retention_days: days }).catch(() => {});
@@ -247,6 +254,7 @@ export default function SettingsPage() {
         max_run_cost_usd: maxRunCost,
         browser_cdp_url: browserCdpUrl.trim(),
         email_otp_via_gmail: emailOtpViaGmail,
+        test_mode: testMode,
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -448,6 +456,23 @@ export default function SettingsPage() {
               aria-label={t("automation.emailOtp")}
               checked={emailOtpViaGmail}
               onChange={(e) => setEmailOtpViaGmail(e.target.checked)}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-secondary peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+          </label>
+        </div>
+
+        <div className="mt-5 pt-5 border-t border-border flex items-center justify-between">
+          <div>
+            <p className="text-sm font-semibold text-foreground">{t("automation.testMode")}</p>
+            <p className="text-[13px] text-muted-foreground mt-1">{t("automation.testModeHelp")}</p>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
+            <input
+              type="checkbox"
+              aria-label={t("automation.testMode")}
+              checked={testMode}
+              onChange={(e) => handleTestModeChange(e.target.checked)}
               className="sr-only peer"
             />
             <div className="w-11 h-6 bg-secondary peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>

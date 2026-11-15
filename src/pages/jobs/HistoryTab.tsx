@@ -73,18 +73,19 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
 
   async function loadAppliedJobs() {
     try {
-      const [applied, failed, needsInput, skipped, metrics, settings] = await Promise.all([
+      const [applied, failed, needsInput, skipped, testPassed, metrics, settings] = await Promise.all([
         getJobs({ status: "applied" }),
         getJobs({ status: "failed" }),
         getJobs({ status: "needs_input" }).catch(() => [] as Job[]),
         getJobs({ status: "skipped" }).catch(() => [] as Job[]),
+        getJobs({ status: "test_passed" }).catch(() => [] as Job[]),
         getMetricRuns(200),
         getSettings(),
       ]);
 
       setResumePath((settings as AppSettings).resume_path || "");
 
-      const allJobs = [...applied, ...failed, ...(needsInput || []), ...(skipped || [])];
+      const allJobs = [...applied, ...failed, ...(needsInput || []), ...(skipped || []), ...(testPassed || [])];
       // Build a map of metrics by job_url for quick lookup
       const metricsByUrl = new Map<string, RunMetric>();
       for (const m of metrics) {

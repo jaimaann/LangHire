@@ -10,7 +10,8 @@
     "blocked": "Disekat",
     "inProgress": "Sedang Berjalan",
     "needsInput": "Perlukan jawapan anda",
-    "skipped": "Dilangkau"
+    "skipped": "Dilangkau",
+    "testPassed": "Ujian lulus"
   },
   "filter": {
     "all": "Semua"
@@ -86,5 +87,6 @@
   "progress": {
     "applying": "Sedang memohon…",
     "cost": "Kos LLM setakat ini: ${{cost}}"
-  }
+  },
+  "testModePill": "Mod ujian: permohonan tidak dihantar"
 }

@@ -101,7 +101,9 @@
     "browserCdpUrl": "Il tuo Chrome (indirizzo DevTools)",
     "browserCdpUrlHelp": "Usa il tuo Chrome: avvialo con --remote-debugging-port=9222 e incolla l'indirizzo. Lascia vuoto per usare il browser di LangHire.",
     "emailOtp": "Leggi i codici di verifica da Gmail",
-    "emailOtpHelp": "Consenti all'agente di leggere l'email più recente con un codice di verifica in Gmail"
+    "emailOtpHelp": "Consenti all'agente di leggere l'email più recente con un codice di verifica in Gmail",
+    "testMode": "Modalità test (non viene inviato nulla)",
+    "testModeHelp": "L'agente compila ogni campo e clicca su Invia, ma la candidatura viene fermata nel browser prima dell'invio. Usala per verificare come andrebbero le candidature."
   },
   "logins": {
     "title": "Accessi ai siti di lavoro",

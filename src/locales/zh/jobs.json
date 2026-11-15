@@ -10,7 +10,8 @@
     "blocked": "已阻止",
     "inProgress": "进行中",
     "needsInput": "需要你的回答",
-    "skipped": "已跳过"
+    "skipped": "已跳过",
+    "testPassed": "测试通过"
   },
   "filter": {
     "all": "全部"
@@ -86,5 +87,6 @@
   "progress": {
     "applying": "正在申请…",
     "cost": "目前 LLM 费用：${{cost}}"
-  }
+  },
+  "testModePill": "测试模式：申请不会发送"
 }

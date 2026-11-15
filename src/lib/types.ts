@@ -110,6 +110,8 @@ export interface AppSettings {
   browser_cdp_url?: string;
   /** Let the agent read the newest verification-code email in Gmail. */
   email_otp_via_gmail?: boolean;
+  /** Fill and click Submit, but stop the request in the browser (nothing is sent). */
+  test_mode?: boolean;
 }
 
 // ── Privacy & data ────────────────────────────────────────────────────────
@@ -161,6 +163,10 @@ export interface ApplicationRecord {
   cost_usd?: number | null;
   steps?: number | null;
   ats?: string | null;
+  /** Test mode: application requests stopped in the browser. */
+  intercepted?: number | null;
+  /** Test mode: how many times Submit was clicked. */
+  submit_clicks?: number | null;
   created_at: string;
 }
 
@@ -350,7 +356,8 @@ export type JobStatus =
   | "failed"
   | "blocked"
   | "skipped"
-  | "needs_input";
+  | "needs_input"
+  | "test_passed";
 
 export interface JobStats {
   total: number;
@@ -361,6 +368,7 @@ export interface JobStats {
   in_progress: number;
   skipped?: number;
   needs_input?: number;
+  test_passed?: number;
 }
 
 /** Success rate and average cost per applicant tracking system. */

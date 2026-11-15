@@ -93,7 +93,9 @@
     "browserCdpUrl": "Je eigen Chrome (DevTools-adres)",
     "browserCdpUrlHelp": "Gebruik je eigen Chrome: start het met --remote-debugging-port=9222 en plak het adres. Laat leeg om de browser van LangHire te gebruiken.",
     "emailOtp": "Verificatiecodes uit Gmail lezen",
-    "emailOtpHelp": "Laat de agent de nieuwste e-mail met verificatiecode in Gmail lezen"
+    "emailOtpHelp": "Laat de agent de nieuwste e-mail met verificatiecode in Gmail lezen",
+    "testMode": "Testmodus (er wordt niets verzonden)",
+    "testModeHelp": "De agent vult elk veld in en klikt op Verzenden, maar de sollicitatie wordt in de browser tegengehouden voordat deze wordt verzonden. Gebruik dit om te controleren hoe sollicitaties zouden verlopen."
   },
   "logins": {
     "title": "Aanmeldingen bij vacaturesites",

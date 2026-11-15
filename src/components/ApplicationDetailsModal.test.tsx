@@ -49,6 +49,15 @@ describe("ApplicationDetailsModal", () => {
     vi.mocked(openLocalFile).mockResolvedValue(undefined as never);
   });
 
+  it("labels a test-mode record as passed validation and shows intercepted requests", async () => {
+    vi.mocked(getApplications).mockResolvedValue([
+      { ...structuredClone(record), outcome: "ready_to_submit", intercepted: 2, submit_clicks: 1 },
+    ] as never);
+    render(<ApplicationDetailsModal job={job} onClose={vi.fn()} />);
+    expect(await screen.findByTestId("application-outcome")).toHaveTextContent("details.outcomes.readyToSubmit");
+    expect(screen.getByTestId("intercepted-count")).toHaveTextContent('details.intercepted:{"n":2}');
+  });
+
   it("loads the latest record for the job and shows outcome, cost, resume and answers", async () => {
     render(<ApplicationDetailsModal job={job} onClose={vi.fn()} />);
     expect(await screen.findByTestId("application-outcome")).toHaveTextContent("details.outcomes.submitted");

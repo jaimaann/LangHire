@@ -221,6 +221,25 @@ describe("SettingsPage", () => {
     await waitFor(() => expect(mockSaveSettings).toHaveBeenCalledWith({ telemetry_enabled: false }));
   });
 
+  it("toggles test mode and saves test_mode right away", async () => {
+    const user = userEvent.setup();
+    render(<SettingsPage />);
+    await screen.findByDisplayValue("/home/me/resume.pdf");
+    const toggle = screen.getByRole("checkbox", { name: "automation.testMode" });
+    expect(toggle).not.toBeChecked();
+    expect(screen.getByText("automation.testModeHelp")).toBeInTheDocument();
+    await user.click(toggle);
+    expect(toggle).toBeChecked();
+    await waitFor(() => expect(mockSaveSettings).toHaveBeenCalledWith({ test_mode: true }));
+  });
+
+  it("shows test mode on when the backend has it enabled", async () => {
+    mockGetSettings.mockResolvedValue({ ...structuredClone(baseSettings), test_mode: true } as never);
+    render(<SettingsPage />);
+    await screen.findByDisplayValue("/home/me/resume.pdf");
+    expect(screen.getByRole("checkbox", { name: "automation.testMode" })).toBeChecked();
+  });
+
   it("toggles a plugin on/off via the API", async () => {
     const user = userEvent.setup();
     render(<SettingsPage />);
