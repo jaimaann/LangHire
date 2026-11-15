@@ -198,8 +198,9 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             register_done_callback=_log_done,
         )
         history = await agent.run(max_steps=prompts.MAX_APPLY_STEPS)
+        if vision_on and vision.history_rejected_images(history):
+            vision.remember_text_only()  # next runs skip screenshots from the start
         if vision_on and report.result is None and vision.history_rejected_images(history):
-            vision.remember_text_only()
             emit("log", f"🖼️ {tag} This model does not accept screenshots; retrying without them", "warning")
             await close_session(browser)
             db.update_job(url, status="pending", error=None)
@@ -365,6 +366,13 @@ async def run_apply(ctx: RunContext, *, mode: str = "all", workers: int = 1, lim
             ctx.counters["applied"] = stats.get("applied", 0)
             if stagger and not queue.empty():
                 await asyncio.sleep(stagger)
+
+    # Clone worker profiles before any browser starts: once worker 1's Chrome is
+    # running, Windows locks its cookie database and it can't be copied.
+    from .browsers import uses_own_chrome, worker_profile_dir
+    if not uses_own_chrome():
+        for wid in range(2, min(workers, len(pending)) + 1):
+            await asyncio.to_thread(worker_profile_dir, wid)
 
     tasks = []
     for i in range(min(workers, len(pending))):

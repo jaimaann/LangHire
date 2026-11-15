@@ -96,7 +96,13 @@ def worker_profile_dir(worker_id: int) -> Path:
     if not stamp.exists() or float(stamp.read_text() or 0) < main_mtime:
         import shutil
         shutil.rmtree(clone, ignore_errors=True)
-        shutil.copytree(main, clone, ignore=shutil.ignore_patterns(*_CLONE_SKIP), dirs_exist_ok=True)
+        def _copy(src, dst):
+            try:
+                return shutil.copy2(src, dst)
+            except OSError:  # a file locked by a running Chrome: skip it rather than abort the run
+                return dst
+        shutil.copytree(main, clone, ignore=shutil.ignore_patterns(*_CLONE_SKIP), dirs_exist_ok=True,
+                        copy_function=_copy)
         stamp.write_text(str(main_mtime))
     return clone
 
