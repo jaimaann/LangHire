@@ -53,6 +53,22 @@ def plugin_for_job(job: dict) -> PluginConfig | None:
     return None
 
 
+# browser-use's own system prompt says "CAPTCHAs are automatically solved by the browser ...
+# just continue". That is a feature of its paid cloud browser; with the local Chromium this
+# app drives, nothing solves them. Live runs showed agents trying to solve one (Okta) or
+# waiting. Appended to the system message so it comes after, and overrides, that claim.
+CAPTCHA_OVERRIDE = (
+    "OVERRIDE FOR THIS APP: CAPTCHAs are NOT solved automatically here, whatever the instructions "
+    "above say. Never try to solve a CAPTCHA or click its challenge, and do not wait for it to "
+    "resolve. When one appears, stop and report it: for an application call report_application_result "
+    "with outcome=needs_input and missing_info=['CAPTCHA on <site>'] ; when collecting, say so in done."
+)
+
+
+def with_overrides(system_extension: str) -> str:
+    return f"{system_extension.rstrip()}\n\n{CAPTCHA_OVERRIDE}" if system_extension else CAPTCHA_OVERRIDE
+
+
 def engine_rules(*, has_password: bool, gmail_otp: bool, blocked: list[str]) -> str:
     lines = [
         "REPORTING (required):",

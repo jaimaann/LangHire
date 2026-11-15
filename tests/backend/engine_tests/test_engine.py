@@ -552,3 +552,12 @@ def test_custom_token_prices_give_unpriced_models_a_cost(data_dir):
     save_llm_settings(s)
     assert round(_usage_cost(run), 4) == 0.0404     # now priced, so the run budget applies
     assert not _cost_unknown(run)
+
+
+def test_captcha_override_reaches_the_system_message():
+    """browser-use's prompt claims CAPTCHAs are auto-solved (a cloud-only feature); ours must override it."""
+    from engine.prompts import CAPTCHA_OVERRIDE, with_overrides
+    assert with_overrides("").startswith("OVERRIDE FOR THIS APP: CAPTCHAs are NOT solved")
+    combined = with_overrides("CANDIDATE PROFILE:\nName: X")
+    assert combined.startswith("CANDIDATE PROFILE") and combined.endswith(CAPTCHA_OVERRIDE)
+    assert "needs_input" in CAPTCHA_OVERRIDE

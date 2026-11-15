@@ -337,7 +337,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             # The outcome is part of done() itself, so it survives browser-use's forced
             # "done only" final step (seen live: the result tool was unavailable there)
             output_model_schema=ApplicationResult,
-            extend_system_message=memory_ctx,
+            extend_system_message=prompts.with_overrides(memory_ctx),
             available_file_paths=[resume_path] if resume_path else [],
             save_conversation_path=convo_path,
             calculate_cost=True,

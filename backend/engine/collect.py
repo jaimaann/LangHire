@@ -138,6 +138,7 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
             browser_session=browser, max_failures=int(settings.get("max_failures", 8) or 8), calculate_cost=True,
             register_new_step_callback=on_step, register_done_callback=_log_done,
             save_conversation_path=convo,
+            extend_system_message=prompts.with_overrides(""),
         )
         agent_ref["agent"] = agent
         history = await agent.run(max_steps=150)
