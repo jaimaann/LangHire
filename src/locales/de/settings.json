@@ -24,7 +24,8 @@
   "blockedDomains": {
     "title": "Blockierte Domains",
     "description": "Jobs auf diesen Domains werden automatisch übersprungen.",
-    "empty": "Keine blockierten Domains"
+    "empty": "Keine blockierten Domains",
+    "none": "Keine gesperrten Domains"
   },
   "plugins": {
     "title": "Job-Quellen-Plugins",

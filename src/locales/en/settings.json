@@ -24,7 +24,8 @@
   "blockedDomains": {
     "title": "Blocked Domains",
     "description": "Jobs on these domains will be automatically skipped.",
-    "empty": "No blocked domains"
+    "empty": "No blocked domains",
+    "none": "No blocked domains"
   },
   "plugins": {
     "title": "Job Source Plugins",

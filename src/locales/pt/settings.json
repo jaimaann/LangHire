@@ -24,7 +24,8 @@
   "blockedDomains": {
     "title": "Domínios bloqueados",
     "description": "Vagas nesses domínios serão automaticamente ignoradas.",
-    "empty": "Nenhum domínio bloqueado"
+    "empty": "Nenhum domínio bloqueado",
+    "none": "Nenhum domínio bloqueado"
   },
   "plugins": {
     "title": "Plugins de fontes de vagas",

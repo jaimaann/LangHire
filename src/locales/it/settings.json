@@ -24,7 +24,8 @@
   "blockedDomains": {
     "title": "Domini bloccati",
     "description": "Le offerte su questi domini verranno saltate automaticamente.",
-    "empty": "Nessun dominio bloccato"
+    "empty": "Nessun dominio bloccato",
+    "none": "Nessun dominio bloccato"
   },
   "plugins": {
     "title": "Plugin di origine delle offerte",

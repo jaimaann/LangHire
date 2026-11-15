@@ -24,7 +24,8 @@
   "blockedDomains": {
     "title": "已阻止的域名",
     "description": "这些域名上的职位将被自动跳过。",
-    "empty": "没有已阻止的域名"
+    "empty": "没有已阻止的域名",
+    "none": "没有已屏蔽的域名"
   },
   "plugins": {
     "title": "职位来源插件",

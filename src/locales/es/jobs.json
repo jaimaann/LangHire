@@ -89,5 +89,16 @@
     "applying": "Postulando…",
     "cost": "Costo de LLM hasta ahora: ${{cost}}"
   },
-  "testModePill": "Modo de prueba: las solicitudes no se envían"
+  "testModePill": "Modo de prueba: las solicitudes no se envían",
+  "tabs": {
+    "collect": "Recopilar",
+    "pending": "Revisar y postular",
+    "history": "Historial"
+  },
+  "tailorParts": {
+    "skills": "Habilidades",
+    "title": "Puesto",
+    "overview": "Resumen",
+    "experience": "Experiencia"
+  }
 }

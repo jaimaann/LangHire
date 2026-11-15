@@ -89,5 +89,16 @@
     "applying": "आवेदन हो रहा है…",
     "cost": "अब तक LLM लागत: ${{cost}}"
   },
-  "testModePill": "परीक्षण मोड: आवेदन नहीं भेजे जाते"
+  "testModePill": "परीक्षण मोड: आवेदन नहीं भेजे जाते",
+  "tabs": {
+    "collect": "एकत्र करें",
+    "pending": "समीक्षा और आवेदन",
+    "history": "इतिहास"
+  },
+  "tailorParts": {
+    "skills": "कौशल",
+    "title": "पद का नाम",
+    "overview": "सारांश",
+    "experience": "अनुभव"
+  }
 }

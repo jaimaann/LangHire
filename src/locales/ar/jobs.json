@@ -89,5 +89,16 @@
     "applying": "جارٍ التقديم…",
     "cost": "تكلفة LLM حتى الآن: ${{cost}}"
   },
-  "testModePill": "وضع الاختبار: لا يتم إرسال الطلبات"
+  "testModePill": "وضع الاختبار: لا يتم إرسال الطلبات",
+  "tabs": {
+    "collect": "جمع",
+    "pending": "مراجعة وتقديم",
+    "history": "السجل"
+  },
+  "tailorParts": {
+    "skills": "المهارات",
+    "title": "المسمى الوظيفي",
+    "overview": "الملخص",
+    "experience": "الخبرة"
+  }
 }

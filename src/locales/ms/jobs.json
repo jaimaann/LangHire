@@ -89,5 +89,16 @@
     "applying": "Sedang memohon…",
     "cost": "Kos LLM setakat ini: ${{cost}}"
   },
-  "testModePill": "Mod ujian: permohonan tidak dihantar"
+  "testModePill": "Mod ujian: permohonan tidak dihantar",
+  "tabs": {
+    "collect": "Kumpul",
+    "pending": "Semak & Mohon",
+    "history": "Sejarah"
+  },
+  "tailorParts": {
+    "skills": "Kemahiran",
+    "title": "Jawatan",
+    "overview": "Ringkasan",
+    "experience": "Pengalaman"
+  }
 }

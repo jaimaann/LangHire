@@ -89,5 +89,16 @@
     "applying": "Bezig met solliciteren…",
     "cost": "LLM-kosten tot nu toe: ${{cost}}"
   },
-  "testModePill": "Testmodus: sollicitaties worden niet verzonden"
+  "testModePill": "Testmodus: sollicitaties worden niet verzonden",
+  "tabs": {
+    "collect": "Verzamelen",
+    "pending": "Controleren & solliciteren",
+    "history": "Geschiedenis"
+  },
+  "tailorParts": {
+    "skills": "Vaardigheden",
+    "title": "Functietitel",
+    "overview": "Samenvatting",
+    "experience": "Ervaring"
+  }
 }

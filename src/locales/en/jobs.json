@@ -89,5 +89,16 @@
     "applying": "Applying…",
     "cost": "LLM cost so far: ${{cost}}"
   },
-  "testModePill": "Test mode: applications are not sent"
+  "testModePill": "Test mode: applications are not sent",
+  "tabs": {
+    "collect": "Collect",
+    "pending": "Review & Apply",
+    "history": "History"
+  },
+  "tailorParts": {
+    "skills": "Skills",
+    "title": "Job title",
+    "overview": "Summary",
+    "experience": "Experience"
+  }
 }

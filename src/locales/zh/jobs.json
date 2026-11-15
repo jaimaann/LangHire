@@ -89,5 +89,16 @@
     "applying": "正在申请…",
     "cost": "目前 LLM 费用：${{cost}}"
   },
-  "testModePill": "测试模式：申请不会发送"
+  "testModePill": "测试模式：申请不会发送",
+  "tabs": {
+    "collect": "收集",
+    "pending": "审核并申请",
+    "history": "历史"
+  },
+  "tailorParts": {
+    "skills": "技能",
+    "title": "职位名称",
+    "overview": "概述",
+    "experience": "工作经历"
+  }
 }

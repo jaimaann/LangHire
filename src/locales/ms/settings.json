@@ -24,7 +24,8 @@
   "blockedDomains": {
     "title": "Domain Disekat",
     "description": "Kerja di domain ini akan dilangkau secara automatik.",
-    "empty": "Tiada domain disekat"
+    "empty": "Tiada domain disekat",
+    "none": "Tiada domain disekat"
   },
   "plugins": {
     "title": "Plugin Sumber Kerja",

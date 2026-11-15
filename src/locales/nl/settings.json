@@ -24,7 +24,8 @@
   "blockedDomains": {
     "title": "Geblokkeerde domeinen",
     "description": "Banen op deze domeinen worden automatisch overgeslagen.",
-    "empty": "Geen geblokkeerde domeinen"
+    "empty": "Geen geblokkeerde domeinen",
+    "none": "Geen geblokkeerde domeinen"
   },
   "plugins": {
     "title": "Baanbron-plugins",

@@ -37,9 +37,9 @@ export default function Jobs() {
   }, [fetchStats]);
 
   const tabs: { id: TabId; label: string; icon: typeof Search; count?: number }[] = [
-    { id: "collect", label: "Collect", icon: Search, count: stats.total },
-    { id: "pending", label: "Review & Apply", icon: Play, count: stats.pending + stats.failed },
-    { id: "history", label: "History", icon: CheckCircle, count: stats.applied },
+    { id: "collect", label: t("tabs.collect"), icon: Search, count: stats.total },
+    { id: "pending", label: t("tabs.pending"), icon: Play, count: stats.pending + stats.failed },
+    { id: "history", label: t("tabs.history"), icon: CheckCircle, count: stats.applied },
   ];
 
   return (

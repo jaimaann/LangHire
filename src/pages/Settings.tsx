@@ -588,7 +588,7 @@ export default function SettingsPage() {
           variant="destructive"
         />
         {blockedDomains.length === 0 && (
-          <p className="text-[13px] text-muted-foreground mt-2">No blocked domains</p>
+          <p className="text-[13px] text-muted-foreground mt-2">{t("blockedDomains.none")}</p>
         )}
       </Section>
 

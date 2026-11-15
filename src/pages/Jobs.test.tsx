@@ -61,7 +61,7 @@ describe("Jobs", () => {
     render(<Jobs />);
     await waitFor(() => expect(mockGetJobStats).toHaveBeenCalled());
 
-    await user.click(screen.getByRole("button", { name: /Review & Apply/ }));
+    await user.click(screen.getByRole("button", { name: /tabs.pending/ }));
     expect(await screen.findByTestId("pending-tab")).toBeInTheDocument();
     expect(screen.queryByTestId("collect-tab")).not.toBeInTheDocument();
   });
@@ -71,7 +71,7 @@ describe("Jobs", () => {
     render(<Jobs />);
     await waitFor(() => expect(mockGetJobStats).toHaveBeenCalled());
 
-    await user.click(screen.getByRole("button", { name: /History/ }));
+    await user.click(screen.getByRole("button", { name: /tabs.history/ }));
     expect(await screen.findByTestId("history-tab")).toBeInTheDocument();
   });
 

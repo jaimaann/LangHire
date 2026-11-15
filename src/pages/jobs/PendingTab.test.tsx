@@ -352,7 +352,7 @@ describe("PendingTab", () => {
     await screen.findByText("Backend Engineer");
 
     await user.click(screen.getByRole("button", { name: /Tailoring Options/ }));
-    const titleCheckbox = await screen.findByRole("checkbox", { name: /Job Title/ });
+    const titleCheckbox = await screen.findByRole("checkbox", { name: /tailorParts.title/ });
     await user.click(titleCheckbox);
 
     await waitFor(() => {

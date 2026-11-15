@@ -89,5 +89,16 @@
     "applying": "Candidatura in corso…",
     "cost": "Costo LLM finora: ${{cost}}"
   },
-  "testModePill": "Modalità test: le candidature non vengono inviate"
+  "testModePill": "Modalità test: le candidature non vengono inviate",
+  "tabs": {
+    "collect": "Raccogli",
+    "pending": "Rivedi e candidati",
+    "history": "Cronologia"
+  },
+  "tailorParts": {
+    "skills": "Competenze",
+    "title": "Qualifica",
+    "overview": "Sintesi",
+    "experience": "Esperienza"
+  }
 }

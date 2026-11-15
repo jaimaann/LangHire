@@ -24,7 +24,8 @@
   "blockedDomains": {
     "title": "차단된 도메인",
     "description": "이 도메인의 채용 공고는 자동으로 건너뜁니다.",
-    "empty": "차단된 도메인 없음"
+    "empty": "차단된 도메인 없음",
+    "none": "차단된 도메인 없음"
   },
   "plugins": {
     "title": "채용 소스 플러그인",

@@ -89,5 +89,16 @@
     "applying": "지원 중…",
     "cost": "현재까지 LLM 비용: ${{cost}}"
   },
-  "testModePill": "테스트 모드: 지원서가 전송되지 않습니다"
+  "testModePill": "테스트 모드: 지원서가 전송되지 않습니다",
+  "tabs": {
+    "collect": "수집",
+    "pending": "검토 및 지원",
+    "history": "기록"
+  },
+  "tailorParts": {
+    "skills": "기술",
+    "title": "직함",
+    "overview": "요약",
+    "experience": "경력"
+  }
 }

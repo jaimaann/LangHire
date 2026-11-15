@@ -89,5 +89,16 @@
     "applying": "Bewerbung läuft…",
     "cost": "Bisherige LLM-Kosten: ${{cost}}"
   },
-  "testModePill": "Testmodus: Bewerbungen werden nicht gesendet"
+  "testModePill": "Testmodus: Bewerbungen werden nicht gesendet",
+  "tabs": {
+    "collect": "Sammeln",
+    "pending": "Prüfen & Bewerben",
+    "history": "Verlauf"
+  },
+  "tailorParts": {
+    "skills": "Fähigkeiten",
+    "title": "Jobtitel",
+    "overview": "Zusammenfassung",
+    "experience": "Berufserfahrung"
+  }
 }

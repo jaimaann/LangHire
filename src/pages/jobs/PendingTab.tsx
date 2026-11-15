@@ -511,10 +511,10 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
             <div className="flex flex-wrap gap-4">
               {(
                 [
-                  { key: "skills" as const, label: "Skills" },
-                  { key: "title" as const, label: "Job Title" },
-                  { key: "overview" as const, label: "Overview/Summary" },
-                  { key: "experience" as const, label: "Job Experience" },
+                  { key: "skills" as const, label: t("tailorParts.skills") },
+                  { key: "title" as const, label: t("tailorParts.title") },
+                  { key: "overview" as const, label: t("tailorParts.overview") },
+                  { key: "experience" as const, label: t("tailorParts.experience") },
                 ] as const
               ).map(({ key, label }) => (
                 <label

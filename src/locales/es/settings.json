@@ -24,7 +24,8 @@
   "blockedDomains": {
     "title": "Dominios bloqueados",
     "description": "Los empleos en estos dominios se omitirán automáticamente.",
-    "empty": "Sin dominios bloqueados"
+    "empty": "Sin dominios bloqueados",
+    "none": "No hay dominios bloqueados"
   },
   "plugins": {
     "title": "Plugins de fuentes de empleo",

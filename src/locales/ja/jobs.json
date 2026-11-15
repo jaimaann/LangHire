@@ -89,5 +89,16 @@
     "applying": "応募中…",
     "cost": "これまでのLLM費用: ${{cost}}"
   },
-  "testModePill": "テストモード：応募は送信されません"
+  "testModePill": "テストモード：応募は送信されません",
+  "tabs": {
+    "collect": "収集",
+    "pending": "確認して応募",
+    "history": "履歴"
+  },
+  "tailorParts": {
+    "skills": "スキル",
+    "title": "職種名",
+    "overview": "概要",
+    "experience": "職務経歴"
+  }
 }
