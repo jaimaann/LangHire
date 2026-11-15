@@ -44,9 +44,9 @@ async def health():
             chromium_ok = chromium.find_playwright_chromium() is not None
         except Exception:
             pass
-    llm_configured = bool(load_llm_settings().get("provider"))
+    llm_ok = llm_configured(load_llm_settings())
     worker_running = manager.is_running("collect") or manager.is_running("apply")
-    all_ok = db_ok and chromium_ok and llm_configured
+    all_ok = db_ok and chromium_ok and llm_ok
     return {
         "status": "ok" if all_ok else "degraded",
         "version": APP_VERSION,
@@ -56,7 +56,7 @@ async def health():
             "database": db_ok,
             "chromium": chromium_ok,
             "chromium_installing": chromium_installing,
-            "llm_configured": llm_configured,
+            "llm_configured": llm_ok,
             "worker_running": bool(worker_running),
         },
     }
