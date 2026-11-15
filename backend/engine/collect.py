@@ -24,6 +24,7 @@ from .browsers import close_session, make_browser_session
 from .events import RunContext, emit
 from .matching import match_score
 from .tools import AgentReport, build_collect_tools
+from . import vision
 
 _JOB_FOUND = re.compile(r"@@JOB_FOUND:\s*(\{[^}]{1,2000}\})")
 
@@ -109,7 +110,7 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
     _log_start("collect", f"{plugin.display_name}: {title}")
     try:
         agent: Agent = Agent(
-            task=task, llm=sc.get_llm(), tools=tools, use_vision=True, llm_call_timeout=300,
+            task=task, llm=sc.get_llm(), tools=tools, use_vision=vision.use_vision(), llm_call_timeout=300,
             browser_session=browser, max_failures=10, calculate_cost=True,
             register_new_step_callback=on_step, register_done_callback=_log_done,
             save_conversation_path=convo,

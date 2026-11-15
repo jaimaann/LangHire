@@ -214,3 +214,24 @@ def test_run_manager_cancel(data_dir):
 def test_emit_without_run_does_not_fail():
     assert current_run.get() is None
     emit("log", "no run")  # just logs
+
+
+# ── vision detection ────────────────────────────────────────────────────────
+
+def test_image_rejection_patterns():
+    from engine import vision
+    assert vision.is_image_rejection("{'code': '1210', 'message': \"messages.content.type is invalid, allowed values: ['text']\"}")
+    assert vision.is_image_rejection("This model does not support image input")
+    assert not vision.is_image_rejection("rate limit exceeded")
+
+
+def test_text_only_model_is_remembered(data_dir):
+    from core import config
+    from engine import vision
+    config.save_llm_settings({"provider": "openai_compatible", "openai_compatible": {"model": "glm-5.3", "base_url": "x"}})
+    assert vision.use_vision() is True
+    vision.remember_text_only()
+    assert vision.use_vision() is False
+    config.save_llm_settings({"provider": "openai_compatible", "use_vision": "on",
+                              "openai_compatible": {"model": "glm-5.3", "base_url": "x"}})
+    assert vision.use_vision() is True

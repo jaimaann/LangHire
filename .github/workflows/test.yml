@@ -62,8 +62,14 @@ jobs:
         run: npx tsc --noEmit --skipLibCheck
 
       - name: ESLint
-        run: npx eslint . --max-warnings 0
-        continue-on-error: true
+        run: npx eslint src
+
+      - name: Python lint (ruff, correctness rules)
+        run: uv run ruff check backend cli tests scripts
+
+      - name: Python type check (mypy, engine and API)
+        working-directory: backend
+        run: uv run mypy --config-file ../pyproject.toml engine api core/db.py core/secrets.py
 
       - name: Frontend build (Vite)
         run: npm run build
@@ -78,6 +84,11 @@ jobs:
       # ── Install Chromium ─────────────────────────────────────────────
       - name: Install Playwright Chromium
         run: uv run python -m playwright install chromium
+
+      - name: Real-browser tests (ATS fast path vs local mock ATS)
+        env:
+          LANGHIRE_BROWSER_TESTS: "1"
+        run: uv run pytest tests/integration -q
 
       # ── Integration Tests (Source) ───────────────────────────────────
       - name: Run integration tests (source)
@@ -109,14 +120,38 @@ jobs:
         run: |
           uv run python scripts/integration-test.py --binary src-tauri/binaries/langhire-backend-${{ matrix.target }}.exe
 
+  rust:
+    name: Rust (clippy + tests)
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libsoup-3.0-dev libjavascriptcoregtk-4.1-dev
+      - name: Placeholder sidecar for tauri-build
+        run: |
+          mkdir -p src-tauri/binaries dist
+          touch src-tauri/binaries/langhire-backend-x86_64-unknown-linux-gnu
+          chmod +x src-tauri/binaries/langhire-backend-x86_64-unknown-linux-gnu
+      - name: cargo clippy
+        working-directory: src-tauri
+        run: cargo clippy --all-targets -- -D warnings
+      - name: cargo test
+        working-directory: src-tauri
+        run: cargo test --lib
+
   summary:
-    needs: test
+    needs: [test, rust]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Test Summary
         run: |
-          if [ "${{ needs.test.result }}" = "success" ]; then
+          if [ "${{ needs.test.result }}" = "success" ] && [ "${{ needs.rust.result }}" = "success" ]; then
             echo "✅ All integration tests passed on all platforms"
           else
             echo "❌ Some integration tests failed"

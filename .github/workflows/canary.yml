@@ -1,0 +1,43 @@
+name: Nightly apply canary
+
+# Runs the full apply flow (real browser + real LLM) against the local mock ATS
+# every night, so a browser-use / model / prompt regression is caught before
+# users hit it. Nothing is sent to real employers. Needs repository secrets
+# CANARY_LLM_BASE_URL, CANARY_LLM_MODEL (a vision-capable model) and CANARY_LLM_API_KEY.
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  canary:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    if: ${{ vars.CANARY_ENABLED == 'true' || github.event_name == 'workflow_dispatch' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: |
+          pip install uv
+          uv sync
+          uv run python -m playwright install --with-deps chromium
+      - name: Make a sample resume
+        run: uv run python scripts/make-sample-resume.py canary-resume.pdf
+      - name: Run end-to-end flow
+        env:
+          LANGHIRE_E2E_BASE_URL: ${{ secrets.CANARY_LLM_BASE_URL }}
+          LANGHIRE_E2E_MODEL: ${{ secrets.CANARY_LLM_MODEL }}
+          LANGHIRE_E2E_API_KEY: ${{ secrets.CANARY_LLM_API_KEY }}
+        run: >
+          xvfb-run -a uv run python scripts/e2e-flow.py --resume canary-resume.pdf --out e2e-report.json
+          --steps health,llm,resume,profile,jobs,apply_gh,apply_needs_input,apply_batch,records,caps,export,delete
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: e2e-report.json

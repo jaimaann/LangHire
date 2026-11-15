@@ -25,6 +25,7 @@ from .ats_fastpath import detect_ats
 from .browsers import close_session, make_browser_session
 from .events import RunContext, emit
 from .tools import AgentReport, build_apply_tools
+from . import vision
 
 _ERROR_MAP = [
     ("'NoneType' object is not subscriptable", "Browser agent encountered an unexpected page state. The page may have changed or timed out."),
@@ -105,7 +106,7 @@ async def _llm_learnings(history, url: str, title: str, success: bool) -> list[d
 
 async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: list[str],
                        worker_id: int, ctx: RunContext | None = None,
-                       resume_override: str | None = None) -> dict:
+                       resume_override: str | None = None, _vision: bool | None = None) -> dict:
     """Apply to one job. Returns {"status", "cost_usd", "outcome"}."""
     url = job["url"]
     title, company = job.get("title") or "Unknown", job.get("company") or "Unknown"
@@ -170,6 +171,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             raise RuntimeError(f"Reached maximum of {prompts.MAX_APPLY_STEPS} steps")
 
     from browser_use import Agent
+    vision_on = vision.use_vision() if _vision is None else _vision
     browser = make_browser_session(keep_alive=True)  # we screenshot, then close it ourselves
     started = datetime.now(timezone.utc)
     _log_start("apply", f"{title} at {company}")
@@ -181,7 +183,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             task=task,
             llm=sc.get_llm(),
             tools=tools,
-            use_vision=True,
+            use_vision=vision_on,
             llm_call_timeout=300,
             max_failures=10,
             loop_detection_enabled=True,
@@ -196,6 +198,13 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             register_done_callback=_log_done,
         )
         history = await agent.run(max_steps=prompts.MAX_APPLY_STEPS)
+        if vision_on and report.result is None and vision.history_rejected_images(history):
+            vision.remember_text_only()
+            emit("log", f"🖼️ {tag} This model does not accept screenshots; retrying without them", "warning")
+            await close_session(browser)
+            db.update_job(url, status="pending", error=None)
+            return await apply_to_job(job, profile=profile, qa=qa, applied_labels=applied_labels,
+                                      worker_id=worker_id, ctx=ctx, resume_override=resume_override, _vision=False)
         cost = _usage_cost(history)
         # Final screenshot for the application record
         try:
