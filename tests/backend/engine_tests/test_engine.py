@@ -375,3 +375,15 @@ def test_engine_rules_mention_upload_resume_and_captcha():
     from engine.prompts import engine_rules
     rules = engine_rules(has_password=False, gmail_otp=False, blocked=[])
     assert "upload_resume" in rules and "CAPTCHA" in rules
+
+
+def test_cost_unknown_for_unpriced_models():
+    from types import SimpleNamespace
+
+    from engine.apply import _cost_unknown
+    priced = SimpleNamespace(usage=SimpleNamespace(total_tokens=5000, total_cost=0.02))
+    unpriced = SimpleNamespace(usage=SimpleNamespace(total_tokens=5000, total_cost=0.0))
+    unused = SimpleNamespace(usage=SimpleNamespace(total_tokens=0, total_cost=0.0))
+    assert not _cost_unknown(priced)
+    assert _cost_unknown(unpriced)  # shown as unknown, not as free
+    assert not _cost_unknown(unused)

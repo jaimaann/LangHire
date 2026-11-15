@@ -109,6 +109,13 @@ def _usage_cost(history) -> float:
     return float(getattr(usage, "total_prompt_cost", 0) or 0) + float(getattr(usage, "total_completion_cost", 0) or 0)
 
 
+def _cost_unknown(history) -> bool:
+    """Tokens were used but the model has no price entry, so the cost reads 0 when it isn't."""
+    usage = getattr(history, "usage", None)
+    tokens = getattr(usage, "total_tokens", 0) if usage is not None else 0
+    return bool(isinstance(tokens, (int, float)) and tokens > 0 and _usage_cost(history) == 0)
+
+
 def _save_answers(answers: dict[str, str], domain: str) -> None:
     if not answers:
         return
@@ -363,7 +370,8 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
         "job_url": url, "run_id": ctx.run_id if ctx else None, "outcome": outcome, "reason": reason[:2000],
         "confirmation": report.result.confirmation_text if report.result else None,
         "answers": report.answers, "missing_info": missing, "resume_path": resume_path,
-        "screenshot_path": screenshot_path, "cost_usd": cost,
+        "screenshot_path": screenshot_path,
+        "cost_usd": None if history is not None and _cost_unknown(history) else cost,
         "steps": len(history.history) if history is not None else steps["n"],
         "source": job.get("source") or "", "ats": ats,
         "test_mode": test_mode, "submit_clicks": report.submit_clicks, "intercepted": report.intercepted,
@@ -375,6 +383,10 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
     emit("job_finished", f"{icon} {tag} {label}: {title} at {company}" + (f" — {reason[:120]}" if reason and status != "applied" else ""),
          "info" if status in ("applied", "skipped") else "warning",
          job_url=url, status=status, outcome=outcome, cost_usd=round(cost, 4), prefilled=report.prefilled)
+    if ctx is not None and history is not None and _cost_unknown(history) and not ctx.counters.get("cost_unknown_warned"):
+        ctx.counters["cost_unknown_warned"] = True
+        events.warn("This model has no price data, so LLM cost shows as unknown and the run budget "
+                       "(max cost per run) cannot stop the run. Use the daily cap to limit volume.")
     if ctx is not None:
         ctx.cost_usd += cost
         emit("cost", f"💰 Run LLM cost so far: ${ctx.cost_usd:.3f}", cost_usd=round(ctx.cost_usd, 4))
