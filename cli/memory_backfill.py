@@ -14,7 +14,6 @@ Usage:
 """
 import argparse
 import json
-import os
 import re
 import sys
 from pathlib import Path
@@ -23,7 +22,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 
 from backend.memory import MemoryStore, CATEGORIES
-from backend.memory.extractors import store_learnings
 from backend.core.shared_config import get_llm
 
 LOGS_DIR = Path(__file__).resolve().parent.parent / "logs"
@@ -419,22 +417,22 @@ def main():
 
                 print(f"    ✅ Extracted {len(learnings)} learnings from batch of {len(batch)} runs")
             else:
-                print(f"    ⚠️  No learnings extracted from batch")
+                print("    ⚠️  No learnings extracted from batch")
 
     # Summary
     print(f"\n{'='*60}")
-    print(f"📊 Backfill Results")
+    print("📊 Backfill Results")
     print(f"{'='*60}")
     print(f"  Logs processed:        {len(all_runs)}")
     print(f"  New memories stored:   {total_new}")
     print(f"  Existing reinforced:   {total_reinforced}")
 
     stats = store.get_stats()
-    print(f"\n🧠 Memory store now has:")
+    print("\n🧠 Memory store now has:")
     print(f"  Total memories:  {stats['total_memories']}")
     print(f"  Unique domains:  {stats['unique_domains']}")
     if stats["by_category"]:
-        print(f"  By category:")
+        print("  By category:")
         for cat, count in sorted(stats["by_category"].items(), key=lambda x: -x[1]):
             print(f"    {cat}: {count}")
 

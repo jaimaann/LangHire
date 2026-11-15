@@ -8,7 +8,6 @@ import json
 import os
 import re
 import socket
-import sys
 from pathlib import Path
 
 try:

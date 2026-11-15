@@ -231,6 +231,8 @@ if __name__ == "__main__":
         config = uvicorn.Config(app, host="127.0.0.1", port=port, log_level="info", lifespan="off")
         config.load()
         server = uvicorn.Server(config)
+        from uvicorn.lifespan.off import LifespanOff
+        server.lifespan = LifespanOff(config)  # startup() expects it; serve() normally sets it
         server.install_signal_handlers = lambda: None  # type: ignore[method-assign]
 
         async def _run():

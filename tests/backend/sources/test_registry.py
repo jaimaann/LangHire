@@ -11,8 +11,6 @@ throwaway tmp dir so the user's real community-plugin/state files are untouched.
 No network access is performed.
 """
 import json
-import textwrap
-from pathlib import Path
 
 import pytest
 import yaml
@@ -21,7 +19,6 @@ from sources.registry import (
     AuthCookie,
     DomainPattern,
     PluginConfig,
-    PluginFilter,
     PluginRegistry,
     REQUIRED_FIELDS,
     _format_profile,

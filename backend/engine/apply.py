@@ -13,20 +13,12 @@ import re
 from datetime import datetime, timezone
 from urllib.parse import urlparse
 
-try:
-    from core import db
-    from core.config import load_profile, load_settings
-    from core import shared_config as sc
-    from memory import extract_learnings_from_markers, extract_learnings_via_llm, store_learnings
-    from memory.metrics import MetricsStore
-    from core.agent_logger import on_step as _log_step, on_done as _log_done, log_run_start as _log_start
-except ImportError:
-    from backend.core import db
-    from backend.core.config import load_profile, load_settings
-    from backend.core import shared_config as sc
-    from backend.memory import extract_learnings_from_markers, extract_learnings_via_llm, store_learnings
-    from backend.memory.metrics import MetricsStore
-    from backend.core.agent_logger import on_step as _log_step, on_done as _log_done, log_run_start as _log_start
+from core import db
+from core.config import load_profile, load_settings
+from core import shared_config as sc
+from memory import extract_learnings_from_markers, extract_learnings_via_llm, store_learnings
+from memory.metrics import MetricsStore
+from core.agent_logger import on_step as _log_step, on_done as _log_done, log_run_start as _log_start
 
 from . import events, prompts
 from .ats_fastpath import detect_ats
@@ -135,18 +127,11 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
 
     emit("job_started", f"🚀 {tag} Starting: {title} at {company}", job_url=url, title=title, company=company)
     resume_path = resume_override or settings.get("resume_path", "") or ""
-    try:
-        from resume.tailor import get_tailored_resume_path
-    except ImportError:
-        try:
-            from backend.resume.tailor import get_tailored_resume_path
-        except ImportError:
-            get_tailored_resume_path = None
-    if get_tailored_resume_path:
-        tailored = get_tailored_resume_path(url)
-        if tailored:
-            resume_path = tailored
-            emit("log", f"📄 {tag} Using tailored resume")
+    from resume.tailor import get_tailored_resume_path
+    tailored = get_tailored_resume_path(url)
+    if tailored:
+        resume_path = tailored
+        emit("log", f"📄 {tag} Using tailored resume")
 
     store = sc.get_memory_store()
     domain = _domain(url)
@@ -192,7 +177,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
     screenshot_path = None
     status, outcome, reason, cost = "failed", "failed", "", 0.0
     try:
-        agent = Agent(
+        agent: Agent = Agent(
             task=task,
             llm=sc.get_llm(),
             tools=tools,

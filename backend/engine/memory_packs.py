@@ -13,12 +13,8 @@ from __future__ import annotations
 
 import re
 
-try:
-    from core import db
-    from core import shared_config as sc
-except ImportError:
-    from backend.core import db
-    from backend.core import shared_config as sc
+from core import db
+from core import shared_config as sc
 
 PACK_FORMAT = "langhire-memory-pack"
 SHAREABLE_CATEGORIES = {"navigation", "form_strategy", "element_interaction", "failure_recovery", "site_structure"}

@@ -12,10 +12,7 @@ from __future__ import annotations
 
 from urllib.parse import urlparse
 
-try:
-    from sources.registry import PluginConfig, PluginRegistry
-except ImportError:
-    from backend.sources.registry import PluginConfig, PluginRegistry
+from sources.registry import PluginConfig, PluginRegistry
 
 MAX_APPLY_STEPS = 70
 

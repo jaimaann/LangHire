@@ -20,12 +20,8 @@ import threading
 from dataclasses import dataclass, field
 from typing import Any
 
-try:
-    from core import db
-    from memory.metrics import MetricsStore
-except ImportError:
-    from backend.core import db
-    from backend.memory.metrics import MetricsStore
+from core import db
+from memory.metrics import MetricsStore
 
 _log = logging.getLogger("engine")
 

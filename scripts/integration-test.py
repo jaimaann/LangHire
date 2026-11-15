@@ -287,7 +287,7 @@ def main():
         if not TOKEN:
             print("WARNING: Could not read API token, tests may fail with 401")
 
-        print(f"\nRunning integration tests...\n")
+        print("\nRunning integration tests...\n")
 
         test("Backend health", test_health)
         test("Countries endpoint", test_countries)
@@ -304,7 +304,7 @@ def main():
         print(f"\n{'='*50}")
         print(f"Results: {passed} passed, {failed} failed")
         if errors:
-            print(f"\nFailures:")
+            print("\nFailures:")
             for e in errors:
                 print(f"  - {e}")
         print(f"{'='*50}")

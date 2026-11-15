@@ -13,16 +13,10 @@ import json
 import re
 from datetime import datetime, timezone
 
-try:
-    from core import db
-    from core.config import load_profile, load_settings
-    from core import shared_config as sc
-    from core.agent_logger import on_step as _log_step, on_done as _log_done, log_run_start as _log_start
-except ImportError:
-    from backend.core import db
-    from backend.core.config import load_profile, load_settings
-    from backend.core import shared_config as sc
-    from backend.core.agent_logger import on_step as _log_step, on_done as _log_done, log_run_start as _log_start
+from core import db
+from core.config import load_profile, load_settings
+from core import shared_config as sc
+from core.agent_logger import on_step as _log_step, on_done as _log_done, log_run_start as _log_start
 
 from . import events, prompts
 from .apply import safe_filename
@@ -114,7 +108,7 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
     browser = make_browser_session()
     _log_start("collect", f"{plugin.display_name}: {title}")
     try:
-        agent = Agent(
+        agent: Agent = Agent(
             task=task, llm=sc.get_llm(), tools=tools, use_vision=True, llm_call_timeout=300,
             browser_session=browser, max_failures=10, calculate_cost=True,
             register_new_step_callback=on_step, register_done_callback=_log_done,
@@ -174,7 +168,7 @@ async def fetch_description(url: str, job: dict) -> str:
     from browser_use import Agent
     browser = make_browser_session()
     try:
-        agent = Agent(
+        agent: Agent = Agent(
             task=(f"Go to {url}. Extract the full job description (title, company, location, description, "
                   "requirements, responsibilities) and return it as your final done text. Do not apply."),
             llm=sc.get_llm(), use_vision=False, browser_session=browser, max_failures=5,

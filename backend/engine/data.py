@@ -11,16 +11,10 @@ from __future__ import annotations
 import logging
 import shutil
 import time
-from pathlib import Path
 
-try:
-    from core import db, secrets
-    from core.config import get_data_dir, load_llm_settings, load_profile, load_settings
-    from core import shared_config as sc
-except ImportError:
-    from backend.core import db, secrets
-    from backend.core.config import get_data_dir, load_llm_settings, load_profile, load_settings
-    from backend.core import shared_config as sc
+from core import db, secrets
+from core.config import get_data_dir, load_llm_settings, load_profile, load_settings
+from core import shared_config as sc
 
 _log = logging.getLogger("engine")
 
@@ -92,10 +86,7 @@ def delete_all() -> list[str]:
             h.close()
         finally:
             logging.getLogger("agent_verbose").removeHandler(h)
-    try:
-        from core import agent_logger
-    except ImportError:
-        from backend.core import agent_logger
+    from core import agent_logger
     agent_logger._logger = None
     root = get_data_dir()
     removed = []

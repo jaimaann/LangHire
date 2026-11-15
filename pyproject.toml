@@ -26,9 +26,11 @@ dependencies = [
 [dependency-groups]
 dev = [
     "httpx>=0.28.1",
+    "mypy>=2.4.1",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.1.0",
+    "ruff>=0.17.5",
 ]
 
 [tool.pytest.ini_options]
@@ -55,3 +57,20 @@ exclude_lines = [
     "raise NotImplementedError",
     "if TYPE_CHECKING:",
 ]
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+extend-exclude = ["website", "build", "dist"]
+
+[tool.ruff.lint]
+# Correctness only: syntax errors, undefined names, unused imports/variables.
+select = ["E9", "F"]
+
+[tool.mypy]
+python_version = "3.13"
+mypy_path = "backend"
+explicit_package_bases = true
+ignore_missing_imports = true
+follow_imports = "silent"
+check_untyped_defs = true

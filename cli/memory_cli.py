@@ -28,12 +28,12 @@ from backend.memory import MemoryStore, CATEGORIES
 def cmd_stats(store: MemoryStore, args):
     """Show overall memory statistics."""
     stats = store.get_stats()
-    print(f"🧠 Agent Memory Store")
+    print("🧠 Agent Memory Store")
     print(f"{'='*50}")
     print(f"Total memories:  {stats['total_memories']}")
     print(f"Unique domains:  {stats['unique_domains']}")
     if stats['by_category']:
-        print(f"\nBy category:")
+        print("\nBy category:")
         for cat, count in sorted(stats['by_category'].items(), key=lambda x: -x[1]):
             label = CATEGORIES.get(cat, cat)
             print(f"  {cat:<25} {count:>4}  — {label}")

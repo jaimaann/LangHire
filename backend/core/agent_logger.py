@@ -7,9 +7,7 @@ to a dedicated rotating log file (agent_verbose.log).
 
 import logging
 import re
-from datetime import datetime, timezone
 from logging.handlers import RotatingFileHandler
-from pathlib import Path
 
 try:
     from core.config import get_data_dir

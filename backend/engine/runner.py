@@ -12,12 +12,9 @@ import logging
 import threading
 import uuid
 from datetime import datetime
-from typing import Any, Awaitable, Callable
+from typing import Any, Awaitable, Callable, Coroutine
 
-try:
-    from core import db
-except ImportError:
-    from backend.core import db
+from core import db
 
 from . import events
 from .events import RunContext, current_run, emit
@@ -167,7 +164,7 @@ class RunManager:
             except Exception:
                 pass
 
-    def run_sync(self, coro: Awaitable[Any], timeout: float | None = None) -> Any:
+    def run_sync(self, coro: Coroutine[Any, Any, Any], timeout: float | None = None) -> Any:
         """Run a coroutine on the engine loop from another thread and wait for it."""
         loop = self._ensure_loop()
         return asyncio.run_coroutine_threadsafe(coro, loop).result(timeout=timeout)

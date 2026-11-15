@@ -73,7 +73,7 @@ def build_apply_tools(report: AgentReport, profile: dict, resume_path: str = "")
     from browser_use import Tools
     from browser_use.agent.views import ActionResult
 
-    tools = Tools()
+    tools: Tools = Tools()
 
     @tools.action(
         "Call this ONCE when the application is finished or cannot continue, before calling done. "
@@ -128,7 +128,7 @@ def build_collect_tools(report: AgentReport):
     from browser_use import Tools
     from browser_use.agent.views import ActionResult
 
-    tools = Tools()
+    tools: Tools = Tools()
 
     @tools.action("Record ONE job listing you found. Call it once per job.", param_model=JobListing)
     async def record_job_listing(params: JobListing):

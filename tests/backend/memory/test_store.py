@@ -4,7 +4,6 @@ Unit tests for backend/memory/store.py — the SQLite-backed MemoryStore.
 Each test gets a fresh DB file under ``tmp_path`` so state never leaks
 between tests. Nothing touches the network or the real app-data dir.
 """
-import sqlite3
 
 import pytest
 

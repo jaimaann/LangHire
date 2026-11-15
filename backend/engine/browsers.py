@@ -13,12 +13,8 @@ import os
 import sys
 from pathlib import Path
 
-try:
-    from core.config import load_settings
-    from core.shared_config import browser_profile_dir
-except ImportError:
-    from backend.core.config import load_settings
-    from backend.core.shared_config import browser_profile_dir
+from core.config import load_settings
+from core.shared_config import browser_profile_dir
 
 _log = logging.getLogger("engine")
 
@@ -81,12 +77,12 @@ def make_browser_session(**overrides):
     cdp_url = (settings.get("browser_cdp_url") or "").strip()
     if cdp_url:
         return BrowserSession(cdp_url=cdp_url, **overrides)
-    kwargs = {
+    kwargs: dict = {
         "user_data_dir": str(browser_profile_dir()),
         "chromium_sandbox": sys.platform != "linux",
     }
     kwargs.update(overrides)
-    return BrowserSession(**kwargs)
+    return BrowserSession(**kwargs)  # type: ignore[call-overload]
 
 
 def uses_own_chrome() -> bool:

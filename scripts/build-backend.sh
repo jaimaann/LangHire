@@ -42,6 +42,10 @@ uv run python -m PyInstaller \
   --add-data "${PROJECT_DIR}/backend/sources:sources" \
   --add-data "${PROJECT_DIR}/backend/sources/plugins:sources/plugins" \
   --add-data "${PROJECT_DIR}/cli:cli" \
+  --collect-submodules api \
+  --collect-submodules engine \
+  --collect-submodules keyring \
+  --copy-metadata keyring \
   --hidden-import uvicorn.logging \
   --hidden-import uvicorn.lifespan.on \
   --hidden-import uvicorn.protocols.http.auto \

@@ -86,7 +86,7 @@ async def add_job_manually(body: JobAddRequest):
         return api_error("invalid_url", "Invalid or internal URL", 400)
     if db.get_job(url) is not None:
         return api_error("duplicate", "Job already exists in the queue", 409)
-    job = {
+    job: dict = {
         "url": url,
         "title": body.title.strip() or "Manually Added",
         "company": body.company.strip(),

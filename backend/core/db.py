@@ -371,7 +371,8 @@ def add_application(record: dict) -> int:
 
 
 def list_applications(job_url: str | None = None, limit: int = 100) -> list[dict]:
-    q, args = "SELECT * FROM applications", []
+    q = "SELECT * FROM applications"
+    args: list = []
     if job_url:
         q += " WHERE job_url = ?"
         args.append(job_url)

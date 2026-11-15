@@ -19,7 +19,6 @@ def find_playwright_chromium() -> str | None:
       New: chromium-*/chrome-mac-arm64/Google Chrome for Testing.app/.../Google Chrome for Testing
     Searches in the correct OS-specific Playwright cache directory.
     """
-    import glob as _glob
 
     home = Path.home()
 

@@ -2,14 +2,13 @@
 import asyncio
 import json
 import time
-from pathlib import Path
 
 import pytest
 
 from core import db
 from engine import ats_fastpath, browsers, matching, memory_packs, prompts
 from engine import data as user_data
-from engine.events import RunContext, current_run, emit
+from engine.events import current_run, emit
 from engine.runner import RunManager
 
 

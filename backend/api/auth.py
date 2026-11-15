@@ -122,12 +122,12 @@ async def auth_login(service: str):
                 args = ["--no-first-run", "--no-default-browser-check"]
                 if sys.platform == "linux":
                     args.append("--no-sandbox")
-                kwargs = {"user_data_dir": profile_dir, "headless": False, "args": args,
+                kwargs: dict = {"user_data_dir": profile_dir, "headless": False, "args": args,
                           "ignore_default_args": ["--enable-automation"]}
                 exe = chromium.find_playwright_chromium()
                 if exe:
                     kwargs["executable_path"] = exe
-                context = p.chromium.launch_persistent_context(**kwargs)
+                context = p.chromium.launch_persistent_context(**kwargs)  # type: ignore[arg-type]
                 page = context.pages[0] if context.pages else context.new_page()
                 page.goto(url, wait_until="domcontentloaded")
                 try:

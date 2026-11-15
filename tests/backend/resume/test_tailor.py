@@ -21,8 +21,6 @@ import resume.tailor as tailor
 from resume.tailor import (
     _MEASURE_FONT,
     _BODY_SIZE,
-    _TEXT_WIDTH,
-    _BULLET_INDENT,
     _PAGE_HEIGHT,
     _PAGE_WIDTH,
     _extract_sections,

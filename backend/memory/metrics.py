@@ -6,11 +6,9 @@ the impact of the memory system on agent performance over time.
 """
 
 import sqlite3
-import sys
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
 
 
 try:

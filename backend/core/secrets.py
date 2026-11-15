@@ -48,6 +48,9 @@ def _get_keyring():
             _log.warning(f"No secure keyring backend ({name}); using file fallback")
             _keyring = None
         else:
+            # Probe it: e.g. Windows services / sandboxed sessions have no
+            # credential store (WinError 1312) even though the backend loads.
+            kr.get_password(SERVICE, "__probe__")
             _keyring = keyring
     except Exception as e:  # ImportError or backend init failure
         _log.warning(f"Keyring unavailable ({e}); using file fallback")
@@ -89,11 +92,12 @@ def get_secret(name: str) -> str:
     kr = _get_keyring()
     if kr:
         try:
-            return kr.get_password(SERVICE, name) or ""
+            value = kr.get_password(SERVICE, name)
+            if value:
+                return value
         except Exception as e:
             _log.warning(f"keyring read failed for {name}: {type(e).__name__}")
-            return ""
-    with _lock:
+    with _lock:  # also covers values written to the fallback after a keyring failure
         return _read_file().get(name, "")
 
 

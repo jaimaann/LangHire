@@ -9,7 +9,6 @@ Usage:
 """
 import argparse
 import json
-import os
 import re
 import sys
 from datetime import datetime, timezone

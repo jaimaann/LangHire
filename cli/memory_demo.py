@@ -190,7 +190,7 @@ def dump_raw_memories(store: MemoryStore):
 
         # Raw fields
         status = "✅ success" if m["success"] else "❌ failure"
-        print(f"│")
+        print("│")
         print(f"│  ID:          {m['id']}")
         print(f"│  Category:    {m['category']}")
         print(f"│  Content:     {m['content']}")
@@ -202,11 +202,11 @@ def dump_raw_memories(store: MemoryStore):
         print(f"│  Updated:     {m['updated_at']}")
         print(f"│  Accessed:    {m['access_count']} times")
 
-    print(f"│")
+    print("│")
     print(f"└{'─'*99}")
 
     # Summary
-    print(f"\n📊 Summary:")
+    print("\n📊 Summary:")
     domains = set(dict(r)["website_domain"] for r in rows)
     categories = {}
     for r in rows:
@@ -247,7 +247,7 @@ def main():
         if count > 0:
             print(f"🌱 Seeded {count} new sample memories.\n")
         else:
-            print(f"ℹ️  All sample memories already exist (duplicates skipped).\n")
+            print("ℹ️  All sample memories already exist (duplicates skipped).\n")
 
     if args.json:
         dump_as_json(store)

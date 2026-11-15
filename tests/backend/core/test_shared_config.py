@@ -6,7 +6,6 @@ behaviour, the memory-store singleton, the agent-history extractor, and the
 memory-context builder. External boundaries (subprocess, MemoryStore) are
 mocked; all file I/O lands in tmp dirs via the ``data_dir`` fixture.
 """
-import json
 import types
 
 import pytest
