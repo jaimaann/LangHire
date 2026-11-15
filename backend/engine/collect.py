@@ -71,6 +71,8 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
         now = datetime.now(timezone.utc).isoformat()
         new = []
         for j in batch:
+            if max_jobs and found + len(new) >= max_jobs:
+                break  # never collect more than asked for
             url = _normalize_url(j.get("url", ""))
             if not url or url in seen or not sc.validate_job_url(url, resolve=False):
                 continue
