@@ -244,7 +244,7 @@ def customize_resume(job: dict, extra_skills: list[str]) -> str:
         "all_skills": all_skills,
         "generated_at": datetime.now(timezone.utc).isoformat(),
     }
-    meta_path.write_text(json.dumps(meta, indent=2))
+    meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print(f"    📄 Created tailored resume: {filename} (+{len(extra_skills)} skills: {', '.join(extra_skills)})")
     return str(output_path)

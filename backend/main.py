@@ -85,6 +85,7 @@ logging.basicConfig(
             get_data_dir() / "backend.log",
             maxBytes=5 * 1024 * 1024,
             backupCount=3,
+            encoding="utf-8",
         ),
         logging.StreamHandler(),
     ],
@@ -105,13 +106,13 @@ _API_TOKEN = os.environ.get("JOB_APPLICANT_TOKEN") or _secrets.token_hex(32)
 import stat as _stat
 _token_path = get_data_dir() / ".api_token"
 _token_path.parent.mkdir(parents=True, exist_ok=True)
-_token_path.write_text(_API_TOKEN)
+_token_path.write_text(_API_TOKEN, encoding="utf-8")
 try:
     os.chmod(_token_path, _stat.S_IRUSR | _stat.S_IWUSR)
 except OSError as e:
     _log.warning(f"Could not set restrictive permissions on token file: {e}")
 # Verify token was written correctly
-_written = _token_path.read_text().strip()
+_written = _token_path.read_text(encoding="utf-8").strip()
 _log.info(f"Token written to {_token_path} (starts with '{_API_TOKEN[:8]}...', verified: {_written == _API_TOKEN})")
 
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -246,7 +247,7 @@ def _get_jobs_file() -> Path:
 def _load_jobs() -> dict:
     path = _get_jobs_file()
     if path.exists():
-        return json.loads(path.read_text())
+        return json.loads(path.read_text(encoding="utf-8"))
     return {}
 
 

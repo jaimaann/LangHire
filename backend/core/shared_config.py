@@ -43,14 +43,14 @@ ADA_CMD: tuple[str, ...] = ()  # Only needed for Amazon internal credential refr
 
 # Load settings from OS data dir (written by desktop app UI) if available
 _settings_file = DATA_DIR / "settings.json"
-_ui_settings = json.loads(_settings_file.read_text()) if _settings_file.exists() else {}
+_ui_settings = json.loads(_settings_file.read_text(encoding="utf-8")) if _settings_file.exists() else {}
 SENSITIVE_DATA = _ui_settings.get("sensitive_data", {"email": "", "password": ""})
 
 # Fall back to profile email if sensitive_data email is blank
 if not SENSITIVE_DATA.get("email", "").strip():
     _profile_file = DATA_DIR / "candidate_profile.json"
     if _profile_file.exists():
-        _profile_data = json.loads(_profile_file.read_text())
+        _profile_data = json.loads(_profile_file.read_text(encoding="utf-8"))
         _profile_email = _profile_data.get("email", "").strip()
         if _profile_email:
             SENSITIVE_DATA["email"] = _profile_email
@@ -93,14 +93,14 @@ def get_memory_store() -> MemoryStore:
 
 def load_json(path: Path, default=None):
     if path.exists():
-        return json.loads(path.read_text())
+        return json.loads(path.read_text(encoding="utf-8"))
     return default if default is not None else []
 
 
 def save_json(path: Path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(data, indent=2))
+    tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     tmp.replace(path)
 
 

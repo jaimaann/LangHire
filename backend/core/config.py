@@ -23,14 +23,14 @@ def get_data_dir() -> Path:
 
 def _load_json(path: Path, default=None):
     if path.exists():
-        return json.loads(path.read_text())
+        return json.loads(path.read_text(encoding="utf-8"))
     return default if default is not None else {}
 
 
 def _save_json(path: Path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(data, indent=2))
+    tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     tmp.replace(path)
     if any(s in path.name for s in ("llm_settings", "settings")):
         try:

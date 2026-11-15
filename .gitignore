@@ -42,7 +42,6 @@ fonts/
 
 # Lock files
 jobs.json.lock
-uv.lock
 
 # ── OS Files ──────────────────────────────────────────────────────────────
 .DS_Store

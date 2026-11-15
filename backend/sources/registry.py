@@ -254,7 +254,7 @@ class PluginRegistry:
         state_path = self._get_state_path()
         if state_path.exists():
             try:
-                state = json.loads(state_path.read_text())
+                state = json.loads(state_path.read_text(encoding="utf-8"))
                 for name, enabled in state.items():
                     if name in self._plugins:
                         self._plugins[name].enabled = enabled
@@ -265,7 +265,7 @@ class PluginRegistry:
         import json
         state = {name: p.enabled for name, p in self._plugins.items()}
         state_path = self._get_state_path()
-        state_path.write_text(json.dumps(state, indent=2))
+        state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
 
     def get_all(self) -> list[PluginConfig]:
         return list(self._plugins.values())

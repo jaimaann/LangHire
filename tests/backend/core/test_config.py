@@ -62,7 +62,7 @@ def test_save_json_roundtrip_and_atomic(tmp_path):
     """_save_json writes the payload and leaves no temp file behind."""
     p = tmp_path / "sub" / "data.json"
     config._save_json(p, {"hello": "world"})
-    assert json.loads(p.read_text()) == {"hello": "world"}
+    assert json.loads(p.read_text(encoding="utf-8")) == {"hello": "world"}
     assert not p.with_suffix(".tmp").exists()
 
 
@@ -96,7 +96,7 @@ def test_save_json_permission_failure_is_swallowed(tmp_path, monkeypatch):
     monkeypatch.setattr(os, "chmod", boom)
     # Should not raise despite chmod failing.
     config._save_json(p, {"a": 1})
-    assert json.loads(p.read_text()) == {"a": 1}
+    assert json.loads(p.read_text(encoding="utf-8")) == {"a": 1}
 
 
 # ── Profile ──────────────────────────────────────────────────────────────────

@@ -433,7 +433,7 @@ class TestCommunityAndState:
         assert registry.get_by_name("seek").enabled is False
         assert "seek" not in {p.name for p in registry.get_enabled()}
         # State file written.
-        state = json.loads((data_dir / "plugin_state.json").read_text())
+        state = json.loads((data_dir / "plugin_state.json").read_text(encoding="utf-8"))
         assert state["seek"] is False
 
     def test_set_enabled_unknown_returns_false(self, registry):

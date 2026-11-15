@@ -67,7 +67,7 @@ def _read_log(data_dir):
     log_path = data_dir / "agent_verbose.log"
     if not log_path.exists():
         return ""
-    return log_path.read_text()
+    return log_path.read_text(encoding="utf-8")
 
 
 # ── minimal fakes for the browser-use objects ──────────────────────────────────
