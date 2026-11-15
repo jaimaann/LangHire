@@ -98,7 +98,7 @@ class SubmitInterceptor:
             reason = self._block_reason(method, req) if method in WRITE_METHODS else None
             if reason:
                 body = req.get("postData") or ""
-                app = reason == "contains candidate details" or not is_tracker(req.get("url", ""))
+                app = is_application(reason, req)
                 self.blocked.append(Intercepted(req.get("url", ""), method, reason, len(body), application=app))
                 _log.info(f"test mode: blocked {method} {req.get('url', '')[:120]} ({reason}"
                           f"{'' if app else ', tracker'})")
@@ -151,9 +151,10 @@ _CAPTCHA_HOSTS = ("hcaptcha.com", "recaptcha.net", "challenges.cloudflare.com", 
 _TRACKER_HOSTS = ("google-analytics.com", "googletagmanager.com", "doubleclick.net",
                   "bing.com", "nr-data.net", "segment.io", "segment.com", "hotjar.com",
                   "mixpanel.com", "amplitude.com", "sentry.io", "datadoghq.com", "fullstory.com",
-                  "clarity.ms", "marketlinc.com", "qualified.com", "heap.io", "intercom.io")
+                  "clarity.ms", "marketlinc.com", "qualified.com", "heap.io", "intercom.io",
+                  "company-target.com", "reddit.com", "twitter.com")
 _TRACKER_PATH = re.compile(r"/(cdn-cgi/rum|pagead|ccm|rmkt|collect|track|tr|beacon|events?|jserrors|log|"
-                           r"metrics|telemetry|analytics|pixel|wa)(/|\?|$)", re.IGNORECASE)
+                           r"metrics|telemetry|analytics|pixel|wa|csp-report|tp2|talentwidgets)(/|\?|$)", re.IGNORECASE)
 
 
 def _host(url: str) -> str:
@@ -171,6 +172,18 @@ def is_captcha(url: str) -> bool:
         return True
     from urllib.parse import urlparse
     return host.endswith("google.com") and urlparse(url).path.startswith("/recaptcha")
+
+
+def is_application(reason: str, req: dict) -> bool:
+    """Was this blocked request the application itself (not a beacon, CSP report or file upload)?
+
+    Real runs showed that an armed click also sweeps up third-party writes: LinkedIn's
+    apply widget, the resume upload to S3, ad pixels. Counting those as the
+    application would make a submit that never sent the form look like a pass."""
+    if reason == "contains candidate details":
+        return True
+    url = req.get("url", "")
+    return not is_tracker(url) and _same_site(req)
 
 
 def is_tracker(url: str) -> bool:

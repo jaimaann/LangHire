@@ -396,3 +396,22 @@ def test_strip_leaked_json_from_typed_text():
     assert strip_leaked_json('Ahmedabad {"input": {"index": 9') == "Ahmedabad"
     for ok in ("INR 3,60,000 fixed", "Built dashboards (Tableau) for {region} teams", "C++ / C#", "a}b"):
         assert strip_leaked_json(ok) == ok
+
+
+def test_only_the_application_counts_as_intercepted():
+    """Seen live: an armed click also blocked LinkedIn's apply widget, the S3 resume upload,
+    Snowplow and ad pixels. None of those is the application."""
+    from engine.submit_guard import is_application
+    gh = "https://boards.greenhouse.io"
+    swept = [
+        {"url": "https://www.linkedin.com/talentwidgets/apply-with-linkedin", "headers": {"Origin": "https://jobs.lever.co"}},
+        {"url": "https://grnhse-prod-jben-us-west-2.s3.us-west-2.amazonaws.com/", "headers": {"Origin": gh}},
+        {"url": "https://c.spl.greenhouse.io/com.snowplowanalytics.snowplow/tp2", "headers": {"Origin": gh}},
+        {"url": "https://q.stripe.com/csp-report", "headers": {"Origin": "https://stripe.com"}},
+        {"url": "https://alb.reddit.com/rp?id=x", "headers": {"Origin": "https://stripe.com"}},
+    ]
+    for req in swept:
+        assert not is_application("after submit click", req), req["url"]
+    real = {"url": "https://boards.greenhouse.io/gitlab/jobs/1", "headers": {"Origin": gh}}
+    assert is_application("after submit click", real)
+    assert is_application("contains candidate details", swept[0])
