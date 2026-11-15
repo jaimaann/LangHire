@@ -462,3 +462,47 @@ def test_provider_errors_get_plain_sentences():
     assert friendly_error("Plain reason the agent gave") == "Plain reason the agent gave"
     # agent reasons that merely contain these numbers or words are left alone
     assert friendly_error("Job 4021 posting does not exist any more") == "Job 4021 posting does not exist any more"
+
+
+def test_job_meta_reads_jsonld_then_opengraph():
+    from engine.job_meta import parse_job_html
+    ld = """<html><head><script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"JobPosting","title":"Billing Operations Analyst",
+     "hiringOrganization":{"@type":"Organization","name":"Twilio"},
+     "jobLocation":{"@type":"Place","address":{"addressLocality":"Bengaluru","addressCountry":"IN"}},
+     "description":"&lt;p&gt;Own &lt;b&gt;billing&lt;/b&gt; ops.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;SQL&lt;/li&gt;&lt;/ul&gt;"}
+    </script></head></html>"""
+    m = parse_job_html(ld)
+    assert m["title"] == "Billing Operations Analyst" and m["company"] == "Twilio"
+    assert m["location"] == "Bengaluru, IN"
+    assert "billing" in m["description"] and "SQL" in m["description"] and "<" not in m["description"]
+
+    graph = '<script type="application/ld+json">{"@graph":[{"@type":"WebPage"},' \
+            '{"@type":["JobPosting"],"title":"PM","hiringOrganization":"Acme","jobLocationType":"TELECOMMUTE"}]}</script>'
+    assert parse_job_html(graph) == {"title": "PM", "company": "Acme", "location": "Remote", "description": ""}
+
+    og = ('<meta property="og:title" content="Senior Data Scientist">'
+          '<meta property="og:site_name" content="Meesho"><meta name="description" content="Build models">')
+    assert parse_job_html(og) == {"title": "Senior Data Scientist", "company": "Meesho", "location": "",
+                                  "description": "Build models"}
+    assert parse_job_html("<title> Jobs at X </title>")["title"] == "Jobs at X"
+    assert parse_job_html('<script type="application/ld+json">{broken</script>')["title"] == ""
+
+
+def test_job_meta_never_raises_and_blocks_private_targets():
+    import asyncio
+    from engine.job_meta import fetch_job_meta
+    assert asyncio.run(fetch_job_meta("http://127.0.0.1:9/job")) == {}
+
+
+def test_greenhouse_job_urls_use_the_public_board_api():
+    from engine.job_meta import greenhouse_api_url, parse_greenhouse_api
+    api = "https://boards-api.greenhouse.io/v1/boards/twilio/jobs/8261245"
+    assert greenhouse_api_url("https://job-boards.greenhouse.io/twilio/jobs/8261245") == api
+    assert greenhouse_api_url("https://boards.greenhouse.io/embed/twilio/jobs/8261245?gh_src=x") == api
+    assert greenhouse_api_url("https://jobs.lever.co/spotify/abc") is None
+    m = parse_greenhouse_api({"title": "Billing Operations Analyst 1", "company_name": "Twilio",
+                              "location": {"name": "Remote - Mexico"},
+                              "content": "&lt;p&gt;&lt;strong&gt;Who we are&lt;/strong&gt;&lt;/p&gt;"})
+    assert m == {"title": "Billing Operations Analyst 1", "company": "Twilio",
+                 "location": "Remote - Mexico", "description": "Who we are"}

@@ -33,6 +33,14 @@ AUTH = {"Authorization": f"Bearer {TOKEN}"}
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
 @pytest.fixture(autouse=True)
+def _no_job_page_fetches(monkeypatch):
+    """/jobs/add fetches the posting's details; API tests must never touch the network."""
+    async def _none(url, timeout=10.0):
+        return {}
+    monkeypatch.setattr("engine.job_meta.fetch_job_meta", _none)
+
+
+@pytest.fixture(autouse=True)
 def _isolate_state(data_dir):
     """Storage paths resolve from LANGHIRE_DATA_DIR on every call (see conftest),
     so nothing needs repointing; this fixture just guarantees an isolated dir."""
@@ -425,6 +433,20 @@ class TestMemoryAndQA:
     def test_qa_stats(self, auth_client):
         stats = auth_client.get("/qa/stats").json()
         assert stats == {"total": 0, "answered": 0, "unanswered": 0}
+
+    def test_add_job_by_url_fills_details_from_the_posting(self, auth_client, monkeypatch):
+        from core import db
+
+        async def fake(url, timeout=10.0):
+            return {"title": "Data Analyst", "company": "Twilio", "location": "Bengaluru, IN",
+                    "description": "SQL, Python, dashboards"}
+        monkeypatch.setattr("engine.job_meta.fetch_job_meta", fake)
+        resp = auth_client.post("/jobs/add", json={"url": "https://boards.greenhouse.io/twilio/jobs/1",
+                                                   "company": "Twilio Inc"}).json()
+        assert resp["success"] and "title" in resp["fetched"]
+        job = db.get_job("https://boards.greenhouse.io/twilio/jobs/1")
+        assert job["title"] == "Data Analyst" and job["description"].startswith("SQL")
+        assert job["company"] == "Twilio Inc"            # what the user typed wins
 
     def test_answering_requeues_jobs_waiting_on_it(self, auth_client):
         from api.common import get_memory_store

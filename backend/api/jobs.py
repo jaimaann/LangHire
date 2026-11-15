@@ -86,12 +86,16 @@ async def add_job_manually(body: JobAddRequest):
         return api_error("invalid_url", "Invalid or internal URL", 400)
     if db.get_job(url) is not None:
         return api_error("duplicate", "Job already exists in the queue", 409)
+    fetched: dict = {}
+    if not (body.title.strip() and body.company.strip() and body.description.strip()):
+        from engine.job_meta import fetch_job_meta
+        fetched = await fetch_job_meta(url)  # what the user typed always wins
     job: dict = {
         "url": url,
-        "title": body.title.strip() or "Manually Added",
-        "company": body.company.strip(),
-        "location": body.location.strip(),
-        "description": body.description.strip(),
+        "title": body.title.strip() or fetched.get("title") or "Manually Added",
+        "company": body.company.strip() or fetched.get("company", ""),
+        "location": body.location.strip() or fetched.get("location", ""),
+        "description": body.description.strip() or fetched.get("description", ""),
         "easy_apply": None,
         "status": "pending",
         "source": body.source or "manual",
@@ -101,7 +105,7 @@ async def add_job_manually(body: JobAddRequest):
     }
     job["match_score"] = match_score(job, load_profile())
     db.add_jobs([job])
-    return {"success": True, "url": url}
+    return {"success": True, "url": url, "fetched": sorted(fetched)}
 
 
 @router.delete("/jobs")
