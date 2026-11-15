@@ -415,3 +415,10 @@ def test_only_the_application_counts_as_intercepted():
     real = {"url": "https://boards.greenhouse.io/gitlab/jobs/1", "headers": {"Origin": gh}}
     assert is_application("after submit click", real)
     assert is_application("contains candidate details", swept[0])
+
+
+def test_detect_ats_recognises_embedded_greenhouse():
+    from engine.ats_fastpath import detect_ats
+    assert detect_ats("https://stripe.com/jobs/search?gh_jid=8190059") == "greenhouse"
+    assert detect_ats("https://www.okta.com/company/careers/opportunity/7626222?gh_jid=7626222") == "greenhouse"
+    assert detect_ats("https://example.com/jobs/1") is None

@@ -92,6 +92,9 @@ def detect_ats(url: str) -> str | None:
     for ats, suffixes in ATS_HOSTS.items():
         if any(host == s or host.endswith("." + s) for s in suffixes):
             return ats
+    # careers pages that embed Greenhouse (stripe.com/jobs/...?gh_jid=123, okta.com, airbnb.com)
+    if "gh_jid=" in (urlparse(url).query or ""):
+        return "greenhouse"
     return None
 
 
