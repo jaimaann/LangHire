@@ -34,6 +34,7 @@ import {
   tailorResumes,
   refineTailoredResume,
   getTailoredResumeContent,
+  openLocalFile,
 } from "../../lib/api";
 import { markStart, measureAndTrack } from "../../lib/perf";
 import type { Job, JobStatus, JobStats, TailorOptions } from "../../lib/types";
@@ -788,9 +789,9 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                             {job.tailored_resume_path && (
                               <button
                                 onClick={() => {
-                                  import("@tauri-apps/api/core").then(({ invoke }) => {
-                                    invoke("open_file", { path: job.tailored_resume_path! });
-                                  });
+                                  openLocalFile(job.tailored_resume_path!).catch((e) =>
+                                    console.warn("Failed to open resume:", e)
+                                  );
                                 }}
                                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold border border-border hover:bg-secondary transition-colors"
                               >
@@ -811,11 +812,9 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
                           {job.tailored_resume_path && (
                             <button
                               onClick={() => {
-                                import("@tauri-apps/plugin-shell").then(({ open }) => {
-                                  open(job.tailored_resume_path!);
-                                }).catch(() => {
-                                  window.open(`file://${job.tailored_resume_path}`, "_blank");
-                                });
+                                openLocalFile(job.tailored_resume_path!).catch((e) =>
+                                  console.warn("Failed to open resume:", e)
+                                );
                               }}
                               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold border border-primary text-primary hover:bg-primary/10 transition-colors"
                             >

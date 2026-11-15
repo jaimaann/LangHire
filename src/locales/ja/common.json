@@ -45,5 +45,15 @@
     "failed": "失敗",
     "blocked": "ブロック",
     "inProgress": "進行中"
+  },
+  "backend": {
+    "restarting": "バックエンドを再起動しています…",
+    "failed": "バックエンドが予期せず停止しました。LangHire を再起動してください。"
+  },
+  "update": {
+    "available": "アップデート {{version}} が利用可能です",
+    "restartToInstall": "再起動してインストール",
+    "installing": "アップデートをインストールしています…",
+    "dismiss": "閉じる"
   }
 }

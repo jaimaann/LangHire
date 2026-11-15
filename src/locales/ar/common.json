@@ -45,5 +45,15 @@
     "failed": "فشل",
     "blocked": "محظور",
     "inProgress": "قيد التنفيذ"
+  },
+  "backend": {
+    "restarting": "جارٍ إعادة تشغيل الخادم الخلفي…",
+    "failed": "توقف الخادم الخلفي بشكل غير متوقع. يرجى إعادة تشغيل LangHire."
+  },
+  "update": {
+    "available": "التحديث {{version}} متاح",
+    "restartToInstall": "أعد التشغيل للتثبيت",
+    "installing": "جارٍ تثبيت التحديث…",
+    "dismiss": "تجاهل"
   }
 }

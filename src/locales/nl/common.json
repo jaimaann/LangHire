@@ -45,5 +45,15 @@
     "failed": "Mislukt",
     "blocked": "Geblokkeerd",
     "inProgress": "Bezig"
+  },
+  "backend": {
+    "restarting": "Backend wordt opnieuw gestart…",
+    "failed": "De backend is onverwacht gestopt. Start LangHire opnieuw."
+  },
+  "update": {
+    "available": "Update {{version}} beschikbaar",
+    "restartToInstall": "Opnieuw starten om te installeren",
+    "installing": "Update wordt geïnstalleerd…",
+    "dismiss": "Sluiten"
   }
 }

@@ -46,5 +46,15 @@
     "failed": "Fallito",
     "blocked": "Bloccato",
     "inProgress": "In corso"
+  },
+  "backend": {
+    "restarting": "Riavvio del backend…",
+    "failed": "Il backend si è arrestato in modo imprevisto. Riavvia LangHire."
+  },
+  "update": {
+    "available": "Aggiornamento {{version}} disponibile",
+    "restartToInstall": "Riavvia per installare",
+    "installing": "Installazione dell'aggiornamento…",
+    "dismiss": "Ignora"
   }
 }

@@ -11,13 +11,35 @@ import { afterEach, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 
 // ── Mock the Tauri core bridge ──────────────────────────────────────────────
-// api.ts does `invoke<string>("get_api_token")`; default to a dummy token so
-// the request helper doesn't throw. Individual tests can `vi.mocked(invoke)...`.
+// api.ts does `invoke<BackendInfo>("get_backend_info")`; default to a dummy
+// port/token so the request helper doesn't throw. Individual tests can
+// `vi.mocked(invoke)...`.
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn(async (cmd: string) => {
+    if (cmd === "get_backend_info")
+      return { port: 8743, token: "test-token", managed: false, status: "running" };
     if (cmd === "get_api_token") return "test-token";
     return undefined;
   }),
+}));
+
+// backend-status events (src/lib/backendStatus.ts): no-op listener.
+vi.mock("@tauri-apps/api/event", () => ({
+  listen: vi.fn(async () => () => {}),
+  emit: vi.fn(async () => {}),
+}));
+
+// Updater / process / opener plugins (UpdateChecker).
+vi.mock("@tauri-apps/plugin-updater", () => ({
+  check: vi.fn(async () => null),
+}));
+vi.mock("@tauri-apps/plugin-process", () => ({
+  relaunch: vi.fn(async () => {}),
+  exit: vi.fn(async () => {}),
+}));
+vi.mock("@tauri-apps/plugin-opener", () => ({
+  openUrl: vi.fn(async () => {}),
+  openPath: vi.fn(async () => {}),
 }));
 
 // Some components import the dialog/opener plugins; stub them defensively.

@@ -46,5 +46,15 @@
     "failed": "失败",
     "blocked": "已阻止",
     "inProgress": "进行中"
+  },
+  "backend": {
+    "restarting": "正在重新启动后端…",
+    "failed": "后端意外停止。请重新启动 LangHire。"
+  },
+  "update": {
+    "available": "有可用更新 {{version}}",
+    "restartToInstall": "重启以安装",
+    "installing": "正在安装更新…",
+    "dismiss": "关闭"
   }
 }

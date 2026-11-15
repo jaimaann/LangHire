@@ -19,7 +19,7 @@ if (SENTRY_DSN) {
   registerCrashReporter(() => Sentry.init({
     dsn: SENTRY_DSN,
     environment: import.meta.env.MODE,
-    release: "langhire@1.0.0",
+    release: `langhire@${__APP_VERSION__}`,
     tracesSampleRate: 0.1,
     sendDefaultPii: false,
     beforeBreadcrumb(breadcrumb) {

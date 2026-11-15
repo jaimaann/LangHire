@@ -45,5 +45,15 @@
     "failed": "Gagal",
     "blocked": "Disekat",
     "inProgress": "Sedang dijalankan"
+  },
+  "backend": {
+    "restarting": "Memulakan semula backend…",
+    "failed": "Backend berhenti secara tidak dijangka. Sila mulakan semula LangHire."
+  },
+  "update": {
+    "available": "Kemas kini {{version}} tersedia",
+    "restartToInstall": "Mulakan semula untuk memasang",
+    "installing": "Memasang kemas kini…",
+    "dismiss": "Tolak"
   }
 }
