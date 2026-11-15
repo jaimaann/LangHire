@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Square,
   Terminal,
@@ -14,7 +14,14 @@ import {
   FileText,
   Zap,
   Download,
+  HelpCircle,
+  SkipForward,
+  ListChecks,
+  DollarSign,
 } from "lucide-react";
+import { useRunEvents, appendLogLine, costFromEvent, FALLBACK_POLL_MS } from "../../hooks/useRunEvents";
+import ApplicationDetailsModal from "../../components/ApplicationDetailsModal";
+import JobStatusBadge from "../../components/JobStatusBadge";
 import {
   stopApplying,
   getApplyStatus,
@@ -50,11 +57,15 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
   const [expandedUrl, setExpandedUrl] = useState<string | null>(null);
   const [resumePath, setResumePath] = useState<string>("");
 
+  const [runCost, setRunCost] = useState<number | null>(null);
+  const [detailsJob, setDetailsJob] = useState<Job | null>(null);
+
   useEffect(() => {
     Promise.all([
       getApplyStatus().then((s) => {
         setRunning(s.running);
         setLog(s.log || []);
+        if (typeof s.cost_usd === "number") setRunCost(s.cost_usd);
       }),
       loadAppliedJobs(),
     ]).finally(() => setLoading(false));
@@ -62,16 +73,18 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
 
   async function loadAppliedJobs() {
     try {
-      const [applied, failed, metrics, settings] = await Promise.all([
+      const [applied, failed, needsInput, skipped, metrics, settings] = await Promise.all([
         getJobs({ status: "applied" }),
         getJobs({ status: "failed" }),
+        getJobs({ status: "needs_input" }).catch(() => [] as Job[]),
+        getJobs({ status: "skipped" }).catch(() => [] as Job[]),
         getMetricRuns(200),
         getSettings(),
       ]);
 
       setResumePath((settings as AppSettings).resume_path || "");
 
-      const allJobs = [...applied, ...failed];
+      const allJobs = [...applied, ...failed, ...(needsInput || []), ...(skipped || [])];
       // Build a map of metrics by job_url for quick lookup
       const metricsByUrl = new Map<string, RunMetric>();
       for (const m of metrics) {
@@ -103,29 +116,46 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
     }
   }
 
+  const runningRef = useRef(false);
+  useEffect(() => {
+    runningRef.current = running;
+  }, [running]);
+  const syncStatus = useCallback(() => {
+    getApplyStatus()
+      .then((s) => {
+        if (runningRef.current && !s.running) {
+          trackEvent("apply_completed", { error: s.error || null });
+          loadAppliedJobs();
+          onJobsChanged();
+        }
+        runningRef.current = s.running;
+        setRunning(s.running);
+        setLog(s.log || []);
+        if (typeof s.cost_usd === "number") setRunCost(s.cost_usd);
+      })
+      .catch(() => {});
+  }, [onJobsChanged]);
+
+  // Live log over SSE.
+  useRunEvents("apply", (event) => {
+    if (event.type === "run_started") {
+      setRunning(true);
+      setLog([]);
+      setRunCost(0);
+    }
+    setLog((prev) => appendLogLine(prev, event.message));
+    const cost = costFromEvent(event);
+    if (cost !== null) setRunCost(cost);
+    if (event.type === "job_finished") loadAppliedJobs();
+    if (event.type === "run_finished") syncStatus();
+  });
+
+  // Slow fallback poll while running, in case the event stream drops.
   useEffect(() => {
     if (!running) return;
-    let active = true;
-    const poll = setInterval(() => {
-      getApplyStatus()
-        .then((s) => {
-          if (active) {
-            if (!s.running) {
-              trackEvent("apply_completed", { error: s.error || null });
-              loadAppliedJobs();
-              onJobsChanged();
-            }
-            setRunning(s.running);
-            setLog(s.log || []);
-          }
-        })
-        .catch(() => {});
-    }, 2000);
-    return () => {
-      active = false;
-      clearInterval(poll);
-    };
-  }, [running, onJobsChanged]);
+    const poll = setInterval(syncStatus, FALLBACK_POLL_MS);
+    return () => clearInterval(poll);
+  }, [running, syncStatus]);
 
   useEffect(() => {
     const el = logRef.current;
@@ -147,7 +177,6 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
     const onExport = () => { void handleExport(); };
     window.addEventListener("langhire:export", onExport);
     return () => window.removeEventListener("langhire:export", onExport);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleExport = async () => {
@@ -211,11 +240,23 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
             <h3 className="section-title">
               {running ? t("log.liveOutput") : t("log.outputLog")}
             </h3>
-            {running && (
-              <button onClick={handleStop} className="btn-destructive text-xs px-3 py-1.5">
-                <Square className="w-3 h-3" /> {t("controls.stop")}
-              </button>
-            )}
+            <div className="flex items-center gap-3">
+              {runCost !== null && (running || runCost > 0) && (
+                <span
+                  data-testid="run-cost"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary text-[12px] font-medium text-foreground"
+                  title={t("log.costTitle")}
+                >
+                  <DollarSign className="w-3 h-3" />
+                  {t("log.cost", { cost: runCost.toFixed(3) })}
+                </span>
+              )}
+              {running && (
+                <button onClick={handleStop} className="btn-destructive text-xs px-3 py-1.5">
+                  <Square className="w-3 h-3" /> {t("controls.stop")}
+                </button>
+              )}
+            </div>
           </div>
           <div ref={logRef} className="log-viewer">
             <div className="flex items-center gap-2 mb-2 text-muted-foreground">
@@ -256,13 +297,16 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
             {appliedJobs.map((row) => {
               const isExpanded = expandedUrl === row.job.url;
               const isSuccess = row.job.status === "applied";
+              const isNeedsInput = row.job.status === "needs_input";
+              const isSkipped = row.job.status === "skipped";
 
               return (
                 <div key={row.job.url}>
                   {/* Row */}
+                  <div className="flex items-center hover:bg-secondary transition-colors">
                   <button
                     onClick={() => toggleExpand(row.job.url)}
-                    className="w-full text-left px-4 py-3 hover:bg-secondary transition-colors flex items-center gap-3"
+                    className="flex-1 min-w-0 text-left pl-4 pr-2 py-3 flex items-center gap-3"
                   >
                     {isExpanded ? (
                       <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />
@@ -273,6 +317,10 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
                     {/* Status icon */}
                     {isSuccess ? (
                       <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                    ) : isNeedsInput ? (
+                      <HelpCircle className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                    ) : isSkipped ? (
+                      <SkipForward className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     ) : (
                       <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
                     )}
@@ -288,15 +336,7 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
                     </div>
 
                     {/* Status badge */}
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-[11px] font-medium flex-shrink-0 ${
-                        isSuccess
-                          ? "bg-green-50 text-green-700"
-                          : "bg-red-50 text-red-700"
-                      }`}
-                    >
-                      {isSuccess ? "Applied" : "Failed"}
-                    </span>
+                    <JobStatusBadge status={row.job.status} />
 
                     {/* Date */}
                     <span className="text-[12px] text-muted-foreground flex-shrink-0 w-36 text-right">
@@ -310,6 +350,24 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
                         : "—"}
                     </span>
                   </button>
+                  <button
+                    onClick={() => setDetailsJob(row.job)}
+                    className="mr-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-border text-foreground hover:bg-card transition-colors flex-shrink-0"
+                    title={t("details.open")}
+                  >
+                    <ListChecks className="w-3 h-3" /> {t("details.button")}
+                  </button>
+                  </div>
+                  {isNeedsInput && (
+                    <div className="px-4 pb-3 -mt-1 flex items-center gap-3 text-[12px]">
+                      {row.job.error && (
+                        <span className="text-amber-700 truncate" title={row.job.error}>{row.job.error}</span>
+                      )}
+                      <a href="#/qa" className="text-primary font-semibold hover:underline flex-shrink-0">
+                        {t("needsInput.answerAndRetry")}
+                      </a>
+                    </div>
+                  )}
 
                   {/* Expanded detail panel */}
                   {isExpanded && (
@@ -347,7 +405,7 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
                                 Status
                               </p>
                               <p className="text-sm text-foreground">
-                                {isSuccess ? "Successfully applied" : "Failed"}
+                                {isSuccess ? "Successfully applied" : <JobStatusBadge status={row.job.status} />}
                               </p>
                               {(row.job.error ||
                                 row.metric?.error_message) && (
@@ -481,6 +539,10 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
             </p>
           </div>
         </div>
+      )}
+
+      {detailsJob && (
+        <ApplicationDetailsModal job={detailsJob} onClose={() => setDetailsJob(null)} />
       )}
 
     </div>

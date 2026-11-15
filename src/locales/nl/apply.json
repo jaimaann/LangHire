@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "Live uitvoer",
     "outputLog": "Uitvoerlog",
-    "applicationLog": "Sollicitatielogboek"
+    "applicationLog": "Sollicitatielogboek",
+    "cost": "LLM-kosten: ${{cost}}",
+    "costTitle": "LLM-uitgaven van deze run tot nu toe"
   },
   "dialog": {
     "title": "Begin met solliciteren"
   },
-  "starting": "Wordt gestart..."
+  "starting": "Wordt gestart...",
+  "needsInput": {
+    "answerAndRetry": "Beantwoorden en opnieuw proberen"
+  },
+  "details": {
+    "button": "Details",
+    "open": "Sollicitatieverslag tonen",
+    "title": "Sollicitatiedetails",
+    "close": "Sluiten",
+    "loadFailed": "Het sollicitatieverslag kon niet worden geladen.",
+    "none": "Nog geen sollicitatieverslag voor deze vacature.",
+    "outcome": "Resultaat",
+    "outcomes": {
+      "submitted": "Verzonden",
+      "failed": "Mislukt",
+      "needsInput": "Jouw antwoord nodig",
+      "skipped": "Overgeslagen"
+    },
+    "confirmation": "Bevestiging: {{text}}",
+    "cost": "Kosten",
+    "steps": "Stappen: {{n}}",
+    "ats": "ATS: {{ats}}",
+    "missingInfo": "Informatie die de agent miste",
+    "resume": "Gebruikt cv:",
+    "openResume": "Cv openen",
+    "openScreenshot": "Screenshot openen",
+    "openFailed": "Het bestand kon niet worden geopend.",
+    "answers": "Antwoorden ({{n}})",
+    "noAnswers": "Er zijn geen antwoorden vastgelegd.",
+    "question": "Vraag",
+    "answer": "Antwoord",
+    "source": "Bron",
+    "checkAnswer": "Controleren",
+    "checkAnswerTitle": "De agent heeft dit antwoord geraden of was niet zeker. Controleer het."
+  }
 }

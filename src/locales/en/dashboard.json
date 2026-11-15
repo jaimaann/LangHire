@@ -7,7 +7,8 @@
     "failed": "Failed",
     "pending": "Pending",
     "successRate": "Success Rate",
-    "memories": "Memories"
+    "memories": "Memories",
+    "llmSpend7d": "LLM spend (7 days)"
   },
   "quickActions": {
     "title": "Quick Actions",
@@ -49,5 +50,13 @@
     "bySource": "By source",
     "topCompanies": "Top companies",
     "trend": "Recent activity"
+  },
+  "ats": {
+    "title": "Success rate by ATS",
+    "empty": "No applications recorded yet.",
+    "ats": "ATS",
+    "attempts": "Attempts",
+    "successRate": "Success",
+    "avgCost": "Avg. cost"
   }
 }

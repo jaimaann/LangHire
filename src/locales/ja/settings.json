@@ -30,7 +30,29 @@
     "title": "求人ソースプラグイン",
     "description": "求人ソースプラグインを管理します。ビルトインプラグインはLinkedIn、Indeed、SEEK、Naukri、Reed、StepStoneを提供します。追加の求人サイト用にコミュニティプラグイン（.yamlファイル）をインポートできます。",
     "builtin": "ビルトイン",
-    "importPlugin": "プラグインをインポート"
+    "importPlugin": "プラグインをインポート",
+    "tampered": "承認後に変更されています — 確認するには再インポートしてください",
+    "tamperedToggle": "このプラグインのファイルは承認後に変更されています。有効にする前に再インポートして確認してください。",
+    "toggleFailed": "プラグインを変更できませんでした。",
+    "previewFailed": "プラグインを読み込めませんでした: {{error}}",
+    "importFailed": "プラグインをインストールできませんでした: {{error}}",
+    "changedDuringReview": "確認中にファイルが変更されました。下の新しいバージョンを確認して、もう一度インストールしてください。",
+    "review": {
+      "title": "インストール前にプラグインを確認",
+      "description": "コミュニティプラグインは、求人サイトでAIエージェントが何をするかを指示します。信頼できるプラグインだけをインストールしてください。",
+      "name": "プラグイン",
+      "author": "作成者",
+      "website": "ウェブサイト",
+      "requiresLogin": "ログインが必要",
+      "yes": "はい",
+      "no": "いいえ",
+      "warnings": "警告 ({{n}})",
+      "noWarnings": "警告はありません。",
+      "collectionPrompt": "収集の指示",
+      "applyPrompt": "応募の指示",
+      "install": "インストール",
+      "cancel": "キャンセル"
+    }
   },
   "language": {
     "title": "言語",
@@ -57,5 +79,36 @@
     "cancel": "キャンセル",
     "deleting": "削除中...",
     "deleteFailed": "データを削除できませんでした。もう一度お試しください。"
+  },
+  "secrets": {
+    "keychain": "APIキーはOSのキーチェーンに保存されています。",
+    "file": "OSのキーチェーンが使えないため、APIキーとパスワードはこのコンピューター上のファイルに保存されています。ユーザーアカウントにアクセスできる人は読み取れます。"
+  },
+  "automation": {
+    "title": "自動化",
+    "dailyApplyCap": "求人サイトごとの1日の最大応募数",
+    "dailyApplyCapHelp": "0 = 上限なし。",
+    "maxRunCost": "LLM支出がこの額に達したら実行を停止 (USD)",
+    "maxRunCostHelp": "実行の費用がこの額に達すると、新しい応募は開始されません。0 = 上限なし。",
+    "browserCdpUrl": "自分のChrome（DevToolsアドレス）",
+    "browserCdpUrlHelp": "自分のChromeを使う: --remote-debugging-port=9222 を付けて起動し、アドレスを貼り付けてください。空欄の場合はLangHireのブラウザーを使います。",
+    "emailOtp": "Gmailから確認コードを読み取る",
+    "emailOtpHelp": "Gmailで最新の確認コードメールをエージェントが読めるようにする"
+  },
+  "logins": {
+    "title": "求人サイトへのログイン",
+    "description": "ログインは任意です。エージェントが求人サイトであなたのアカウントを使えるようになります。URLで求人を追加することもできます。",
+    "loggedIn": "ログイン済み",
+    "notLoggedIn": "未ログイン",
+    "optional": "任意",
+    "refresh": "状態を更新",
+    "opening": "開いています...",
+    "logInTo": "{{name}} にログイン",
+    "launchFailed": "ブラウザーを起動できませんでした",
+    "none": "ログインが必要な求人サイトはありません。",
+    "linkedinReason": "エージェントがあなたのアカウントでLinkedInを検索し、Easy Applyを使えるようにします。",
+    "gmailReason": "エージェントが最新の確認コードメールを読み、ワンタイムコードを代わりに入力します。",
+    "gmailOptional": "任意です。「自動化」の「Gmailから確認コードを読み取る」をオンにすると、エージェントがメールのコードを入力します。",
+    "genericReason": "エージェントがあなたのアカウントで {{name}} を検索・応募できるようにします。"
   }
 }

@@ -8,7 +8,9 @@
     "applied": "応募済み",
     "failed": "失敗",
     "blocked": "ブロック",
-    "inProgress": "進行中"
+    "inProgress": "進行中",
+    "needsInput": "回答が必要",
+    "skipped": "スキップ"
   },
   "filter": {
     "all": "すべて"
@@ -51,7 +53,10 @@
     "applying": "応募中...",
     "retry": "再試行",
     "apply": "応募",
-    "openOnLinkedIn": "LinkedInで開く"
+    "openOnLinkedIn": "LinkedInで開く",
+    "match": "一致度 {{score}}%",
+    "matchTitle": "この求人とプロフィールの一致度",
+    "answerAndRetry": "回答して再試行"
   },
   "showingJobs": "{{count}}件の求人を表示中",
   "showingJobs_plural": "{{count}}件の求人を表示中",
@@ -72,5 +77,14 @@
     "saveToProfile": "プロフィールに保存",
     "failedGenerate": "カバーレターの生成に失敗しました",
     "failedSave": "プロフィールへの保存に失敗しました"
+  },
+  "sort": {
+    "label": "並べ替え",
+    "match": "一致度が高い順",
+    "newest": "新しい順"
+  },
+  "progress": {
+    "applying": "応募中…",
+    "cost": "これまでのLLM費用: ${{cost}}"
   }
 }

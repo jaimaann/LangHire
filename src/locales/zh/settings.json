@@ -30,7 +30,29 @@
     "title": "职位来源插件",
     "description": "管理职位来源插件。内置插件提供 LinkedIn、Indeed、SEEK、Naukri、Reed 和 StepStone。导入社区插件（.yaml 文件）以支持更多职位网站。",
     "builtin": "内置",
-    "importPlugin": "导入插件"
+    "importPlugin": "导入插件",
+    "tampered": "批准后已被修改——请重新导入以审查",
+    "tamperedToggle": "此插件文件在你批准后已被修改。请重新导入并审查后再启用。",
+    "toggleFailed": "无法更改插件。",
+    "previewFailed": "无法读取插件：{{error}}",
+    "importFailed": "无法安装插件：{{error}}",
+    "changedDuringReview": "你审查期间文件已被修改。请审查下方的新版本并重新安装。",
+    "review": {
+      "title": "安装前审查插件",
+      "description": "社区插件会告诉 AI 代理在招聘网站上做什么。请只安装你信任的插件。",
+      "name": "插件",
+      "author": "作者",
+      "website": "网站",
+      "requiresLogin": "需要登录",
+      "yes": "是",
+      "no": "否",
+      "warnings": "警告（{{n}}）",
+      "noWarnings": "未发现警告。",
+      "collectionPrompt": "收集指令",
+      "applyPrompt": "申请指令",
+      "install": "安装",
+      "cancel": "取消"
+    }
   },
   "language": {
     "title": "语言",
@@ -65,5 +87,36 @@
     "cancel": "取消",
     "deleting": "正在删除...",
     "deleteFailed": "无法删除您的数据，请重试。"
+  },
+  "secrets": {
+    "keychain": "API 密钥保存在操作系统的钥匙串中。",
+    "file": "没有可用的系统钥匙串，因此 API 密钥和密码保存在本机的一个文件中。任何能访问你用户账户的人都可以读取它们。"
+  },
+  "automation": {
+    "title": "自动化",
+    "dailyApplyCap": "每个招聘网站每天的最多申请数",
+    "dailyApplyCapHelp": "0 = 不限制。",
+    "maxRunCost": "LLM 花费达到此金额后停止运行（美元）",
+    "maxRunCostHelp": "运行花费达到此金额后，不再开始新的申请。0 = 不限制。",
+    "browserCdpUrl": "使用你自己的 Chrome（DevTools 地址）",
+    "browserCdpUrlHelp": "使用你自己的 Chrome：用 --remote-debugging-port=9222 启动它并粘贴地址。留空则使用 LangHire 的浏览器。",
+    "emailOtp": "从 Gmail 读取验证码",
+    "emailOtpHelp": "允许代理读取 Gmail 中最新的验证码邮件"
+  },
+  "logins": {
+    "title": "招聘网站登录",
+    "description": "登录是可选的。登录后代理可以在招聘网站上使用你的账户；你也可以通过 URL 添加职位。",
+    "loggedIn": "已登录",
+    "notLoggedIn": "未登录",
+    "optional": "可选",
+    "refresh": "刷新状态",
+    "opening": "正在打开...",
+    "logInTo": "登录 {{name}}",
+    "launchFailed": "无法启动浏览器",
+    "none": "没有需要登录的招聘网站。",
+    "linkedinReason": "让代理使用你的账户搜索 LinkedIn 并使用 Easy Apply。",
+    "gmailReason": "代理会读取最新的验证码邮件，替你填写一次性验证码。",
+    "gmailOptional": "可选。在“自动化”中开启“从 Gmail 读取验证码”，代理即可替你填写邮件验证码。",
+    "genericReason": "让代理使用你的账户在 {{name}} 上搜索并申请职位。"
   }
 }

@@ -19,6 +19,8 @@ vi.mock("react-i18next", () => ({
 vi.mock("../../lib/analytics", () => ({ trackEvent: vi.fn() }));
 
 vi.mock("../../lib/api", () => ({
+  subscribeEvents: vi.fn(() => () => {}),
+  getApplications: vi.fn(async () => []),
   stopApplying: vi.fn(),
   getApplyStatus: vi.fn(),
   getJobs: vi.fn(),

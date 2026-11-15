@@ -7,7 +7,8 @@
     "failed": "विफल",
     "pending": "लंबित",
     "successRate": "सफलता दर",
-    "memories": "स्मृतियाँ"
+    "memories": "स्मृतियाँ",
+    "llmSpend7d": "LLM खर्च (7 दिन)"
   },
   "quickActions": {
     "title": "त्वरित कार्य",
@@ -33,5 +34,13 @@
   },
   "backend": {
     "notConnected": "Backend कनेक्ट नहीं है। इसे शुरू करें: <code>uv run python backend/main.py</code>"
+  },
+  "ats": {
+    "title": "ATS के अनुसार सफलता दर",
+    "empty": "अभी तक कोई आवेदन दर्ज नहीं हुआ।",
+    "ats": "ATS",
+    "attempts": "प्रयास",
+    "successRate": "सफलता",
+    "avgCost": "औसत लागत"
   }
 }

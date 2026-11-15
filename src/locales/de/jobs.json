@@ -8,7 +8,9 @@
     "applied": "Beworben",
     "failed": "Fehlgeschlagen",
     "blocked": "Blockiert",
-    "inProgress": "In Bearbeitung"
+    "inProgress": "In Bearbeitung",
+    "needsInput": "Antwort benötigt",
+    "skipped": "Übersprungen"
   },
   "filter": {
     "all": "Alle"
@@ -51,7 +53,10 @@
     "applying": "Bewerbe mich...",
     "retry": "Erneut versuchen",
     "apply": "Bewerben",
-    "openOnLinkedIn": "Auf LinkedIn öffnen"
+    "openOnLinkedIn": "Auf LinkedIn öffnen",
+    "match": "{{score}} % Übereinstimmung",
+    "matchTitle": "Wie gut diese Stelle zu Ihrem Profil passt",
+    "answerAndRetry": "Beantworten und erneut versuchen"
   },
   "showingJobs": "{{count}} Job angezeigt",
   "showingJobs_plural": "{{count}} Jobs angezeigt",
@@ -72,5 +77,14 @@
     "saveToProfile": "Im Profil speichern",
     "failedGenerate": "Anschreiben konnte nicht erstellt werden",
     "failedSave": "Speichern im Profil fehlgeschlagen"
+  },
+  "sort": {
+    "label": "Sortieren nach",
+    "match": "Beste Übereinstimmung",
+    "newest": "Neueste"
+  },
+  "progress": {
+    "applying": "Bewerbung läuft…",
+    "cost": "Bisherige LLM-Kosten: ${{cost}}"
   }
 }

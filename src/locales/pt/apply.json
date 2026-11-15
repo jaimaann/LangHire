@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "Saída ao vivo",
     "outputLog": "Log de saída",
-    "applicationLog": "Log de candidatura"
+    "applicationLog": "Log de candidatura",
+    "cost": "Custo de LLM: ${{cost}}",
+    "costTitle": "Gasto com LLM desta execução até agora"
   },
   "dialog": {
     "title": "Começar a candidatar"
   },
-  "starting": "Iniciando..."
+  "starting": "Iniciando...",
+  "needsInput": {
+    "answerAndRetry": "Responder e tentar novamente"
+  },
+  "details": {
+    "button": "Detalhes",
+    "open": "Mostrar o registro da candidatura",
+    "title": "Detalhes da candidatura",
+    "close": "Fechar",
+    "loadFailed": "Não foi possível carregar o registro da candidatura.",
+    "none": "Ainda não há registro de candidatura para esta vaga.",
+    "outcome": "Resultado",
+    "outcomes": {
+      "submitted": "Enviada",
+      "failed": "Falhou",
+      "needsInput": "Precisa da sua resposta",
+      "skipped": "Ignorada"
+    },
+    "confirmation": "Confirmação: {{text}}",
+    "cost": "Custo",
+    "steps": "Etapas: {{n}}",
+    "ats": "ATS: {{ats}}",
+    "missingInfo": "Informações que faltaram ao agente",
+    "resume": "Currículo usado:",
+    "openResume": "Abrir currículo",
+    "openScreenshot": "Abrir captura de tela",
+    "openFailed": "Não foi possível abrir o arquivo.",
+    "answers": "Respostas ({{n}})",
+    "noAnswers": "Nenhuma resposta foi registrada.",
+    "question": "Pergunta",
+    "answer": "Resposta",
+    "source": "Origem",
+    "checkAnswer": "Verificar",
+    "checkAnswerTitle": "O agente deduziu esta resposta ou não tinha certeza. Verifique-a."
+  }
 }

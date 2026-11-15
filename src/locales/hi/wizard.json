@@ -18,8 +18,8 @@
       "uploadResumeDesc": "AI इसे पढ़ता है और प्रोफ़ाइल ऑटो-फ़िल करता है",
       "reviewProfile": "अपनी प्रोफ़ाइल समीक्षा करें",
       "reviewProfileDesc": "AI द्वारा निकाली गई जानकारी सत्यापित करें",
-      "loginLinkedIn": "LinkedIn में लॉग इन करें",
-      "loginLinkedInDesc": "जहाँ हम नौकरियाँ खोजते और आवेदन करते हैं"
+      "loginJobSites": "जॉब साइटों में लॉग इन करें (वैकल्पिक)",
+      "loginJobSitesDesc": "LinkedIn और अन्य साइटें; आप URL से भी नौकरियाँ जोड़ सकते हैं"
     }
   },
   "llmStep": {

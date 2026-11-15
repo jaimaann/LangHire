@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import Dashboard from "./Dashboard";
@@ -88,6 +88,34 @@ describe("Dashboard page", () => {
     expect(screen.getByText("title")).toBeInTheDocument();
     // The stats grid / quick actions only show after loading completes.
     expect(screen.queryByText("quickActions.title")).not.toBeInTheDocument();
+  });
+
+  it("renders the success-rate-by-ATS card and the 7-day LLM spend", async () => {
+    mockGetDashboardData.mockResolvedValue({
+      ...dashboardData,
+      metrics: {
+        ats: [
+          { ats: "greenhouse", attempts: 8, submitted: 6, success_rate: 0.75, avg_cost_usd: 0.0421 },
+          { ats: "workday", attempts: 3, submitted: 1, success_rate: 0.333, avg_cost_usd: 0.12 },
+        ],
+        cost_7d_usd: 1.234,
+      },
+    } as never);
+    renderDashboard();
+    const card = await screen.findByTestId("ats-card");
+    expect(within(card).getByText("ats.title")).toBeInTheDocument();
+    expect(within(card).getByText("greenhouse")).toBeInTheDocument();
+    expect(within(card).getByText("75%")).toBeInTheDocument();
+    expect(within(card).getByText("$0.042")).toBeInTheDocument();
+    expect(within(card).getByText("33%")).toBeInTheDocument();
+    expect(within(screen.getByTestId("llm-spend")).getByText("$1.23")).toBeInTheDocument();
+  });
+
+  it("shows an empty ATS card and $0.00 spend when metrics are missing", async () => {
+    renderDashboard();
+    const card = await screen.findByTestId("ats-card");
+    expect(within(card).getByText("ats.empty")).toBeInTheDocument();
+    expect(within(screen.getByTestId("llm-spend")).getByText("$0.00")).toBeInTheDocument();
   });
 
   it("renders stat cards computed from dashboard data after load", async () => {

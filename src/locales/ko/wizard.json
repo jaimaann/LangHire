@@ -18,8 +18,8 @@
       "uploadResumeDesc": "AI가 읽고 프로필을 자동 입력",
       "reviewProfile": "프로필 검토",
       "reviewProfileDesc": "AI가 추출한 정보 확인",
-      "loginLinkedIn": "LinkedIn 로그인",
-      "loginLinkedInDesc": "채용을 찾고 지원하는 곳"
+      "loginJobSites": "채용 사이트 로그인 (선택 사항)",
+      "loginJobSitesDesc": "LinkedIn 및 기타 사이트. URL로 채용 공고를 추가할 수도 있습니다"
     }
   },
   "llmStep": {

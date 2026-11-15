@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "المخرجات المباشرة",
     "outputLog": "سجل المخرجات",
-    "applicationLog": "سجل التقديم"
+    "applicationLog": "سجل التقديم",
+    "cost": "تكلفة LLM: ${{cost}}",
+    "costTitle": "إنفاق LLM لهذا التشغيل حتى الآن"
   },
   "dialog": {
     "title": "بدء التقديم"
   },
-  "starting": "جارٍ البدء..."
+  "starting": "جارٍ البدء...",
+  "needsInput": {
+    "answerAndRetry": "أجب وأعد المحاولة"
+  },
+  "details": {
+    "button": "التفاصيل",
+    "open": "عرض سجل الطلب",
+    "title": "تفاصيل الطلب",
+    "close": "إغلاق",
+    "loadFailed": "تعذّر تحميل سجل الطلب.",
+    "none": "لا يوجد سجل طلب لهذه الوظيفة بعد.",
+    "outcome": "النتيجة",
+    "outcomes": {
+      "submitted": "تم الإرسال",
+      "failed": "فشل",
+      "needsInput": "بحاجة إلى إجابتك",
+      "skipped": "تم التخطي"
+    },
+    "confirmation": "التأكيد: {{text}}",
+    "cost": "التكلفة",
+    "steps": "الخطوات: {{n}}",
+    "ats": "نظام التوظيف: {{ats}}",
+    "missingInfo": "معلومات كانت تنقص الوكيل",
+    "resume": "السيرة الذاتية المستخدمة:",
+    "openResume": "فتح السيرة الذاتية",
+    "openScreenshot": "فتح لقطة الشاشة",
+    "openFailed": "تعذّر فتح الملف.",
+    "answers": "الإجابات ({{n}})",
+    "noAnswers": "لم تُسجَّل أي إجابات.",
+    "question": "السؤال",
+    "answer": "الإجابة",
+    "source": "المصدر",
+    "checkAnswer": "تحقق",
+    "checkAnswerTitle": "خمّن الوكيل هذه الإجابة أو لم يكن متأكدًا منها. يرجى التحقق منها."
+  }
 }

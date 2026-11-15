@@ -8,7 +8,9 @@
     "applied": "Applied",
     "failed": "Failed",
     "blocked": "Blocked",
-    "inProgress": "In Progress"
+    "inProgress": "In Progress",
+    "needsInput": "Needs your answer",
+    "skipped": "Skipped"
   },
   "filter": {
     "all": "All"
@@ -51,7 +53,10 @@
     "applying": "Applying...",
     "retry": "Retry",
     "apply": "Apply",
-    "openOnLinkedIn": "Open on LinkedIn"
+    "openOnLinkedIn": "Open on LinkedIn",
+    "match": "{{score}}% match",
+    "matchTitle": "How well this job fits your profile",
+    "answerAndRetry": "Answer and retry"
   },
   "showingJobs": "Showing {{count}} job",
   "showingJobs_plural": "Showing {{count}} jobs",
@@ -72,5 +77,14 @@
     "saveToProfile": "Save to Profile",
     "failedGenerate": "Failed to generate cover letter",
     "failedSave": "Failed to save to profile"
+  },
+  "sort": {
+    "label": "Sort by",
+    "match": "Best match",
+    "newest": "Newest"
+  },
+  "progress": {
+    "applying": "Applying…",
+    "cost": "LLM cost so far: ${{cost}}"
   }
 }

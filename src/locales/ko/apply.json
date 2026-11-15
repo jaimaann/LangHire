@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "실시간 출력",
     "outputLog": "출력 로그",
-    "applicationLog": "지원 로그"
+    "applicationLog": "지원 로그",
+    "cost": "LLM 비용: ${{cost}}",
+    "costTitle": "이번 실행의 현재까지 LLM 지출"
   },
   "dialog": {
     "title": "지원 시작"
   },
-  "starting": "시작 중..."
+  "starting": "시작 중...",
+  "needsInput": {
+    "answerAndRetry": "답변 후 다시 시도"
+  },
+  "details": {
+    "button": "상세",
+    "open": "지원 기록 보기",
+    "title": "지원 상세",
+    "close": "닫기",
+    "loadFailed": "지원 기록을 불러올 수 없습니다.",
+    "none": "이 채용 공고의 지원 기록이 아직 없습니다.",
+    "outcome": "결과",
+    "outcomes": {
+      "submitted": "제출됨",
+      "failed": "실패",
+      "needsInput": "답변 필요",
+      "skipped": "건너뜀"
+    },
+    "confirmation": "확인: {{text}}",
+    "cost": "비용",
+    "steps": "단계: {{n}}",
+    "ats": "ATS: {{ats}}",
+    "missingInfo": "에이전트에게 부족했던 정보",
+    "resume": "사용한 이력서:",
+    "openResume": "이력서 열기",
+    "openScreenshot": "스크린샷 열기",
+    "openFailed": "파일을 열 수 없습니다.",
+    "answers": "답변 ({{n}})",
+    "noAnswers": "기록된 답변이 없습니다.",
+    "question": "질문",
+    "answer": "답변",
+    "source": "출처",
+    "checkAnswer": "확인 필요",
+    "checkAnswerTitle": "에이전트가 이 답변을 추측했거나 확신하지 못했습니다. 확인해 주세요."
+  }
 }

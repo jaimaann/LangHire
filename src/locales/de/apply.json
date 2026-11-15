@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "Live-Ausgabe",
     "outputLog": "Ausgabeprotokoll",
-    "applicationLog": "Bewerbungsprotokoll"
+    "applicationLog": "Bewerbungsprotokoll",
+    "cost": "LLM-Kosten: ${{cost}}",
+    "costTitle": "Bisherige LLM-Ausgaben dieses Durchlaufs"
   },
   "dialog": {
     "title": "Bewerben starten"
   },
-  "starting": "Wird gestartet..."
+  "starting": "Wird gestartet...",
+  "needsInput": {
+    "answerAndRetry": "Beantworten und erneut versuchen"
+  },
+  "details": {
+    "button": "Details",
+    "open": "Bewerbungsprotokoll anzeigen",
+    "title": "Bewerbungsdetails",
+    "close": "Schließen",
+    "loadFailed": "Das Bewerbungsprotokoll konnte nicht geladen werden.",
+    "none": "Für diese Stelle gibt es noch kein Bewerbungsprotokoll.",
+    "outcome": "Ergebnis",
+    "outcomes": {
+      "submitted": "Eingereicht",
+      "failed": "Fehlgeschlagen",
+      "needsInput": "Antwort benötigt",
+      "skipped": "Übersprungen"
+    },
+    "confirmation": "Bestätigung: {{text}}",
+    "cost": "Kosten",
+    "steps": "Schritte: {{n}}",
+    "ats": "ATS: {{ats}}",
+    "missingInfo": "Informationen, die dem Agenten fehlten",
+    "resume": "Verwendeter Lebenslauf:",
+    "openResume": "Lebenslauf öffnen",
+    "openScreenshot": "Screenshot öffnen",
+    "openFailed": "Die Datei konnte nicht geöffnet werden.",
+    "answers": "Antworten ({{n}})",
+    "noAnswers": "Es wurden keine Antworten aufgezeichnet.",
+    "question": "Frage",
+    "answer": "Antwort",
+    "source": "Quelle",
+    "checkAnswer": "Prüfen",
+    "checkAnswerTitle": "Der Agent hat diese Antwort geraten oder war unsicher. Bitte prüfen Sie sie."
+  }
 }

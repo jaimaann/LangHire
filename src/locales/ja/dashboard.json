@@ -7,7 +7,8 @@
     "failed": "失敗",
     "pending": "保留中",
     "successRate": "成功率",
-    "memories": "メモリー"
+    "memories": "メモリー",
+    "llmSpend7d": "LLM支出（7日間）"
   },
   "quickActions": {
     "title": "クイックアクション",
@@ -33,5 +34,13 @@
   },
   "backend": {
     "notConnected": "Backendに接続されていません。次のコマンドで起動してください: <code>uv run python backend/main.py</code>"
+  },
+  "ats": {
+    "title": "ATS別の成功率",
+    "empty": "まだ応募記録はありません。",
+    "ats": "ATS",
+    "attempts": "試行回数",
+    "successRate": "成功率",
+    "avgCost": "平均費用"
   }
 }

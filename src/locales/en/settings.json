@@ -30,7 +30,29 @@
     "title": "Job Source Plugins",
     "description": "Manage job source plugins. Built-in plugins provide LinkedIn, Indeed, SEEK, Naukri, Reed, and StepStone. Import community plugins (.yaml files) for additional job sites.",
     "builtin": "Built-in",
-    "importPlugin": "Import Plugin"
+    "importPlugin": "Import Plugin",
+    "tampered": "Changed since you approved it — re-import to review",
+    "tamperedToggle": "This plugin's file changed since you approved it. Import it again to review it before enabling.",
+    "toggleFailed": "Could not change the plugin.",
+    "previewFailed": "Could not read the plugin: {{error}}",
+    "importFailed": "Could not install the plugin: {{error}}",
+    "changedDuringReview": "The file changed while you were reviewing it. Review the new version below and install again.",
+    "review": {
+      "title": "Review plugin before installing",
+      "description": "Community plugins tell the AI agent what to do on a job site. Only install plugins you trust.",
+      "name": "Plugin",
+      "author": "Author",
+      "website": "Website",
+      "requiresLogin": "Needs login",
+      "yes": "Yes",
+      "no": "No",
+      "warnings": "Warnings ({{n}})",
+      "noWarnings": "No warnings found.",
+      "collectionPrompt": "Collection instructions",
+      "applyPrompt": "Application instructions",
+      "install": "Install",
+      "cancel": "Cancel"
+    }
   },
   "language": {
     "title": "Language",
@@ -65,5 +87,36 @@
     "cancel": "Cancel",
     "deleting": "Deleting...",
     "deleteFailed": "Could not delete your data. Please try again."
+  },
+  "secrets": {
+    "keychain": "API keys are stored in your OS keychain.",
+    "file": "No OS keychain is available, so API keys and passwords are stored in a file on this computer. Anyone with access to your user account could read them."
+  },
+  "automation": {
+    "title": "Automation",
+    "dailyApplyCap": "Max applications per job site per day",
+    "dailyApplyCapHelp": "0 = no cap.",
+    "maxRunCost": "Stop a run after this much LLM spend (USD)",
+    "maxRunCostHelp": "No new applications start once a run has cost this much. 0 = no limit.",
+    "browserCdpUrl": "Your own Chrome (DevTools address)",
+    "browserCdpUrlHelp": "Use your own Chrome: start it with --remote-debugging-port=9222 and paste the address. Leave empty to use LangHire's browser.",
+    "emailOtp": "Read verification codes from Gmail",
+    "emailOtpHelp": "Let the agent read the newest verification-code email in Gmail"
+  },
+  "logins": {
+    "title": "Job site logins",
+    "description": "Logging in is optional. It lets the agent use your accounts on job sites; you can also add jobs by URL.",
+    "loggedIn": "Logged in",
+    "notLoggedIn": "Not logged in",
+    "optional": "Optional",
+    "refresh": "Refresh status",
+    "opening": "Opening...",
+    "logInTo": "Log in to {{name}}",
+    "launchFailed": "Failed to launch browser",
+    "none": "No job sites need a login.",
+    "linkedinReason": "Lets the agent search LinkedIn and use Easy Apply with your account.",
+    "gmailReason": "The agent reads the newest verification-code email so it can enter one-time codes for you.",
+    "gmailOptional": "Optional. Turn on \"Read verification codes from Gmail\" under Automation to let the agent enter email codes for you.",
+    "genericReason": "Lets the agent search and apply on {{name}} with your account."
   }
 }

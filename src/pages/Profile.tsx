@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Save } from "lucide-react";
-import { getProfile, saveProfile, getCountries } from "../lib/api";
+import { getProfile, saveProfile, getCountries, rescoreJobs } from "../lib/api";
 import type { CandidateProfile, CountryConfig } from "../lib/types";
 import { PageHeader, LoadingSpinner, Section } from "../components/ui";
 import TagInputShared from "../components/ui/TagInput";
@@ -116,6 +116,10 @@ export default function Profile() {
     try {
       setSaveError(null);
       await saveProfile(profile);
+      // Match scores depend on the profile: recompute in the background.
+      void Promise.resolve()
+        .then(() => rescoreJobs())
+        .catch(() => {});
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (e) {

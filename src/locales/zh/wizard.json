@@ -18,8 +18,8 @@
       "uploadResumeDesc": "AI 读取它并自动填写你的个人资料",
       "reviewProfile": "查看你的个人资料",
       "reviewProfileDesc": "核实 AI 提取的信息",
-      "loginLinkedIn": "登录 LinkedIn",
-      "loginLinkedInDesc": "我们在此查找并申请职位"
+      "loginJobSites": "登录招聘网站（可选）",
+      "loginJobSitesDesc": "LinkedIn 等网站；你也可以通过 URL 添加职位"
     }
   },
   "llmStep": {

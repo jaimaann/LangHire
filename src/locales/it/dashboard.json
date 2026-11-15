@@ -7,7 +7,8 @@
     "failed": "Fallite",
     "pending": "In attesa",
     "successRate": "Tasso di successo",
-    "memories": "Memorie"
+    "memories": "Memorie",
+    "llmSpend7d": "Spesa LLM (7 giorni)"
   },
   "quickActions": {
     "title": "Azioni rapide",
@@ -49,5 +50,13 @@
     "bySource": "Per fonte",
     "topCompanies": "Aziende principali",
     "trend": "Attività recente"
+  },
+  "ats": {
+    "title": "Tasso di successo per ATS",
+    "empty": "Nessuna candidatura registrata finora.",
+    "ats": "ATS",
+    "attempts": "Tentativi",
+    "successRate": "Successo",
+    "avgCost": "Costo medio"
   }
 }

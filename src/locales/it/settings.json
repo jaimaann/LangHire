@@ -30,7 +30,29 @@
     "title": "Plugin di origine delle offerte",
     "description": "Gestisci i plugin di origine delle offerte. I plugin integrati forniscono LinkedIn, Indeed, SEEK, Naukri, Reed e StepStone. Importa plugin della community (file .yaml) per altri siti di lavoro.",
     "builtin": "Integrato",
-    "importPlugin": "Importa plugin"
+    "importPlugin": "Importa plugin",
+    "tampered": "Modificato dopo la tua approvazione: reimportalo per rivederlo",
+    "tamperedToggle": "Il file di questo plugin è cambiato dopo la tua approvazione. Reimportalo per rivederlo prima di attivarlo.",
+    "toggleFailed": "Impossibile modificare il plugin.",
+    "previewFailed": "Impossibile leggere il plugin: {{error}}",
+    "importFailed": "Impossibile installare il plugin: {{error}}",
+    "changedDuringReview": "Il file è cambiato mentre lo stavi rivedendo. Rivedi la nuova versione qui sotto e installala di nuovo.",
+    "review": {
+      "title": "Rivedi il plugin prima di installarlo",
+      "description": "I plugin della community dicono all'agente IA cosa fare su un sito di lavoro. Installa solo plugin di cui ti fidi.",
+      "name": "Plugin",
+      "author": "Autore",
+      "website": "Sito web",
+      "requiresLogin": "Richiede accesso",
+      "yes": "Sì",
+      "no": "No",
+      "warnings": "Avvisi ({{n}})",
+      "noWarnings": "Nessun avviso trovato.",
+      "collectionPrompt": "Istruzioni di raccolta",
+      "applyPrompt": "Istruzioni di candidatura",
+      "install": "Installa",
+      "cancel": "Annulla"
+    }
   },
   "language": {
     "title": "Lingua",
@@ -65,5 +87,36 @@
     "cancel": "Annulla",
     "deleting": "Eliminazione in corso...",
     "deleteFailed": "Impossibile eliminare i tuoi dati. Riprova."
+  },
+  "secrets": {
+    "keychain": "Le chiavi API sono salvate nel portachiavi del sistema operativo.",
+    "file": "Nessun portachiavi di sistema disponibile: chiavi API e password sono salvate in un file su questo computer. Chiunque abbia accesso al tuo account utente potrebbe leggerle."
+  },
+  "automation": {
+    "title": "Automazione",
+    "dailyApplyCap": "Candidature massime per sito di lavoro al giorno",
+    "dailyApplyCapHelp": "0 = nessun limite.",
+    "maxRunCost": "Interrompi un'esecuzione dopo questa spesa LLM (USD)",
+    "maxRunCostHelp": "Raggiunto questo costo, non vengono avviate nuove candidature. 0 = nessun limite.",
+    "browserCdpUrl": "Il tuo Chrome (indirizzo DevTools)",
+    "browserCdpUrlHelp": "Usa il tuo Chrome: avvialo con --remote-debugging-port=9222 e incolla l'indirizzo. Lascia vuoto per usare il browser di LangHire.",
+    "emailOtp": "Leggi i codici di verifica da Gmail",
+    "emailOtpHelp": "Consenti all'agente di leggere l'email più recente con un codice di verifica in Gmail"
+  },
+  "logins": {
+    "title": "Accessi ai siti di lavoro",
+    "description": "L'accesso è facoltativo. Consente all'agente di usare i tuoi account sui siti di lavoro; puoi anche aggiungere offerte tramite URL.",
+    "loggedIn": "Accesso effettuato",
+    "notLoggedIn": "Accesso non effettuato",
+    "optional": "Facoltativo",
+    "refresh": "Aggiorna stato",
+    "opening": "Apertura...",
+    "logInTo": "Accedi a {{name}}",
+    "launchFailed": "Impossibile avviare il browser",
+    "none": "Nessun sito di lavoro richiede l'accesso.",
+    "linkedinReason": "Consente all'agente di cercare su LinkedIn e usare Easy Apply con il tuo account.",
+    "gmailReason": "L'agente legge l'email più recente con il codice di verifica per inserire i codici monouso al posto tuo.",
+    "gmailOptional": "Facoltativo. Attiva \"Leggi i codici di verifica da Gmail\" in Automazione perché l'agente inserisca i codici al posto tuo.",
+    "genericReason": "Consente all'agente di cercare e candidarsi su {{name}} con il tuo account."
   }
 }

@@ -30,7 +30,29 @@
     "title": "Plugin Sumber Kerja",
     "description": "Urus plugin sumber kerja. Plugin terbina dalam menyediakan LinkedIn, Indeed, SEEK, Naukri, Reed, dan StepStone. Import plugin komuniti (fail .yaml) untuk laman kerja tambahan.",
     "builtin": "Terbina dalam",
-    "importPlugin": "Import Plugin"
+    "importPlugin": "Import Plugin",
+    "tampered": "Berubah sejak anda meluluskannya — import semula untuk menyemak",
+    "tamperedToggle": "Fail plugin ini telah berubah sejak anda meluluskannya. Import semula untuk menyemaknya sebelum mendayakannya.",
+    "toggleFailed": "Plugin tidak dapat diubah.",
+    "previewFailed": "Plugin tidak dapat dibaca: {{error}}",
+    "importFailed": "Plugin tidak dapat dipasang: {{error}}",
+    "changedDuringReview": "Fail berubah semasa anda menyemaknya. Semak versi baharu di bawah dan pasang semula.",
+    "review": {
+      "title": "Semak plugin sebelum memasang",
+      "description": "Plugin komuniti memberitahu ejen AI apa yang perlu dilakukan di laman kerja. Pasang hanya plugin yang anda percayai.",
+      "name": "Plugin",
+      "author": "Pengarang",
+      "website": "Laman web",
+      "requiresLogin": "Perlu log masuk",
+      "yes": "Ya",
+      "no": "Tidak",
+      "warnings": "Amaran ({{n}})",
+      "noWarnings": "Tiada amaran ditemui.",
+      "collectionPrompt": "Arahan pengumpulan",
+      "applyPrompt": "Arahan permohonan",
+      "install": "Pasang",
+      "cancel": "Batal"
+    }
   },
   "language": {
     "title": "Bahasa",
@@ -57,5 +79,36 @@
     "cancel": "Batal",
     "deleting": "Memadam...",
     "deleteFailed": "Tidak dapat memadam data anda. Sila cuba lagi."
+  },
+  "secrets": {
+    "keychain": "Kunci API disimpan dalam keychain OS anda.",
+    "file": "Tiada keychain OS tersedia, jadi kunci API dan kata laluan disimpan dalam fail pada komputer ini. Sesiapa yang boleh mengakses akaun pengguna anda boleh membacanya."
+  },
+  "automation": {
+    "title": "Automasi",
+    "dailyApplyCap": "Maksimum permohonan setiap laman kerja sehari",
+    "dailyApplyCapHelp": "0 = tiada had.",
+    "maxRunCost": "Hentikan larian selepas perbelanjaan LLM sebanyak ini (USD)",
+    "maxRunCostHelp": "Tiada permohonan baharu dimulakan apabila kos larian mencapai jumlah ini. 0 = tiada had.",
+    "browserCdpUrl": "Chrome anda sendiri (alamat DevTools)",
+    "browserCdpUrlHelp": "Gunakan Chrome anda sendiri: mulakan dengan --remote-debugging-port=9222 dan tampal alamatnya. Biarkan kosong untuk menggunakan pelayar LangHire.",
+    "emailOtp": "Baca kod pengesahan daripada Gmail",
+    "emailOtpHelp": "Benarkan ejen membaca e-mel kod pengesahan terbaharu dalam Gmail"
+  },
+  "logins": {
+    "title": "Log masuk laman kerja",
+    "description": "Log masuk adalah pilihan. Ia membolehkan ejen menggunakan akaun anda di laman kerja; anda juga boleh menambah kerja melalui URL.",
+    "loggedIn": "Telah log masuk",
+    "notLoggedIn": "Belum log masuk",
+    "optional": "Pilihan",
+    "refresh": "Muat semula status",
+    "opening": "Sedang membuka...",
+    "logInTo": "Log masuk ke {{name}}",
+    "launchFailed": "Gagal melancarkan pelayar",
+    "none": "Tiada laman kerja yang memerlukan log masuk.",
+    "linkedinReason": "Membolehkan ejen mencari di LinkedIn dan menggunakan Easy Apply dengan akaun anda.",
+    "gmailReason": "Ejen membaca e-mel kod pengesahan terbaharu supaya dapat memasukkan kod sekali guna untuk anda.",
+    "gmailOptional": "Pilihan. Hidupkan \"Baca kod pengesahan daripada Gmail\" di bawah Automasi supaya ejen memasukkan kod e-mel untuk anda.",
+    "genericReason": "Membolehkan ejen mencari dan memohon di {{name}} dengan akaun anda."
   }
 }

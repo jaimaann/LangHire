@@ -36,7 +36,9 @@ export default function Sidebar() {
   const [buildId, setBuildId] = useState("");
 
   const backendOkRef = useRef(backendOk);
-  backendOkRef.current = backendOk;
+  useEffect(() => {
+    backendOkRef.current = backendOk;
+  }, [backendOk]);
 
   useEffect(() => {
     let interval: ReturnType<typeof setTimeout> | null = null;

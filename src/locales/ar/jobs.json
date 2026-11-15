@@ -8,7 +8,9 @@
     "applied": "تم التقديم",
     "failed": "فشل",
     "blocked": "محظور",
-    "inProgress": "قيد التنفيذ"
+    "inProgress": "قيد التنفيذ",
+    "needsInput": "بحاجة إلى إجابتك",
+    "skipped": "تم التخطي"
   },
   "filter": {
     "all": "الكل"
@@ -51,7 +53,10 @@
     "applying": "جارٍ التقديم...",
     "retry": "إعادة المحاولة",
     "apply": "تقديم",
-    "openOnLinkedIn": "فتح على LinkedIn"
+    "openOnLinkedIn": "فتح على LinkedIn",
+    "match": "تطابق {{score}}%",
+    "matchTitle": "مدى ملاءمة هذه الوظيفة لملفك الشخصي",
+    "answerAndRetry": "أجب وأعد المحاولة"
   },
   "showingJobs": "عرض {{count}} وظيفة",
   "showingJobs_plural": "عرض {{count}} وظائف",
@@ -72,5 +77,14 @@
     "saveToProfile": "حفظ في الملف الشخصي",
     "failedGenerate": "فشل في إنشاء خطاب التقديم",
     "failedSave": "فشل في الحفظ في الملف الشخصي"
+  },
+  "sort": {
+    "label": "ترتيب حسب",
+    "match": "الأفضل تطابقًا",
+    "newest": "الأحدث"
+  },
+  "progress": {
+    "applying": "جارٍ التقديم…",
+    "cost": "تكلفة LLM حتى الآن: ${{cost}}"
   }
 }

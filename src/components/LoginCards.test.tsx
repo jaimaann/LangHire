@@ -4,6 +4,28 @@ import userEvent from "@testing-library/user-event";
 import LoginCards from "./LoginCards";
 import { getAuthStatus, launchLogin } from "../lib/api";
 
+// i18n: a small English dictionary so assertions read like the real UI.
+const EN: Record<string, string> = {
+  "logins.loggedIn": "Logged in",
+  "logins.notLoggedIn": "Not logged in",
+  "logins.optional": "Optional",
+  "logins.refresh": "Refresh status",
+  "logins.opening": "Opening...",
+  "logins.logInTo": "Log in to {{name}}",
+  "logins.launchFailed": "Failed to launch browser",
+  "logins.none": "No job sites need a login.",
+  "logins.linkedinReason": "LinkedIn reason",
+  "logins.gmailReason": "Gmail reason",
+  "logins.gmailOptional": "Gmail optional reason",
+  "logins.genericReason": "Apply on {{name}}",
+};
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (k: string, o?: Record<string, unknown>) =>
+      (EN[k] ?? k).replace(/\{\{(\w+)\}\}/g, (_, n) => String(o?.[n] ?? "")),
+  }),
+}));
+
 vi.mock("../lib/api", () => ({
   getAuthStatus: vi.fn(),
   launchLogin: vi.fn(),
@@ -16,8 +38,8 @@ describe("LoginCards", () => {
   beforeEach(() => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockGetAuthStatus.mockResolvedValue({
-      linkedin: { logged_in: false },
-      gmail: { logged_in: false },
+      linkedin: { logged_in: false, display_name: "LinkedIn" },
+      gmail: { logged_in: false, display_name: "Gmail" },
     } as never);
     mockLaunchLogin.mockResolvedValue({ success: true, message: "ok" } as never);
   });
@@ -126,5 +148,53 @@ describe("LoginCards", () => {
     await waitFor(() =>
       expect(screen.getByRole("button", { name: /Log in to LinkedIn/ })).not.toBeDisabled(),
     );
+  });
+
+  it("renders a card per source plugin from /auth/status, LinkedIn first and Gmail last", async () => {
+    mockGetAuthStatus.mockResolvedValue({
+      gmail: { logged_in: false, display_name: "Gmail" },
+      indeed: { logged_in: true, display_name: "Indeed" },
+      linkedin: { logged_in: false, display_name: "LinkedIn" },
+      seek: { logged_in: false, display_name: "SEEK" },
+    } as never);
+    const user = userEvent.setup();
+    const { container } = render(<LoginCards />);
+    await screen.findByText("Indeed");
+
+    const order = [...container.querySelectorAll("[data-testid^='login-card-']")].map((el) =>
+      el.getAttribute("data-testid"),
+    );
+    expect(order).toEqual(["login-card-linkedin", "login-card-indeed", "login-card-seek", "login-card-gmail"]);
+    expect(screen.getByText("Apply on SEEK")).toBeInTheDocument();
+    // Indeed is logged in: no login button for it.
+    expect(screen.queryByRole("button", { name: /Log in to Indeed/ })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Log in to SEEK/ }));
+    await waitFor(() => expect(mockLaunchLogin).toHaveBeenCalledWith("seek"));
+  });
+
+  it("marks Gmail optional unless email OTP via Gmail is enabled", async () => {
+    const { unmount } = render(<LoginCards />);
+    const gmail = await screen.findByTestId("login-card-gmail");
+    expect(within(gmail).getByText("Optional")).toBeInTheDocument();
+    expect(within(gmail).getByText("Gmail optional reason")).toBeInTheDocument();
+    unmount();
+
+    render(<LoginCards gmailEnabled />);
+    const enabled = await screen.findByTestId("login-card-gmail");
+    expect(within(enabled).queryByText("Optional")).not.toBeInTheDocument();
+    expect(within(enabled).getByText("Gmail reason")).toBeInTheDocument();
+  });
+
+  it("falls back to the service id when display_name is missing", async () => {
+    mockGetAuthStatus.mockResolvedValue({ reed: { logged_in: false } } as never);
+    render(<LoginCards />);
+    expect(await screen.findByText("reed")).toBeInTheDocument();
+  });
+
+  it("shows a note when no service needs a login", async () => {
+    mockGetAuthStatus.mockResolvedValue({} as never);
+    render(<LoginCards />);
+    expect(await screen.findByText("No job sites need a login.")).toBeInTheDocument();
   });
 });

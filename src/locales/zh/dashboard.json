@@ -7,7 +7,8 @@
     "failed": "失败",
     "pending": "待处理",
     "successRate": "成功率",
-    "memories": "记忆"
+    "memories": "记忆",
+    "llmSpend7d": "LLM 花费（7 天）"
   },
   "quickActions": {
     "title": "快捷操作",
@@ -49,5 +50,13 @@
     "bySource": "按来源",
     "topCompanies": "热门公司",
     "trend": "近期活动"
+  },
+  "ats": {
+    "title": "各 ATS 的成功率",
+    "empty": "暂无申请记录。",
+    "ats": "ATS",
+    "attempts": "尝试次数",
+    "successRate": "成功率",
+    "avgCost": "平均费用"
   }
 }

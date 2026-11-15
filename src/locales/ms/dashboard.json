@@ -7,7 +7,8 @@
     "failed": "Gagal",
     "pending": "Menunggu",
     "successRate": "Kadar Kejayaan",
-    "memories": "Memori"
+    "memories": "Memori",
+    "llmSpend7d": "Perbelanjaan LLM (7 hari)"
   },
   "quickActions": {
     "title": "Tindakan Pantas",
@@ -33,5 +34,13 @@
   },
   "backend": {
     "notConnected": "Backend tidak disambungkan. Mulakannya dengan: <code>uv run python backend/main.py</code>"
+  },
+  "ats": {
+    "title": "Kadar kejayaan mengikut ATS",
+    "empty": "Belum ada permohonan direkodkan.",
+    "ats": "ATS",
+    "attempts": "Percubaan",
+    "successRate": "Kejayaan",
+    "avgCost": "Purata kos"
   }
 }

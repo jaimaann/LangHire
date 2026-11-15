@@ -7,7 +7,8 @@
     "failed": "فشل",
     "pending": "قيد الانتظار",
     "successRate": "معدل النجاح",
-    "memories": "الذكريات"
+    "memories": "الذكريات",
+    "llmSpend7d": "إنفاق LLM (7 أيام)"
   },
   "quickActions": {
     "title": "إجراءات سريعة",
@@ -33,5 +34,13 @@
   },
   "backend": {
     "notConnected": "Backend غير متصل. قم بتشغيله بـ: <code>uv run python backend/main.py</code>"
+  },
+  "ats": {
+    "title": "معدل النجاح حسب نظام التوظيف",
+    "empty": "لم تُسجَّل أي طلبات بعد.",
+    "ats": "نظام التوظيف",
+    "attempts": "المحاولات",
+    "successRate": "النجاح",
+    "avgCost": "متوسط التكلفة"
   }
 }

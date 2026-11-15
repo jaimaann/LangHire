@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "Live Output",
     "outputLog": "Output Log",
-    "applicationLog": "Application Log"
+    "applicationLog": "Application Log",
+    "cost": "LLM cost: ${{cost}}",
+    "costTitle": "LLM spend of this run so far"
   },
   "dialog": {
     "title": "Start Applying"
   },
-  "starting": "Starting..."
+  "starting": "Starting...",
+  "needsInput": {
+    "answerAndRetry": "Answer and retry"
+  },
+  "details": {
+    "button": "Details",
+    "open": "Show the application record",
+    "title": "Application details",
+    "close": "Close",
+    "loadFailed": "Could not load the application record.",
+    "none": "No application record yet for this job.",
+    "outcome": "Outcome",
+    "outcomes": {
+      "submitted": "Submitted",
+      "failed": "Failed",
+      "needsInput": "Needs your answer",
+      "skipped": "Skipped"
+    },
+    "confirmation": "Confirmation: {{text}}",
+    "cost": "Cost",
+    "steps": "Steps: {{n}}",
+    "ats": "ATS: {{ats}}",
+    "missingInfo": "Information the agent was missing",
+    "resume": "Resume used:",
+    "openResume": "Open resume",
+    "openScreenshot": "Open screenshot",
+    "openFailed": "Could not open the file.",
+    "answers": "Answers ({{n}})",
+    "noAnswers": "No answers were recorded.",
+    "question": "Question",
+    "answer": "Answer",
+    "source": "Source",
+    "checkAnswer": "Check",
+    "checkAnswerTitle": "The agent guessed this answer or was not sure. Please check it."
+  }
 }

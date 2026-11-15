@@ -11,7 +11,9 @@ import {
   Cpu,
   FileText,
   ArrowRight,
+  DollarSign,
 } from "lucide-react";
+import type { AtsStat } from "../lib/types";
 import { getDashboardData, checkHealth, getSetupStatus, getChromiumStatus, getQAStats, type SetupStatus } from "../lib/api";
 import { trackEvent } from "../lib/analytics";
 import { markStart, measureAndTrack } from "../lib/perf";
@@ -25,6 +27,8 @@ export default function Dashboard() {
   const [stats, setStats] = useState({
     totalJobs: 0, applied: 0, failed: 0, pending: 0, successRate: 0, totalMemories: 0,
   });
+  const [atsStats, setAtsStats] = useState<AtsStat[]>([]);
+  const [cost7d, setCost7d] = useState(0);
   const [backendOk, setBackendOk] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [setupStatus, setSetupStatus] = useState<SetupStatus | null>(null);
@@ -59,6 +63,9 @@ export default function Dashboard() {
         const total = jobs.total || 0;
         const applied = jobs.applied || 0;
         if (!cancelled) {
+          const metrics = data.metrics || {};
+          setAtsStats(Array.isArray(metrics.ats) ? metrics.ats : []);
+          setCost7d(Number(metrics.cost_7d_usd) || 0);
           setStats({
             totalJobs: total,
             applied,
@@ -227,6 +234,56 @@ export default function Dashboard() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* LLM spend + success rate by ATS */}
+      <div className="grid grid-cols-3 gap-5 mb-8">
+        <div className="card flex items-center gap-4 self-start" data-testid="llm-spend">
+          <div className="bg-[#F7F7F7] p-3.5 rounded-2xl">
+            <DollarSign className="w-5 h-5 text-[#222222]" />
+          </div>
+          <div>
+            <p className="text-[13px] text-muted-foreground font-medium">{t("cards.llmSpend7d")}</p>
+            <p className="text-2xl font-extrabold text-foreground">${cost7d.toFixed(2)}</p>
+          </div>
+        </div>
+        <div className="card col-span-2" data-testid="ats-card">
+          <h3 className="section-title mb-4">{t("ats.title")}</h3>
+          {atsStats.length === 0 ? (
+            <p className="text-[13px] text-muted-foreground">{t("ats.empty")}</p>
+          ) : (
+            <table className="w-full text-[13px]">
+              <thead className="text-muted-foreground">
+                <tr>
+                  <th className="text-left font-medium pb-2">{t("ats.ats")}</th>
+                  <th className="text-right font-medium pb-2">{t("ats.attempts")}</th>
+                  <th className="text-left font-medium pb-2 pl-4">{t("ats.successRate")}</th>
+                  <th className="text-right font-medium pb-2">{t("ats.avgCost")}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {atsStats.map((row) => {
+                  const pct = Math.round((row.success_rate || 0) * 100);
+                  return (
+                    <tr key={row.ats}>
+                      <td className="py-2 font-medium text-foreground">{row.ats}</td>
+                      <td className="py-2 text-right text-foreground">{row.attempts}</td>
+                      <td className="py-2 pl-4">
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 h-2 bg-secondary rounded-full overflow-hidden max-w-[120px]">
+                            <div className="h-full bg-primary rounded-full" style={{ width: `${pct}%` }} />
+                          </div>
+                          <span className="text-foreground w-10 text-right">{pct}%</span>
+                        </div>
+                      </td>
+                      <td className="py-2 text-right text-foreground">${(row.avg_cost_usd || 0).toFixed(3)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
 
       {/* Quick Actions */}

@@ -18,8 +18,8 @@
       "uploadResumeDesc": "AI membacanya dan mengisi profil anda secara automatik",
       "reviewProfile": "Semak profil anda",
       "reviewProfileDesc": "Sahkan maklumat yang diekstrak oleh AI",
-      "loginLinkedIn": "Log masuk ke LinkedIn",
-      "loginLinkedInDesc": "Di mana kami mencari dan memohon kerja"
+      "loginJobSites": "Log masuk ke laman kerja (pilihan)",
+      "loginJobSitesDesc": "LinkedIn dan laman lain; anda juga boleh menambah kerja melalui URL"
     }
   },
   "llmStep": {

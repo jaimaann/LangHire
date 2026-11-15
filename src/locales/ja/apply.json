@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "ライブ出力",
     "outputLog": "出力ログ",
-    "applicationLog": "応募ログ"
+    "applicationLog": "応募ログ",
+    "cost": "LLM費用: ${{cost}}",
+    "costTitle": "この実行でのこれまでのLLM支出"
   },
   "dialog": {
     "title": "応募を開始"
   },
-  "starting": "開始中..."
+  "starting": "開始中...",
+  "needsInput": {
+    "answerAndRetry": "回答して再試行"
+  },
+  "details": {
+    "button": "詳細",
+    "open": "応募記録を表示",
+    "title": "応募の詳細",
+    "close": "閉じる",
+    "loadFailed": "応募記録を読み込めませんでした。",
+    "none": "この求人の応募記録はまだありません。",
+    "outcome": "結果",
+    "outcomes": {
+      "submitted": "送信済み",
+      "failed": "失敗",
+      "needsInput": "回答が必要",
+      "skipped": "スキップ"
+    },
+    "confirmation": "確認: {{text}}",
+    "cost": "費用",
+    "steps": "ステップ: {{n}}",
+    "ats": "ATS: {{ats}}",
+    "missingInfo": "エージェントに不足していた情報",
+    "resume": "使用した履歴書:",
+    "openResume": "履歴書を開く",
+    "openScreenshot": "スクリーンショットを開く",
+    "openFailed": "ファイルを開けませんでした。",
+    "answers": "回答 ({{n}})",
+    "noAnswers": "記録された回答はありません。",
+    "question": "質問",
+    "answer": "回答",
+    "source": "出典",
+    "checkAnswer": "要確認",
+    "checkAnswerTitle": "エージェントがこの回答を推測したか、確信がありませんでした。確認してください。"
+  }
 }

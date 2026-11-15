@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "Sortie en direct",
     "outputLog": "Journal de sortie",
-    "applicationLog": "Journal de candidature"
+    "applicationLog": "Journal de candidature",
+    "cost": "Coût LLM : ${{cost}}",
+    "costTitle": "Dépenses LLM de cette exécution jusqu'ici"
   },
   "dialog": {
     "title": "Commencer à postuler"
   },
-  "starting": "Démarrage..."
+  "starting": "Démarrage...",
+  "needsInput": {
+    "answerAndRetry": "Répondre et réessayer"
+  },
+  "details": {
+    "button": "Détails",
+    "open": "Afficher le dossier de candidature",
+    "title": "Détails de la candidature",
+    "close": "Fermer",
+    "loadFailed": "Impossible de charger le dossier de candidature.",
+    "none": "Aucun dossier de candidature pour ce poste pour l'instant.",
+    "outcome": "Résultat",
+    "outcomes": {
+      "submitted": "Envoyée",
+      "failed": "Échec",
+      "needsInput": "Réponse requise",
+      "skipped": "Ignorée"
+    },
+    "confirmation": "Confirmation : {{text}}",
+    "cost": "Coût",
+    "steps": "Étapes : {{n}}",
+    "ats": "ATS : {{ats}}",
+    "missingInfo": "Informations manquantes pour l'agent",
+    "resume": "CV utilisé :",
+    "openResume": "Ouvrir le CV",
+    "openScreenshot": "Ouvrir la capture d'écran",
+    "openFailed": "Impossible d'ouvrir le fichier.",
+    "answers": "Réponses ({{n}})",
+    "noAnswers": "Aucune réponse n'a été enregistrée.",
+    "question": "Question",
+    "answer": "Réponse",
+    "source": "Source",
+    "checkAnswer": "À vérifier",
+    "checkAnswerTitle": "L'agent a deviné cette réponse ou n'en était pas sûr. Veuillez la vérifier."
+  }
 }

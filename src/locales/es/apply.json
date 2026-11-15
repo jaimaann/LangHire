@@ -23,10 +23,46 @@
   "log": {
     "liveOutput": "Salida en vivo",
     "outputLog": "Registro de salida",
-    "applicationLog": "Registro de solicitudes"
+    "applicationLog": "Registro de solicitudes",
+    "cost": "Costo de LLM: ${{cost}}",
+    "costTitle": "Gasto en LLM de esta ejecución hasta ahora"
   },
   "dialog": {
     "title": "Comenzar a aplicar"
   },
-  "starting": "Iniciando..."
+  "starting": "Iniciando...",
+  "needsInput": {
+    "answerAndRetry": "Responder y reintentar"
+  },
+  "details": {
+    "button": "Detalles",
+    "open": "Ver el registro de la postulación",
+    "title": "Detalles de la postulación",
+    "close": "Cerrar",
+    "loadFailed": "No se pudo cargar el registro de la postulación.",
+    "none": "Aún no hay registro de postulación para este empleo.",
+    "outcome": "Resultado",
+    "outcomes": {
+      "submitted": "Enviada",
+      "failed": "Fallida",
+      "needsInput": "Necesita tu respuesta",
+      "skipped": "Omitida"
+    },
+    "confirmation": "Confirmación: {{text}}",
+    "cost": "Costo",
+    "steps": "Pasos: {{n}}",
+    "ats": "ATS: {{ats}}",
+    "missingInfo": "Información que le faltó al agente",
+    "resume": "Currículum usado:",
+    "openResume": "Abrir currículum",
+    "openScreenshot": "Abrir captura de pantalla",
+    "openFailed": "No se pudo abrir el archivo.",
+    "answers": "Respuestas ({{n}})",
+    "noAnswers": "No se registraron respuestas.",
+    "question": "Pregunta",
+    "answer": "Respuesta",
+    "source": "Origen",
+    "checkAnswer": "Revisar",
+    "checkAnswerTitle": "El agente adivinó esta respuesta o no estaba seguro. Revísala."
+  }
 }
