@@ -170,7 +170,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             raise RuntimeError(f"Reached maximum of {prompts.MAX_APPLY_STEPS} steps")
 
     from browser_use import Agent
-    browser = make_browser_session()
+    browser = make_browser_session(keep_alive=True)  # we screenshot, then close it ourselves
     started = datetime.now(timezone.utc)
     _log_start("apply", f"{title} at {company}")
     history = None
