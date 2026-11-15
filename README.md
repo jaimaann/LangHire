@@ -122,7 +122,7 @@ sudo dpkg -i LangHire_1.0.0_arm64.deb
 - **Tailored resumes** (beta) -- Auto-customizes your resume for each job description
 - **Self-learning memory** -- Stores per-ATS procedural knowledge (navigation patterns, form strategies, UI quirks). Lessons from one Workday site apply to all Workday sites globally.
 - **Smart Q&A reuse** -- Learns answers from previous applications and reuses them
-- **Multi-LLM support** -- OpenAI, Anthropic, AWS Bedrock, Ollama, or OpenRouter (100+ models)
+- **Multi-LLM support** -- OpenAI, Anthropic, Google Gemini, AWS Bedrock, Z.ai (GLM, incl. the GLM Coding Plan), xAI (Grok), Ollama, OpenRouter (100+ models), or any OpenAI-compatible API
 - **Dashboard** -- Real-time stats, success rates, per-domain performance, memory impact analysis
 - **CLI tools** -- Power-user scripts for collection, application, memory management, and analytics
 - **100% local** -- All data stored on your machine in your OS app data directory
