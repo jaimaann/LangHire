@@ -68,5 +68,10 @@
     "checkAnswer": "Verifica",
     "checkAnswerTitle": "L'agente ha indovinato questa risposta o non ne era sicuro. Controllala.",
     "intercepted": "Richieste intercettate: {{n}}"
+  },
+  "uncertain": {
+    "count": "{{count}} risposte ipotizzate",
+    "count_one": "1 risposta ipotizzata",
+    "hint": "L'agente ha ipotizzato queste risposte o non ne era sicuro. Apri Dettagli per controllare cosa è stato inviato."
   }
 }

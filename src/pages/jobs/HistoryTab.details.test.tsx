@@ -58,7 +58,12 @@ describe("HistoryTab details and new statuses", () => {
     vi.mocked(getSettings).mockResolvedValue({ resume_path: "" } as never);
     vi.mocked(getApplications).mockResolvedValue([
       {
-        outcome: "submitted", reason: null, confirmation: null, answers: [], missing_info: [],
+        job_url: "https://j/applied",
+        outcome: "submitted", reason: null, confirmation: null, missing_info: [],
+        answers: [
+          { question: "Years of SQL", answer: "5", source: "inferred", confidence: 0.5 },
+          { question: "Notice period", answer: "30 days", source: "profile", confidence: 1 },
+        ],
         resume_path: "/r.pdf", screenshot_path: "/s.png", cost_usd: 0.02, steps: 3, ats: "lever",
         prompt_tokens: 12000, cached_tokens: 9000, completion_tokens: 600, llm_model: "glm-5.3-flash",
         created_at: "2026-11-10T00:00:00Z",
@@ -79,6 +84,13 @@ describe("HistoryTab details and new statuses", () => {
     expect(screen.getByTestId("status-badge-skipped")).toHaveTextContent("status.skipped");
     expect(screen.getByText(/driving licence/)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "needsInput.answerAndRetry" })).toHaveAttribute("href", "#/qa");
+  });
+
+  it("flags guessed answers on the history row", async () => {
+    render(<HistoryTab onJobsChanged={vi.fn()} />);
+    await screen.findByText("Applied Job");
+    const flag = await screen.findByTestId("uncertain-answers");
+    expect(flag).toHaveTextContent('uncertain.count:{"count":1}');
   });
 
   it("opens the application details panel for a job", async () => {

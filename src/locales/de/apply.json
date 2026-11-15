@@ -68,5 +68,10 @@
     "checkAnswer": "Prüfen",
     "checkAnswerTitle": "Der Agent hat diese Antwort geraten oder war unsicher. Bitte prüfen Sie sie.",
     "intercepted": "Abgefangene Anfragen: {{n}}"
+  },
+  "uncertain": {
+    "count": "{{count}} geschätzte Antworten",
+    "count_one": "1 geschätzte Antwort",
+    "hint": "Der Agent hat diese Antworten geraten oder war unsicher. Öffne Details, um zu prüfen, was gesendet wurde."
   }
 }

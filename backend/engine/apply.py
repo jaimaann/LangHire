@@ -28,6 +28,21 @@ from .tools import AgentReport, ApplicationResult, build_apply_tools
 from . import vision
 
 _ERROR_MAP = [
+    # AI provider errors (checked first: they often also contain "Timeout" or "Error")
+    ("content.type", "This model can't read screenshots. Pick a vision model in LLM Settings, or the app will retry without screenshots."),
+    ("image_url", "This model can't read screenshots. Pick a vision model in LLM Settings, or the app will retry without screenshots."),
+    ("invalid api key", "The AI provider rejected the API key. Check it in LLM Settings."),
+    ("incorrect api key", "The AI provider rejected the API key. Check it in LLM Settings."),
+    ("error code: 401", "The AI provider rejected the API key. Check it in LLM Settings."),
+    ("insufficient balance", "Your AI provider account is out of credit. Top it up or switch provider in LLM Settings."),
+    ("insufficient_quota", "Your AI provider account is out of credit. Top it up or switch provider in LLM Settings."),
+    ("error code: 402", "Your AI provider account is out of credit. Top it up or switch provider in LLM Settings."),
+    ("model_not_found", "The AI provider doesn't know this model name. Check the model in LLM Settings."),
+    ("model does not exist", "The AI provider doesn't know this model name. Check the model in LLM Settings."),
+    ("context length", "The page was too large for this model's context window. Try a model with a larger context."),
+    ("maximum context", "The page was too large for this model's context window. Try a model with a larger context."),
+    ("did not answer within", "The AI provider was too slow to answer. Try again, or pick a faster model in LLM Settings."),
+    ("error code: 429", "API rate limit reached. Wait a moment and try again."),
     ("'NoneType' object is not subscriptable", "Browser agent encountered an unexpected page state. The page may have changed or timed out."),
     ("'NoneType' object has no attribute", "Browser agent lost track of a page element. The site may have redirected or loaded slowly."),
     ("net::ERR_", "Network error — the page failed to load. Check your internet connection."),

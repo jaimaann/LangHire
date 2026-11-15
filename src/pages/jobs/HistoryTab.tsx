@@ -18,6 +18,7 @@ import {
   SkipForward,
   ListChecks,
   DollarSign,
+  AlertTriangle,
 } from "lucide-react";
 import { useRunEvents, appendLogLine, costFromEvent, FALLBACK_POLL_MS } from "../../hooks/useRunEvents";
 import ApplicationDetailsModal from "../../components/ApplicationDetailsModal";
@@ -29,15 +30,25 @@ import {
   getMetricRuns,
   getSettings,
   exportJobsCsv,
+  getApplications,
 } from "../../lib/api";
 import { trackEvent, usageParams } from "../../lib/analytics";
 import LogLine from "../../components/LogLine";
 import { useTranslation } from "react-i18next";
-import type { Job, RunMetric, AppSettings } from "../../lib/types";
+import type { Job, RunMetric, AppSettings, ApplicationRecord } from "../../lib/types";
 
 interface AppliedJobRow {
   job: Job;
   metric?: RunMetric;
+  /** Answers the agent guessed (inferred or low confidence) in the latest application. */
+  uncertain?: number;
+}
+
+/** Answers worth a spot-check: guessed by the agent, or entered with low confidence. */
+export function countUncertain(record: ApplicationRecord): number {
+  return (record.answers || []).filter(
+    (a) => a.source === "inferred" || (typeof a.confidence === "number" && a.confidence < 0.6),
+  ).length;
 }
 
 interface HistoryTabProps {
@@ -82,6 +93,12 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
         getMetricRuns(200),
         getSettings(),
       ]);
+      const records = await getApplications({ limit: 500 }).catch(() => [] as ApplicationRecord[]);
+      const uncertainByUrl = new Map<string, number>();
+      for (const r of records || []) {
+        // newest first: keep the latest application per job
+        if (r.job_url && !uncertainByUrl.has(r.job_url)) uncertainByUrl.set(r.job_url, countUncertain(r));
+      }
 
       setResumePath((settings as AppSettings).resume_path || "");
 
@@ -102,6 +119,7 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
       const rows: AppliedJobRow[] = allJobs.map((job) => ({
         job,
         metric: metricsByUrl.get(job.url),
+        uncertain: uncertainByUrl.get(job.url) || 0,
       }));
 
       // Sort by applied_at desc (newest first)
@@ -342,6 +360,16 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
 
                     {/* Status badge */}
                     <JobStatusBadge status={row.job.status} />
+                    {!!row.uncertain && (
+                      <span
+                        className="inline-flex items-center gap-1 text-[11px] text-amber-600 dark:text-amber-400 flex-shrink-0"
+                        title={t("uncertain.hint")}
+                        data-testid="uncertain-answers"
+                      >
+                        <AlertTriangle className="w-3 h-3" />
+                        {t("uncertain.count", { count: row.uncertain })}
+                      </span>
+                    )}
 
                     {/* Date */}
                     <span className="text-[12px] text-muted-foreground flex-shrink-0 w-36 text-right">

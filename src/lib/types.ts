@@ -154,6 +154,7 @@ export interface ApplicationAnswer {
 }
 
 export interface ApplicationRecord {
+  job_url?: string;
   outcome: string;
   reason?: string | null;
   confirmation?: string | null;

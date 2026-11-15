@@ -68,5 +68,10 @@
     "checkAnswer": "Semak",
     "checkAnswerTitle": "Ejen meneka jawapan ini atau tidak pasti. Sila semak.",
     "intercepted": "Permintaan dipintas: {{n}}"
+  },
+  "uncertain": {
+    "count": "{{count}} jawapan diteka",
+    "count_one": "1 jawapan diteka",
+    "hint": "Ejen meneka jawapan ini atau tidak pasti. Buka Butiran untuk menyemak apa yang dihantar."
   }
 }

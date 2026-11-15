@@ -68,5 +68,10 @@
     "checkAnswer": "Controleren",
     "checkAnswerTitle": "De agent heeft dit antwoord geraden of was niet zeker. Controleer het.",
     "intercepted": "Onderschepte verzoeken: {{n}}"
+  },
+  "uncertain": {
+    "count": "{{count}} gegokte antwoorden",
+    "count_one": "1 gegokt antwoord",
+    "hint": "De agent heeft deze antwoorden gegokt of was onzeker. Open Details om te controleren wat is verstuurd."
   }
 }

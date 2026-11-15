@@ -68,5 +68,10 @@
     "checkAnswer": "请核对",
     "checkAnswerTitle": "该回答是代理推测的或不确定，请核对。",
     "intercepted": "已拦截请求：{{n}}"
+  },
+  "uncertain": {
+    "count": "{{count}} 个推测的回答",
+    "count_one": "1 个推测的回答",
+    "hint": "这些回答是代理推测的或不确定的。打开详情查看发送的内容。"
   }
 }

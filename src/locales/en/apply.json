@@ -68,5 +68,10 @@
     "checkAnswer": "Check",
     "checkAnswerTitle": "The agent guessed this answer or was not sure. Please check it.",
     "intercepted": "Intercepted requests: {{n}}"
+  },
+  "uncertain": {
+    "count": "{{count}} guessed answers",
+    "count_one": "1 guessed answer",
+    "hint": "The agent guessed these answers or was unsure. Open Details to check what was sent."
   }
 }

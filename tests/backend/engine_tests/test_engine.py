@@ -448,3 +448,15 @@ def test_token_usage_recorded_per_application_and_run(data_dir):
     assert rows["https://a.co/1"]["cost_usd"] is None      # unknown price stays unknown, not $0
     assert rows["https://a.co/2"]["cost_usd"] == 0.02
     assert rows["https://a.co/1"]["cached_tokens"] == 9000 and rows["https://a.co/1"]["llm_model"] == "glm-5.3-flash"
+
+
+def test_provider_errors_get_plain_sentences():
+    from engine.apply import friendly_error
+    assert "screenshots" in friendly_error("Error code: 400 - {'error': {'message': 'content.type is invalid'}}")
+    assert "API key" in friendly_error("Error code: 401 - Unauthorized")
+    assert "credit" in friendly_error("openai.APIStatusError: Insufficient balance or no resource package")
+    assert "model name" in friendly_error("Error code: 404 - model_not_found")
+    assert "too slow" in friendly_error("The AI provider did not answer within 300 seconds.")
+    assert friendly_error("Plain reason the agent gave") == "Plain reason the agent gave"
+    # agent reasons that merely contain these numbers or words are left alone
+    assert friendly_error("Job 4021 posting does not exist any more") == "Job 4021 posting does not exist any more"

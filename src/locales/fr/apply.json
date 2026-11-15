@@ -68,5 +68,10 @@
     "checkAnswer": "À vérifier",
     "checkAnswerTitle": "L'agent a deviné cette réponse ou n'en était pas sûr. Veuillez la vérifier.",
     "intercepted": "Requêtes interceptées : {{n}}"
+  },
+  "uncertain": {
+    "count": "{{count}} réponses devinées",
+    "count_one": "1 réponse devinée",
+    "hint": "L'agent a deviné ces réponses ou n'était pas sûr. Ouvrez Détails pour vérifier ce qui a été envoyé."
   }
 }

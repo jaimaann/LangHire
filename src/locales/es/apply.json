@@ -68,5 +68,10 @@
     "checkAnswer": "Revisar",
     "checkAnswerTitle": "El agente adivinó esta respuesta o no estaba seguro. Revísala.",
     "intercepted": "Solicitudes interceptadas: {{n}}"
+  },
+  "uncertain": {
+    "count": "{{count}} respuestas supuestas",
+    "count_one": "1 respuesta supuesta",
+    "hint": "El agente supuso estas respuestas o no estaba seguro. Abre Detalles para revisar lo enviado."
   }
 }

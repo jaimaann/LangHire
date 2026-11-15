@@ -68,5 +68,10 @@
     "checkAnswer": "Verificar",
     "checkAnswerTitle": "O agente deduziu esta resposta ou não tinha certeza. Verifique-a.",
     "intercepted": "Pedidos interceptados: {{n}}"
+  },
+  "uncertain": {
+    "count": "{{count}} respostas presumidas",
+    "count_one": "1 resposta presumida",
+    "hint": "O agente presumiu essas respostas ou não tinha certeza. Abra Detalhes para conferir o que foi enviado."
   }
 }
