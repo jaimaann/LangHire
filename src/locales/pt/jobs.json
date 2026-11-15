@@ -22,7 +22,7 @@
   "collector": {
     "title": "Coletor de vagas",
     "description": "Busque vagas que correspondam ao seu perfil. Selecione uma plataforma fonte, insira um cargo e inicie a coleta. A coleta geralmente leva 3-10 minutos por cargo enquanto o agente rola pelos resultados.",
-    "loginInfo": "<strong>Login:</strong> Um navegador será aberto e verificará se você está logado na plataforma selecionada. Caso contrário, o agente aguardará seu login manual — e depois prosseguirá automaticamente.",
+    "loginInfo": "<strong>Login:</strong> Se os resultados carregarem sem login, o agente continua. Se estiverem atrás de um login, uma janela do navegador abre e o agente espera até 2 minutos para você entrar.",
     "sourcePlatform": "Plataforma fonte",
     "jobTitlePlaceholder": "Cargo (ex.: 'Analista de Dados') ou deixe vazio para todos",
     "maxJobsPlaceholder": "Máx. vagas",

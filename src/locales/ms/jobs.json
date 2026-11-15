@@ -22,7 +22,7 @@
   "collector": {
     "title": "Pengumpul Kerja",
     "description": "Cari senarai kerja yang sepadan dengan profil anda. Pilih platform sumber, masukkan jawatan, dan mulakan pengumpulan. Pengumpulan biasanya mengambil masa 3-10 minit setiap jawatan kerana ejen menatal hasil.",
-    "loginInfo": "<strong>Log masuk:</strong> Pelayar akan dibuka dan menyemak sama ada anda telah log masuk ke platform yang dipilih. Jika tidak, ejen akan menunggu anda log masuk secara manual — kemudian meneruskan secara automatik.",
+    "loginInfo": "<strong>Log masuk:</strong> Jika hasil carian dimuatkan tanpa log masuk, ejen terus berjalan. Jika ia di sebalik log masuk, tetingkap pelayar dibuka dan ejen menunggu sehingga 2 minit untuk anda log masuk.",
     "sourcePlatform": "Platform Sumber",
     "jobTitlePlaceholder": "Jawatan (cth. 'Penganalisis Data') atau kosongkan untuk semua",
     "maxJobsPlaceholder": "Maks kerja",

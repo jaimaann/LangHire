@@ -22,7 +22,7 @@
   "collector": {
     "title": "Recopilador de empleos",
     "description": "Busca ofertas de empleo que coincidan con tu perfil. Selecciona una plataforma fuente, ingresa un título de puesto y comienza a recopilar. La recopilación suele tardar 3-10 minutos por título mientras el agente recorre los resultados.",
-    "loginInfo": "<strong>Inicio de sesión:</strong> Se abrirá un navegador y verificará si estás conectado a la plataforma seleccionada. Si no, el agente esperará a que inicies sesión manualmente — luego continuará automáticamente.",
+    "loginInfo": "<strong>Inicio de sesión:</strong> Si los resultados cargan sin iniciar sesión, el agente continúa. Si están detrás de un inicio de sesión, se abre una ventana del navegador y el agente espera hasta 2 minutos a que inicies sesión.",
     "sourcePlatform": "Plataforma fuente",
     "jobTitlePlaceholder": "Título del puesto (ej. 'Analista de Datos') o dejar vacío para todos",
     "maxJobsPlaceholder": "Máx. empleos",

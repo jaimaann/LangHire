@@ -22,7 +22,7 @@
   "collector": {
     "title": "Job Collector",
     "description": "Search for job listings matching your profile. Select a source platform, enter a job title, and start collecting. Collection typically takes 3-10 minutes per job title as the agent scrolls through results.",
-    "loginInfo": "<strong>Login:</strong> A browser will open and check if you're logged into the selected platform. If not, the agent will wait for you to log in manually — then proceed automatically.",
+    "loginInfo": "<strong>Login:</strong> If search results load without signing in, the agent just continues. If they are hidden behind a login, a browser window opens and the agent waits up to 2 minutes for you to sign in.",
     "sourcePlatform": "Source Platform",
     "jobTitlePlaceholder": "Job title (e.g. 'Data Analyst') or leave blank for all",
     "maxJobsPlaceholder": "Max jobs",

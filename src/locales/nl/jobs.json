@@ -22,7 +22,7 @@
   "collector": {
     "title": "Banenverzamelaar",
     "description": "Zoek naar vacatures die bij je profiel passen. Selecteer een bronplatform, voer een functietitel in en start de verzameling. Het verzamelen duurt doorgaans 3-10 minuten per functietitel terwijl de agent door de resultaten scrollt.",
-    "loginInfo": "<strong>Inloggen:</strong> Er opent een browser die controleert of je bent ingelogd op het geselecteerde platform. Zo niet, dan wacht de agent tot je handmatig inlogt — en gaat daarna automatisch verder.",
+    "loginInfo": "<strong>Inloggen:</strong> Laden de zoekresultaten zonder inloggen, dan gaat de agent gewoon door. Staan ze achter een login, dan opent een browservenster en wacht de agent tot 2 minuten tot je inlogt.",
     "sourcePlatform": "Bronplatform",
     "jobTitlePlaceholder": "Functietitel (bijv. 'Data Analyst') of leeg laten voor alle",
     "maxJobsPlaceholder": "Max. banen",

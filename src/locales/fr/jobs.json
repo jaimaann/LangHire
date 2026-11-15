@@ -22,7 +22,7 @@
   "collector": {
     "title": "Collecteur d'emplois",
     "description": "Recherchez des offres d'emploi correspondant à votre profil. Sélectionnez une plateforme source, entrez un titre de poste et lancez la collecte. La collecte prend généralement 3 à 10 minutes par titre de poste car l'agent fait défiler les résultats.",
-    "loginInfo": "<strong>Connexion :</strong> Un navigateur s'ouvrira et vérifiera si vous êtes connecté à la plateforme sélectionnée. Sinon, l'agent attendra que vous vous connectiez manuellement — puis continuera automatiquement.",
+    "loginInfo": "<strong>Connexion :</strong> Si les résultats s'affichent sans connexion, l'agent continue. S'ils sont derrière une connexion, une fenêtre de navigateur s'ouvre et l'agent attend jusqu'à 2 minutes que vous vous connectiez.",
     "sourcePlatform": "Plateforme source",
     "jobTitlePlaceholder": "Titre du poste (ex. 'Analyste de données') ou laisser vide pour tous",
     "maxJobsPlaceholder": "Max emplois",

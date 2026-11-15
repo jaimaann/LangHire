@@ -22,7 +22,7 @@
   "collector": {
     "title": "Raccolta offerte",
     "description": "Cerca offerte di lavoro in linea con il tuo profilo. Seleziona una piattaforma di origine, inserisci un titolo di lavoro e avvia la raccolta. La raccolta richiede in genere 3-10 minuti per titolo, mentre l'agente scorre i risultati.",
-    "loginInfo": "<strong>Accesso:</strong> Si aprirà un browser per verificare se hai effettuato l'accesso alla piattaforma selezionata. In caso contrario, l'agente attenderà che tu acceda manualmente, quindi proseguirà automaticamente.",
+    "loginInfo": "<strong>Accesso:</strong> Se i risultati si caricano senza accesso, l'agente prosegue. Se sono dietro un accesso, si apre una finestra del browser e l'agente attende fino a 2 minuti che tu acceda.",
     "sourcePlatform": "Piattaforma di origine",
     "jobTitlePlaceholder": "Titolo di lavoro (es. 'Data Analyst') o lascia vuoto per tutti",
     "maxJobsPlaceholder": "Max offerte",

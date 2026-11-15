@@ -22,7 +22,7 @@
   "collector": {
     "title": "职位收集器",
     "description": "搜索与你的个人资料匹配的职位信息。选择来源平台，输入职位名称，然后开始收集。由于代理需要滚动浏览结果，每个职位名称的收集通常需要 3-10 分钟。",
-    "loginInfo": "<strong>登录：</strong>系统将打开浏览器并检查你是否已登录所选平台。如果未登录，代理会等待你手动登录，然后自动继续。",
+    "loginInfo": "<strong>登录:</strong>如果无需登录即可加载搜索结果，代理会直接继续。如果结果需要登录才能查看，会打开浏览器窗口，代理最多等待 2 分钟让你登录。",
     "sourcePlatform": "来源平台",
     "jobTitlePlaceholder": "职位名称（例如 'Data Analyst'），留空则收集全部",
     "maxJobsPlaceholder": "最大职位数",
