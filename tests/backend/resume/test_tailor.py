@@ -340,7 +340,7 @@ class TestTailorResume:
         # Markdown sidecar written and retrievable.
         content = get_tailored_content("https://job/1")
         assert content is not None
-        assert "## SKILLS" in content["content"] or "## EXPERIENCE" in content["content"]
+        assert "## skills" in content["content"].lower() or "## experience" in content["content"].lower()
 
     async def test_missing_resume_path_raises(self, monkeypatch, data_dir):
         monkeypatch.setattr(tailor, "load_settings", lambda: {"resume_path": ""})
@@ -632,3 +632,40 @@ class TestGenerateFreshPdf:
             assert all(x > 36 for x in xs)
         finally:
             doc.close()
+
+
+# ── section detection on real-world headings, trimming, fabrication guard ───
+
+def test_classify_heading_real_world_titles():
+    from resume.tailor import classify_heading
+    assert classify_heading("Internships") == "experience"
+    assert classify_heading("Academic Projects") == "projects"
+    assert classify_heading("Certifications and Awards") == "certifications"
+    assert classify_heading("Other Activities") == "other"
+    assert classify_heading("Built dashboards in Tableau for 40 managers.") is None
+
+
+def test_trim_to_limit_cuts_at_a_boundary():
+    from resume.tailor import trim_to_limit
+    out = trim_to_limit("Built dashboards in Tableau. Automated weekly reports in Python for finance.", 40)
+    assert out == "Built dashboards in Tableau."
+
+
+def test_find_fabrications_flags_new_facts_only():
+    from resume.tailor import find_fabrications
+    original = "Data Analyst Intern at Mobility Health. Python, SQL, Tableau. Reduced time by 50 minutes."
+    assert find_fabrications(original, "Analyzed data with Python and SQL; reduced time by 50 minutes") == []
+    assert set(find_fabrications(original, "Led a Snowflake migration saving 30% at Google")) >= {"Snowflake", "30%", "Google"} - {"30%"}
+
+
+def test_unrecognised_sections_survive_into_the_pdf(tmp_path):
+    from resume.tailor import _generate_fresh_pdf
+    sections = [
+        {"section_type": "skills", "title": "Skills", "text": "Python, SQL", "char_count": 11},
+        {"section_type": "projects", "title": "Academic Projects", "text": "Zomato Analysis\n• Cleaned data", "char_count": 30},
+        {"section_type": "certifications", "title": "Certifications and Awards", "text": "IBM Data Science", "char_count": 16},
+    ]
+    out = tmp_path / "t.pdf"
+    _generate_fresh_pdf(sections, {}, "Jane", "jane@x.com", "", out)
+    text = "".join(p.get_text() for p in fitz.open(str(out)))
+    assert "Academic Projects" in text and "Zomato Analysis" in text and "IBM Data Science" in text

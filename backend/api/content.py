@@ -47,7 +47,8 @@ async def tailor_resumes(body: TailorRequest):
         try:
             result = await tailor_resume(url, description, options)
             update_job(url, tailored_resume_path=result["path"])
-            results.append({"url": url, "status": "done", "path": result["path"], "content": result["content"]})
+            results.append({"url": url, "status": "done", "path": result["path"], "content": result["content"],
+                            "warnings": result.get("warnings", [])})
         except Exception as e:
             results.append({"url": url, "status": "error", "message": str(e)})
 
@@ -72,9 +73,11 @@ async def refine_tailored_resume(body: RefineRequest):
     options = body.options.model_dump()
 
     try:
-        result = await tailor_resume(job_url, description + f"\n\nADDITIONAL INSTRUCTION: {instruction}", options)
+        # The instruction goes in its own prompt slot; it used to be appended to the job description
+        result = await tailor_resume(job_url, description, options, refinement=instruction)
         update_job(job_url, tailored_resume_path=result["path"])
-        return {"success": True, "content": result["content"], "path": result["path"]}
+        return {"success": True, "content": result["content"], "path": result["path"],
+                "warnings": result.get("warnings", [])}
     except Exception as e:
         return api_error("tailor_error", str(e), 500)
 

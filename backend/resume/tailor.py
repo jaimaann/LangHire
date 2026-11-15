@@ -29,98 +29,121 @@ def _url_hash(url: str) -> str:
     return hashlib.md5(url.encode()).hexdigest()[:12]
 
 
+_HEADING_RULES = [  # first match wins; order matters ("Academic Projects" is projects, not education)
+    ("projects", r"project"),
+    ("experience", r"experience|internship|employment|work history|career history|professional background"),
+    ("certifications", r"certif|award|achievement|honou?rs?|courses?|training|licen[cs]e"),
+    ("skills", r"skill|technolog|tech stack|tools|competenc|expertise"),
+    ("overview", r"summary|objective|overview|about me|^profile$|professional profile"),
+    ("education", r"education|academic|qualification"),
+    ("contact", r"^contact"),
+    ("other", r"activit|volunteer|interest|hobb|leadership|publication|languages?|references|extra"),
+]
+
+_DEFAULT_TITLES = {"overview": "Summary", "skills": "Skills", "experience": "Experience", "projects": "Projects",
+                   "education": "Education", "certifications": "Certifications", "other": "Other"}
+
+
+def classify_heading(text: str) -> str | None:
+    """Section type for a heading line, or None if it doesn't look like a heading."""
+    t = " ".join(text.split())
+    if not t or len(t) > 45 or len(t.split()) > 6:
+        return None
+    if t[-1] in ".,;" or "@" in t or any(ch.isdigit() for ch in t):
+        return None
+    low = t.lower().rstrip(":")
+    for stype, rx in _HEADING_RULES:
+        if re.search(rx, low):
+            return stype
+    return None
+
+
 def _extract_sections(doc: fitz.Document) -> list[dict]:
-    """Extract text blocks from the PDF grouped into logical sections.
+    """Split a resume PDF into titled sections, in reading order.
 
-    Groups a section header block with all content blocks that follow it
-    until the next section header.
+    A line starts a new section when it is a short heading that names a known
+    section ("Internships", "Academic Projects", "Certifications and Awards"),
+    or when it is visibly emphasised (clearly larger than body text) and short.
+    Unknown emphasised headings become type "other" and are kept verbatim.
+    Headings used to be matched against a fixed list of exact strings, so most
+    real resumes collapsed into one or two sections.
     """
-    SECTION_HEADERS = {
-        "skills": "skills",
-        "technologies": "skills",
-        "tech stack": "skills",
-        "tools": "skills",
-        "summary": "overview",
-        "objective": "overview",
-        "overview": "overview",
-        "about me": "overview",
-        "profile": "overview",
-        "work experience": "experience",
-        "experience": "experience",
-        "employment": "experience",
-        "professional experience": "experience",
-        "volunteer experience": "experience",
-        "education": "education",
-        "contact": "contact",
-    }
-
-    all_blocks = []
+    lines: list[dict] = []
+    sizes: list[tuple[float, int]] = []
     for page_num in range(len(doc)):
-        page = doc[page_num]
-        blocks = page.get_text("dict")["blocks"]
-        for block in blocks:
-            if block["type"] != 0:
+        for block in doc[page_num].get_text("dict")["blocks"]:
+            if block.get("type") != 0:
                 continue
-            text = ""
+            block_lines = []
             for line in block.get("lines", []):
-                for span in line.get("spans", []):
-                    text += span.get("text", "")
-                text += "\n"
-            text = text.strip()
-            if not text:
-                continue
-            all_blocks.append({
-                "page": page_num,
-                "bbox": block["bbox"],
-                "text": text,
-            })
+                spans = line.get("spans", [])
+                text = "".join(sp.get("text", "") for sp in spans).replace("​", "").strip()
+                if not text:
+                    continue
+                size = max((sp.get("size", 0) for sp in spans), default=0)
+                bold = any("bold" in (sp.get("font", "") or "").lower() or (sp.get("flags", 0) & 16) for sp in spans)
+                sizes.append((size, len(text)))
+                block_lines.append({"text": text, "size": size, "bold": bold, "page": page_num,
+                                    "bbox": line.get("bbox", block["bbox"])})
+            if block_lines:
+                block_lines[-1]["end_block"] = True
+                lines.extend(block_lines)
 
-    # Identify which blocks are section headers
-    sections = []
-    current_section = None
+    if not lines:
+        return []
+    # Body size: the size carrying the most characters
+    weight: dict[float, int] = {}
+    for size, n in sizes:
+        weight[round(size, 1)] = weight.get(round(size, 1), 0) + n
+    body = max(weight, key=weight.get)
 
-    for block in all_blocks:
-        lower = block["text"].lower().strip()
-        section_type = SECTION_HEADERS.get(lower)
+    # If the resume marks its headings with a larger font, trust that and ignore
+    # bold sub-lines like "Soft Skills" or a certificate name. Single-font PDFs
+    # fall back to keyword matching alone.
+    sized_headings = any(classify_heading(ln["text"]) and ln["size"] >= body + 2.5 for ln in lines)
 
-        if section_type:
-            # This block is a header — start a new section
-            if current_section and current_section["content_blocks"]:
-                sections.append(current_section)
-            current_section = {
-                "section_type": section_type,
-                "header_block": block,
-                "content_blocks": [],
-                "page": block["page"],
-            }
-        elif current_section:
-            # This block is content under the current header
-            current_section["content_blocks"].append(block)
-
-    if current_section and current_section["content_blocks"]:
-        sections.append(current_section)
-
-    # Build final section objects with combined text and bounding boxes
-    result = []
-    for section in sections:
-        content_text = "\n".join(b["text"] for b in section["content_blocks"])
-        if not content_text.strip():
+    sections: list[dict] = []
+    current: dict | None = None
+    for ln in lines:
+        stype = classify_heading(ln["text"])
+        emphasised = ln["size"] >= body + 2.5
+        if sized_headings and not emphasised:
+            stype = None
+        if stype is None and emphasised and len(ln["text"]) <= 45 and current is not None and                 not any(ch.isdigit() for ch in ln["text"]) and ln["text"][-1:] not in ".,;":
+            stype = "other"
+        is_heading = stype is not None and (emphasised or ln["bold"] or ln.get("end_block") or len(ln["text"].split()) <= 3)
+        if is_heading:
+            if current and current["lines"]:
+                sections.append(current)
+            current = {"section_type": stype, "title": " ".join(ln["text"].split()).rstrip(":"),
+                       "page": ln["page"], "lines": [], "bboxes": []}
             continue
-        # Compute bounding box that covers all content blocks
-        all_bboxes = [b["bbox"] for b in section["content_blocks"]]
-        combined_bbox = (
-            min(b[0] for b in all_bboxes),
-            min(b[1] for b in all_bboxes),
-            max(b[2] for b in all_bboxes),
-            max(b[3] for b in all_bboxes),
-        )
+        if current is None:
+            continue  # name / contact header above the first section
+        # A blank line after each PDF text block keeps entries (jobs, projects) apart
+        current["lines"].append(ln["text"])
+        if ln.get("end_block"):
+            current["lines"].append("")
+        current["bboxes"].append(ln["bbox"])
+    if current and current["lines"]:
+        sections.append(current)
+
+    result = []
+    for sec in sections:
+        text = "\n".join(sec["lines"])
+        text = re.sub(r"\n{3,}", "\n\n", text).strip()
+        if not text:
+            continue
+        bb = sec["bboxes"]
         result.append({
-            "page": section["page"],
-            "bbox": combined_bbox,
-            "text": content_text,
-            "char_count": len(content_text),
-            "section_type": section["section_type"],
-            "content_blocks": section["content_blocks"],
+            "page": sec["page"],
+            "bbox": (min(b[0] for b in bb), min(b[1] for b in bb), max(b[2] for b in bb), max(b[3] for b in bb)),
+            "text": text,
+            "char_count": len(text),
+            "section_type": sec["section_type"],
+            "title": sec["title"],
+            "content_blocks": [{"text": t, "bbox": b, "page": sec["page"]}
+                               for t, b in zip([x for x in sec["lines"] if x], bb)],
         })
     return result
 
@@ -134,9 +157,58 @@ def _identify_tailorable_sections(sections: list[dict], options: dict) -> list[d
             tailorable.append(s)
         elif st == "overview" and options.get("overview"):
             tailorable.append(s)
-        elif st == "experience" and options.get("experience"):
+        elif st in ("experience", "projects") and options.get("experience"):
             tailorable.append(s)
     return tailorable
+
+
+def trim_to_limit(text: str, limit: int) -> str:
+    """Shorten to `limit` chars at a line or sentence boundary, never mid-word."""
+    text = text.strip()
+    if len(text) <= limit:
+        return text
+    cut = text[:limit]
+    for sep in ("\n", ". ", "; ", ", "):
+        pos = cut.rfind(sep)
+        if pos >= limit * 0.6:
+            return cut[: pos + (1 if sep.startswith(".") else 0)].rstrip(" ,;")
+    pos = cut.rfind(" ")
+    return (cut[:pos] if pos > 0 else cut).rstrip(" ,;")
+
+
+_FACT_TOKEN = re.compile(r"\b(?:\d[\d.,%+]*|[A-Z][A-Za-z0-9+#.\-]{1,}|[a-z]+[A-Z][A-Za-z0-9]*)\b")
+_COMMON_CAPS = {
+    "The", "A", "An", "And", "Or", "For", "With", "In", "On", "At", "To", "Of", "By", "From", "As", "Using", "Used",
+    "Built", "Led", "Developed", "Designed", "Created", "Managed", "Analyzed", "Analysed", "Improved", "Delivered",
+    "Implemented", "Performed", "Conducted", "Collaborated", "Worked", "Applied", "Automated", "Reduced",
+    "Increased", "Optimized", "Optimised", "Presented", "Prepared", "Cleaned", "Visualized", "Visualised",
+    "Extracted", "Downloaded", "Identified", "Generated", "Leveraged", "Utilized", "Utilised", "Strong",
+    "Proficient", "Experienced", "Skilled", "Data", "Analysis", "Analyst", "Skills", "Experience", "Summary",
+    "Projects", "Project", "Tools", "Programming", "Visualization", "Visualisation", "Database", "Databases",
+    "Soft", "Technical", "Key", "Core", "Results", "Team", "Teams", "Business", "Reports", "Reporting",
+    "Dashboards", "Dashboard", "Insights", "Communication", "Detail", "Oriented", "Problem", "Solving",
+}
+
+
+def find_fabrications(original_resume: str, tailored: str) -> list[str]:
+    """Numbers, names and skills in the tailored text that the original resume never mentions.
+
+    The prompt tells the model not to invent experience; this checks it. Any
+    number (years, %, counts) or capitalised / camel-case term (tools, employers,
+    certifications) must already appear somewhere in the original resume.
+    """
+    known = original_resume.lower()
+    known_compact = re.sub(r"[^a-z0-9]", "", known)
+    found = []
+    for tok in _FACT_TOKEN.findall(tailored):
+        t = tok.strip(".,")
+        if not t or t in _COMMON_CAPS:
+            continue
+        low = t.lower()
+        if low in known or re.sub(r"[^a-z0-9]", "", low) in known_compact:
+            continue
+        found.append(t)
+    return sorted(set(found))
 
 
 async def _generate_tailored_text(
@@ -201,11 +273,9 @@ async def _generate_tailored_text(
     for i, s in enumerate(sections):
         key = str(i)
         if key in result:
-            new_text = result[key].strip()
-            if len(new_text) <= s["char_count"]:
-                tailored[i] = new_text
-            else:
-                tailored[i] = new_text[:s["char_count"]]
+            new_text = str(result[key]).strip()
+            # Over-long output used to be cut mid-word ("...built dashbo"); cut at a boundary instead
+            tailored[i] = trim_to_limit(new_text, s["char_count"])
 
     return tailored
 
@@ -389,71 +459,56 @@ def _generate_fresh_pdf(
                            line_height=14, baseline_pad=10)
     state["y"] += 10
 
-    # ─── Skills Section ───
-    skills_section = next(
-        ((i, s) for i, s in enumerate(sections) if s["section_type"] == "skills"),
-        None,
-    )
-    if skills_section:
-        idx, s = skills_section
-        draw_section_header("Skills")
-        content = tailored.get(idx, s["text"])
+    def draw_entries(content: str):
+        for entry in _split_entries(content):
+            # Lines before the first bullet are the entry header (title / org / dates)
+            first_bullet_idx = next((i for i, l in enumerate(entry) if _is_bullet(l)), len(entry))
+            for ei, eline in enumerate(entry):
+                if _is_bullet(eline):
+                    draw_wrapped("• " + _strip_bullet(eline), x=_MARGIN_LEFT + _BULLET_INDENT,
+                                 hang_x=_MARGIN_LEFT + _HANGING_INDENT, width=_TEXT_WIDTH - _BULLET_INDENT,
+                                 fontsize=_BODY_SIZE, fontname="helv", color=body_color)
+                elif ei == 0 and ei < first_bullet_idx:
+                    draw_wrapped(eline, x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT, width=_TEXT_WIDTH,
+                                 fontsize=9.5, fontname="helvetica-bold", color=body_color)
+                elif ei == 1 and ei < first_bullet_idx:
+                    draw_wrapped(eline, x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT, width=_TEXT_WIDTH,
+                                 fontsize=_BODY_SIZE, fontname="helv", color=body_color)
+                else:
+                    draw_wrapped(eline, x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT, width=_TEXT_WIDTH,
+                                 fontsize=_BODY_SIZE, fontname="helv",
+                                 color=light_color if ei < first_bullet_idx else body_color)
+            state["y"] += _ENTRY_GAP
+
+    def draw_lines(content: str):
         for line in content.split("\n"):
             if line.strip():
-                draw_wrapped(line.strip(), x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT,
-                             width=_TEXT_WIDTH, fontsize=_BODY_SIZE,
-                             fontname="helv", color=body_color)
+                draw_wrapped(line.strip(), x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT, width=_TEXT_WIDTH,
+                             fontsize=_BODY_SIZE, fontname="helv", color=body_color)
         state["y"] += 10
 
-    # ─── Experience Section ───
-    experience_sections = [
-        (i, s) for i, s in enumerate(sections) if s["section_type"] == "experience"
-    ]
-    if experience_sections:
-        draw_section_header("Experience")
-        for idx, s in experience_sections:
-            content = tailored.get(idx, s["text"])
-            entries = _split_entries(content)
-            for entry in entries:
-                # Determine where the bullets begin so header lines (title /
-                # company / date) before them get header styling.
-                first_bullet_idx = next(
-                    (i for i, l in enumerate(entry) if _is_bullet(l)), len(entry)
-                )
-                for ei, eline in enumerate(entry):
-                    if _is_bullet(eline):
-                        bullet_text = "• " + _strip_bullet(eline)
-                        draw_wrapped(
-                            bullet_text, x=_MARGIN_LEFT + _BULLET_INDENT,
-                            hang_x=_MARGIN_LEFT + _HANGING_INDENT,
-                            width=_TEXT_WIDTH - _BULLET_INDENT,
-                            fontsize=_BODY_SIZE, fontname="helv", color=body_color,
-                        )
-                    elif ei == 0 and ei < first_bullet_idx:
-                        # Job title
-                        draw_wrapped(eline, x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT,
-                                     width=_TEXT_WIDTH, fontsize=9.5,
-                                     fontname="helvetica-bold", color=body_color)
-                    elif ei == 1 and ei < first_bullet_idx:
-                        # Company
-                        draw_wrapped(eline, x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT,
-                                     width=_TEXT_WIDTH, fontsize=_BODY_SIZE,
-                                     fontname="helv", color=body_color)
-                    else:
-                        # Date / secondary line
-                        draw_wrapped(eline, x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT,
-                                     width=_TEXT_WIDTH, fontsize=_BODY_SIZE,
-                                     fontname="helv", color=light_color)
-                state["y"] += _ENTRY_GAP
+    # ─── Every section, in the resume's own order, under its own title ───
+    # (The old layout drew only Skills, Experience and Education: summaries were
+    # tailored but never drawn, and projects / certifications / awards vanished.)
+    has_education = False
+    for idx, s in enumerate(sections):
+        stype = s.get("section_type", "other")
+        if stype == "contact":
+            continue
+        has_education = has_education or stype == "education"
+        title = s.get("title") or _DEFAULT_TITLES.get(stype, stype.replace("_", " ").title())
+        content = tailored.get(idx, s["text"])
+        if not content.strip():
+            continue
+        draw_section_header(title)
+        if stype in ("experience", "projects"):
+            draw_entries(content)
+        else:
+            draw_lines(content)
 
-    # ─── Education Section (at the bottom) ───
-    if education_text:
+    if education_text and not has_education:
         draw_section_header("Education")
-        for line in education_text.split("\n"):
-            if line.strip():
-                draw_wrapped(line.strip(), x=_MARGIN_LEFT, hang_x=_MARGIN_LEFT,
-                             width=_TEXT_WIDTH, fontsize=_BODY_SIZE,
-                             fontname="helv", color=body_color)
+        draw_lines(education_text)
 
     doc.save(str(output_path))
     doc.close()
@@ -500,6 +555,7 @@ async def tailor_resume(
     job_url: str,
     job_description: str,
     options: dict,
+    refinement: str = "",
 ) -> dict:
     """Generate a tailored resume PDF for a specific job. Returns path and content."""
     settings = load_settings()
@@ -515,9 +571,20 @@ async def tailor_resume(
         doc.close()
         raise ValueError("No tailorable sections found in resume matching selected options")
 
-    tailored_text = await _generate_tailored_text(tailorable, job_description, options)
+    tailored_text = await _generate_tailored_text(tailorable, job_description, options, refinement=refinement)
 
-    if not tailored_text:
+    # Fabrication guard: a rewritten section may only use facts already in the resume
+    original_resume = "\n".join(page.get_text() for page in doc)
+    warnings: list[str] = []
+    for ti, text in list(tailored_text.items()):
+        invented = find_fabrications(original_resume, text)
+        if invented:
+            title = tailorable[ti].get("title") or tailorable[ti]["section_type"]
+            warnings.append(f"Kept the original {title}: the rewrite added terms not in your resume "
+                            f"({', '.join(invented[:6])})")
+            del tailored_text[ti]
+
+    if not tailored_text and not warnings:
         doc.close()
         raise ValueError("LLM could not tailor any sections within character limits")
 
@@ -559,7 +626,7 @@ async def tailor_resume(
 
     # Pass ALL sections to the PDF (not just tailored ones)
     # Map tailored indices back to full section list
-    all_sections_for_pdf = [s for s in sections if s["section_type"] in ("skills", "experience", "overview")]
+    all_sections_for_pdf = [s for s in sections if s["section_type"] != "contact"]
     # Build a tailored_text map using full section indices
     full_tailored = {}
     for i, s in enumerate(all_sections_for_pdf):
@@ -578,7 +645,7 @@ async def tailor_resume(
         section_type = s["section_type"].upper()
         original = s["text"]
         tailored = tailored_text.get(i, original)
-        content_parts.append(f"## {section_type}\n\n{tailored}")
+        content_parts.append(f"## {s.get('title') or section_type}\n\n{tailored}")
 
     content = "\n\n".join(content_parts)
     output_md.write_text(content, encoding="utf-8")
@@ -588,12 +655,13 @@ async def tailor_resume(
         "content": content,
         "sections_tailored": len(tailored_text),
         "sections_total": len(tailorable),
+        "warnings": warnings,
     }
 
 
 async def refine_resume(job_url: str, job_description: str, instruction: str, options: dict) -> dict:
     """Refine an existing tailored resume with additional instructions."""
-    return await tailor_resume(job_url, job_description, options)
+    return await tailor_resume(job_url, job_description, options, refinement=instruction)
 
 
 def get_tailored_content(job_url: str) -> Optional[dict]:
