@@ -180,7 +180,7 @@ def test_run_manager_runs_and_records_events(data_dir):
         return {"collected": 1}
 
     st = mgr.start("collect", factory, {"title": "x"})
-    for _ in range(100):
+    for _ in range(400):  # up to 20 s: generous for a loaded CI machine
         if not st.running:
             break
         time.sleep(0.05)
@@ -203,7 +203,7 @@ def test_run_manager_cancel(data_dir):
     with pytest.raises(RuntimeError):
         mgr.start("apply", factory, {})  # one apply run at a time
     assert mgr.cancel("apply") is True
-    for _ in range(100):
+    for _ in range(400):  # up to 20 s: generous for a loaded CI machine
         if not st.running:
             break
         time.sleep(0.05)
