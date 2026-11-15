@@ -64,3 +64,36 @@ its browser/subprocess/worker endpoints are exercised by the end-to-end harness
 `scripts/integration-test.py` instead. Frontend statement coverage is **~90%**.
 
 Run the coverage commands above to see the current per-module breakdown.
+
+## Real-browser and end-to-end tests
+
+**Mock ATS.** `tests/fixtures/ats/server.py` serves job postings and application
+forms shaped like Greenhouse, Lever, a two-step form and a form with a required
+sensitive question. It records each submission as JSON and includes
+prompt-injection bait in the job description. No application ever reaches a real
+employer.
+
+```bash
+# ATS fast-path checks against the mock ATS in a real Chromium (no LLM)
+LANGHIRE_BROWSER_TESTS=1 uv run pytest tests/integration -q
+
+# Full flow with a real LLM: resume parsing, cover letter, tailoring, applications,
+# needs-input handling, parallel workers, daily cap, export and delete
+LANGHIRE_E2E_BASE_URL=https://api.example.com/v1 LANGHIRE_E2E_MODEL=<vision model> \
+LANGHIRE_E2E_API_KEY=... uv run python scripts/e2e-flow.py \
+  --resume path/to/resume.pdf --out e2e-report.json
+```
+
+`scripts/make-sample-resume.py` writes a fictional one-page resume. The nightly
+`.github/workflows/canary.yml` runs the same flow (enable with `CANARY_ENABLED`).
+
+**UI in a normal browser.** Start a backend by hand and point the dev server at it:
+
+```bash
+LANGHIRE_DATA_DIR=/tmp/lh LANGHIRE_PORT=18800 LANGHIRE_API_TOKEN=devtoken \
+  uv run python backend/main.py
+VITE_DEV_BACKEND_TOKEN=devtoken VITE_DEV_BACKEND_PORT=18800 npx vite --port 1420
+```
+
+The override is ignored in production builds. Use `LANGHIRE_DATA_DIR` for any
+manual testing so your real data in the OS app-data folder is never touched.
