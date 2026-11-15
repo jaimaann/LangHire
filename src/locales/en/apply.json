@@ -1,6 +1,7 @@
 {
   "title": "Apply",
   "subtitle": "Automated job applications · {{count}} pending jobs",
+  "subtitle_one": "Automated job applications · {{count}} pending job",
   "emptyState": {
     "title": "No jobs to apply to yet",
     "description": "Collect jobs from LinkedIn first, then come back here to apply automatically.",

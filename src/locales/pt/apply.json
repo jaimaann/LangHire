@@ -1,6 +1,7 @@
 {
   "title": "Candidatar",
   "subtitle": "Candidaturas automáticas · {{count}} vagas pendentes",
+  "subtitle_one": "Candidaturas automáticas · {{count}} vagas pendentes",
   "emptyState": {
     "title": "Nenhuma vaga para se candidatar ainda",
     "description": "Colete vagas do LinkedIn primeiro, depois volte aqui para se candidatar automaticamente.",

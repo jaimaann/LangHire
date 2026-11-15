@@ -1,6 +1,7 @@
 {
   "title": "Solliciteren",
   "subtitle": "Geautomatiseerde sollicitaties · {{count}} banen in afwachting",
+  "subtitle_one": "Geautomatiseerde sollicitaties · {{count}} banen in afwachting",
   "emptyState": {
     "title": "Nog geen banen om op te solliciteren",
     "description": "Verzamel eerst banen van LinkedIn en kom dan hier terug om automatisch te solliciteren.",

@@ -1,6 +1,7 @@
 {
   "title": "応募",
   "subtitle": "自動求人応募 · {{count}}件の保留中の求人",
+  "subtitle_one": "自動求人応募 · {{count}}件の保留中の求人",
   "emptyState": {
     "title": "応募する求人がまだありません",
     "description": "まずLinkedInから求人を収集してから、ここに戻って自動応募してください。",

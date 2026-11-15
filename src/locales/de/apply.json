@@ -1,6 +1,7 @@
 {
   "title": "Bewerben",
   "subtitle": "Automatisierte Bewerbungen · {{count}} ausstehende Jobs",
+  "subtitle_one": "Automatisierte Bewerbungen · {{count}} ausstehende Jobs",
   "emptyState": {
     "title": "Noch keine Jobs zum Bewerben",
     "description": "Sammle zuerst Jobs von LinkedIn, dann komm hierher zurück, um dich automatisch zu bewerben.",

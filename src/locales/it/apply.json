@@ -1,6 +1,7 @@
 {
   "title": "Candidati",
   "subtitle": "Candidature automatiche · {{count}} offerte in attesa",
+  "subtitle_one": "Candidature automatiche · {{count}} offerte in attesa",
   "emptyState": {
     "title": "Nessuna offerta a cui candidarsi ancora",
     "description": "Raccogli prima le offerte da LinkedIn, poi torna qui per candidarti automaticamente.",

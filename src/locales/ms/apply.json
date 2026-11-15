@@ -1,6 +1,7 @@
 {
   "title": "Mohon",
   "subtitle": "Permohonan kerja automatik · {{count}} kerja menunggu",
+  "subtitle_one": "Permohonan kerja automatik · {{count}} kerja menunggu",
   "emptyState": {
     "title": "Belum ada kerja untuk dimohon",
     "description": "Kumpul kerja dari LinkedIn dahulu, kemudian kembali ke sini untuk memohon secara automatik.",

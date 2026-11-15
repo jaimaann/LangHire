@@ -1,6 +1,7 @@
 {
   "title": "Aplicar",
   "subtitle": "Solicitudes automáticas · {{count}} empleos pendientes",
+  "subtitle_one": "Solicitudes automáticas · {{count}} empleos pendientes",
   "emptyState": {
     "title": "No hay empleos para aplicar todavía",
     "description": "Primero recopila empleos de LinkedIn, luego vuelve aquí para aplicar automáticamente.",

@@ -1,6 +1,7 @@
 {
   "title": "Postuler",
   "subtitle": "Candidatures automatisées · {{count}} emplois en attente",
+  "subtitle_one": "Candidatures automatisées · {{count}} emplois en attente",
   "emptyState": {
     "title": "Aucun emploi pour postuler",
     "description": "Collectez d'abord des emplois depuis LinkedIn, puis revenez ici pour postuler automatiquement.",
