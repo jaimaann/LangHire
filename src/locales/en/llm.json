@@ -110,5 +110,12 @@
     "testConnection": "Test Connection",
     "connectionSuccessful": "Connection successful!",
     "connectionFailed": "Connection failed."
+  },
+  "pricing": {
+    "title": "Token prices (optional)",
+    "hint": "For models the app has no price data for (for example GLM, local models or gateways). Prices in USD per million tokens. With prices set, costs show in History and the per-run cost limit works.",
+    "input": "Input per 1M",
+    "cached": "Cached input per 1M",
+    "output": "Output per 1M"
   }
 }

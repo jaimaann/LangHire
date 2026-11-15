@@ -93,5 +93,12 @@
     "testConnection": "Tester la connexion",
     "connectionSuccessful": "Connexion réussie !",
     "connectionFailed": "Connexion échouée."
+  },
+  "pricing": {
+    "title": "Prix des jetons (facultatif)",
+    "hint": "Pour les modèles sans tarif connu de l'application (par exemple GLM, modèles locaux ou passerelles). Prix en USD par million de jetons. Avec des prix, les coûts apparaissent dans l'historique et la limite de coût par exécution s'applique.",
+    "input": "Entrée par million",
+    "cached": "Entrée en cache par million",
+    "output": "Sortie par million"
   }
 }

@@ -93,5 +93,12 @@
     "testConnection": "Testar conexão",
     "connectionSuccessful": "Conexão bem-sucedida!",
     "connectionFailed": "Conexão falhou."
+  },
+  "pricing": {
+    "title": "Preços por token (opcional)",
+    "hint": "Para modelos sem dados de preço no app (por exemplo GLM, modelos locais ou gateways). Preços em USD por milhão de tokens. Com preços, os custos aparecem no histórico e o limite de custo por execução funciona.",
+    "input": "Entrada por 1 M",
+    "cached": "Entrada em cache por 1 M",
+    "output": "Saída por 1 M"
   }
 }

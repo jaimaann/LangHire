@@ -110,5 +110,12 @@
     "testConnection": "测试连接",
     "connectionSuccessful": "连接成功！",
     "connectionFailed": "连接失败。"
+  },
+  "pricing": {
+    "title": "令牌价格(可选)",
+    "hint": "适用于应用没有价格数据的模型(例如 GLM、本地模型或网关)。价格为每百万令牌的美元。设置后，历史记录会显示费用，单次运行费用上限也会生效。",
+    "input": "输入 每百万",
+    "cached": "缓存输入 每百万",
+    "output": "输出 每百万"
   }
 }

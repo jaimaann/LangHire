@@ -93,5 +93,12 @@
     "testConnection": "Verbinding testen",
     "connectionSuccessful": "Verbinding geslaagd!",
     "connectionFailed": "Verbinding mislukt."
+  },
+  "pricing": {
+    "title": "Tokenprijzen (optioneel)",
+    "hint": "Voor modellen waarvan de app geen prijs kent (bijvoorbeeld GLM, lokale modellen of gateways). Prijzen in USD per miljoen tokens. Met prijzen verschijnen kosten in de geschiedenis en werkt de kostenlimiet per run.",
+    "input": "Invoer per 1 mln",
+    "cached": "Gecachte invoer per 1 mln",
+    "output": "Uitvoer per 1 mln"
   }
 }

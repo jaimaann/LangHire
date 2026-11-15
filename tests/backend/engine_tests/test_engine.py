@@ -529,3 +529,26 @@ def test_job_meta_does_not_split_on_a_dash():
     from engine.job_meta import parse_job_html
     m = parse_job_html("<title>Senior Analyst, Advanced Analytics - Gurugram</title>")
     assert m["title"] == "Senior Analyst, Advanced Analytics - Gurugram" and m["company"] == ""
+
+
+def test_custom_token_prices_give_unpriced_models_a_cost(data_dir):
+    from types import SimpleNamespace
+
+    from core.config import load_llm_settings, save_llm_settings
+    from engine.apply import _cost_unknown, _usage_cost, custom_price_cost
+    t = {"prompt_tokens": 242603, "cached_tokens": 132288, "completion_tokens": 39707}
+    glm_flash = {"input": 0.15, "cached": 0.03, "output": 0.50}  # USD per 1M tokens
+    # the Twilio run measured live: 110,315 new + 132,288 cached input, 39,707 output
+    assert abs(custom_price_cost(t, glm_flash) - (110315 * 0.15 + 132288 * 0.03 + 39707 * 0.5) / 1e6) < 1e-9
+    assert custom_price_cost(t, {}) == 0
+    assert custom_price_cost(t, {"input": "abc", "output": -1}) == 0
+
+    usage = SimpleNamespace(total_cost=0, total_tokens=282310, total_prompt_tokens=242603,
+                            total_prompt_cached_tokens=132288, total_completion_tokens=39707, by_model={})
+    run = SimpleNamespace(usage=usage)
+    assert _cost_unknown(run)                       # no price anywhere: unknown, not free
+    s = load_llm_settings()
+    s["pricing"] = glm_flash
+    save_llm_settings(s)
+    assert round(_usage_cost(run), 4) == 0.0404     # now priced, so the run budget applies
+    assert not _cost_unknown(run)

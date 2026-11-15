@@ -93,5 +93,12 @@
     "testConnection": "Uji Sambungan",
     "connectionSuccessful": "Sambungan berjaya!",
     "connectionFailed": "Sambungan gagal."
+  },
+  "pricing": {
+    "title": "Harga token (pilihan)",
+    "hint": "Untuk model yang harganya tidak diketahui oleh aplikasi (contohnya GLM, model tempatan atau gateway). Harga dalam USD bagi setiap sejuta token. Dengan harga, kos dipaparkan dalam sejarah dan had kos setiap larian berfungsi.",
+    "input": "Input setiap 1 juta",
+    "cached": "Input cache setiap 1 juta",
+    "output": "Output setiap 1 juta"
   }
 }

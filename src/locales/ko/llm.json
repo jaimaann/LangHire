@@ -93,5 +93,12 @@
     "testConnection": "연결 테스트",
     "connectionSuccessful": "연결 성공!",
     "connectionFailed": "연결 실패."
+  },
+  "pricing": {
+    "title": "토큰 가격 (선택)",
+    "hint": "앱에 가격 정보가 없는 모델(GLM, 로컬 모델, 게이트웨이 등)용입니다. 100만 토큰당 USD 가격입니다. 가격을 설정하면 기록에 비용이 표시되고 실행당 비용 한도가 적용됩니다.",
+    "input": "입력 100만당",
+    "cached": "캐시 입력 100만당",
+    "output": "출력 100만당"
   }
 }

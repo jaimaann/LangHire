@@ -93,5 +93,12 @@
     "testConnection": "Verbindung testen",
     "connectionSuccessful": "Verbindung erfolgreich!",
     "connectionFailed": "Verbindung fehlgeschlagen."
+  },
+  "pricing": {
+    "title": "Token-Preise (optional)",
+    "hint": "Für Modelle ohne hinterlegte Preise (z. B. GLM, lokale Modelle, Gateways). Preise in USD pro Million Tokens. Mit Preisen erscheinen Kosten im Verlauf und das Kostenlimit pro Lauf greift.",
+    "input": "Eingabe pro 1 Mio.",
+    "cached": "Gecachte Eingabe pro 1 Mio.",
+    "output": "Ausgabe pro 1 Mio."
   }
 }

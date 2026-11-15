@@ -53,6 +53,8 @@ export type LLMProvider = "openai" | "anthropic" | "gemini" | "bedrock" | "ollam
 
 export interface LLMSettings {
   provider: LLMProvider;
+  /** Optional USD per 1M tokens, for models the app has no price data for. */
+  pricing?: { input?: number; cached?: number; output?: number };
   openai?: {
     api_key: string;
     model: string;

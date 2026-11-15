@@ -233,6 +233,13 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
     if (field === "model") immediateSave(ns); else autoSave(ns);
   };
 
+  const updatePricing = (field: "input" | "cached" | "output", value: string) => {
+    const n = value === "" ? undefined : Math.max(0, Number(value));
+    const ns = { ...settings, pricing: { ...(settings.pricing || {}), [field]: Number.isFinite(n) ? n : undefined } };
+    setSettings(ns);
+    autoSave(ns);
+  };
+
   const updateOpenAICompatible = (field: string, value: string) => {
     const ns = { ...settings, openai_compatible: { ...settings.openai_compatible!, [field]: value } };
     setSettings(ns);
@@ -585,6 +592,29 @@ export default function LLMSettingsForm({ onSaved, compact }: LLMSettingsFormPro
           </div>
         )}
       </div>
+
+      {/* Optional token prices: give models without a built-in price table a real cost */}
+      <details className="card" data-testid="pricing">
+        <summary className="cursor-pointer text-sm font-semibold text-foreground">{t("pricing.title")}</summary>
+        <p className="text-xs text-muted-foreground mt-2 mb-3">{t("pricing.hint")}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {(["input", "cached", "output"] as const).map((f) => (
+            <label key={f} className="text-xs font-semibold text-foreground">
+              {t(`pricing.${f}`)}
+              <input
+                type="number"
+                min={0}
+                step="0.01"
+                inputMode="decimal"
+                value={settings.pricing?.[f] ?? ""}
+                onChange={(e) => updatePricing(f, e.target.value)}
+                placeholder="0.00"
+                className="input-base mt-1"
+              />
+            </label>
+          ))}
+        </div>
+      </details>
 
       {/* Status + Test */}
       <div className="flex items-center gap-3">

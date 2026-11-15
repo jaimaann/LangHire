@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from urllib.parse import urlparse
 
 from core import db
-from core.config import load_profile, load_settings
+from core.config import load_llm_settings, load_profile, load_settings
 from core import shared_config as sc
 from memory import extract_learnings_from_markers, extract_learnings_via_llm, store_learnings
 from memory.metrics import MetricsStore
@@ -141,11 +141,42 @@ def _usage_cost(history) -> float:
     usage = getattr(history, "usage", None)
     if usage is None:
         return 0.0
+    cost = None
     for attr in ("total_cost", "total_cost_usd"):
         v = getattr(usage, attr, None)
         if isinstance(v, (int, float)):
-            return float(v)
-    return float(getattr(usage, "total_prompt_cost", 0) or 0) + float(getattr(usage, "total_completion_cost", 0) or 0)
+            cost = float(v)
+            break
+    if cost is None:
+        cost = float(getattr(usage, "total_prompt_cost", 0) or 0) + float(getattr(usage, "total_completion_cost", 0) or 0)
+    if cost == 0:
+        cost = custom_price_cost(usage_tokens(history))  # models without a price table (GLM, local, gateways)
+    return cost
+
+
+def custom_price_cost(tokens: dict, pricing: dict | None = None) -> float:
+    """Cost from the user's own per-million-token prices (LLM Settings → pricing), else 0.
+
+    Cached prompt tokens use the cached price when one is set, else the input price.
+    """
+    if pricing is None:
+        try:
+            pricing = (load_llm_settings().get("pricing") or {})
+        except Exception:
+            pricing = {}
+
+    def price(key: str) -> float:
+        try:
+            return max(0.0, float(pricing.get(key) or 0))
+        except (TypeError, ValueError):
+            return 0.0
+    p_in, p_cached, p_out = price("input"), price("cached"), price("output")
+    if not (p_in or p_out):
+        return 0.0
+    prompt = int(tokens.get("prompt_tokens") or 0)
+    cached = min(prompt, int(tokens.get("cached_tokens") or 0))
+    completion = int(tokens.get("completion_tokens") or 0)
+    return ((prompt - cached) * p_in + cached * (p_cached or p_in) + completion * p_out) / 1_000_000
 
 
 def usage_tokens(history) -> dict:

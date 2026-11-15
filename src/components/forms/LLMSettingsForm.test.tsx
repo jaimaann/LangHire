@@ -126,6 +126,24 @@ describe("LLMSettingsForm", () => {
     );
   });
 
+  it("saves optional token prices for models without price data", async () => {
+    const user = userEvent.setup();
+    render(<LLMSettingsForm />);
+    await screen.findByText("selectProvider");
+    await user.click(screen.getByText("pricing.title"));
+    const [input, cached, output] = screen.getAllByPlaceholderText("0.00");
+    await user.type(input, "0.15");
+    await user.type(cached, "0.03");
+    await user.type(output, "0.5");
+    await waitFor(
+      () =>
+        expect(mockSaveLLMSettings).toHaveBeenLastCalledWith(
+          expect.objectContaining({ pricing: { input: 0.15, cached: 0.03, output: 0.5 } }),
+        ),
+      { timeout: 2000 },
+    );
+  });
+
   it("Test Connection success shows the returned message", async () => {
     mockTestLLMConnection.mockResolvedValue({
       success: true,
