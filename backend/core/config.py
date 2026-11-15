@@ -62,33 +62,51 @@ def _save_json(path: Path, data):
 
 # ── Profile ───────────────────────────────────────────────────────────────
 
+DEFAULT_PROFILE = {
+    "name": "",
+    "email": "",
+    "phone": "",
+    "phone_country_code": "+1",
+    "country": "US",
+    "address": {"street": "", "city": "", "state": "", "zip": "", "country": ""},
+    "work_authorization": "",
+    "visa_sponsorship_needed": False,
+    "willing_to_relocate": False,
+    "preferred_work_mode": "",
+    "years_of_experience": 0,
+    "education": {"degree": "", "school": "", "graduation": ""},
+    "current_role": "",
+    "target_job_titles": [],
+    "target_locations": [],
+    "languages": ["English"],
+    "skills": [],
+    # No made-up numbers: the agent answers salary questions from this
+    "salary_expectation": {"min": 0, "max": 0, "currency": "USD", "period": "annual"},
+    "notice_period": "",
+    "nationality": "",
+    "date_of_birth": "",
+    "cover_letter": "",
+    "date_format": "MM/DD/YYYY",
+    "notes": "",
+}
+
+
+def _deep_merge(defaults: dict, stored: dict) -> dict:
+    out = _copy(defaults)
+    for k, v in (stored or {}).items():
+        if isinstance(v, dict) and isinstance(out.get(k), dict):
+            out[k] = {**out[k], **v}
+        elif v is not None:
+            out[k] = v
+    return out
+
+
 def load_profile() -> dict:
-    return _load_json(get_data_dir() / "candidate_profile.json", {
-        "name": "",
-        "email": "",
-        "phone": "",
-        "phone_country_code": "+1",
-        "country": "US",
-        "address": {"street": "", "city": "", "state": "", "zip": "", "country": "USA"},
-        "work_authorization": "",
-        "visa_sponsorship_needed": False,
-        "willing_to_relocate": False,
-        "preferred_work_mode": "hybrid",
-        "years_of_experience": 0,
-        "education": {"degree": "", "school": "", "graduation": ""},
-        "current_role": "",
-        "target_job_titles": [],
-        "target_locations": [],
-        "languages": ["English"],
-        "skills": [],
-        "salary_expectation": {"min": 50000, "max": 100000, "currency": "USD", "period": "annual"},
-        "notice_period": "",
-        "nationality": "",
-        "date_of_birth": "",
-        "cover_letter": "",
-        "date_format": "MM/DD/YYYY",
-        "notes": "",
-    })
+    """The candidate profile, with every field present (missing ones from defaults).
+
+    A profile missing any field used to crash every application with a bare KeyError.
+    """
+    return _deep_merge(DEFAULT_PROFILE, _load_json(get_data_dir() / "candidate_profile.json", {}))
 
 
 def save_profile(profile: dict):

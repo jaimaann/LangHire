@@ -42,6 +42,29 @@ STATUS_FOR_OUTCOME = {"submitted": "applied", "failed": "failed", "needs_input":
                       "ready_to_submit": "test_passed"}
 
 
+_OUTCOME_TEXT = re.compile(r"outcome\s*[=:]\s*['\"]?(submitted|failed|needs_input|skipped|ready_to_submit)", re.I)
+_MISSING_TEXT = re.compile(r"missing_info\s*[=:]\s*\[([^\]]*)\]", re.I)
+_REASON_TEXT = re.compile(r"reason\s*[=:]\s*['\"]?([^\n'\"]{3,300})", re.I)
+
+
+def parse_outcome_text(text: str) -> tuple[str, str, list[str]] | None:
+    """Outcome written as text in the final message instead of a tool call.
+
+    Seen live: the model wrote 'report_application_result: outcome=needs_input
+    missing_info=[...]' inside done(), so the job was marked failed with no reason.
+    """
+    m = _OUTCOME_TEXT.search(text or "")
+    if not m:
+        return None
+    missing = []
+    mm = _MISSING_TEXT.search(text)
+    if mm:
+        quoted = re.findall(r"['\"]([^'\"]+)['\"]", mm.group(1))
+        missing = [q.strip() for q in quoted] or [x.strip() for x in mm.group(1).split(",") if x.strip()]
+    rm = _REASON_TEXT.search(text)
+    return m.group(1).lower(), (rm.group(1).strip() if rm else text[:300]), missing
+
+
 def friendly_error(raw: str) -> str:
     for pattern, friendly in _ERROR_MAP:
         if pattern.lower() in raw.lower():
@@ -231,10 +254,19 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
 
         if report.result is not None:
             outcome, reason = report.result.outcome, report.result.reason
-        else:  # older prompt / model ignored the tool: fall back to done() + markers
-            ok = bool(history.is_successful())
-            outcome = "submitted" if ok else "failed"
-            reason = "" if ok else (history.errors()[-1] if history.errors() else "Agent reported failure") or ""
+        else:  # the model didn't call the tool: read its final text, then fall back to done()
+            final = (history.final_result() or "").strip()
+            parsed = parse_outcome_text(final)
+            if parsed:
+                outcome, reason, missing_from_text = parsed
+                report.missing_from_text = missing_from_text
+            else:
+                ok = bool(history.is_successful())
+                outcome = "submitted" if ok else "failed"
+                reason = "" if ok else (history.errors()[-1] if history.errors() else "") or ""
+            if not reason and outcome != "submitted":
+                # never leave the user with a bare "Failed"
+                reason = final[:500] or "The agent stopped without reporting a reason"
         if test_mode:
             # Trust the network guard over the model's own claim
             if report.intercepted and outcome in ("submitted", "ready_to_submit", "failed"):
@@ -265,7 +297,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
         _, marker_qs = sc.extract_from_history(history)
         for q, a in marker_qs.items():
             answers.setdefault(q, a)
-    missing = list(report.result.missing_info) if report.result else []
+    missing = list(report.result.missing_info) if report.result else list(report.missing_from_text)
     _save_answers(answers, domain)
     for q in missing:  # unanswered questions show up in the Q&A page for the user
         sc.get_memory_store().qa_add(question=q, answer="", source_domain=domain)

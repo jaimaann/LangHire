@@ -228,27 +228,38 @@ def build_memory_context(
     # Country-aware date format
     date_format = profile.get('date_format', '') or 'MM/DD/YYYY'
 
+    addr = profile.get("address") or {}
+    edu = profile.get("education") or {}
+    na = "Not specified"
+    location = " ".join(x for x in [", ".join(x for x in [addr.get("city", ""), addr.get("state", "")] if x),
+                                    addr.get("zip", ""), addr.get("country", "")] if x)
+
+    def lst(key):
+        return ", ".join(profile.get(key) or []) or na
+
     profile_lines = [
         "CANDIDATE PROFILE:",
-        f"Name: {profile['name']}",
-        f"Email: {profile['email']}, Phone: {profile.get('phone_country_code', '')}{profile['phone']}",
-        f"Location: {profile['address']['city']}, {profile['address']['state']} {profile['address']['zip']} {profile['address'].get('country', '')}".strip(),
-        f"Work Authorization: {profile['work_authorization']}, Visa Sponsorship Needed: {profile['visa_sponsorship_needed']}",
-        f"Willing to Relocate: {profile['willing_to_relocate']}, Preferred Work Mode: {profile['preferred_work_mode']}",
-        f"Years of Experience: {profile['years_of_experience']}",
-        f"Education: {profile['education']['degree']} from {profile['education']['school']} ({profile['education']['graduation']})",
-        f"Current Role: {profile['current_role']}",
-        f"Target Locations: {', '.join(profile['target_locations'])}",
-        f"Languages: {', '.join(profile['languages'])}",
-        f"Skills: {', '.join(profile['skills'])}",
+        f"Name: {profile.get('name') or na}",
+        f"Email: {profile.get('email') or na}, Phone: {profile.get('phone_country_code', '')}{profile.get('phone', '')}",
+        f"Location: {location or na}",
+        f"Work Authorization: {profile.get('work_authorization') or na}, "
+        f"Visa Sponsorship Needed: {profile.get('visa_sponsorship_needed', False)}",
+        f"Willing to Relocate: {profile.get('willing_to_relocate', False)}, "
+        f"Preferred Work Mode: {profile.get('preferred_work_mode') or na}",
+        f"Years of Experience: {profile.get('years_of_experience', 0)}",
+        f"Education: {edu.get('degree') or na} from {edu.get('school') or na} ({edu.get('graduation') or na})",
+        f"Current Role: {profile.get('current_role') or na}",
+        f"Target Locations: {lst('target_locations')}",
+        f"Languages: {lst('languages')}",
+        f"Skills: {lst('skills')}",
         f"Salary: {salary_str}",
     ]
     if profile.get('notice_period'):
-        profile_lines.append(f"Notice Period: {profile['notice_period']}")
+        profile_lines.append(f"Notice Period: {profile.get('notice_period')}")
     if profile.get('nationality'):
-        profile_lines.append(f"Nationality: {profile['nationality']}")
+        profile_lines.append(f"Nationality: {profile.get('nationality')}")
     if profile.get('notes'):
-        profile_lines.append(f"Notes: {profile['notes']}")
+        profile_lines.append(f"Notes: {profile.get('notes')}")
 
     parts.append("\n".join(profile_lines))
 
@@ -256,11 +267,11 @@ def build_memory_context(
     country_instructions = []
     country_instructions.append(f"DATE FORMAT: When filling date fields, use {date_format} format.")
     if profile.get('notice_period'):
-        country_instructions.append(f"NOTICE PERIOD: If asked about notice period or availability, answer: {profile['notice_period']}")
+        country_instructions.append(f"NOTICE PERIOD: If asked about notice period or availability, answer: {profile.get('notice_period')}")
     if profile.get('nationality'):
-        country_instructions.append(f"NATIONALITY: If asked about nationality, answer: {profile['nationality']}")
+        country_instructions.append(f"NATIONALITY: If asked about nationality, answer: {profile.get('nationality')}")
     if profile.get('cover_letter'):
-        country_instructions.append(f"COVER LETTER: If a cover letter is requested, use:\n{profile['cover_letter']}")
+        country_instructions.append(f"COVER LETTER: If a cover letter is requested, use:\n{profile.get('cover_letter')}")
     if country_instructions:
         parts.append("COUNTRY-SPECIFIC INSTRUCTIONS:\n" + "\n".join(country_instructions))
 

@@ -277,3 +277,13 @@ def test_linkedin_url_normalization_handles_slug_urls():
         == "https://www.linkedin.com/jobs/view/4490713768/"
     assert n("https://www.linkedin.com/jobs/search/?currentJobId=4356842209") \
         == "https://www.linkedin.com/jobs/view/4356842209/"
+
+
+def test_outcome_written_as_text_is_recovered():
+    from engine.apply import parse_outcome_text
+    text = ("report_application_result:\noutcome=needs_input\n"
+            "missing_info=['Log in to LinkedIn in LangHire Settings, Job site logins']\nJOB: Senior Data Analyst")
+    outcome, reason, missing = parse_outcome_text(text)
+    assert outcome == "needs_input"
+    assert missing == ["Log in to LinkedIn in LangHire Settings, Job site logins"]
+    assert parse_outcome_text("I could not finish") is None

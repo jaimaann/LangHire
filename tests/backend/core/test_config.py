@@ -110,17 +110,21 @@ def test_load_profile_defaults(data_dir):
     assert profile["name"] == ""
     assert profile["phone_country_code"] == "+1"
     assert profile["country"] == "US"
-    assert profile["address"]["country"] == "USA"
+    assert profile["address"]["country"] == ""
+    assert profile["salary_expectation"]["min"] == 0  # no invented salary for the agent to use
+    assert profile["preferred_work_mode"] == ""
     assert profile["salary_expectation"]["currency"] == "USD"
     assert profile["languages"] == ["English"]
     assert profile["visa_sponsorship_needed"] is False
 
 
 def test_save_and_load_profile_roundtrip(data_dir):
-    """A saved profile is read back identically."""
+    """A saved profile is read back, with any missing fields filled from defaults."""
     custom = {"name": "Ada Lovelace", "email": "ada@example.com", "skills": ["math"]}
     config.save_profile(custom)
-    assert config.load_profile() == custom
+    loaded = config.load_profile()
+    assert {k: loaded[k] for k in custom} == custom
+    assert loaded["preferred_work_mode"] == ""  # present even though it wasn't saved
     assert (data_dir / "candidate_profile.json").exists()
 
 

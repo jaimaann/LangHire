@@ -67,6 +67,7 @@ class AgentReport:
     learnings: list[dict] = field(default_factory=list)
     jobs: list[dict] = field(default_factory=list)
     prefilled: list[str] = field(default_factory=list)
+    missing_from_text: list[str] = field(default_factory=list)  # parsed when the tool was not called
     submit_clicks: int = 0   # test mode: clicks on a final-submit control
     intercepted: int = 0     # test mode: application requests blocked by the guard
 
