@@ -3,6 +3,10 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import AutomationDialog from "./AutomationDialog";
 
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({ t: (k: string) => k, i18n: { changeLanguage: vi.fn() } }),
+}));
+
 function renderDialog(overrides: Partial<React.ComponentProps<typeof AutomationDialog>> = {}) {
   const onConfirm = vi.fn();
   const onCancel = vi.fn();
@@ -28,15 +32,15 @@ describe("AutomationDialog", () => {
   it("renders the title and informational sections when open", () => {
     renderDialog({ title: "Apply to Jobs" });
     expect(screen.getByRole("heading", { name: "Apply to Jobs" })).toBeInTheDocument();
-    expect(screen.getByText("This may take a while")).toBeInTheDocument();
-    expect(screen.getByText("First-time login required")).toBeInTheDocument();
-    expect(screen.getByText("Keep the browser window open")).toBeInTheDocument();
+    expect(screen.getByText("automation.slowTitle")).toBeInTheDocument();
+    expect(screen.getByText("automation.loginTitle")).toBeInTheDocument();
+    expect(screen.getByText("automation.windowTitle")).toBeInTheDocument();
   });
 
   it("calls onConfirm when the start button is clicked", async () => {
     const user = userEvent.setup();
     const { onConfirm, onCancel } = renderDialog();
-    await user.click(screen.getByRole("button", { name: "Got it, Start" }));
+    await user.click(screen.getByRole("button", { name: "automation.start" }));
     expect(onConfirm).toHaveBeenCalledTimes(1);
     expect(onCancel).not.toHaveBeenCalled();
   });
@@ -44,7 +48,9 @@ describe("AutomationDialog", () => {
   it("calls onCancel when the Cancel button is clicked", async () => {
     const user = userEvent.setup();
     const { onCancel, onConfirm } = renderDialog();
-    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    // the X close button shares the accessible name; the footer button is the last one
+    const cancels = screen.getAllByRole("button", { name: "automation.cancel" });
+    await user.click(cancels[cancels.length - 1]);
     expect(onCancel).toHaveBeenCalledTimes(1);
     expect(onConfirm).not.toHaveBeenCalled();
   });
@@ -73,7 +79,7 @@ describe("AutomationDialog", () => {
   it("does NOT call onCancel when clicking inside the dialog body (stopPropagation)", async () => {
     const user = userEvent.setup();
     const { onCancel } = renderDialog();
-    await user.click(screen.getByText("This may take a while"));
+    await user.click(screen.getByText("automation.slowTitle"));
     expect(onCancel).not.toHaveBeenCalled();
   });
 });

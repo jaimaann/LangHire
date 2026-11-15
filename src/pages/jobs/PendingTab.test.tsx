@@ -177,7 +177,7 @@ describe("PendingTab", () => {
     const applyButtons = screen.getAllByRole("button", { name: /jobItem\.apply/ });
     await user.click(applyButtons[0]);
 
-    await user.click(await screen.findByRole("button", { name: "Got it, Start" }));
+    await user.click(await screen.findByRole("button", { name: "automation.start" }));
     await waitFor(() =>
       expect(mockStartApplying).toHaveBeenCalledWith(
         expect.objectContaining({ job_url: pendingJob.url, workers: 1, mode: "all" }),
@@ -340,7 +340,7 @@ describe("PendingTab", () => {
 
     const applyButtons = screen.getAllByRole("button", { name: /jobItem\.apply/ });
     await user.click(applyButtons[0]);
-    await user.click(await screen.findByRole("button", { name: "Got it, Start" }));
+    await user.click(await screen.findByRole("button", { name: "automation.start" }));
     await waitFor(() => expect(window.alert).toHaveBeenCalledWith("apply boom"));
   });
 

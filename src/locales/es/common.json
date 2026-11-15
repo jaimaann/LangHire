@@ -55,5 +55,15 @@
     "restartToInstall": "Reiniciar para instalar",
     "installing": "Instalando actualización…",
     "dismiss": "Descartar"
+  },
+  "automation": {
+    "slowTitle": "Esto puede tardar un poco",
+    "slowBody": "El agente abre un navegador, carga páginas y rellena formularios. Mantén la aplicación abierta mientras trabaja.",
+    "loginTitle": "Algunos sitios piden iniciar sesión",
+    "loginBody": "Si un portal de empleo te pide iniciar sesión, hazlo una vez en la ventana del navegador; la sesión se guarda. Las ofertas añadidas por URL normalmente no lo necesitan.",
+    "windowTitle": "Mantén abierta la ventana del navegador",
+    "windowBody": "Aparecerá una ventana de Chromium: es el agente trabajando. No la cierres ni hagas clic en ella salvo para iniciar sesión.",
+    "cancel": "Cancelar",
+    "start": "Entendido, empezar"
   }
 }

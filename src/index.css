@@ -70,7 +70,7 @@
     @apply px-4 py-3 bg-[#FFF0F0] border border-[#FFD0D0] rounded-xl text-sm text-destructive;
   }
   .info-box {
-    @apply bg-[#F7F7F7] rounded-2xl p-4 text-[13px] text-foreground;
+    @apply bg-secondary rounded-2xl p-4 text-[13px] text-foreground;
   }
   .section-title {
     @apply text-lg font-bold text-foreground;
@@ -130,3 +130,16 @@ body {
   margin-left: 0;
   margin-right: 15rem;
 }
+
+/* Dark mode for the hardcoded light tints used across components. Unlayered,
+   so these win over Tailwind's utilities layer. Without them, light text sat
+   on near-white boxes in dark mode (info boxes, dialogs, badges). */
+.dark .bg-\[\#F7F7F7\] { background-color: var(--color-secondary); }
+.dark .bg-amber-50 { background-color: rgb(245 158 11 / 0.14); }
+.dark .bg-amber-50\/60 { background-color: rgb(245 158 11 / 0.10); }
+.dark .bg-blue-50 { background-color: rgb(59 130 246 / 0.14); }
+.dark .border-amber-200, .dark .border-amber-300 { border-color: rgb(245 158 11 / 0.35); }
+.dark .border-blue-200 { border-color: rgb(59 130 246 / 0.35); }
+.dark .text-amber-900, .dark .text-amber-700 { color: #fcd34d; }
+.dark .text-blue-900 { color: #bfdbfe; }
+.dark .bg-white\/90 { background-color: color-mix(in srgb, var(--color-card) 92%, transparent); }

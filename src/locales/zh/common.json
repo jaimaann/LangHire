@@ -56,5 +56,15 @@
     "restartToInstall": "重启以安装",
     "installing": "正在安装更新…",
     "dismiss": "关闭"
+  },
+  "automation": {
+    "slowTitle": "这可能需要一些时间",
+    "slowBody": "代理会打开浏览器、加载页面并填写表单。运行期间请保持应用打开。",
+    "loginTitle": "有些网站需要登录",
+    "loginBody": "如果招聘网站要求登录，请在浏览器窗口中登录一次，会话会被保存。通过链接添加的职位通常不需要登录。",
+    "windowTitle": "请保持浏览器窗口打开",
+    "windowBody": "会出现一个 Chromium 窗口，那是代理在工作。除非需要登录，否则不要关闭或点击它。",
+    "cancel": "取消",
+    "start": "知道了，开始"
   }
 }

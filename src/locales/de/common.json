@@ -55,5 +55,15 @@
     "restartToInstall": "Zum Installieren neu starten",
     "installing": "Update wird installiert…",
     "dismiss": "Schließen"
+  },
+  "automation": {
+    "slowTitle": "Das kann etwas dauern",
+    "slowBody": "Der Agent öffnet einen Browser, lädt Seiten und füllt Formulare aus. Lass die App geöffnet, solange er läuft.",
+    "loginTitle": "Manche Seiten brauchen eine Anmeldung",
+    "loginBody": "Wenn eine Jobseite eine Anmeldung verlangt, melde dich einmal im Browserfenster an; die Sitzung wird gespeichert. Per URL hinzugefügte Jobs brauchen meist keine Anmeldung.",
+    "windowTitle": "Browserfenster geöffnet lassen",
+    "windowBody": "Ein Chromium-Fenster erscheint – das ist der Agent bei der Arbeit. Schließe es nicht und klicke nicht hinein, außer zum Anmelden.",
+    "cancel": "Abbrechen",
+    "start": "Verstanden, starten"
   }
 }

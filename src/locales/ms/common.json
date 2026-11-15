@@ -55,5 +55,15 @@
     "restartToInstall": "Mulakan semula untuk memasang",
     "installing": "Memasang kemas kini…",
     "dismiss": "Tolak"
+  },
+  "automation": {
+    "slowTitle": "Ini mungkin mengambil sedikit masa",
+    "slowBody": "Ejen membuka pelayar, memuatkan halaman dan mengisi borang. Biarkan aplikasi terbuka semasa ia berjalan.",
+    "loginTitle": "Sesetengah laman perlukan log masuk",
+    "loginBody": "Jika laman kerja meminta anda log masuk, log masuk sekali dalam tetingkap pelayar; sesi akan disimpan. Kerja yang ditambah melalui URL biasanya tidak perlukan log masuk.",
+    "windowTitle": "Biarkan tetingkap pelayar terbuka",
+    "windowBody": "Tetingkap Chromium akan muncul — itu ejen sedang bekerja. Jangan tutup atau klik di dalamnya kecuali untuk log masuk.",
+    "cancel": "Batal",
+    "start": "Faham, mula"
   }
 }

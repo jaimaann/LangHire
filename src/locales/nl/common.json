@@ -55,5 +55,15 @@
     "restartToInstall": "Opnieuw starten om te installeren",
     "installing": "Update wordt geïnstalleerd…",
     "dismiss": "Sluiten"
+  },
+  "automation": {
+    "slowTitle": "Dit kan even duren",
+    "slowBody": "De agent opent een browser, laadt pagina's en vult formulieren in. Laat de app open terwijl hij bezig is.",
+    "loginTitle": "Sommige sites vragen om in te loggen",
+    "loginBody": "Vraagt een vacaturesite om in te loggen, log dan één keer in in het browservenster; de sessie wordt bewaard. Vacatures die je via een URL toevoegt hebben meestal geen login nodig.",
+    "windowTitle": "Laat het browservenster open",
+    "windowBody": "Er verschijnt een Chromium-venster — dat is de agent aan het werk. Sluit het niet en klik er niet in, behalve om in te loggen.",
+    "cancel": "Annuleren",
+    "start": "Begrepen, starten"
   }
 }

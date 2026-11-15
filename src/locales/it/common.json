@@ -56,5 +56,15 @@
     "restartToInstall": "Riavvia per installare",
     "installing": "Installazione dell'aggiornamento…",
     "dismiss": "Ignora"
+  },
+  "automation": {
+    "slowTitle": "Potrebbe volerci un po'",
+    "slowBody": "L'agente apre un browser, carica pagine e compila moduli. Tieni l'app aperta mentre lavora.",
+    "loginTitle": "Alcuni siti richiedono l'accesso",
+    "loginBody": "Se un sito di lavoro ti chiede di accedere, fallo una volta nella finestra del browser; la sessione viene salvata. Le offerte aggiunte tramite URL di solito non lo richiedono.",
+    "windowTitle": "Tieni aperta la finestra del browser",
+    "windowBody": "Comparirà una finestra di Chromium: è l'agente al lavoro. Non chiuderla e non cliccarci, a meno che tu debba accedere.",
+    "cancel": "Annulla",
+    "start": "Ho capito, avvia"
   }
 }

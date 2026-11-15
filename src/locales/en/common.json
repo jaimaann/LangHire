@@ -56,5 +56,15 @@
     "restartToInstall": "Restart to install",
     "installing": "Installing update…",
     "dismiss": "Dismiss"
+  },
+  "automation": {
+    "slowTitle": "This may take a while",
+    "slowBody": "The agent opens a browser, loads pages and fills forms. Keep the app open while it runs.",
+    "loginTitle": "Some sites need a login",
+    "loginBody": "If a job site asks you to sign in, log in once in the browser window; your session is saved for next time. Jobs you added by URL usually need no login.",
+    "windowTitle": "Keep the browser window open",
+    "windowBody": "A Chromium window will appear — that is the agent working. Don't close it or click in it unless you need to log in.",
+    "cancel": "Cancel",
+    "start": "Got it, start"
   }
 }

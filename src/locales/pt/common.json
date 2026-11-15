@@ -55,5 +55,15 @@
     "restartToInstall": "Reiniciar para instalar",
     "installing": "Instalando atualização…",
     "dismiss": "Dispensar"
+  },
+  "automation": {
+    "slowTitle": "Isto pode demorar um pouco",
+    "slowBody": "O agente abre um navegador, carrega páginas e preenche formulários. Mantenha o app aberto enquanto ele trabalha.",
+    "loginTitle": "Alguns sites pedem login",
+    "loginBody": "Se um site de vagas pedir login, entre uma vez na janela do navegador; a sessão fica salva. Vagas adicionadas por URL geralmente não precisam de login.",
+    "windowTitle": "Mantenha a janela do navegador aberta",
+    "windowBody": "Uma janela do Chromium vai aparecer — é o agente trabalhando. Não feche nem clique nela, a não ser para fazer login.",
+    "cancel": "Cancelar",
+    "start": "Entendi, começar"
   }
 }

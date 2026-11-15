@@ -103,7 +103,7 @@ describe("CollectTab", () => {
     await user.click(screen.getByRole("button", { name: /collector\.start/ }));
 
     // AutomationDialog appears.
-    const confirm = await screen.findByRole("button", { name: "Got it, Start" });
+    const confirm = await screen.findByRole("button", { name: "automation.start" });
     await user.click(confirm);
 
     await waitFor(() =>
@@ -122,7 +122,7 @@ describe("CollectTab", () => {
     await screen.findByRole("button", { name: "LinkedIn" });
 
     await user.click(screen.getByRole("button", { name: /collector\.start/ }));
-    await user.click(await screen.findByRole("button", { name: "Got it, Start" }));
+    await user.click(await screen.findByRole("button", { name: "automation.start" }));
 
     await waitFor(() => expect(window.alert).toHaveBeenCalledWith("no login"));
   });

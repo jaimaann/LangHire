@@ -55,5 +55,15 @@
     "restartToInstall": "Redémarrer pour installer",
     "installing": "Installation de la mise à jour…",
     "dismiss": "Ignorer"
+  },
+  "automation": {
+    "slowTitle": "Cela peut prendre un moment",
+    "slowBody": "L'agent ouvre un navigateur, charge des pages et remplit des formulaires. Gardez l'application ouverte pendant ce temps.",
+    "loginTitle": "Certains sites demandent une connexion",
+    "loginBody": "Si un site d'emploi vous demande de vous connecter, faites-le une fois dans la fenêtre du navigateur ; la session est enregistrée. Les offres ajoutées par URL ne demandent généralement pas de connexion.",
+    "windowTitle": "Gardez la fenêtre du navigateur ouverte",
+    "windowBody": "Une fenêtre Chromium va s'ouvrir : c'est l'agent au travail. Ne la fermez pas et n'y cliquez pas, sauf pour vous connecter.",
+    "cancel": "Annuler",
+    "start": "Compris, démarrer"
   }
 }
