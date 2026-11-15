@@ -66,12 +66,14 @@ async def start_applying(body: ApplyRequest):
     if manager.is_running("apply"):
         return {"success": False, "message": "Application already running"}
     kill_profile_browsers()
+    from core.config import load_settings
+    test_mode = body.test_mode or bool(load_settings().get("test_mode"))
     workers = 1 if body.job_url else body.workers
 
     async def run(ctx):
         return await apply_engine.run_apply(ctx, mode=body.mode, workers=workers, limit=body.limit,
                                             job_url=body.job_url, job_urls=body.job_urls,
-                                            test_mode=body.test_mode)
+                                            test_mode=test_mode)
 
     if body.job_url:
         first = "Applying to single job..."
@@ -81,7 +83,7 @@ async def start_applying(body: ApplyRequest):
         first = f"Starting {body.mode} apply with {workers} worker(s)..."
     manager.start("apply", run, {
         "mode": body.mode, "workers": workers, "limit": body.limit,
-        "job_url": body.job_url, "job_urls": body.job_urls, "test_mode": body.test_mode,
+        "job_url": body.job_url, "job_urls": body.job_urls, "test_mode": test_mode,
         "_status_extra": {"mode": body.mode, "workers": workers},
     }, first_message=first)
     return {"success": True, "message": f"Started {body.mode} apply with {workers} worker(s)"}

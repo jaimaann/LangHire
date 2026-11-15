@@ -167,6 +167,7 @@ DEFAULT_SETTINGS = {
     "max_run_cost_usd": 5.0,          # stop starting new applications past this LLM spend
     "browser_cdp_url": "",            # e.g. http://127.0.0.1:9222 to drive your own Chrome
     "email_otp_via_gmail": False,     # let the agent read Gmail for verification codes
+    "test_mode": False,               # click Submit but intercept the request: nothing is sent
 }
 
 

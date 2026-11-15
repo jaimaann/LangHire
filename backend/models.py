@@ -111,6 +111,7 @@ class SettingsBody(_Open):
     max_run_cost_usd: float = 5.0
     browser_cdp_url: str = ""
     email_otp_via_gmail: bool = False
+    test_mode: bool = False
 
 
 class LLMSettingsBody(_Open):
