@@ -266,16 +266,45 @@ def find_fabrications(original_resume: str, tailored: str) -> list[str]:
     """
     known = original_resume.lower()
     known_compact = re.sub(r"[^a-z0-9]", "", known)
+
+    def is_known(word: str) -> bool:
+        low = word.lower()
+        variants = {low, low.rstrip("s"), low[:-2] if low.endswith("es") else low, re.sub(r"[^a-z0-9]", "", low)}
+        return any(v and (v in known or v in known_compact) for v in variants)
+
     found = []
-    for tok in _FACT_TOKEN.findall(tailored):
-        t = tok.strip(".,")
-        if not t or t in _COMMON_CAPS:
+    for m in _FACT_TOKEN.finditer(tailored):
+        t = m.group(0).strip(".,")
+        if not t or t in _COMMON_CAPS or t.upper() in _GENERIC_ACRONYMS:
             continue
-        low = t.lower()
-        if low in known or re.sub(r"[^a-z0-9]", "", low) in known_compact:
+        if is_known(t) or all(is_known(p) for p in t.split("-") if p):
             continue
-        found.append(t)
+        is_number = t[0].isdigit()
+        is_tool = t.lower() in _TECH_TERMS
+        acronym_or_camel = sum(ch.isupper() for ch in t) > 1
+        start = tailored[max(0, m.start() - 3):m.start()]
+        sentence_initial = m.start() == 0 or bool(re.search(r"(^|[\n.:•;!?]\s*|^\s*)$", start))
+        # An ordinary capitalised word opening a sentence or bullet ("Partnered", "Exported")
+        # is style, not a claim; tools, acronyms, numbers and mid-sentence names are claims.
+        if sentence_initial and t[0].isupper() and t[1:].islower() and not is_tool:
+            continue
+        if is_number or is_tool or acronym_or_camel or (t[0].isupper() and not sentence_initial):
+            found.append(t)
     return sorted(set(found))
+
+
+# Generic business acronyms that describe work, not claimed tools or credentials
+_GENERIC_ACRONYMS = {"KPI", "KPIS", "ROI", "ETL", "BI", "QA", "UI", "UX", "API", "APIS", "CRM", "ERP", "SLA", "SLAS",
+                     "OKR", "OKRS", "B2B", "B2C", "CSV", "PDF", "MOM", "YOY", "QOQ", "EDA", "AI", "ML", "IT", "HR"}
+
+# Tools and platforms a rewrite is most likely to invent (flagged wherever they appear)
+_TECH_TERMS = {
+    "snowflake", "redshift", "bigquery", "databricks", "spark", "pyspark", "hadoop", "hive", "airflow", "dbt",
+    "looker", "qlik", "qlikview", "alteryx", "sas", "spss", "stata", "matlab", "aws", "azure", "gcp", "kubernetes",
+    "docker", "java", "scala", "go", "rust", "javascript", "typescript", "react", "node", "tensorflow", "pytorch",
+    "keras", "scikit-learn", "sklearn", "salesforce", "sap", "oracle", "postgresql", "postgres", "mongodb",
+    "kafka", "excel", "tableau", "powerbi", "jira", "git", "github", "linux",
+}
 
 
 async def _generate_tailored_text(

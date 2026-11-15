@@ -669,3 +669,12 @@ def test_unrecognised_sections_survive_into_the_pdf(tmp_path):
     _generate_fresh_pdf(sections, {}, "Jane", "jane@x.com", "", out)
     text = "".join(p.get_text() for p in fitz.open(str(out)))
     assert "Academic Projects" in text and "Zomato Analysis" in text and "IBM Data Science" in text
+
+
+def test_fabrication_guard_ignores_style_but_flags_claims():
+    from resume.tailor import find_fabrications
+    orig = "Data Analyst Intern. Python, SQL. Chi-square and T-distribution. Reduced from 50 minutes to 2 minutes."
+    assert find_fabrications(orig, "Partnered with stakeholders. Exported CSV reports; tracked KPIs. "
+                                   "Applied T-distributions. Cross-functional work.") == []
+    flagged = set(find_fabrications(orig, "Led a Snowflake migration at Google, cutting cost 30%."))
+    assert {"Snowflake", "Google", "30"} <= flagged
