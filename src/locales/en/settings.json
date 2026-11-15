@@ -19,7 +19,7 @@
   "telemetry": {
     "title": "Privacy & Telemetry",
     "usageAnalytics": "Usage Analytics",
-    "description": "Help improve LangHire by sending anonymous usage data (feature usage, crash reports). No personal information or job data is transmitted."
+    "description": "Optional and off by default. If enabled, LangHire sends anonymous usage events and crash reports. It never sends your resumes, profile data, job data or API keys."
   },
   "blockedDomains": {
     "title": "Blocked Domains",
@@ -45,5 +45,25 @@
     "dark": "Dark",
     "system": "System",
     "description": "Choose light, dark, or follow your system setting."
+  },
+  "privacy": {
+    "title": "Privacy & data",
+    "retentionLabel": "Keep agent conversation logs for",
+    "retentionDescription": "Older agent conversation logs are deleted automatically. Choose \"Don't save\" to keep none.",
+    "retentionNone": "Don't save",
+    "retentionDays": "{{days}} days",
+    "exportTitle": "Export my data",
+    "exportDescription": "Download everything LangHire stores about you as a JSON file.",
+    "exportButton": "Export my data",
+    "exporting": "Exporting...",
+    "exportFailed": "Export failed. Please try again.",
+    "deleteTitle": "Delete all my data",
+    "deleteDescription": "Permanently delete your profile, resumes, jobs, logs, settings and API keys stored by LangHire on this computer. This cannot be undone.",
+    "deleteButton": "Delete all my data",
+    "deleteConfirm": "Are you sure? This permanently deletes all your LangHire data and restarts the setup wizard.",
+    "deleteConfirmButton": "Yes, delete everything",
+    "cancel": "Cancel",
+    "deleting": "Deleting...",
+    "deleteFailed": "Could not delete your data. Please try again."
   }
 }

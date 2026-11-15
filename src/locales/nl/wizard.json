@@ -69,5 +69,10 @@
     "letsGo": "Aan de slag",
     "next": "Volgende",
     "finishSetup": "Installatie afronden"
+  },
+  "consent": {
+    "title": "Help LangHire te verbeteren (optioneel)",
+    "label": "Anonieme gebruiksstatistieken en crashrapporten verzenden",
+    "description": "Als je toestemming geeft, verstuurt LangHire anonieme gebruiksgebeurtenissen (zoals welke pagina's en functies worden gebruikt) en crashrapporten. Je cv's, profielgegevens, baangegevens of API-sleutels worden nooit verzonden. Je kunt dit altijd wijzigen in Instellingen."
   }
 }

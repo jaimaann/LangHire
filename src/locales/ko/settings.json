@@ -19,7 +19,7 @@
   "telemetry": {
     "title": "개인정보 보호 및 텔레메트리",
     "usageAnalytics": "사용 분석",
-    "description": "익명 사용 데이터(기능 사용, 충돌 보고서)를 전송하여 LangHire 개선에 도움을 주세요. 개인 정보나 채용 데이터는 전송되지 않습니다."
+    "description": "선택 사항이며 기본적으로 꺼져 있습니다. 활성화하면 LangHire가 익명 사용 이벤트와 충돌 보고서를 전송합니다. 이력서, 프로필 데이터, 채용 데이터 또는 API 키는 절대 전송하지 않습니다."
   },
   "blockedDomains": {
     "title": "차단된 도메인",
@@ -37,5 +37,25 @@
     "label": "인터페이스 언어",
     "auto": "자동 (국가 기준)",
     "description": "애플리케이션 인터페이스의 언어를 선택하세요. 선택한 국가에 맞추려면 '자동'으로 설정하세요."
+  },
+  "privacy": {
+    "title": "개인정보 및 데이터",
+    "retentionLabel": "에이전트 대화 로그 보관 기간",
+    "retentionDescription": "오래된 에이전트 대화 로그는 자동으로 삭제됩니다. 로그를 남기지 않으려면 \"저장 안 함\"을 선택하세요.",
+    "retentionNone": "저장 안 함",
+    "retentionDays": "{{days}}일",
+    "exportTitle": "내 데이터 내보내기",
+    "exportDescription": "LangHire가 저장하고 있는 모든 데이터를 JSON 파일로 다운로드합니다.",
+    "exportButton": "내 데이터 내보내기",
+    "exporting": "내보내는 중...",
+    "exportFailed": "내보내기에 실패했습니다. 다시 시도해 주세요.",
+    "deleteTitle": "내 데이터 모두 삭제",
+    "deleteDescription": "이 컴퓨터에 LangHire가 저장한 프로필, 이력서, 채용 공고, 로그, 설정 및 API 키를 영구적으로 삭제합니다. 이 작업은 되돌릴 수 없습니다.",
+    "deleteButton": "내 데이터 모두 삭제",
+    "deleteConfirm": "정말 삭제하시겠습니까? 모든 LangHire 데이터가 영구적으로 삭제되고 설정 마법사가 다시 시작됩니다.",
+    "deleteConfirmButton": "예, 모두 삭제합니다",
+    "cancel": "취소",
+    "deleting": "삭제 중...",
+    "deleteFailed": "데이터를 삭제하지 못했습니다. 다시 시도해 주세요."
   }
 }

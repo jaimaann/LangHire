@@ -69,5 +69,10 @@
     "letsGo": "Jom mulakan",
     "next": "Seterusnya",
     "finishSetup": "Selesaikan Persediaan"
+  },
+  "consent": {
+    "title": "Bantu tingkatkan LangHire (pilihan)",
+    "label": "Hantar statistik penggunaan tanpa nama dan laporan ranap",
+    "description": "Jika anda bersetuju, LangHire menghantar peristiwa penggunaan tanpa nama (seperti halaman dan ciri yang digunakan) dan laporan ranap. Ia tidak pernah menghantar resume, data profil, data kerja atau kunci API anda. Anda boleh mengubahnya pada bila-bila masa dalam Tetapan."
   }
 }

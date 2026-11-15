@@ -9,8 +9,11 @@ import {
   togglePlugin,
   removePlugin,
   importPlugin,
+  deleteAllData,
+  exportAllData,
 } from "../lib/api";
-import { setTelemetryEnabled } from "../lib/analytics";
+import { setTelemetryEnabled, hasTelemetryConsent } from "../lib/analytics";
+import { clearLocalAppData, restartApp, downloadJson } from "../lib/privacy";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 
 // jsdom in this config does not provide a working localStorage; polyfill it.
@@ -35,6 +38,14 @@ vi.mock("react-i18next", () => ({
 
 vi.mock("../lib/analytics", () => ({
   setTelemetryEnabled: vi.fn(),
+  hasTelemetryConsent: vi.fn(() => true),
+}));
+
+vi.mock("../lib/privacy", () => ({
+  clearLocalAppData: vi.fn(),
+  restartApp: vi.fn(),
+  downloadJson: vi.fn(),
+  exportFileName: () => "langhire-export-2026-11-14.json",
 }));
 
 // loadLanguage performs dynamic i18n resource loading — stub it out.
@@ -49,6 +60,8 @@ vi.mock("../lib/api", () => ({
   togglePlugin: vi.fn(),
   removePlugin: vi.fn(),
   importPlugin: vi.fn(),
+  deleteAllData: vi.fn(),
+  exportAllData: vi.fn(),
 }));
 
 const mockGetSettings = vi.mocked(getSettings);
@@ -59,6 +72,12 @@ const mockRemovePlugin = vi.mocked(removePlugin);
 const mockImportPlugin = vi.mocked(importPlugin);
 const mockSetTelemetry = vi.mocked(setTelemetryEnabled);
 const mockOpenDialog = vi.mocked(openDialog);
+const mockHasConsent = vi.mocked(hasTelemetryConsent);
+const mockDeleteAllData = vi.mocked(deleteAllData);
+const mockExportAllData = vi.mocked(exportAllData);
+const mockClearLocal = vi.mocked(clearLocalAppData);
+const mockRestartApp = vi.mocked(restartApp);
+const mockDownloadJson = vi.mocked(downloadJson);
 
 const baseSettings = {
   resume_path: "/home/me/resume.pdf",
@@ -109,6 +128,14 @@ describe("SettingsPage", () => {
       plugin: { name: "new", display_name: "New" },
     } as never);
     mockOpenDialog.mockResolvedValue(null as never);
+    mockHasConsent.mockReturnValue(true);
+    mockDeleteAllData.mockReset();
+    mockExportAllData.mockReset();
+    mockClearLocal.mockClear();
+    mockRestartApp.mockClear();
+    mockDownloadJson.mockClear();
+    mockSaveSettings.mockClear();
+    mockSetTelemetry.mockClear();
   });
 
   it("shows a loading spinner before settings load", () => {
@@ -173,12 +200,14 @@ describe("SettingsPage", () => {
 
     // The telemetry toggle lives in the "Usage Analytics" section. Find the
     // checkbox in the same row as that label (avoids matching plugin toggles).
-    const analyticsRow = screen.getByText("Usage Analytics").closest("div")!
+    const analyticsRow = screen.getByText("telemetry.usageAnalytics").closest("div")!
       .parentElement! as HTMLElement;
     const telemetryToggle = within(analyticsRow).getByRole("checkbox");
     expect(telemetryToggle).toBeChecked();
     await user.click(telemetryToggle);
     expect(mockSetTelemetry).toHaveBeenCalledWith(false);
+    // Kept in sync with the backend immediately.
+    await waitFor(() => expect(mockSaveSettings).toHaveBeenCalledWith({ telemetry_enabled: false }));
   });
 
   it("toggles a plugin on/off via the API", async () => {
@@ -199,7 +228,8 @@ describe("SettingsPage", () => {
     await screen.findByText("Acme Jobs");
 
     // Only the community plugin has a remove (Trash) button.
-    const removeButtons = screen
+    const acmeRow = screen.getByText("Acme Jobs").closest("div.flex.items-center.justify-between") as HTMLElement;
+    const removeButtons = within(acmeRow)
       .getAllByRole("button")
       .filter((b) => b.querySelector("svg.lucide-trash2") || b.className.includes("text-destructive"));
     await user.click(removeButtons[0]);
@@ -264,5 +294,122 @@ describe("SettingsPage", () => {
     await screen.findByDisplayValue("/home/me/resume.pdf");
     await waitFor(() => expect(document.documentElement.classList.contains("dark")).toBe(true));
     document.documentElement.classList.remove("dark");
+  });
+
+  it("shows telemetry OFF when the backend says on but this device never consented", async () => {
+    mockHasConsent.mockReturnValue(false);
+    render(<SettingsPage />);
+    await screen.findByDisplayValue("/home/me/resume.pdf");
+    expect(screen.getByRole("checkbox", { name: "telemetry.usageAnalytics" })).not.toBeChecked();
+  });
+
+  it("shows telemetry OFF when telemetry_enabled is absent (opt-in default)", async () => {
+    const { telemetry_enabled: _omit, ...rest } = baseSettings;
+    void _omit;
+    mockGetSettings.mockResolvedValue(rest as never);
+    render(<SettingsPage />);
+    await screen.findByDisplayValue("/home/me/resume.pdf");
+    expect(screen.getByRole("checkbox", { name: "telemetry.usageAnalytics" })).not.toBeChecked();
+  });
+
+  describe("Privacy & data", () => {
+    it("defaults log retention to 14 days and persists a new choice", async () => {
+      const user = userEvent.setup();
+      render(<SettingsPage />);
+      await screen.findByDisplayValue("/home/me/resume.pdf");
+
+      const select = screen.getByLabelText("privacy.retentionLabel") as HTMLSelectElement;
+      expect(select.value).toBe("14");
+      expect(Array.from(select.options).map((o) => o.value)).toEqual(["0", "7", "14", "30", "90"]);
+
+      await user.selectOptions(select, "0");
+      await waitFor(() => expect(mockSaveSettings).toHaveBeenCalledWith({ log_retention_days: 0 }));
+      expect(select.value).toBe("0");
+
+      await user.selectOptions(select, "90");
+      await waitFor(() => expect(mockSaveSettings).toHaveBeenCalledWith({ log_retention_days: 90 }));
+    });
+
+    it("loads a saved retention value and includes it in Save Settings", async () => {
+      mockGetSettings.mockResolvedValue({ ...baseSettings, log_retention_days: 30 } as never);
+      const user = userEvent.setup();
+      render(<SettingsPage />);
+      await screen.findByDisplayValue("/home/me/resume.pdf");
+      expect((screen.getByLabelText("privacy.retentionLabel") as HTMLSelectElement).value).toBe("30");
+
+      await user.click(screen.getByRole("button", { name: /Save Settings/ }));
+      await waitFor(() =>
+        expect(mockSaveSettings).toHaveBeenCalledWith(expect.objectContaining({ log_retention_days: 30 })),
+      );
+    });
+
+    it("requires an in-page confirmation before deleting all data", async () => {
+      const confirmSpy = vi.spyOn(window, "confirm");
+      mockDeleteAllData.mockResolvedValue({ ok: true, deleted: ["profile", "jobs"] } as never);
+      const user = userEvent.setup();
+      render(<SettingsPage />);
+      await screen.findByDisplayValue("/home/me/resume.pdf");
+
+      await user.click(screen.getByRole("button", { name: /privacy\.deleteButton/ }));
+      // First click only reveals the confirmation — nothing deleted yet.
+      expect(mockDeleteAllData).not.toHaveBeenCalled();
+      expect(screen.getByRole("alertdialog")).toBeInTheDocument();
+      expect(screen.getByText("privacy.deleteConfirm")).toBeInTheDocument();
+
+      await user.click(screen.getByRole("button", { name: /privacy\.deleteConfirmButton/ }));
+      await waitFor(() => expect(mockDeleteAllData).toHaveBeenCalledTimes(1));
+      await waitFor(() => expect(mockClearLocal).toHaveBeenCalled());
+      expect(mockRestartApp).toHaveBeenCalled();
+      expect(confirmSpy).not.toHaveBeenCalled();
+    });
+
+    it("cancel dismisses the confirmation without deleting", async () => {
+      const user = userEvent.setup();
+      render(<SettingsPage />);
+      await screen.findByDisplayValue("/home/me/resume.pdf");
+
+      await user.click(screen.getByRole("button", { name: /privacy\.deleteButton/ }));
+      await user.click(screen.getByRole("button", { name: /privacy\.cancel/ }));
+      expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+      expect(mockDeleteAllData).not.toHaveBeenCalled();
+      expect(mockRestartApp).not.toHaveBeenCalled();
+    });
+
+    it("shows an error and keeps local data when deletion fails", async () => {
+      mockDeleteAllData.mockRejectedValue(new Error("API Error 500"));
+      const user = userEvent.setup();
+      render(<SettingsPage />);
+      await screen.findByDisplayValue("/home/me/resume.pdf");
+
+      await user.click(screen.getByRole("button", { name: /privacy\.deleteButton/ }));
+      await user.click(screen.getByRole("button", { name: /privacy\.deleteConfirmButton/ }));
+      expect(await screen.findByText("privacy.deleteFailed")).toBeInTheDocument();
+      expect(mockClearLocal).not.toHaveBeenCalled();
+      expect(mockRestartApp).not.toHaveBeenCalled();
+    });
+
+    it("exports all data as a dated JSON file", async () => {
+      const payload = { profile: { name: "A" }, jobs: [] };
+      mockExportAllData.mockResolvedValue(payload as never);
+      const user = userEvent.setup();
+      render(<SettingsPage />);
+      await screen.findByDisplayValue("/home/me/resume.pdf");
+
+      await user.click(screen.getByRole("button", { name: /privacy\.exportButton/ }));
+      await waitFor(() =>
+        expect(mockDownloadJson).toHaveBeenCalledWith(payload, "langhire-export-2026-11-14.json"),
+      );
+    });
+
+    it("surfaces an export failure", async () => {
+      mockExportAllData.mockRejectedValue(new Error("nope"));
+      const user = userEvent.setup();
+      render(<SettingsPage />);
+      await screen.findByDisplayValue("/home/me/resume.pdf");
+
+      await user.click(screen.getByRole("button", { name: /privacy\.exportButton/ }));
+      expect(await screen.findByText("privacy.exportFailed")).toBeInTheDocument();
+      expect(mockDownloadJson).not.toHaveBeenCalled();
+    });
   });
 });

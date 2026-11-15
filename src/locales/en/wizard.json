@@ -69,5 +69,10 @@
     "letsGo": "Let's Go",
     "next": "Next",
     "finishSetup": "Finish Setup"
+  },
+  "consent": {
+    "title": "Help improve LangHire (optional)",
+    "label": "Send anonymous usage statistics and crash reports",
+    "description": "If you opt in, LangHire sends anonymous usage events (such as which pages and features are used) and crash reports. It never sends your resumes, profile data, job data or API keys. You can change this anytime in Settings."
   }
 }

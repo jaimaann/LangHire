@@ -19,7 +19,7 @@
   "telemetry": {
     "title": "Datenschutz & Telemetrie",
     "usageAnalytics": "Nutzungsanalyse",
-    "description": "Helfen Sie LangHire zu verbessern, indem Sie anonyme Nutzungsdaten senden (Feature-Nutzung, Absturzberichte). Es werden keine persönlichen Daten oder Jobdaten übertragen."
+    "description": "Optional und standardmäßig deaktiviert. Wenn aktiviert, sendet LangHire anonyme Nutzungsereignisse und Absturzberichte. Ihre Lebensläufe, Profildaten, Jobdaten oder API-Schlüssel werden niemals gesendet."
   },
   "blockedDomains": {
     "title": "Blockierte Domains",
@@ -37,5 +37,25 @@
     "label": "Oberflächensprache",
     "auto": "Automatisch (nach Land)",
     "description": "Wählen Sie die Sprache der Benutzeroberfläche. Setzen Sie auf 'Automatisch', um Ihr ausgewähltes Land abzugleichen."
+  },
+  "privacy": {
+    "title": "Datenschutz & Daten",
+    "retentionLabel": "Agent-Gesprächsprotokolle aufbewahren für",
+    "retentionDescription": "Ältere Agent-Gesprächsprotokolle werden automatisch gelöscht. Wählen Sie „Nicht speichern“, um keine aufzubewahren.",
+    "retentionNone": "Nicht speichern",
+    "retentionDays": "{{days}} Tage",
+    "exportTitle": "Meine Daten exportieren",
+    "exportDescription": "Laden Sie alle Daten, die LangHire über Sie speichert, als JSON-Datei herunter.",
+    "exportButton": "Meine Daten exportieren",
+    "exporting": "Wird exportiert...",
+    "exportFailed": "Export fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "deleteTitle": "Alle meine Daten löschen",
+    "deleteDescription": "Löscht dauerhaft Ihr Profil, Ihre Lebensläufe, Jobs, Protokolle, Einstellungen und API-Schlüssel, die LangHire auf diesem Computer speichert. Dies kann nicht rückgängig gemacht werden.",
+    "deleteButton": "Alle meine Daten löschen",
+    "deleteConfirm": "Sind Sie sicher? Dadurch werden alle Ihre LangHire-Daten dauerhaft gelöscht und der Einrichtungsassistent neu gestartet.",
+    "deleteConfirmButton": "Ja, alles löschen",
+    "cancel": "Abbrechen",
+    "deleting": "Wird gelöscht...",
+    "deleteFailed": "Ihre Daten konnten nicht gelöscht werden. Bitte versuchen Sie es erneut."
   }
 }

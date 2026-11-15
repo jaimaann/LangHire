@@ -19,7 +19,7 @@
   "telemetry": {
     "title": "Privacy & telemetrie",
     "usageAnalytics": "Gebruiksanalyse",
-    "description": "Help LangHire te verbeteren door anonieme gebruiksgegevens te verzenden (functiegebruik, crashrapporten). Er worden geen persoonlijke gegevens of baangegevens verzonden."
+    "description": "Optioneel en standaard uitgeschakeld. Indien ingeschakeld, verstuurt LangHire anonieme gebruiksgebeurtenissen en crashrapporten. Je cv's, profielgegevens, baangegevens of API-sleutels worden nooit verzonden."
   },
   "blockedDomains": {
     "title": "Geblokkeerde domeinen",
@@ -37,5 +37,25 @@
     "label": "Interfacetaal",
     "auto": "Automatisch (op basis van land)",
     "description": "Kies de taal van de applicatie-interface. Stel in op 'Automatisch' om overeen te komen met je geselecteerde land."
+  },
+  "privacy": {
+    "title": "Privacy & gegevens",
+    "retentionLabel": "Gesprekslogs van de agent bewaren gedurende",
+    "retentionDescription": "Oudere gesprekslogs van de agent worden automatisch verwijderd. Kies 'Niet opslaan' om niets te bewaren.",
+    "retentionNone": "Niet opslaan",
+    "retentionDays": "{{days}} dagen",
+    "exportTitle": "Mijn gegevens exporteren",
+    "exportDescription": "Download alles wat LangHire over je opslaat als JSON-bestand.",
+    "exportButton": "Mijn gegevens exporteren",
+    "exporting": "Bezig met exporteren...",
+    "exportFailed": "Exporteren mislukt. Probeer het opnieuw.",
+    "deleteTitle": "Al mijn gegevens verwijderen",
+    "deleteDescription": "Verwijdert permanent je profiel, cv's, vacatures, logs, instellingen en API-sleutels die LangHire op deze computer opslaat. Dit kan niet ongedaan worden gemaakt.",
+    "deleteButton": "Al mijn gegevens verwijderen",
+    "deleteConfirm": "Weet je het zeker? Hiermee worden al je LangHire-gegevens permanent verwijderd en wordt de installatiewizard opnieuw gestart.",
+    "deleteConfirmButton": "Ja, alles verwijderen",
+    "cancel": "Annuleren",
+    "deleting": "Bezig met verwijderen...",
+    "deleteFailed": "Je gegevens konden niet worden verwijderd. Probeer het opnieuw."
   }
 }

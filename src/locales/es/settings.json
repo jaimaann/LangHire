@@ -19,7 +19,7 @@
   "telemetry": {
     "title": "Privacidad y telemetría",
     "usageAnalytics": "Análisis de uso",
-    "description": "Ayuda a mejorar LangHire enviando datos de uso anónimos (uso de funciones, informes de fallos). No se transmite información personal ni datos de empleo."
+    "description": "Opcional y desactivado por defecto. Si se activa, LangHire envía eventos de uso anónimos e informes de fallos. Nunca envía tus currículums, datos de perfil, datos de empleo ni claves API."
   },
   "blockedDomains": {
     "title": "Dominios bloqueados",
@@ -37,5 +37,25 @@
     "label": "Idioma de la interfaz",
     "auto": "Automático (según país)",
     "description": "Elige el idioma de la interfaz de la aplicación. Establece en 'Automático' para coincidir con tu país seleccionado."
+  },
+  "privacy": {
+    "title": "Privacidad y datos",
+    "retentionLabel": "Conservar los registros de conversación del agente durante",
+    "retentionDescription": "Los registros de conversación del agente más antiguos se eliminan automáticamente. Elige «No guardar» para no conservar ninguno.",
+    "retentionNone": "No guardar",
+    "retentionDays": "{{days}} días",
+    "exportTitle": "Exportar mis datos",
+    "exportDescription": "Descarga todo lo que LangHire guarda sobre ti como archivo JSON.",
+    "exportButton": "Exportar mis datos",
+    "exporting": "Exportando...",
+    "exportFailed": "La exportación falló. Inténtalo de nuevo.",
+    "deleteTitle": "Eliminar todos mis datos",
+    "deleteDescription": "Elimina de forma permanente tu perfil, currículums, empleos, registros, ajustes y claves API que LangHire guarda en este equipo. Esta acción no se puede deshacer.",
+    "deleteButton": "Eliminar todos mis datos",
+    "deleteConfirm": "¿Estás seguro? Esto elimina de forma permanente todos tus datos de LangHire y reinicia el asistente de configuración.",
+    "deleteConfirmButton": "Sí, eliminar todo",
+    "cancel": "Cancelar",
+    "deleting": "Eliminando...",
+    "deleteFailed": "No se pudieron eliminar tus datos. Inténtalo de nuevo."
   }
 }

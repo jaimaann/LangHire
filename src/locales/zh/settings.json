@@ -19,7 +19,7 @@
   "telemetry": {
     "title": "隐私与遥测",
     "usageAnalytics": "使用情况分析",
-    "description": "通过发送匿名使用数据（功能使用情况、崩溃报告）帮助改进 LangHire。不会传输任何个人信息或职位数据。"
+    "description": "可选，默认关闭。启用后，LangHire 会发送匿名使用事件和崩溃报告。绝不会发送您的简历、个人资料数据、职位数据或 API 密钥。"
   },
   "blockedDomains": {
     "title": "已阻止的域名",
@@ -45,5 +45,25 @@
     "dark": "深色",
     "system": "系统",
     "description": "选择浅色、深色或跟随系统设置。"
+  },
+  "privacy": {
+    "title": "隐私与数据",
+    "retentionLabel": "代理对话日志保留时长",
+    "retentionDescription": "较旧的代理对话日志会被自动删除。选择“不保存”则不保留任何日志。",
+    "retentionNone": "不保存",
+    "retentionDays": "{{days}} 天",
+    "exportTitle": "导出我的数据",
+    "exportDescription": "将 LangHire 存储的有关您的所有数据下载为 JSON 文件。",
+    "exportButton": "导出我的数据",
+    "exporting": "正在导出...",
+    "exportFailed": "导出失败，请重试。",
+    "deleteTitle": "删除我的所有数据",
+    "deleteDescription": "永久删除 LangHire 在此电脑上存储的您的个人资料、简历、职位、日志、设置和 API 密钥。此操作无法撤销。",
+    "deleteButton": "删除我的所有数据",
+    "deleteConfirm": "确定吗？这将永久删除您的所有 LangHire 数据并重新启动设置向导。",
+    "deleteConfirmButton": "是的，全部删除",
+    "cancel": "取消",
+    "deleting": "正在删除...",
+    "deleteFailed": "无法删除您的数据，请重试。"
   }
 }

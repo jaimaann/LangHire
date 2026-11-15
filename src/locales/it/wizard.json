@@ -69,5 +69,10 @@
     "letsGo": "Iniziamo",
     "next": "Avanti",
     "finishSetup": "Completa la configurazione"
+  },
+  "consent": {
+    "title": "Aiuta a migliorare LangHire (facoltativo)",
+    "label": "Invia statistiche di utilizzo anonime e segnalazioni di arresti anomali",
+    "description": "Se acconsenti, LangHire invia eventi di utilizzo anonimi (ad esempio quali pagine e funzionalità vengono usate) e segnalazioni di arresti anomali. Non invia mai i tuoi curriculum, i dati del profilo, i dati delle offerte o le chiavi API. Puoi modificare questa scelta in qualsiasi momento nelle Impostazioni."
   }
 }
