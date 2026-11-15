@@ -24,10 +24,11 @@ from . import events
 
 
 class ApplicationResult(BaseModel):
-    outcome: Literal["submitted", "failed", "needs_input", "skipped"] = Field(
+    outcome: Literal["submitted", "failed", "needs_input", "skipped", "ready_to_submit"] = Field(
         description="submitted = the application was sent and a confirmation was seen; "
                     "needs_input = a required question could not be answered from the profile or Q&A bank; "
                     "skipped = not a real application (video funnel, expired posting, blocked site); "
+                    "ready_to_submit = TEST MODE only: the form passed validation and the request was intercepted; "
                     "failed = anything else")
     reason: str = Field(default="", description="One sentence explaining the outcome")
     confirmation_text: str = Field(default="", description="Text of the confirmation message, if any")
@@ -66,6 +67,8 @@ class AgentReport:
     learnings: list[dict] = field(default_factory=list)
     jobs: list[dict] = field(default_factory=list)
     prefilled: list[str] = field(default_factory=list)
+    submit_clicks: int = 0   # test mode: clicks on a final-submit control
+    intercepted: int = 0     # test mode: application requests blocked by the guard
 
 
 def build_apply_tools(report: AgentReport, profile: dict, resume_path: str = ""):

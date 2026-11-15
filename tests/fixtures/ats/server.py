@@ -177,6 +177,13 @@ def make_handler(store: Store):
                 links = "".join(f"<li><a href='/jobs/{k}'>{html.escape(v['title'])} — {html.escape(v['company'])}</a></li>"
                                 for k, v in JOBS.items())
                 return self._send(200, PAGE.format(title="Careers", body=f"<h1>Open roles</h1><ul>{links}</ul>"))
+            m_embed = re.fullmatch(r"/embed/([\w-]+)", path)
+            if m_embed and m_embed.group(1) in JOBS:
+                # A careers page embedding the form from another site (cross-origin iframe)
+                port = self.server.server_address[1]
+                src = f"http://localhost:{port}/jobs/{m_embed.group(1)}/apply"
+                return self._send(200, PAGE.format(title="Careers", body=f"<h1>Careers at {JOBS[m_embed.group(1)]['company']}</h1>"
+                                                    f"<iframe id='ats' src='{src}' style='width:100%;height:1400px;border:0'></iframe>"))
             m = re.fullmatch(r"/jobs/([\w-]+)(/apply)?", path)
             if not m or m.group(1) not in JOBS:
                 return self._send(404, PAGE.format(title="Not found", body="<h1>Not found</h1>"))

@@ -16,6 +16,7 @@ class ApplyRequest(BaseModel):
     workers: int = Field(default=1, ge=1, le=4)
     job_url: Optional[str] = None
     job_urls: Optional[list[str]] = Field(default=None, description="Specific job URLs to apply to (batch apply)")
+    test_mode: bool = Field(default=False, description="Click Submit but intercept the request (nothing is sent)")
 
 
 class CollectFilters(BaseModel):

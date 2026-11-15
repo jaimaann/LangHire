@@ -91,6 +91,12 @@ MIGRATIONS: list[str] = [
     CREATE INDEX idx_applications_job ON applications(job_url, created_at);
     CREATE INDEX idx_applications_day ON applications(source, created_at);
     """,
+    # 2 — test mode (submit-intercept) bookkeeping
+    """
+    ALTER TABLE applications ADD COLUMN test_mode INTEGER NOT NULL DEFAULT 0;
+    ALTER TABLE applications ADD COLUMN submit_clicks INTEGER NOT NULL DEFAULT 0;
+    ALTER TABLE applications ADD COLUMN intercepted INTEGER NOT NULL DEFAULT 0;
+    """,
 ]
 
 _local = threading.local()
@@ -355,8 +361,9 @@ def add_application(record: dict) -> int:
     with conn:
         cur = conn.execute(
             """INSERT INTO applications (job_url, run_id, outcome, reason, confirmation, answers,
-                   missing_info, resume_path, screenshot_path, cost_usd, steps, source, ats, created_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                   missing_info, resume_path, screenshot_path, cost_usd, steps, source, ats, created_at,
+                   test_mode, submit_clicks, intercepted)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 record["job_url"], record.get("run_id"), record["outcome"], record.get("reason"),
                 record.get("confirmation"),
@@ -365,6 +372,8 @@ def add_application(record: dict) -> int:
                 record.get("resume_path"), record.get("screenshot_path"),
                 float(record.get("cost_usd") or 0), int(record.get("steps") or 0),
                 record.get("source") or "", record.get("ats"), now_iso(),
+                1 if record.get("test_mode") else 0, int(record.get("submit_clicks") or 0),
+                int(record.get("intercepted") or 0),
             ),
         )
     return int(cur.lastrowid or 0)

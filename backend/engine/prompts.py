@@ -102,8 +102,17 @@ def engine_rules(*, has_password: bool, gmail_otp: bool, blocked: list[str]) -> 
     return "\n".join(lines)
 
 
+TEST_MODE_RULES = (
+    "TEST MODE: behave exactly like a real application, including clicking the final Submit button. "
+    "The app intercepts the submission so nothing is sent. After clicking Submit, read the click result: if it "
+    "says the form passed validation, call report_application_result with outcome=ready_to_submit. If it says no "
+    "request was sent, find the validation errors on the page, fix them, and click Submit again. Click elements "
+    "by index, not by coordinates."
+)
+
+
 def build_apply_task(job: dict, profile: dict, qa_bank: dict, resume_path: str, memories: str,
-                     *, has_password: bool, gmail_otp: bool, blocked: list[str]) -> str:
+                     *, has_password: bool, gmail_otp: bool, blocked: list[str], test_mode: bool = False) -> str:
     plugin = plugin_for_job(job)
     title, company, url = job.get("title", ""), job.get("company", ""), job.get("url", "")
     if plugin is not None:
@@ -123,7 +132,8 @@ def build_apply_task(job: dict, profile: dict, qa_bank: dict, resume_path: str, 
             "the description or one or two pages in).\n"
             f"Fill it from the candidate profile and upload the resume at {resume_path}."
         )
-    return f"{body.strip()}\n\n{engine_rules(has_password=has_password, gmail_otp=gmail_otp, blocked=blocked)}"
+    task = f"{body.strip()}\n\n{engine_rules(has_password=has_password, gmail_otp=gmail_otp, blocked=blocked)}"
+    return f"{task}\n\n{TEST_MODE_RULES}" if test_mode else task
 
 
 def build_collect_task(plugin: PluginConfig, title: str, locations: list[str], max_jobs: int,

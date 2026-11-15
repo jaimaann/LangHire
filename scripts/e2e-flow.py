@@ -116,6 +116,8 @@ def main():
     ap.add_argument("--data-dir", default="")
     ap.add_argument("--collect-source", default="reed")
     ap.add_argument("--apply-timeout", type=float, default=900)
+    ap.add_argument("--test-mode", action="store_true",
+                    help="click Submit but intercept the request; the mock ATS must receive nothing")
     a = ap.parse_args()
     steps = [s.strip() for s in a.steps.split(",") if s.strip()]
     base_url = os.environ["LANGHIRE_E2E_BASE_URL"]
@@ -258,7 +260,8 @@ def main():
         step("tailor", s_tailor)
 
         def apply_one(jid: str) -> dict:
-            code, r = api.post("/apply/start", {"mode": "all", "job_url": f"{ats_base}/jobs/{jid}"})
+            code, r = api.post("/apply/start", {"mode": "all", "job_url": f"{ats_base}/jobs/{jid}",
+                                                 "test_mode": a.test_mode})
             assert r.get("success"), r
             st = wait_run(api, "apply", a.apply_timeout)
             _, jobs = api.get("/jobs")
@@ -272,6 +275,12 @@ def main():
 
         def s_apply_gh():
             out = apply_one("gh-1")
+            if a.test_mode:
+                assert out["submission"] is None, "TEST MODE LEAK: the mock ATS received an application"
+                assert out["status"] == "test_passed", out["status"]
+                rec = out["record"] or {}
+                assert rec.get("intercepted", 0) >= 1, rec
+                return out
             assert out["submission"] is not None, "no submission reached the mock ATS"
             assert out["status"] == "applied", out["status"]
             f = out["submission"]["fields"]
@@ -289,13 +298,18 @@ def main():
 
         def s_batch():
             urls = [f"{ats_base}/jobs/lv-1", f"{ats_base}/jobs/ms-1"]
-            code, r = api.post("/apply/start", {"mode": "all", "job_urls": urls, "workers": 2})
+            code, r = api.post("/apply/start", {"mode": "all", "job_urls": urls, "workers": 2,
+                                                 "test_mode": a.test_mode})
             assert r.get("success"), r
             st = wait_run(api, "apply", a.apply_timeout * 2)
             _, jobs = api.get("/jobs")
             res = {j["url"].rsplit("/", 1)[-1]: (j["status"], j.get("error")) for j in jobs if j["url"] in urls}
             got = {p.stem.split("-")[0] + "-" + p.stem.split("-")[1] for p in subs.glob("*.json")}
-            assert all(s == "applied" for s, _ in res.values()), res
+            if a.test_mode:
+                assert not got, f"TEST MODE LEAK: {got}"
+                assert all(s == "test_passed" for s, _ in res.values()), res
+            else:
+                assert all(s == "applied" for s, _ in res.values()), res
             return {"jobs": res, "submissions": sorted(got), "cost_usd": st.get("cost_usd"),
                     "log_tail": (st.get("log") or [])[-10:]}
         step("apply_batch", s_batch)

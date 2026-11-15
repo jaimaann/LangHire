@@ -38,7 +38,8 @@ _ERROR_MAP = [
     ("Target page, context or browser has been closed", "Browser closed unexpectedly during the application."),
 ]
 
-STATUS_FOR_OUTCOME = {"submitted": "applied", "failed": "failed", "needs_input": "needs_input", "skipped": "skipped"}
+STATUS_FOR_OUTCOME = {"submitted": "applied", "failed": "failed", "needs_input": "needs_input", "skipped": "skipped",
+                      "ready_to_submit": "test_passed"}
 
 
 def friendly_error(raw: str) -> str:
@@ -106,7 +107,8 @@ async def _llm_learnings(history, url: str, title: str, success: bool) -> list[d
 
 async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: list[str],
                        worker_id: int, ctx: RunContext | None = None,
-                       resume_override: str | None = None, _vision: bool | None = None) -> dict:
+                       resume_override: str | None = None, _vision: bool | None = None,
+                       test_mode: bool = False) -> dict:
     """Apply to one job. Returns {"status", "cost_usd", "outcome"}."""
     url = job["url"]
     title, company = job.get("title") or "Unknown", job.get("company") or "Unknown"
@@ -154,9 +156,11 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
     task = prompts.build_apply_task(
         job, profile, qa, resume_path, memory_ctx,
         has_password=has_password, gmail_otp=bool(settings.get("email_otp_via_gmail")), blocked=blocked,
+        test_mode=test_mode,
     )
     report = AgentReport()
     tools = build_apply_tools(report, profile, resume_path)
+    interceptor = None
     retention = int(settings.get("log_retention_days", 14) or 0)
     convo_path = None
     if retention > 0:
@@ -179,6 +183,13 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
     screenshot_path = None
     status, outcome, reason, cost = "failed", "failed", "", 0.0
     try:
+        if test_mode:
+            # Fail closed: never run a test-mode application without the network guard
+            from .submit_guard import SubmitInterceptor, install_click_hook
+            interceptor = SubmitInterceptor(browser, profile)
+            if not await interceptor.install():
+                raise RuntimeError("Test mode: could not install the submission guard; job not attempted")
+            install_click_hook(tools, interceptor, report)
         agent: Agent = Agent(
             task=task,
             llm=sc.get_llm(),
@@ -205,7 +216,8 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             await close_session(browser)
             db.update_job(url, status="pending", error=None)
             return await apply_to_job(job, profile=profile, qa=qa, applied_labels=applied_labels,
-                                      worker_id=worker_id, ctx=ctx, resume_override=resume_override, _vision=False)
+                                      worker_id=worker_id, ctx=ctx, resume_override=resume_override, _vision=False,
+                                      test_mode=test_mode)
         cost = _usage_cost(history)
         # Final screenshot for the application record
         try:
@@ -223,6 +235,14 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             ok = bool(history.is_successful())
             outcome = "submitted" if ok else "failed"
             reason = "" if ok else (history.errors()[-1] if history.errors() else "Agent reported failure") or ""
+        if test_mode:
+            # Trust the network guard over the model's own claim
+            if report.intercepted and outcome in ("submitted", "ready_to_submit", "failed"):
+                outcome, reason = "ready_to_submit", reason or "Form passed validation; submission intercepted"
+            elif outcome in ("submitted", "ready_to_submit"):
+                outcome = "failed"
+                reason = (f"No application request was captured (submit clicks: {report.submit_clicks}). "
+                          + (reason or ""))
         status = STATUS_FOR_OUTCOME[outcome]
     except asyncio.CancelledError:
         db.update_job(url, status="pending", error=None)
@@ -285,10 +305,12 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
         "screenshot_path": screenshot_path, "cost_usd": cost,
         "steps": len(history.history) if history is not None else steps["n"],
         "source": job.get("source") or "", "ats": ats,
+        "test_mode": test_mode, "submit_clicks": report.submit_clicks, "intercepted": report.intercepted,
     })
 
-    icon = {"applied": "✅", "needs_input": "❓", "skipped": "⏭️"}.get(status, "❌")
-    label = {"applied": "Applied", "needs_input": "Needs your input", "skipped": "Skipped"}.get(status, "Failed")
+    icon = {"applied": "✅", "needs_input": "❓", "skipped": "⏭️", "test_passed": "🧪"}.get(status, "❌")
+    label = {"applied": "Applied", "needs_input": "Needs your input", "skipped": "Skipped",
+             "test_passed": "Test passed (submission intercepted)"}.get(status, "Failed")
     emit("job_finished", f"{icon} {tag} {label}: {title} at {company}" + (f" — {reason[:120]}" if reason and status != "applied" else ""),
          "info" if status in ("applied", "skipped") else "warning",
          job_url=url, status=status, outcome=outcome, cost_usd=round(cost, 4), prefilled=report.prefilled)
@@ -304,7 +326,7 @@ def select_jobs(mode: str, limit: int | None, job_url: str | None, job_urls: lis
         picked = []
         for u in ([job_url] if job_url else []) + list(job_urls or []):
             j = jobs.get(u)
-            if j and j.get("status") in ("pending", "failed", "needs_input"):
+            if j and j.get("status") in ("pending", "failed", "needs_input", "test_passed", "skipped"):
                 db.update_job(u, status="pending", error=None)
                 j["status"] = "pending"
                 picked.append(j)
@@ -319,7 +341,8 @@ def select_jobs(mode: str, limit: int | None, job_url: str | None, job_urls: lis
 
 
 async def run_apply(ctx: RunContext, *, mode: str = "all", workers: int = 1, limit: int | None = None,
-                    job_url: str | None = None, job_urls: list[str] | None = None) -> dict:
+                    job_url: str | None = None, job_urls: list[str] | None = None,
+                    test_mode: bool = False) -> dict:
     settings = load_settings()
     profile = load_profile()
     qa: dict = {}
@@ -361,7 +384,7 @@ async def run_apply(ctx: RunContext, *, mode: str = "all", workers: int = 1, lim
                     stats["capped"] = stats.get("capped", 0) + 1
                     continue
             res = await apply_to_job(job, profile=profile, qa=qa, applied_labels=applied_labels,
-                                     worker_id=wid, ctx=ctx)
+                                     worker_id=wid, ctx=ctx, test_mode=test_mode)
             stats[res["status"]] = stats.get(res["status"], 0) + 1
             ctx.counters["applied"] = stats.get("applied", 0)
             if stagger and not queue.empty():

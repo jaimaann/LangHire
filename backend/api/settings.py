@@ -135,11 +135,11 @@ async def parse_resume_to_profile():
   "name": "Full Name",
   "email": "email@example.com",
   "phone": "phone number",
-  "address": {{"street": "", "city": "City", "state": "State", "zip": "ZIP", "country": "USA"}},
-  "work_authorization": "Authorized to work in the US",
+  "address": {{"street": "", "city": "City", "state": "State", "zip": "ZIP", "country": "Country name"}},
+  "work_authorization": "",
   "visa_sponsorship_needed": false,
   "willing_to_relocate": false,
-  "preferred_work_mode": "hybrid",
+  "preferred_work_mode": "",
   "years_of_experience": 0,
   "education": {{"degree": "Degree Name", "school": "University Name", "graduation": "Year or Date"}},
   "current_role": "Current or Most Recent Job Title",
@@ -147,7 +147,7 @@ async def parse_resume_to_profile():
   "target_locations": ["City, State"],
   "languages": ["English"],
   "skills": ["Skill 1", "Skill 2"],
-  "salary_expectation": {{"min": 50000, "max": 100000, "currency": "USD"}},
+  "salary_expectation": {{"min": 0, "max": 0, "currency": ""}},
   "notes": ""
 }}
 
@@ -158,6 +158,9 @@ Rules:
 - For skills, extract ALL mentioned technical and soft skills
 - For years_of_experience, calculate from work history dates if possible
 - For education, use the highest degree
+- Only fill work_authorization, visa_sponsorship_needed, preferred_work_mode and salary_expectation when the
+  resume states them explicitly; otherwise leave them empty / 0 / false. Never guess these.
+- The values above are placeholders showing the format, not defaults to copy
 - Return ONLY the JSON object, no other text
 
 RESUME TEXT:
@@ -185,6 +188,18 @@ RESUME TEXT:
                 elif isinstance(v, str) and v.strip():
                     flat_skills.append(v)
             parsed_profile["skills"] = flat_skills
+
+        # The country picker drives date format, currency and work-authorization options;
+        # it used to stay at the default "US" even for a resume with an Indian address.
+        inferred = infer_country_code(parsed_profile)
+        if inferred:
+            from core.country_config import COUNTRY_CONFIGS
+            cfg = COUNTRY_CONFIGS[inferred]
+            parsed_profile["country"] = inferred
+            parsed_profile.setdefault("date_format", cfg.get("date_format", ""))
+            sal = parsed_profile.get("salary_expectation")
+            if isinstance(sal, dict) and cfg.get("currency"):
+                sal["currency"] = cfg["currency"]
 
         # Merge with existing profile — overwrite with parsed values when they're non-empty
         existing = load_profile()
@@ -237,3 +252,24 @@ RESUME TEXT:
         return {"success": False, "message": "LLM returned invalid JSON. Try again."}
     except Exception as e:
         return {"success": False, "message": f"LLM parsing failed: {e}"}
+
+
+_COUNTRY_ALIASES = {"usa": "US", "united states of america": "US", "u.s.": "US", "u.s.a.": "US", "uk": "GB",
+                    "england": "GB", "scotland": "GB", "great britain": "GB", "uae": "AE", "deutschland": "DE"}
+
+
+def infer_country_code(parsed: dict) -> str | None:
+    """Country code from a parsed resume's address (name, alias or ISO code)."""
+    from core.country_config import COUNTRY_CONFIGS
+    raw = str((parsed.get("address") or {}).get("country") or parsed.get("country") or "").strip()
+    if not raw:
+        return None
+    low = raw.lower()
+    if raw.upper() in COUNTRY_CONFIGS:
+        return raw.upper()
+    if low in _COUNTRY_ALIASES:
+        return _COUNTRY_ALIASES[low]
+    for code, cfg in COUNTRY_CONFIGS.items():
+        if cfg.get("name", "").lower() == low:
+            return code
+    return None

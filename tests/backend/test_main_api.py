@@ -656,3 +656,10 @@ class TestNotFound:
         body = resp.json()
         assert body["success"] is False
         assert body["models"] == []
+
+
+def test_infer_country_code_from_parsed_resume():
+    from api.settings import infer_country_code
+    assert infer_country_code({"address": {"country": "India"}}) == "IN"
+    assert infer_country_code({"address": {"country": "U.S.A."}}) == "US"
+    assert infer_country_code({"address": {"country": "Atlantis"}}) is None
