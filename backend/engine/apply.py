@@ -243,6 +243,11 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
                 outcome = "failed"
                 reason = (f"No application request was captured (submit clicks: {report.submit_clicks}). "
                           + (reason or ""))
+            early = len(interceptor.blocked) - report.intercepted if interceptor else 0
+            if outcome == "failed" and early > 0:
+                # A multi-step form saves each step server-side; test mode blocks those saves,
+                # so this failure may be caused by the test itself, not the site or the agent.
+                reason = (f"[test mode blocked {early} intermediate save(s)] " + (reason or "")).strip()
         status = STATUS_FOR_OUTCOME[outcome]
     except asyncio.CancelledError:
         db.update_job(url, status="pending", error=None)
