@@ -90,12 +90,12 @@ collection_prompt: |
   @@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", "url": "https://www.linkedin.com/jobs/view/<currentJobId>/", "easy_apply": true/false}}
 
 apply_prompt: |
-  FIRST — LOGIN CHECK:
-  1. Go to https://www.linkedin.com/feed/ to check if you're logged into LinkedIn.
-     - If you see the feed/home page → logged in ✓
-     - If you see a login page → WAIT for user to log in manually. Check every 15 seconds (refresh). Wait up to 5 minutes.
+  Go straight to the job. Do not open a login page first and never wait for a manual login.
+  If LinkedIn's own quick-apply flow needs you to be signed in and you are not, use the employer's
+  own application site if the posting links to one; otherwise report outcome=needs_input with
+  missing_info=['Log in to LinkedIn in LangHire Settings, Job site logins'].
 
-  THEN: Go to {job_url} on LinkedIn.
+  Go to {job_url} on LinkedIn.
 
   If this is an Easy Apply job:
   - Click "Easy Apply" and complete the application modal.

@@ -88,12 +88,12 @@ collection_prompt: |
   @@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", "url": "<full job URL>", "easy_apply": true/false}}
 
 apply_prompt: |
-  FIRST — LOGIN CHECK:
-  1. Go to https://www.indeed.com/account/view to check if you're logged into Indeed.
-     - If you see your account/profile page → logged in ✓
-     - If you see a sign-in page → WAIT for user to log in manually. Check every 15 seconds. Wait up to 5 minutes.
+  Go straight to the job. Do not open a login page first and never wait for a manual login.
+  If Indeed's own quick-apply flow needs you to be signed in and you are not, use the employer's
+  own application site if the posting links to one; otherwise report outcome=needs_input with
+  missing_info=['Log in to Indeed in LangHire Settings, Job site logins'].
 
-  THEN: Go to {job_url}
+  Go to {job_url}
 
   If this job has "Easily apply" or "Apply now" on Indeed:
   - Click the apply button to open the Indeed Apply flow.

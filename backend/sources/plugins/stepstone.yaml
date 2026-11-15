@@ -56,12 +56,12 @@ collection_prompt: |
   @@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", "url": "<full StepStone job URL>", "easy_apply": true/false}}
 
 apply_prompt: |
-  FIRST — LOGIN CHECK:
-  1. Go to https://www.stepstone.de/meinkonto/ to check if you're logged into StepStone.
-     - If you see your account page → logged in ✓
-     - If redirected to login → WAIT for user to log in. Check every 15 seconds. Wait up to 5 minutes.
+  Go straight to the job. Do not open a login page first and never wait for a manual login.
+  If StepStone's own quick-apply flow needs you to be signed in and you are not, use the employer's
+  own application site if the posting links to one; otherwise report outcome=needs_input with
+  missing_info=['Log in to StepStone in LangHire Settings, Job site logins'].
 
-  THEN: Go to {job_url}
+  Go to {job_url}
 
   StepStone application flow:
   1. On the job details page, click "Jetzt bewerben" (Apply now) or "Bewerben" (Apply).

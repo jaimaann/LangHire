@@ -56,12 +56,12 @@ collection_prompt: |
   @@JOB_FOUND: {{"title": "<job title>", "company": "<company>", "location": "<location>", "url": "<full Naukri job URL>", "easy_apply": true/false}}
 
 apply_prompt: |
-  FIRST — LOGIN CHECK:
-  1. Go to https://www.naukri.com/mnjuser/profile to check if you're logged into Naukri.
-     - If you see your profile page → logged in ✓
-     - If redirected to login → WAIT for user to log in. Check every 15 seconds. Wait up to 5 minutes.
+  Go straight to the job. Do not open a login page first and never wait for a manual login.
+  If Naukri's own quick-apply flow needs you to be signed in and you are not, use the employer's
+  own application site if the posting links to one; otherwise report outcome=needs_input with
+  missing_info=['Log in to Naukri in LangHire Settings, Job site logins'].
 
-  THEN: Go to {job_url}
+  Go to {job_url}
 
   If this job has an "Apply" button on Naukri:
   - Click the "Apply" or "Apply on Naukri" button.

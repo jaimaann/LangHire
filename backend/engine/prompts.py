@@ -75,6 +75,8 @@ def engine_rules(*, has_password: bool, gmail_otp: bool, blocked: list[str]) -> 
         "- If it is a video funnel, a recruitment pitch, or the posting is closed, report outcome=skipped.",
         "",
         "ACCOUNTS:",
+        "- Never wait or poll for the user to log in manually, whatever earlier instructions say: if a login is "
+        "required and you are not signed in, report outcome=needs_input naming the site to log in to.",
         "- Prefer applying as a guest. 'Sign in with Google/LinkedIn' is fine when it is offered.",
     ]
     if has_password:
