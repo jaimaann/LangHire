@@ -176,7 +176,7 @@ Return ONLY the JSON array."""
                 if isinstance(l, dict) and l.get("content", "").strip()
             ]
     except Exception as e:
-        _log.warning(f"Memory extraction LLM call failed: {e}")
+        _log.warning(f"Memory extraction LLM call failed: {type(e).__name__}: {e}")
 
     return []
 

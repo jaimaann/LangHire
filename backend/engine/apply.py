@@ -65,6 +65,11 @@ def parse_outcome_text(text: str) -> tuple[str, str, list[str]] | None:
     return m.group(1).lower(), (rm.group(1).strip() if rm else text[:300]), missing
 
 
+def is_rate_limited(text: str) -> bool:
+    low = (text or "").lower()
+    return "429" in low or "rate limit" in low or "too many requests" in low or "quota" in low
+
+
 def friendly_error(raw: str) -> str:
     for pattern, friendly in _ERROR_MAP:
         if pattern.lower() in raw.lower():
@@ -119,7 +124,7 @@ async def _llm_learnings(history, url: str, title: str, success: bool) -> list[d
         from browser_use.llm.messages import UserMessage
 
         async def _go():
-            resp = await asyncio.wait_for(sc.get_llm().ainvoke([UserMessage(content=prompt)]), timeout=45)
+            resp = await asyncio.wait_for(sc.get_llm().ainvoke([UserMessage(content=prompt)]), timeout=120)
             return getattr(resp, "completion", None) or getattr(resp, "content", None) or str(resp)
         return asyncio.run(_go())
 
@@ -291,6 +296,15 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
     finally:
         await close_session(browser)
 
+    if status == "failed" and is_rate_limited(reason):
+        # The provider throttled us: not the job's fault. Put it back and let the worker retry later.
+        db.update_job(url, status="pending", error=None)
+        emit("job_finished", f"⏳ {tag} AI provider rate limit hit on {title}; will retry", "warning",
+             job_url=url, status="retry")
+        if ctx is not None:
+            ctx.cost_usd += cost
+        return {"status": "retry", "cost_usd": cost, "outcome": "retry"}
+
     # Q&A: tool-reported answers, plus legacy markers
     answers = {a["question"]: a["answer"] for a in report.answers if a.get("question")}
     if history is not None:
@@ -304,7 +318,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
 
     # Memory (self-learning)
     learned = 0
-    success = outcome == "submitted"
+    success = outcome in ("submitted", "ready_to_submit")  # a test-mode pass is a successful run
     if history is not None:
         tool_learnings = [{"domain": domain, "category": l["category"], "content": l["insight"]} for l in report.learnings]
         marker_learnings = extract_learnings_from_markers(history)
@@ -422,6 +436,15 @@ async def run_apply(ctx: RunContext, *, mode: str = "all", workers: int = 1, lim
                     continue
             res = await apply_to_job(job, profile=profile, qa=qa, applied_labels=applied_labels,
                                      worker_id=wid, ctx=ctx, test_mode=test_mode)
+            if res["status"] == "retry":
+                tries = job.get("_retries", 0) + 1
+                if tries <= 2:
+                    job["_retries"] = tries
+                    await asyncio.sleep(60 * tries)  # back off before trying the provider again
+                    queue.put_nowait(job)
+                    continue
+                db.update_job(job["url"], status="failed", error="AI provider rate limit; try again later")
+                res["status"] = "failed"
             stats[res["status"]] = stats.get(res["status"], 0) + 1
             ctx.counters["applied"] = stats.get("applied", 0)
             if stagger and not queue.empty():

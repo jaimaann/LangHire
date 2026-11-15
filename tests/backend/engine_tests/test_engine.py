@@ -287,3 +287,9 @@ def test_outcome_written_as_text_is_recovered():
     assert outcome == "needs_input"
     assert missing == ["Log in to LinkedIn in LangHire Settings, Job site logins"]
     assert parse_outcome_text("I could not finish") is None
+
+
+def test_rate_limit_detection():
+    from engine.apply import is_rate_limited
+    assert is_rate_limited("Error code: 429 - Rate limit reached for requests")
+    assert not is_rate_limited("Could not find the application form")
