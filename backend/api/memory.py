@@ -145,10 +145,36 @@ async def get_recent_logs(limit: int = Query(100)):
 
 @router.get("/logs/runs")
 async def get_runs_with_logs(limit: int = Query(50)):
+    """One row per collection/apply run (including the one in progress).
+
+    Previously this listed per-job metric rows, which only exist once a job
+    finishes, so a running run never appeared on the Logs page.
+    """
     metrics = get_metrics_store()
+    counts: dict[str, int] = {}
     if metrics:
-        return metrics.get_runs_with_logs(limit=limit)
-    return []
+        try:
+            for r in metrics._get_conn().execute("SELECT run_id, COUNT(*) c FROM run_logs GROUP BY run_id"):
+                counts[r[0]] = r[1]
+        except Exception:
+            counts = {}
+    rows = []
+    for i, run in enumerate(db.list_runs(limit=limit)):
+        params = run.get("params") or {}
+        stats = run.get("stats") or {}
+        if run["kind"] == "apply":
+            title = "Apply run"
+            detail = ", ".join(f"{k}: {v}" for k, v in stats.items()) or (params.get("mode") or "")
+        else:
+            title = f"Collect: {params.get('title') or 'all titles'}"
+            detail = params.get("source") or ""
+        rows.append({
+            "id": i + 1, "run_id": run["id"], "job_title": title, "company": detail,
+            "website_domain": run["status"], "success": run["status"] == "succeeded",
+            "created_at": run["started_at"], "finished_at": run.get("finished_at"),
+            "cost_usd": run.get("cost_usd"), "status": run["status"], "log_count": counts.get(run["id"], 0),
+        })
+    return rows
 
 
 # ── Q&A Repository ────────────────────────────────────────────────────────
