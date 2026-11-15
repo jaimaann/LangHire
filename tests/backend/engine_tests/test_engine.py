@@ -293,3 +293,9 @@ def test_rate_limit_detection():
     from engine.apply import is_rate_limited
     assert is_rate_limited("Error code: 429 - Rate limit reached for requests")
     assert not is_rate_limited("Could not find the application form")
+
+
+def test_outcome_text_with_words_between():
+    from engine.apply import parse_outcome_text
+    text = "OUTCOME (had report_application_result been callable): needs_input — form is mostly filled"
+    assert parse_outcome_text(text)[0] == "needs_input"

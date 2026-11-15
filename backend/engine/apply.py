@@ -24,7 +24,7 @@ from . import events, prompts
 from .ats_fastpath import detect_ats
 from .browsers import close_session, make_browser_session
 from .events import RunContext, emit
-from .tools import AgentReport, build_apply_tools
+from .tools import AgentReport, ApplicationResult, build_apply_tools
 from . import vision
 
 _ERROR_MAP = [
@@ -42,7 +42,7 @@ STATUS_FOR_OUTCOME = {"submitted": "applied", "failed": "failed", "needs_input":
                       "ready_to_submit": "test_passed"}
 
 
-_OUTCOME_TEXT = re.compile(r"outcome\s*[=:]\s*['\"]?(submitted|failed|needs_input|skipped|ready_to_submit)", re.I)
+_OUTCOME_TEXT = re.compile(r"outcome[^\n]{0,80}?\b(submitted|failed|needs_input|skipped|ready_to_submit)\b", re.I)
 _MISSING_TEXT = re.compile(r"missing_info\s*[=:]\s*\[([^\]]*)\]", re.I)
 _REASON_TEXT = re.compile(r"reason\s*[=:]\s*['\"]?([^\n'\"]{3,300})", re.I)
 
@@ -229,6 +229,9 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
             loop_detection_window=5,
             browser_session=browser,
             sensitive_data=sensitive,
+            # The outcome is part of done() itself, so it survives browser-use's forced
+            # "done only" final step (seen live: the result tool was unavailable there)
+            output_model_schema=ApplicationResult,
             extend_system_message=memory_ctx,
             available_file_paths=[resume_path] if resume_path else [],
             save_conversation_path=convo_path,
@@ -257,6 +260,13 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
         except Exception:
             screenshot_path = None
 
+        if report.result is None:
+            try:
+                structured = history.get_structured_output(ApplicationResult)
+            except Exception:
+                structured = None
+            if structured is not None:
+                report.result = structured
         if report.result is not None:
             outcome, reason = report.result.outcome, report.result.reason
         else:  # the model didn't call the tool: read its final text, then fall back to done()
