@@ -678,3 +678,21 @@ def test_fabrication_guard_ignores_style_but_flags_claims():
                                    "Applied T-distributions. Cross-functional work.") == []
     flagged = set(find_fabrications(orig, "Led a Snowflake migration at Google, cutting cost 30%."))
     assert {"Snowflake", "Google", "30"} <= flagged
+
+
+def test_find_dropped_terms_flags_lost_job_keywords():
+    from resume.tailor import find_dropped_terms
+    jd = "We need SQL, Tableau and Python for dashboards and stakeholder reporting."
+    original = "Built Tableau dashboards with SQL and Python for weekly reporting."
+    assert find_dropped_terms(original, "Built Tableau dashboards with SQL and Python for reporting.", jd) == []
+    lost = find_dropped_terms(original, "Built dashboards for reporting.", jd)
+    assert lost == ["python", "sql", "tableau"]
+
+
+def test_find_dropped_terms_ignores_generic_words():
+    from resume.tailor import find_dropped_terms
+    jd = ("Build dashboards in Tableau. Show insights. Tableau reporting, SQL reporting. "
+          "Help the company do more. SQL SQL.")
+    original = "Built Tableau dashboards and SQL reporting to show more insights for the company."
+    tailored = "Tableau dashboards and SQL reporting delivering insights."
+    assert find_dropped_terms(original, tailored, jd) == []  # 'show', 'more', 'company' are not job keywords

@@ -387,3 +387,12 @@ def test_cost_unknown_for_unpriced_models():
     assert not _cost_unknown(priced)
     assert _cost_unknown(unpriced)  # shown as unknown, not as free
     assert not _cost_unknown(unused)
+
+
+def test_strip_leaked_json_from_typed_text():
+    from engine.tools import strip_leaked_json
+    assert strip_leaked_json("1}}, {") == "1"
+    assert strip_leaked_json('Python, SQL"}, {"click": {"index": 4}}') == "Python, SQL"
+    assert strip_leaked_json('Ahmedabad {"input": {"index": 9') == "Ahmedabad"
+    for ok in ("INR 3,60,000 fixed", "Built dashboards (Tableau) for {region} teams", "C++ / C#", "a}b"):
+        assert strip_leaked_json(ok) == ok

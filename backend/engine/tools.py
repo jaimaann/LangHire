@@ -15,6 +15,7 @@ Marker parsing stays as a fallback for older prompts and community plugins.
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Literal, Optional
 
@@ -161,12 +162,38 @@ def _guard_file_inputs(tools) -> None:
         except Exception:
             node = None
         attrs = (getattr(node, "attributes", None) or {}) if node is not None else {}
-        if node is not None and str(getattr(node, "tag_name", "")).lower() == "input"                 and str(attrs.get("type", "")).lower() == "file":
+        is_file = (node is not None and str(getattr(node, "tag_name", "")).lower() == "input"
+                   and str(attrs.get("type", "")).lower() == "file")
+        if is_file:
             msg = "That is a file field: do not type into it. Call upload_resume to attach the resume."
             return ActionResult(error=msg, long_term_memory=msg)
+        text = getattr(params, "text", None)
+        clean = strip_leaked_json(text) if isinstance(text, str) else text
+        if clean != text:
+            try:
+                params.text = clean
+            except Exception:
+                pass
+            result = await original(*args, **kwargs)
+            note = "Removed stray action JSON from the typed text; send one action's arguments per field."
+            if isinstance(result, ActionResult):
+                result.extracted_content = ((result.extracted_content or "") + " " + note).strip()
+            return result
         return await original(*args, **kwargs)
 
     action.function = guarded_input
+
+
+# Some models leak the next tool call into a text argument: "1}}, {" or '... "}, {"click": ...'.
+_LEAKED_JSON = re.compile(r'\s*(?:\}\}|\}\s*,\s*\{|"\s*\}\s*[,\]]|\{\s*"[a-z_]+"\s*:\s*[\[{"\d]).*\Z', re.DOTALL)
+
+
+def strip_leaked_json(text: str) -> str:
+    """Cut a text value at the first tool-call fragment. Form answers never contain these."""
+    m = _LEAKED_JSON.search(text)
+    if not m or m.start() == 0:
+        return text
+    return text[: m.start()].rstrip()
 
 
 def build_collect_tools(report: AgentReport):

@@ -307,6 +307,38 @@ _TECH_TERMS = {
 }
 
 
+_STOP = {"and", "the", "for", "with", "from", "that", "this", "using", "used", "into", "over", "our", "your",
+         "you", "are", "was", "were", "will", "have", "has", "had", "not", "but", "all", "any", "can", "its",
+         "their", "they", "them", "who", "what", "which", "when", "where", "about", "work", "working", "team",
+         "role", "years", "year", "experience", "skills", "ability", "strong", "good", "including", "across"}
+
+
+def _terms(text: str) -> set[str]:
+    words = (w.strip(".") for w in re.findall(r"[a-z][a-z0-9+#.]{2,}", (text or "").lower()))
+    return {w for w in words if len(w) >= 3 and w not in _STOP}
+
+
+_GENERIC = {"build", "built", "show", "more", "how", "company", "perform", "remove", "make", "made", "help",
+             "new", "well", "also", "other", "such", "than", "within", "per", "etc", "able", "must", "should",
+             "would", "may", "need", "needs", "based", "like", "high", "time", "day", "days", "end", "get", "use"}
+
+
+def _jd_keywords(job_description: str, n: int = 30) -> set[str]:
+    """The job description's most frequent content words: what a recruiter's keyword search looks for."""
+    freq: dict[str, int] = {}
+    for w in re.findall(r"[a-z][a-z0-9+#.]{2,}", (job_description or "").lower()):
+        w = w.strip(".")
+        if len(w) >= 3 and w not in _STOP and w not in _GENERIC:
+            freq[w] = freq.get(w, 0) + 1
+    return {w for w, _ in sorted(freq.items(), key=lambda kv: -kv[1])[:n]}
+
+
+def find_dropped_terms(original_section: str, tailored: str, job_description: str) -> list[str]:
+    """Top job keywords the original section had and the rewrite lost (tailoring should add, not remove)."""
+    relevant = _terms(original_section) & _jd_keywords(job_description)
+    return sorted(relevant - _terms(tailored))
+
+
 async def _generate_tailored_text(
     sections: list[dict],
     job_description: str,
@@ -339,6 +371,8 @@ async def _generate_tailored_text(
         "CRITICAL RULES:\n"
         "- Each section's output MUST NOT exceed its character limit\n"
         "- Keep the same general structure and formatting style\n"
+        "- Keep EVERY entry, bullet and fact of the original: reword and reorder, never drop content. "
+        "Use most of each character limit; a shorter rewrite loses keywords recruiters search for\n"
         "- Emphasize skills and experience relevant to the job\n"
         "- Do NOT fabricate experience the candidate doesn't have\n"
         "- Do NOT add skills not present in the original resume\n"
@@ -678,6 +712,13 @@ async def tailor_resume(
             title = tailorable[ti].get("title") or tailorable[ti]["section_type"]
             warnings.append(f"Kept the original {title}: the rewrite added terms not in your resume "
                             f"({', '.join(invented[:6])})")
+            del tailored_text[ti]
+            continue
+        dropped = find_dropped_terms(tailorable[ti]["text"], text, job_description)
+        if len(dropped) >= 2:
+            title = tailorable[ti].get("title") or tailorable[ti]["section_type"]
+            warnings.append(f"Kept the original {title}: the rewrite dropped job keywords you already had "
+                            f"({', '.join(dropped[:6])})")
             del tailored_text[ti]
 
     if not tailored_text and not warnings:
