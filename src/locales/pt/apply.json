@@ -53,6 +53,7 @@
     "confirmation": "Confirmação: {{text}}",
     "cost": "Custo",
     "steps": "Etapas: {{n}}",
+    "tokens": "Tokens: {{prompt}} de entrada ({{cached}} em cache) · {{completion}} de saída",
     "ats": "ATS: {{ats}}",
     "missingInfo": "Informações que faltaram ao agente",
     "resume": "Currículo usado:",

@@ -301,3 +301,14 @@ describe("analytics — setTelemetryEnabled", () => {
     expect(init).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("usageParams", () => {
+  it("sends token counts and the model name only", async () => {
+    const { usageParams } = await loadAnalytics();
+    expect(usageParams(undefined)).toEqual({});
+    expect(
+      usageParams({ prompt_tokens: 12000, cached_tokens: 9000, completion_tokens: 600, llm_model: "glm-5.3-flash" }),
+    ).toEqual({ prompt_tokens: 12000, cached_tokens: 9000, completion_tokens: 600, llm_model: "glm-5.3-flash" });
+    expect(usageParams({ prompt_tokens: 5 })).toEqual({ prompt_tokens: 5, cached_tokens: 0, completion_tokens: 0 });
+  });
+});

@@ -162,6 +162,16 @@ export default function ApplicationDetailsModal({ job, onClose }: Props) {
                       </span>
                     )}
                   </p>
+                  {!!record.prompt_tokens && (
+                    <p className="text-[13px] text-muted-foreground">
+                      {t("details.tokens", {
+                        prompt: record.prompt_tokens.toLocaleString(),
+                        cached: (record.cached_tokens || 0).toLocaleString(),
+                        completion: (record.completion_tokens || 0).toLocaleString(),
+                      })}
+                      {record.llm_model ? ` · ${record.llm_model}` : ""}
+                    </p>
+                  )}
                   {record.ats && (
                     <p className="text-[13px] text-muted-foreground">
                       {t("details.ats", { ats: record.ats })}

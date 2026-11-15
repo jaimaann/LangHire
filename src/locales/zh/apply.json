@@ -53,6 +53,7 @@
     "confirmation": "确认：{{text}}",
     "cost": "费用",
     "steps": "步骤：{{n}}",
+    "tokens": "令牌:输入 {{prompt}}(缓存 {{cached}})· 输出 {{completion}}",
     "ats": "ATS：{{ats}}",
     "missingInfo": "代理缺少的信息",
     "resume": "使用的简历：",

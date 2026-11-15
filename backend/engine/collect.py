@@ -152,9 +152,10 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
             for act in getattr(mo, "action", []) or []:
                 dumped = act.model_dump() if hasattr(act, "model_dump") else act
                 save(parse_job_markers(json.dumps(dumped, default=str)))
-        from .apply import _usage_cost
+        from .apply import _usage_cost, add_run_usage, usage_tokens
         if ctx is not None:
             ctx.cost_usd += _usage_cost(history)
+        add_run_usage(ctx, usage_tokens(history))
     finally:
         await close_session(browser)
     if found == 0 and final_text:

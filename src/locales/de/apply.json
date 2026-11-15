@@ -53,6 +53,7 @@
     "confirmation": "Bestätigung: {{text}}",
     "cost": "Kosten",
     "steps": "Schritte: {{n}}",
+    "tokens": "Tokens: {{prompt}} Eingabe ({{cached}} zwischengespeichert) · {{completion}} Ausgabe",
     "ats": "ATS: {{ats}}",
     "missingInfo": "Informationen, die dem Agenten fehlten",
     "resume": "Verwendeter Lebenslauf:",

@@ -168,7 +168,20 @@ export interface ApplicationRecord {
   intercepted?: number | null;
   /** Test mode: how many times Submit was clicked. */
   submit_clicks?: number | null;
+  /** Exact LLM token counts reported by the provider for this application. */
+  prompt_tokens?: number | null;
+  cached_tokens?: number | null;
+  completion_tokens?: number | null;
+  llm_model?: string | null;
   created_at: string;
+}
+
+/** LLM token totals for a whole run (apply or collect). */
+export interface RunUsage {
+  prompt_tokens: number;
+  cached_tokens: number;
+  completion_tokens: number;
+  llm_model?: string;
 }
 
 // ── Resume Tailoring ─────────────────────────────────────────────────────
@@ -334,6 +347,7 @@ export interface CollectionStatus {
   title: string | null;
   log: string[];
   collected: number;
+  usage?: RunUsage;
   max_jobs: number;
   error: string | null;
   finished_at: string | null;
@@ -348,6 +362,8 @@ export interface ApplyStatus {
   finished_at: string | null;
   /** LLM spend of the current/last run so far (USD). */
   cost_usd?: number;
+  usage?: RunUsage;
+  stats?: Record<string, unknown>;
 }
 
 export type JobStatus =

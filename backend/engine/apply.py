@@ -109,6 +109,31 @@ def _usage_cost(history) -> float:
     return float(getattr(usage, "total_prompt_cost", 0) or 0) + float(getattr(usage, "total_completion_cost", 0) or 0)
 
 
+def usage_tokens(history) -> dict:
+    """Exact token counts the provider reported for one agent run (browser-use sums every step)."""
+    usage = getattr(history, "usage", None) if history is not None else None
+    if usage is None:
+        return {"prompt_tokens": 0, "cached_tokens": 0, "completion_tokens": 0, "llm_model": None}
+    by_model = getattr(usage, "by_model", None) or {}
+    return {
+        "prompt_tokens": int(getattr(usage, "total_prompt_tokens", 0) or 0),
+        "cached_tokens": int(getattr(usage, "total_prompt_cached_tokens", 0) or 0),
+        "completion_tokens": int(getattr(usage, "total_completion_tokens", 0) or 0),
+        "llm_model": next(iter(by_model), None),
+    }
+
+
+def add_run_usage(ctx, tokens: dict) -> None:
+    """Running totals for the whole run, shown in the run status and sent to analytics."""
+    if ctx is None:
+        return
+    total = ctx.counters.setdefault("usage", {"prompt_tokens": 0, "cached_tokens": 0, "completion_tokens": 0})
+    for k in ("prompt_tokens", "cached_tokens", "completion_tokens"):
+        total[k] += int(tokens.get(k) or 0)
+    if tokens.get("llm_model"):
+        total["llm_model"] = tokens["llm_model"]
+
+
 def _cost_unknown(history) -> bool:
     """Tokens were used but the model has no price entry, so the cost reads 0 when it isn't."""
     usage = getattr(history, "usage", None)
@@ -320,6 +345,7 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
              job_url=url, status="retry")
         if ctx is not None:
             ctx.cost_usd += cost
+        add_run_usage(ctx, usage_tokens(history))
         return {"status": "retry", "cost_usd": cost, "outcome": "retry"}
 
     # Q&A: tool-reported answers, plus legacy markers
@@ -366,7 +392,10 @@ async def apply_to_job(job: dict, *, profile: dict, qa: dict, applied_labels: li
     except Exception as e:
         emit("log", f"⚠️ {tag} Metrics recording failed (non-fatal): {e}", "warning")
 
+    tokens = usage_tokens(history)
+    add_run_usage(ctx, tokens)
     db.add_application({
+        **tokens,
         "job_url": url, "run_id": ctx.run_id if ctx else None, "outcome": outcome, "reason": reason[:2000],
         "confirmation": report.result.confirmation_text if report.result else None,
         "answers": report.answers, "missing_info": missing, "resume_path": resume_path,

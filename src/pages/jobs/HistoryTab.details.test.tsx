@@ -60,6 +60,7 @@ describe("HistoryTab details and new statuses", () => {
       {
         outcome: "submitted", reason: null, confirmation: null, answers: [], missing_info: [],
         resume_path: "/r.pdf", screenshot_path: "/s.png", cost_usd: 0.02, steps: 3, ats: "lever",
+        prompt_tokens: 12000, cached_tokens: 9000, completion_tokens: 600, llm_model: "glm-5.3-flash",
         created_at: "2026-11-10T00:00:00Z",
       },
     ] as never);
@@ -89,6 +90,7 @@ describe("HistoryTab details and new statuses", () => {
     const dialog = await screen.findByRole("dialog");
     await waitFor(() => expect(getApplications).toHaveBeenCalledWith({ jobUrl: "https://j/applied", limit: 1 }));
     expect(await within(dialog).findByText("$0.0200")).toBeInTheDocument();
+    expect(within(dialog).getByText(/details\.tokens.*"cached":"9,000".*glm-5\.3-flash/)).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: "details.close" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });

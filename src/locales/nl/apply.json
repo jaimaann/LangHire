@@ -53,6 +53,7 @@
     "confirmation": "Bevestiging: {{text}}",
     "cost": "Kosten",
     "steps": "Stappen: {{n}}",
+    "tokens": "Tokens: {{prompt}} invoer ({{cached}} uit cache) · {{completion}} uitvoer",
     "ats": "ATS: {{ats}}",
     "missingInfo": "Informatie die de agent miste",
     "resume": "Gebruikt cv:",

@@ -53,6 +53,7 @@
     "confirmation": "पुष्टि: {{text}}",
     "cost": "लागत",
     "steps": "चरण: {{n}}",
+    "tokens": "टोकन: {{prompt}} इनपुट ({{cached}} कैश्ड) · {{completion}} आउटपुट",
     "ats": "ATS: {{ats}}",
     "missingInfo": "एजेंट के पास जो जानकारी नहीं थी",
     "resume": "उपयोग किया गया रिज़्यूमे:",

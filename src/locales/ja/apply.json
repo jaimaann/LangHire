@@ -53,6 +53,7 @@
     "confirmation": "確認: {{text}}",
     "cost": "費用",
     "steps": "ステップ: {{n}}",
+    "tokens": "トークン: 入力 {{prompt}}(キャッシュ {{cached}})· 出力 {{completion}}",
     "ats": "ATS: {{ats}}",
     "missingInfo": "エージェントに不足していた情報",
     "resume": "使用した履歴書:",

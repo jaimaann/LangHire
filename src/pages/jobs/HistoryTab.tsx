@@ -30,7 +30,7 @@ import {
   getSettings,
   exportJobsCsv,
 } from "../../lib/api";
-import { trackEvent } from "../../lib/analytics";
+import { trackEvent, usageParams } from "../../lib/analytics";
 import LogLine from "../../components/LogLine";
 import { useTranslation } from "react-i18next";
 import type { Job, RunMetric, AppSettings } from "../../lib/types";
@@ -125,7 +125,11 @@ export default function HistoryTab({ onJobsChanged }: HistoryTabProps) {
     getApplyStatus()
       .then((s) => {
         if (runningRef.current && !s.running) {
-          trackEvent("apply_completed", { error: s.error || null });
+          const counts: Record<string, number> = {};
+          for (const [k, v] of Object.entries(s.stats || {})) {
+            if (typeof v === "number") counts[`jobs_${k}`] = v;
+          }
+          trackEvent("apply_completed", { error: s.error || null, ...counts, ...usageParams(s.usage) });
           loadAppliedJobs();
           onJobsChanged();
         }

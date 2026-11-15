@@ -53,6 +53,7 @@
     "confirmation": "Pengesahan: {{text}}",
     "cost": "Kos",
     "steps": "Langkah: {{n}}",
+    "tokens": "Token: {{prompt}} masuk ({{cached}} dicache) · {{completion}} keluar",
     "ats": "ATS: {{ats}}",
     "missingInfo": "Maklumat yang tiada pada ejen",
     "resume": "Resume digunakan:",

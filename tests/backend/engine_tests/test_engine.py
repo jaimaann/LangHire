@@ -422,3 +422,29 @@ def test_detect_ats_recognises_embedded_greenhouse():
     assert detect_ats("https://stripe.com/jobs/search?gh_jid=8190059") == "greenhouse"
     assert detect_ats("https://www.okta.com/company/careers/opportunity/7626222?gh_jid=7626222") == "greenhouse"
     assert detect_ats("https://example.com/jobs/1") is None
+
+
+def test_token_usage_recorded_per_application_and_run(data_dir):
+    from types import SimpleNamespace
+
+    from core import db as cdb
+    from engine.apply import add_run_usage, usage_tokens
+    from engine.events import RunContext
+    usage = SimpleNamespace(total_prompt_tokens=12000, total_prompt_cached_tokens=9000,
+                            total_completion_tokens=600, by_model={"glm-5.3-flash": {}})
+    tokens = usage_tokens(SimpleNamespace(usage=usage))
+    assert tokens == {"prompt_tokens": 12000, "cached_tokens": 9000, "completion_tokens": 600,
+                      "llm_model": "glm-5.3-flash"}
+    assert usage_tokens(None)["prompt_tokens"] == 0
+
+    ctx = RunContext(run_id="r1", kind="apply")
+    add_run_usage(ctx, tokens)
+    add_run_usage(ctx, tokens)
+    assert ctx.counters["usage"]["prompt_tokens"] == 24000 and ctx.counters["usage"]["cached_tokens"] == 18000
+
+    cdb.add_application({"job_url": "https://a.co/1", "outcome": "failed", "cost_usd": None, **tokens})
+    cdb.add_application({"job_url": "https://a.co/2", "outcome": "failed", "cost_usd": 0.02, **tokens})
+    rows = {r["job_url"]: r for r in cdb.list_applications()}
+    assert rows["https://a.co/1"]["cost_usd"] is None      # unknown price stays unknown, not $0
+    assert rows["https://a.co/2"]["cost_usd"] == 0.02
+    assert rows["https://a.co/1"]["cached_tokens"] == 9000 and rows["https://a.co/1"]["llm_model"] == "glm-5.3-flash"

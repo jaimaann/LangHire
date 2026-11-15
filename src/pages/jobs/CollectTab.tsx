@@ -9,7 +9,7 @@ import {
   getProfile,
   addJob,
 } from "../../lib/api";
-import { trackEvent } from "../../lib/analytics";
+import { trackEvent, usageParams } from "../../lib/analytics";
 import type { PluginConfig } from "../../lib/types";
 import LogLine from "../../components/LogLine";
 import AutomationDialog from "../../components/AutomationDialog";
@@ -87,7 +87,7 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
     getCollectionStatus()
       .then((s) => {
         if (wasRunningRef.current && !s.running) {
-          trackEvent("collection_completed", { jobs_collected: s.collected || 0 });
+          trackEvent("collection_completed", { jobs_collected: s.collected || 0, ...usageParams(s.usage) });
           onJobsChanged();
         }
         wasRunningRef.current = s.running;

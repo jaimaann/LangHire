@@ -132,7 +132,8 @@ class RunManager:
                 status = "cancelled" if state.error == "cancelled" else ("failed" if state.error else "succeeded")
                 try:
                     db.finish_run(run_id, status, None if status != "failed" else state.error,
-                                  state.stats, ctx.cost_usd)
+                                  {**state.stats, **({"usage": ctx.counters["usage"]}
+                                                     if ctx.counters.get("usage") else {})}, ctx.cost_usd)
                 except Exception as e:
                     _log.warning(f"finish_run failed: {e}")
                 current_run.reset(token)

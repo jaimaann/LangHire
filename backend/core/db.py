@@ -97,6 +97,14 @@ MIGRATIONS: list[str] = [
     ALTER TABLE applications ADD COLUMN submit_clicks INTEGER NOT NULL DEFAULT 0;
     ALTER TABLE applications ADD COLUMN intercepted INTEGER NOT NULL DEFAULT 0;
     """,
+    # 3 — LLM token usage per application (exact counts from the provider)
+    """
+    ALTER TABLE applications ADD COLUMN prompt_tokens INTEGER NOT NULL DEFAULT 0;
+    ALTER TABLE applications ADD COLUMN cached_tokens INTEGER NOT NULL DEFAULT 0;
+    ALTER TABLE applications ADD COLUMN completion_tokens INTEGER NOT NULL DEFAULT 0;
+    ALTER TABLE applications ADD COLUMN llm_model TEXT;
+    ALTER TABLE applications ADD COLUMN cost_known INTEGER NOT NULL DEFAULT 1;
+    """,
 ]
 
 _local = threading.local()
@@ -362,8 +370,9 @@ def add_application(record: dict) -> int:
         cur = conn.execute(
             """INSERT INTO applications (job_url, run_id, outcome, reason, confirmation, answers,
                    missing_info, resume_path, screenshot_path, cost_usd, steps, source, ats, created_at,
-                   test_mode, submit_clicks, intercepted)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                   test_mode, submit_clicks, intercepted, prompt_tokens, cached_tokens,
+                   completion_tokens, llm_model, cost_known)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 record["job_url"], record.get("run_id"), record["outcome"], record.get("reason"),
                 record.get("confirmation"),
@@ -374,6 +383,9 @@ def add_application(record: dict) -> int:
                 record.get("source") or "", record.get("ats"), now_iso(),
                 1 if record.get("test_mode") else 0, int(record.get("submit_clicks") or 0),
                 int(record.get("intercepted") or 0),
+                int(record.get("prompt_tokens") or 0), int(record.get("cached_tokens") or 0),
+                int(record.get("completion_tokens") or 0), record.get("llm_model"),
+                0 if record.get("cost_usd") is None else 1,
             ),
         )
     return int(cur.lastrowid or 0)
@@ -392,6 +404,8 @@ def list_applications(job_url: str | None = None, limit: int = 100) -> list[dict
         d = dict(r)
         d["answers"] = json.loads(d["answers"] or "[]")
         d["missing_info"] = json.loads(d["missing_info"] or "[]")
+        if not d.pop("cost_known", 1):
+            d["cost_usd"] = None  # the model has no price data: unknown, not free
         out.append(d)
     return out
 

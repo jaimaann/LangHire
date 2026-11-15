@@ -171,3 +171,23 @@ export function initCrashReporting(): boolean {
   }
   return true;
 }
+
+/**
+ * GA4 parameters for a run's LLM usage: token counts and model name only —
+ * never job URLs, company names or anything from the user's profile.
+ */
+export function usageParams(usage?: {
+  prompt_tokens?: number;
+  cached_tokens?: number;
+  completion_tokens?: number;
+  llm_model?: string;
+} | null): Record<string, string | number> {
+  if (!usage) return {};
+  const out: Record<string, string | number> = {
+    prompt_tokens: usage.prompt_tokens || 0,
+    cached_tokens: usage.cached_tokens || 0,
+    completion_tokens: usage.completion_tokens || 0,
+  };
+  if (usage.llm_model) out.llm_model = String(usage.llm_model).slice(0, 100);
+  return out;
+}

@@ -53,6 +53,7 @@
     "confirmation": "확인: {{text}}",
     "cost": "비용",
     "steps": "단계: {{n}}",
+    "tokens": "토큰: 입력 {{prompt}} (캐시 {{cached}}) · 출력 {{completion}}",
     "ats": "ATS: {{ats}}",
     "missingInfo": "에이전트에게 부족했던 정보",
     "resume": "사용한 이력서:",
