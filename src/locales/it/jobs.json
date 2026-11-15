@@ -104,5 +104,28 @@
   "timeline": {
     "step": "Passo {{n}}",
     "now": "Ora: {{goal}}"
+  },
+  "addJob": {
+    "button": "Aggiungi offerta",
+    "title": "Aggiungi offerta manualmente",
+    "hint": "Lascia vuoti titolo e azienda per leggerli, insieme alla descrizione, dall'annuncio.",
+    "url": "URL dell'offerta (obbligatorio)",
+    "jobTitle": "Titolo (facoltativo)",
+    "company": "Azienda (facoltativo)",
+    "cancel": "Annulla"
+  },
+  "errors": {
+    "startCollection": "Impossibile avviare la raccolta.",
+    "addJob": "Impossibile aggiungere l'offerta.",
+    "startApply": "Impossibile avviare le candidature.",
+    "deleteJobs": "Impossibile eliminare le offerte.",
+    "tailor": "Impossibile adattare i curriculum.",
+    "updateStatus": "Impossibile aggiornare lo stato.",
+    "refine": "Impossibile perfezionare il curriculum."
+  },
+  "tailorResult": {
+    "done": "{{count}} curriculum adattati.",
+    "done_one": "1 curriculum adattato.",
+    "withFailures": "{{done}} adattati, {{failed}} non riusciti."
   }
 }

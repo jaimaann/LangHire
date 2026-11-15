@@ -104,5 +104,28 @@
   "timeline": {
     "step": "Stap {{n}}",
     "now": "Nu: {{goal}}"
+  },
+  "addJob": {
+    "button": "Vacature toevoegen",
+    "title": "Vacature handmatig toevoegen",
+    "hint": "Laat titel en bedrijf leeg om ze, met de omschrijving, uit de vacature te lezen.",
+    "url": "Vacature-URL (verplicht)",
+    "jobTitle": "Functietitel (optioneel)",
+    "company": "Bedrijf (optioneel)",
+    "cancel": "Annuleren"
+  },
+  "errors": {
+    "startCollection": "Verzamelen kon niet starten.",
+    "addJob": "De vacature kon niet worden toegevoegd.",
+    "startApply": "Solliciteren kon niet starten.",
+    "deleteJobs": "De vacatures konden niet worden verwijderd.",
+    "tailor": "De cv's konden niet worden aangepast.",
+    "updateStatus": "De status kon niet worden gewijzigd.",
+    "refine": "Het cv kon niet worden verfijnd."
+  },
+  "tailorResult": {
+    "done": "{{count}} cv's aangepast.",
+    "done_one": "1 cv aangepast.",
+    "withFailures": "{{done}} aangepast, {{failed}} mislukt."
   }
 }

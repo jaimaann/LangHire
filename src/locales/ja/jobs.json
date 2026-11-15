@@ -104,5 +104,28 @@
   "timeline": {
     "step": "ステップ {{n}}",
     "now": "現在: {{goal}}"
+  },
+  "addJob": {
+    "button": "求人を追加",
+    "title": "求人を手動で追加",
+    "hint": "役職と会社を空欄にすると、説明文と一緒に求人ページから読み取ります。",
+    "url": "求人URL(必須)",
+    "jobTitle": "役職(任意)",
+    "company": "会社(任意)",
+    "cancel": "キャンセル"
+  },
+  "errors": {
+    "startCollection": "収集を開始できませんでした。",
+    "addJob": "求人を追加できませんでした。",
+    "startApply": "応募を開始できませんでした。",
+    "deleteJobs": "求人を削除できませんでした。",
+    "tailor": "履歴書を調整できませんでした。",
+    "updateStatus": "ステータスを更新できませんでした。",
+    "refine": "履歴書を改善できませんでした。"
+  },
+  "tailorResult": {
+    "done": "{{count}} 件の履歴書を調整しました。",
+    "done_one": "1 件の履歴書を調整しました。",
+    "withFailures": "{{done}} 件調整、{{failed}} 件失敗。"
   }
 }

@@ -69,5 +69,8 @@
   "badge": {
     "waiting": "{{count}} menunggu anda",
     "waiting_one": "1 menunggu anda"
+  },
+  "notice": {
+    "dismiss": "Tutup"
   }
 }

@@ -104,5 +104,28 @@
   "timeline": {
     "step": "Schritt {{n}}",
     "now": "Jetzt: {{goal}}"
+  },
+  "addJob": {
+    "button": "Job hinzufügen",
+    "title": "Job manuell hinzufügen",
+    "hint": "Titel und Firma leer lassen, um sie und die Beschreibung aus der Anzeige zu lesen.",
+    "url": "Job-URL (erforderlich)",
+    "jobTitle": "Jobtitel (optional)",
+    "company": "Firma (optional)",
+    "cancel": "Abbrechen"
+  },
+  "errors": {
+    "startCollection": "Sammeln konnte nicht gestartet werden.",
+    "addJob": "Der Job konnte nicht hinzugefügt werden.",
+    "startApply": "Bewerben konnte nicht gestartet werden.",
+    "deleteJobs": "Die Jobs konnten nicht gelöscht werden.",
+    "tailor": "Die Lebensläufe konnten nicht angepasst werden.",
+    "updateStatus": "Der Status konnte nicht geändert werden.",
+    "refine": "Der Lebenslauf konnte nicht verfeinert werden."
+  },
+  "tailorResult": {
+    "done": "{{count}} Lebensläufe angepasst.",
+    "done_one": "1 Lebenslauf angepasst.",
+    "withFailures": "{{done}} angepasst, {{failed}} fehlgeschlagen."
   }
 }

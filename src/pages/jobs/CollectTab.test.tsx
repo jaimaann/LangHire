@@ -115,7 +115,7 @@ describe("CollectTab", () => {
     );
   });
 
-  it("alerts when starting collection rejects", async () => {
+  it("shows an inline error when starting collection rejects", async () => {
     mockStart.mockRejectedValue(new Error("no login"));
     const user = userEvent.setup();
     render(<CollectTab onJobsChanged={onJobsChanged} />);
@@ -124,7 +124,8 @@ describe("CollectTab", () => {
     await user.click(screen.getByRole("button", { name: /collector\.start/ }));
     await user.click(await screen.findByRole("button", { name: "automation.start" }));
 
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith("no login"));
+    expect(await screen.findByRole("alert")).toHaveTextContent("no login");
+    expect(window.alert).not.toHaveBeenCalled();
   });
 
   it("switches the active source", async () => {
@@ -162,15 +163,15 @@ describe("CollectTab", () => {
     render(<CollectTab onJobsChanged={onJobsChanged} />);
     await screen.findByRole("button", { name: "LinkedIn" });
 
-    await user.click(screen.getByRole("button", { name: /Add Job/ }));
+    await user.click(screen.getByRole("button", { name: /addJob.button/ }));
     await user.type(
-      screen.getByPlaceholderText("Job URL (required)"),
+      screen.getByPlaceholderText("addJob.url"),
       "https://jobs.example.com/1",
     );
-    await user.type(screen.getByPlaceholderText("Job title (optional)"), "Dev");
+    await user.type(screen.getByPlaceholderText("addJob.jobTitle"), "Dev");
 
     // Submit the add-job form.
-    const addButtons = screen.getAllByRole("button", { name: /Add Job/ });
+    const addButtons = screen.getAllByRole("button", { name: /addJob.button/ });
     await user.click(addButtons[addButtons.length - 1]);
 
     await waitFor(() =>

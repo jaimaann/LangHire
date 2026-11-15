@@ -70,5 +70,8 @@
   "badge": {
     "waiting": "{{count}} waiting for you",
     "waiting_one": "1 waiting for you"
+  },
+  "notice": {
+    "dismiss": "Dismiss"
   }
 }

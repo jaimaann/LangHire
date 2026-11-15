@@ -255,7 +255,7 @@ describe("PendingTab", () => {
     await user.click(await screen.findByRole("button", { name: /Tailor Resume/ }));
 
     await waitFor(() => expect(mockTailorResumes).toHaveBeenCalled());
-    await waitFor(() => expect(window.alert).toHaveBeenCalled());
+    expect(await screen.findByTestId("inline-notice")).toHaveTextContent("tailorResult.done");
   });
 
   it("opens the cover letter modal and generates a letter from the description", async () => {
@@ -334,7 +334,7 @@ describe("PendingTab", () => {
     );
   });
 
-  it("alerts when a single apply rejects", async () => {
+  it("shows an inline error when a single apply rejects", async () => {
     mockStartApplying.mockRejectedValueOnce(new Error("apply boom"));
     const user = userEvent.setup();
     render(<PendingTab onJobsChanged={onJobsChanged} stats={stats} />);
@@ -343,7 +343,8 @@ describe("PendingTab", () => {
     const applyButtons = screen.getAllByRole("button", { name: /jobItem\.apply/ });
     await user.click(applyButtons[0]);
     await user.click(await screen.findByRole("button", { name: "automation.start" }));
-    await waitFor(() => expect(window.alert).toHaveBeenCalledWith("apply boom"));
+    expect(await screen.findByRole("alert")).toHaveTextContent("apply boom");
+    expect(window.alert).not.toHaveBeenCalled();
   });
 
   it("persists tailoring options to localStorage when toggled", async () => {

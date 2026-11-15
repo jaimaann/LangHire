@@ -69,5 +69,8 @@
   "badge": {
     "waiting": "{{count}} en attente de vous",
     "waiting_one": "1 en attente de vous"
+  },
+  "notice": {
+    "dismiss": "Fermer"
   }
 }

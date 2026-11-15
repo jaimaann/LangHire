@@ -104,5 +104,28 @@
   "timeline": {
     "step": "{{n}}단계",
     "now": "진행 중: {{goal}}"
+  },
+  "addJob": {
+    "button": "채용 공고 추가",
+    "title": "채용 공고 직접 추가",
+    "hint": "직무와 회사를 비워 두면 설명과 함께 공고에서 읽어옵니다.",
+    "url": "채용 공고 URL (필수)",
+    "jobTitle": "직무 (선택)",
+    "company": "회사 (선택)",
+    "cancel": "취소"
+  },
+  "errors": {
+    "startCollection": "수집을 시작할 수 없습니다.",
+    "addJob": "채용 공고를 추가할 수 없습니다.",
+    "startApply": "지원을 시작할 수 없습니다.",
+    "deleteJobs": "채용 공고를 삭제할 수 없습니다.",
+    "tailor": "이력서를 맞춤화할 수 없습니다.",
+    "updateStatus": "상태를 변경할 수 없습니다.",
+    "refine": "이력서를 다듬을 수 없습니다."
+  },
+  "tailorResult": {
+    "done": "이력서 {{count}}개를 맞춤화했습니다.",
+    "done_one": "이력서 1개를 맞춤화했습니다.",
+    "withFailures": "{{done}}개 완료, {{failed}}개 실패."
   }
 }

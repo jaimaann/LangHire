@@ -104,5 +104,28 @@
   "timeline": {
     "step": "Paso {{n}}",
     "now": "Ahora: {{goal}}"
+  },
+  "addJob": {
+    "button": "Añadir empleo",
+    "title": "Añadir empleo manualmente",
+    "hint": "Deja vacíos el título y la empresa para leerlos, junto con la descripción, de la oferta.",
+    "url": "URL del empleo (obligatoria)",
+    "jobTitle": "Título (opcional)",
+    "company": "Empresa (opcional)",
+    "cancel": "Cancelar"
+  },
+  "errors": {
+    "startCollection": "No se pudo iniciar la recopilación.",
+    "addJob": "No se pudo añadir el empleo.",
+    "startApply": "No se pudo iniciar la postulación.",
+    "deleteJobs": "No se pudieron eliminar los empleos.",
+    "tailor": "No se pudieron adaptar los currículums.",
+    "updateStatus": "No se pudo actualizar el estado.",
+    "refine": "No se pudo refinar el currículum."
+  },
+  "tailorResult": {
+    "done": "{{count}} currículums adaptados.",
+    "done_one": "1 currículum adaptado.",
+    "withFailures": "{{done}} adaptados, {{failed}} con error."
   }
 }

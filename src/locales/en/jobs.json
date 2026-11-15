@@ -104,5 +104,28 @@
   "timeline": {
     "step": "Step {{n}}",
     "now": "Now: {{goal}}"
+  },
+  "addJob": {
+    "button": "Add Job",
+    "title": "Add Job Manually",
+    "hint": "Leave title and company empty to read them, and the description, from the posting.",
+    "url": "Job URL (required)",
+    "jobTitle": "Job title (optional)",
+    "company": "Company (optional)",
+    "cancel": "Cancel"
+  },
+  "errors": {
+    "startCollection": "Could not start collecting.",
+    "addJob": "Could not add the job.",
+    "startApply": "Could not start applying.",
+    "deleteJobs": "Could not delete the jobs.",
+    "tailor": "Could not tailor the resumes.",
+    "updateStatus": "Could not update the status.",
+    "refine": "Could not refine the resume."
+  },
+  "tailorResult": {
+    "done": "Tailored {{count}} resumes.",
+    "done_one": "Tailored 1 resume.",
+    "withFailures": "Tailored {{done}}, {{failed}} failed."
   }
 }

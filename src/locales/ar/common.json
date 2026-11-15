@@ -69,5 +69,8 @@
   "badge": {
     "waiting": "{{count}} بانتظارك",
     "waiting_one": "عنصر واحد بانتظارك"
+  },
+  "notice": {
+    "dismiss": "إغلاق"
   }
 }

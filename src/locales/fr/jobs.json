@@ -104,5 +104,28 @@
   "timeline": {
     "step": "Étape {{n}}",
     "now": "En cours : {{goal}}"
+  },
+  "addJob": {
+    "button": "Ajouter une offre",
+    "title": "Ajouter une offre manuellement",
+    "hint": "Laissez le titre et l'entreprise vides pour les lire, avec la description, dans l'annonce.",
+    "url": "URL de l'offre (obligatoire)",
+    "jobTitle": "Intitulé (facultatif)",
+    "company": "Entreprise (facultatif)",
+    "cancel": "Annuler"
+  },
+  "errors": {
+    "startCollection": "Impossible de lancer la collecte.",
+    "addJob": "Impossible d'ajouter l'offre.",
+    "startApply": "Impossible de lancer les candidatures.",
+    "deleteJobs": "Impossible de supprimer les offres.",
+    "tailor": "Impossible d'adapter les CV.",
+    "updateStatus": "Impossible de modifier le statut.",
+    "refine": "Impossible d'affiner le CV."
+  },
+  "tailorResult": {
+    "done": "{{count}} CV adaptés.",
+    "done_one": "1 CV adapté.",
+    "withFailures": "{{done}} adaptés, {{failed}} en échec."
   }
 }

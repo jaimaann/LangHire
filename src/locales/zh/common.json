@@ -70,5 +70,8 @@
   "badge": {
     "waiting": "{{count}} 项等待你处理",
     "waiting_one": "1 项等待你处理"
+  },
+  "notice": {
+    "dismiss": "关闭"
   }
 }

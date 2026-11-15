@@ -69,5 +69,8 @@
   "badge": {
     "waiting": "{{count}}개가 기다리고 있습니다",
     "waiting_one": "1개가 기다리고 있습니다"
+  },
+  "notice": {
+    "dismiss": "닫기"
   }
 }

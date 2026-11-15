@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useRunEvents, costFromEvent, FALLBACK_POLL_MS } from "../../hooks/useRunEvents";
 import ApplyTimeline from "../../components/ApplyTimeline";
+import InlineNotice, { type Notice } from "../../components/InlineNotice";
 import { applyTimelineEvent, type JobTimeline } from "../../lib/timeline";
 import JobStatusBadge from "../../components/JobStatusBadge";
 import { sortJobs, type JobSort } from "../../lib/jobSort";
@@ -98,6 +99,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
   const [applyingUrl, setApplyingUrl] = useState<string | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingApplyUrl, setPendingApplyUrl] = useState<string | null>(null);
+  const [notice, setNotice] = useState<Notice | null>(null);
 
   // Cover letter state
   const [coverLetterJob, setCoverLetterJob] = useState<Job | null>(null);
@@ -253,13 +255,13 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
         mode: "all",
       });
       if (!res.success) {
-        alert(res.message);
+        setNotice({ kind: "error", text: res.message || t("errors.startApply") });
         return;
       }
       setRunCost(null);
       setApplyingUrl(pendingApplyUrl);
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Failed to start");
+      setNotice({ kind: "error", text: e instanceof Error ? e.message : t("errors.startApply") });
     } finally {
       setPendingApplyUrl(null);
     }
@@ -357,13 +359,13 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
         mode: "all",
       });
       if (!res.success) {
-        alert(res.message);
+        setNotice({ kind: "error", text: res.message || t("errors.startApply") });
         setBatchApplying(false);
       } else {
         setSelectedJobs(new Set());
       }
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Failed to start batch apply");
+      setNotice({ kind: "error", text: e instanceof Error ? e.message : t("errors.startApply") });
       setBatchApplying(false);
     }
   };
@@ -379,7 +381,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
       fetchJobs();
       onJobsChanged();
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Failed to delete jobs");
+      setNotice({ kind: "error", text: e instanceof Error ? e.message : t("errors.deleteJobs") });
     }
   };
 
@@ -401,12 +403,15 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
           }
         }
         setTailoredContent(newContent);
-        alert(`Tailored ${done} resume(s)${failed ? `, ${failed} failed` : ""}`);
+        setNotice({
+          kind: failed ? "error" : "info",
+          text: failed ? t("tailorResult.withFailures", { done, failed }) : t("tailorResult.done", { count: done }),
+        });
         setSelectedJobs(new Set());
         fetchJobs();
       }
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Failed to tailor resumes");
+      setNotice({ kind: "error", text: e instanceof Error ? e.message : t("errors.tailor") });
     } finally {
       setTailoring(false);
     }
@@ -420,7 +425,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
       fetchJobs(true);
       onJobsChanged();
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Failed to update status");
+      setNotice({ kind: "error", text: e instanceof Error ? e.message : t("errors.updateStatus") });
     }
   };
 
@@ -475,7 +480,7 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
         setRefineInput((prev) => ({ ...prev, [jobUrl]: "" }));
       }
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Refinement failed");
+      setNotice({ kind: "error", text: e instanceof Error ? e.message : t("errors.refine") });
     } finally {
       setRefining((prev) => ({ ...prev, [jobUrl]: false }));
     }
@@ -592,6 +597,8 @@ export default function PendingTab({ onJobsChanged, stats }: PendingTabProps) {
           </button>
         </div>
       </form>
+
+      <InlineNotice notice={notice} onClose={() => setNotice(null)} />
 
       {/* Live apply progress (LLM spend so far) */}
       {isApplying && (

@@ -69,5 +69,8 @@
   "badge": {
     "waiting": "{{count}} wachten op jou",
     "waiting_one": "1 wacht op jou"
+  },
+  "notice": {
+    "dismiss": "Sluiten"
   }
 }

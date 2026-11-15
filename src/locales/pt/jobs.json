@@ -104,5 +104,28 @@
   "timeline": {
     "step": "Passo {{n}}",
     "now": "Agora: {{goal}}"
+  },
+  "addJob": {
+    "button": "Adicionar vaga",
+    "title": "Adicionar vaga manualmente",
+    "hint": "Deixe título e empresa em branco para lê-los, com a descrição, do anúncio.",
+    "url": "URL da vaga (obrigatório)",
+    "jobTitle": "Cargo (opcional)",
+    "company": "Empresa (opcional)",
+    "cancel": "Cancelar"
+  },
+  "errors": {
+    "startCollection": "Não foi possível iniciar a coleta.",
+    "addJob": "Não foi possível adicionar a vaga.",
+    "startApply": "Não foi possível iniciar as candidaturas.",
+    "deleteJobs": "Não foi possível excluir as vagas.",
+    "tailor": "Não foi possível adaptar os currículos.",
+    "updateStatus": "Não foi possível atualizar o status.",
+    "refine": "Não foi possível refinar o currículo."
+  },
+  "tailorResult": {
+    "done": "{{count}} currículos adaptados.",
+    "done_one": "1 currículo adaptado.",
+    "withFailures": "{{done}} adaptados, {{failed}} com falha."
   }
 }

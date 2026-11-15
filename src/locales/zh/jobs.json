@@ -104,5 +104,28 @@
   "timeline": {
     "step": "第 {{n}} 步",
     "now": "当前:{{goal}}"
+  },
+  "addJob": {
+    "button": "添加职位",
+    "title": "手动添加职位",
+    "hint": "职位名称和公司留空时，将从招聘页面读取它们和职位描述。",
+    "url": "职位链接(必填)",
+    "jobTitle": "职位名称(可选)",
+    "company": "公司(可选)",
+    "cancel": "取消"
+  },
+  "errors": {
+    "startCollection": "无法开始收集。",
+    "addJob": "无法添加该职位。",
+    "startApply": "无法开始申请。",
+    "deleteJobs": "无法删除这些职位。",
+    "tailor": "无法定制简历。",
+    "updateStatus": "无法更新状态。",
+    "refine": "无法优化简历。"
+  },
+  "tailorResult": {
+    "done": "已定制 {{count}} 份简历。",
+    "done_one": "已定制 1 份简历。",
+    "withFailures": "已定制 {{done}} 份,{{failed}} 份失败。"
   }
 }

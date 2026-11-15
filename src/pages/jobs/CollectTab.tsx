@@ -15,6 +15,7 @@ import LogLine from "../../components/LogLine";
 import AutomationDialog from "../../components/AutomationDialog";
 import { ProgressBar } from "../../components/ui";
 import { useTranslation } from "react-i18next";
+import InlineNotice, { type Notice } from "../../components/InlineNotice";
 
 interface CollectTabProps {
   onJobsChanged: () => void;
@@ -36,6 +37,7 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
 
   // Add job form state
   const [showAddJobForm, setShowAddJobForm] = useState(false);
+  const [notice, setNotice] = useState<Notice | null>(null);
   const [addJobUrl, setAddJobUrl] = useState("");
   const [addJobTitle, setAddJobTitle] = useState("");
   const [addJobCompany, setAddJobCompany] = useState("");
@@ -150,10 +152,10 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
           source: collectSource,
         });
       } else {
-        alert(res.message);
+        setNotice({ kind: "error", text: res.message || t("errors.startCollection") });
       }
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Failed to start collection");
+      setNotice({ kind: "error", text: e instanceof Error ? e.message : t("errors.startCollection") });
     }
   };
 
@@ -181,7 +183,7 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
         onJobsChanged();
       }
     } catch (e2) {
-      alert(e2 instanceof Error ? e2.message : "Failed to add job");
+      setNotice({ kind: "error", text: e2 instanceof Error ? e2.message : t("errors.addJob") });
     } finally {
       setAddingJob(false);
     }
@@ -195,19 +197,21 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
           onClick={() => setShowAddJobForm(!showAddJobForm)}
           className="btn-secondary"
         >
-          <Plus className="w-4 h-4" /> Add Job
+          <Plus className="w-4 h-4" /> {t("addJob.button")}
         </button>
       </div>
+      <InlineNotice notice={notice} onClose={() => setNotice(null)} />
 
       {/* Add Job Form */}
       {showAddJobForm && (
         <div className="card mb-5">
-          <h3 className="section-title mb-3">Add Job Manually</h3>
+          <h3 className="section-title mb-1">{t("addJob.title")}</h3>
+          <p className="text-xs text-muted-foreground mb-3">{t("addJob.hint")}</p>
           <form onSubmit={handleAddJob} className="flex flex-col gap-3">
             <input
               value={addJobUrl}
               onChange={(e) => setAddJobUrl(e.target.value)}
-              placeholder="Job URL (required)"
+              placeholder={t("addJob.url")}
               className="input-base"
               required
             />
@@ -215,13 +219,13 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
               <input
                 value={addJobTitle}
                 onChange={(e) => setAddJobTitle(e.target.value)}
-                placeholder="Job title (optional)"
+                placeholder={t("addJob.jobTitle")}
                 className="input-base flex-1"
               />
               <input
                 value={addJobCompany}
                 onChange={(e) => setAddJobCompany(e.target.value)}
-                placeholder="Company (optional)"
+                placeholder={t("addJob.company")}
                 className="input-base flex-1"
               />
             </div>
@@ -236,14 +240,14 @@ export default function CollectTab({ onJobsChanged }: CollectTabProps) {
                 ) : (
                   <Plus className="w-4 h-4" />
                 )}
-                Add Job
+                {t("addJob.button")}
               </button>
               <button
                 type="button"
                 onClick={() => setShowAddJobForm(false)}
                 className="btn-secondary"
               >
-                Cancel
+                {t("addJob.cancel")}
               </button>
             </div>
           </form>

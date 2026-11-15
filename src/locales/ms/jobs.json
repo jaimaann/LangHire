@@ -104,5 +104,28 @@
   "timeline": {
     "step": "Langkah {{n}}",
     "now": "Sekarang: {{goal}}"
+  },
+  "addJob": {
+    "button": "Tambah kerja",
+    "title": "Tambah kerja secara manual",
+    "hint": "Biarkan jawatan dan syarikat kosong untuk membacanya, bersama penerangan, daripada iklan.",
+    "url": "URL kerja (wajib)",
+    "jobTitle": "Jawatan (pilihan)",
+    "company": "Syarikat (pilihan)",
+    "cancel": "Batal"
+  },
+  "errors": {
+    "startCollection": "Tidak dapat memulakan pengumpulan.",
+    "addJob": "Tidak dapat menambah kerja.",
+    "startApply": "Tidak dapat memulakan permohonan.",
+    "deleteJobs": "Tidak dapat memadam kerja.",
+    "tailor": "Tidak dapat menyesuaikan resume.",
+    "updateStatus": "Tidak dapat mengemas kini status.",
+    "refine": "Tidak dapat memperhalusi resume."
+  },
+  "tailorResult": {
+    "done": "{{count}} resume disesuaikan.",
+    "done_one": "1 resume disesuaikan.",
+    "withFailures": "{{done}} disesuaikan, {{failed}} gagal."
   }
 }

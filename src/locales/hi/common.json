@@ -69,5 +69,8 @@
   "badge": {
     "waiting": "{{count}} आपकी प्रतीक्षा में",
     "waiting_one": "1 आपकी प्रतीक्षा में"
+  },
+  "notice": {
+    "dismiss": "बंद करें"
   }
 }
