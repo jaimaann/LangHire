@@ -70,11 +70,7 @@ class PluginConfig:
     def render_collection_prompt(self, titles: list[str], locations: list[str], max_jobs: int, filters: dict | None = None) -> str:
         title = titles[0] if titles else ""
         location = locations[0] if locations else ""
-        search_url = self.search_url.format(
-            title=title, titles=", ".join(titles),
-            location=location, locations=", ".join(locations),
-            max_jobs=max_jobs,
-        )
+        search_url = build_search_url(self.search_url, title, location, titles, locations, max_jobs)
         # Append filter URL params
         filter_params = []
         if filters:
@@ -118,6 +114,31 @@ class PluginConfig:
             cover_letter=cover_letter,
             memories=memories,
         )
+
+
+def _slug(text: str) -> str:
+    """'Data Analyst' -> 'data-analyst'; 'Austin, TX' -> 'austin-tx' (path-style job boards)."""
+    return re.sub(r"[^\w]+", "-", text.strip().lower(), flags=re.UNICODE).strip("-")
+
+
+def build_search_url(template: str, title: str, location: str, titles: list[str], locations: list[str],
+                     max_jobs: int) -> str:
+    """Fill a plugin's search_url with properly encoded values.
+
+    Placeholders in the query string are percent-encoded; placeholders in the
+    path (Reed, Naukri, SEEK, StepStone use /data-analyst-jobs-in-london) are
+    slugified. Raw values used to be inserted as-is, so 'Data Analyst' and
+    'Austin, TX' produced URLs the boards mis-parsed.
+    """
+    from urllib.parse import quote_plus
+    path, sep, query = template.partition("?")
+
+    def fill(part: str, enc) -> str:
+        return part.format(title=enc(title), titles=enc(", ".join(titles)), location=enc(location),
+                           locations=enc(", ".join(locations)), max_jobs=max_jobs)
+
+    url = fill(path, _slug)
+    return url + (sep + fill(query, quote_plus) if sep else "")
 
 
 def _format_profile(profile: dict) -> str:

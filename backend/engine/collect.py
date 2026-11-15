@@ -60,6 +60,7 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
     )
     report = AgentReport()
     tools = build_collect_tools(report)
+    final_text = ""
     seen = set(existing)
     found = 0
     agent_ref: dict = {}
@@ -117,6 +118,7 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
         )
         agent_ref["agent"] = agent
         history = await agent.run(max_steps=150)
+        final_text = (history.final_result() or "").strip()
         if report.jobs:
             save(list(report.jobs))
         for item in history.history:
@@ -132,6 +134,9 @@ async def collect_for_title(plugin, title: str, profile: dict, *, max_jobs: int,
             ctx.cost_usd += _usage_cost(history)
     finally:
         await close_session(browser)
+    if found == 0 and final_text:
+        # Say why, instead of a bare "finished successfully"
+        events.warn(f"No new jobs for '{title}'. Agent said: {final_text[:400]}")
     return found
 
 
@@ -222,5 +227,9 @@ async def run_collect(ctx: RunContext, *, title: str | None, source: str, max_jo
             raise
         except Exception as e:
             events.warn(f"  [{i}/{len(needs)}] ❌ {e}")
-    events.info(f"Collection complete: {total} new job(s) from {plugin.display_name}")
+    if total == 0:
+        events.warn(f"Collection finished with no new jobs from {plugin.display_name}. Try another title, "
+                    "a broader location, or a job site that covers your country.")
+    else:
+        events.info(f"Collection complete: {total} new job(s) from {plugin.display_name}")
     return {"collected": total}

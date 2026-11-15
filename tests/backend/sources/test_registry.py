@@ -224,7 +224,7 @@ class TestRenderCollectionPrompt:
     def test_substitutes_title_location_maxjobs(self):
         plugin = self._plugin()
         out = plugin.render_collection_prompt(["Engineer"], ["Sydney"], 20)
-        assert "https://acme.example/Engineer-jobs/in-Sydney" in out
+        assert "https://acme.example/engineer-jobs/in-sydney" in out  # path values are slugified
         assert "for Engineer in Sydney" in out
         assert "max 20" in out
 
@@ -540,3 +540,11 @@ class TestImportRemove:
         (data_dir / "plugins" / "mine.yaml").unlink()
         assert registry.remove_plugin("mine") is True
         assert registry.get_by_name("mine") is None
+
+
+def test_search_url_encoding():
+    from sources.registry import build_search_url
+    assert build_search_url("https://www.reed.co.uk/jobs/{title}-jobs-in-{location}?d=1", "Data Analyst",
+                            "London, UK", [], [], 0) == "https://www.reed.co.uk/jobs/data-analyst-jobs-in-london-uk?d=1"
+    assert build_search_url("https://x.com/jobs?q={title}&l={location}", "C++ Dev", "Austin, TX", [], [], 0) \
+        == "https://x.com/jobs?q=C%2B%2B+Dev&l=Austin%2C+TX"

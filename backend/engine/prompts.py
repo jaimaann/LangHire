@@ -131,6 +131,10 @@ def build_collect_task(plugin: PluginConfig, title: str, locations: list[str], m
     body = plugin.render_collection_prompt([title], locations, max_jobs, filters or None)
     rules = [
         "",
+        "LOGIN: If you are not logged in, first check whether the search results load without logging in. "
+        "If they do, continue without waiting. Only wait for a manual login when the results are hidden "
+        "behind it, and never wait more than 2 minutes in total.",
+        "",
         "RECORDING JOBS:",
         "- For every job you find, call record_job_listing once with title, company, location, the full job URL "
         "and whether the board's quick-apply flow is offered. (The @@JOB_FOUND memory format also still works.)",
