@@ -410,7 +410,7 @@ def ats_success_rates() -> list[dict]:
     rows = connect().execute(
         """SELECT COALESCE(ats, 'other') ats,
                   COUNT(*) attempts,
-                  SUM(CASE WHEN outcome='submitted' THEN 1 ELSE 0 END) submitted,
+                  SUM(CASE WHEN outcome IN ('submitted', 'ready_to_submit') THEN 1 ELSE 0 END) submitted,
                   SUM(cost_usd) cost_usd
            FROM applications GROUP BY COALESCE(ats, 'other') ORDER BY attempts DESC"""
     ).fetchall()
