@@ -174,9 +174,15 @@ _DESC_JS = r"""() => {
 }"""
 
 
-async def fetch_description(url: str, job: dict) -> str:
-    """Read the posting text from the DOM; use an LLM agent only if that fails."""
-    browser = make_browser_session()
+async def fetch_description(url: str, job: dict, browser=None) -> str:
+    """Read the posting text from the DOM; use an LLM agent only if that fails.
+
+    Pass a started `browser` to reuse it across jobs (launching Chrome per job
+    made fetching 20 descriptions take minutes).
+    """
+    own = browser is None
+    if own:
+        browser = make_browser_session()
     try:
         await browser.start()
         page = await browser.get_current_page()
@@ -184,7 +190,7 @@ async def fetch_description(url: str, job: dict) -> str:
             page = await browser.new_page(url)
         else:
             await page.goto(url)
-        await asyncio.sleep(3)
+        await asyncio.sleep(2.5)
         text = await page.evaluate(_DESC_JS)
         text = (text or "").strip()
         if len(text) >= 300:
@@ -192,7 +198,8 @@ async def fetch_description(url: str, job: dict) -> str:
     except Exception as e:
         events.info(f"  DOM read failed ({type(e).__name__}); using the agent")
     finally:
-        await close_session(browser)
+        if own:
+            await close_session(browser)
 
     from browser_use import Agent
     browser = make_browser_session()
@@ -236,9 +243,25 @@ async def run_collect(ctx: RunContext, *, title: str | None, source: str, max_jo
              if j.get("status") == "pending" and not j.get("description") and j.get("source") == plugin.name]
     if needs:
         events.info(f"📋 Fetching descriptions for {len(needs)} job(s)...")
+    shared = make_browser_session() if needs else None
+    try:
+        await _fetch_all(needs, shared, profile)
+    finally:
+        if shared is not None:
+            await close_session(shared)
+    if total == 0:
+        events.warn(f"Collection finished with no new jobs from {plugin.display_name}. Try another title, "
+                    "a broader location, or a job site that covers your country.")
+    else:
+        events.info(f"Collection complete: {total} new job(s) from {plugin.display_name}")
+    return {"collected": total}
+
+
+async def _fetch_all(needs: list[tuple[str, dict]], browser, profile: dict) -> None:
+    """Fetch descriptions for jobs, reusing one browser for the DOM reads."""
     for i, (url, job) in enumerate(needs, start=1):
         try:
-            desc = await fetch_description(url, job)
+            desc = await fetch_description(url, job, browser=browser)
             if desc:
                 job["description"] = desc
                 db.update_job(url, description=desc, match_score=match_score(job, profile))
@@ -250,9 +273,3 @@ async def run_collect(ctx: RunContext, *, title: str | None, source: str, max_jo
             raise
         except Exception as e:
             events.warn(f"  [{i}/{len(needs)}] ❌ {e}")
-    if total == 0:
-        events.warn(f"Collection finished with no new jobs from {plugin.display_name}. Try another title, "
-                    "a broader location, or a job site that covers your country.")
-    else:
-        events.info(f"Collection complete: {total} new job(s) from {plugin.display_name}")
-    return {"collected": total}
